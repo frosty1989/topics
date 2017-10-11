@@ -1,0 +1,10 @@
+{
+  "name": "uu_demoappg01",
+  "code": "UU.DEMOAPPG01",
+  "namespace": "UU.DemoApp",
+  "version": "0.1.0",
+  "description": "Project template for developing UAF application with uu5.",
+  "vendor": "<your company>",
+  "license": "Licence Commercial",
+  "template": "uu5-javascript-0.1.0"
+}
