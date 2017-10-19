@@ -1,10 +1,13 @@
 import React from "react";
+import createReactClass from 'create-react-class';
+import PropTypes from 'prop-types';
 import * as UU5 from "uu5g04";
+import "uu5g04-bricks";
 
 import Cfg from './_config.js';
 import './demo-bottom.less';
 
-export const DemoBottom = React.createClass({
+export const DemoBottom = createReactClass({
 
   //@@viewOn:mixins
   mixins: [

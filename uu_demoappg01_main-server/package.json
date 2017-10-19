@@ -1,0 +1,25 @@
+{
+  "name": "uu_demoappg01_main-server",
+  "version": "0.1.0",
+  "description": "Server project template for developing UAF application in Node.js",
+  "license": "Licence Commercial",
+  "dependencies": {
+    "uu_appg01_server": "^0.1.0"
+  },
+  "devDependencies": {
+    "uu_appg01_core-npm": "^0.1.0"
+  },
+  "scripts": {
+    "clean": "uu-appg01-core-npm clean",
+    "test": "uu-appg01-core-npm test",
+    "build": "uu-appg01-core-npm build",
+    "deploy": "uu-appg01-core-npm deploy",
+    "start": "uu-appg01-core-npm start"
+  },
+  "main": "app.js",
+  "files": [
+    "app",
+    "config",
+    "public"
+  ]
+}

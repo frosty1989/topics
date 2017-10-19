@@ -1,6 +1,10 @@
 import React from "react";
+import createReactClass from 'create-react-class';
 import * as UU5 from "uu5g04";
-import * as Plus4U5 from "plus4u5g01";
+import "uu5g04-bricks";
+import * as Plus4U5 from "uu_plus4u5g01";
+import "uu_plus4u5g01-bricks";
+
 import Cfg from "./_config.js";
 
 import DemoSpaAuthenticated from "./demo-spa-authenticated.js";
@@ -8,7 +12,7 @@ import DemoSpaNotAuthenticated from "./demo-spa-not-authenticated.js";
 
 import "./demo-spa.less";
 
-const DemoSpa = React.createClass({
+const DemoSpa = createReactClass({
 
   //@@viewOn:mixins
   mixins: [
@@ -32,6 +36,7 @@ const DemoSpa = React.createClass({
       ccrKey: Cfg.CCRKEY_SPA
     }
   },
+
   //@@viewOff:statics
 
   //@@viewOn:propTypes

@@ -14,16 +14,17 @@
   },
   "dependencies": {
     "bootstrap": "3.3.7",
-    "react": "15.4.2",
-    "react-dom": "15.4.2",
+    "react": "16.0.0",
+    "react-dom": "16.0.0",
+    "create-react-class": "15.6.0",
+    "prop-types": "15.6.0",
     "systemjs": "0.19.47",
     "systemjs-plugin-json": "0.2.1",
-    "uu5g04": "https://cdn.plus4u.net/uu-uu5g04/0.0.0/uu5g04.tgz",
+    "uu5g04": "https://cdn.plus4u.net/uu-uu5g04/1.0.0/uu5g04.tgz",
     "uu_appg01": "https://cdn.plus4u.net/uu-appg01/3.0.0/uu_appg01.tgz",
     "uu_appg01_core": "https://cdn.plus4u.net/uu-appg01-core/3.0.0/uu_appg01_core.tgz",
     "uu_oidcg01": "https://cdn.plus4u.net/uu-oidcg01/3.0.0/uu_oidcg01.tgz",
-    "uu5codekitg01": "https://cdn.plus4u.net/uu-uu5codekitg01/0.0.0/uu5codekitg01.tgz",
-    "plus4u5g01": "https://cdn.plus4u.net/uu-plus4u5g01/0.0.0/plus4u5g01.tgz"
+    "uu_plus4u5g01": "https://cdn.plus4u.net/beta/uu-plus4u5g01/1.0.0-beta1.5/uu_plus4u5g01.tgz"
   },
   "uuBuildSettings": {
     "useCdn": true,
@@ -39,7 +40,15 @@
         "localBaseUri": "node_modules/react/dist/"
       },
       "react-dom": {
-        "cdnBaseUri": "https://cdn.plus4u.net/libs/react/%version%/",
+        "cdnBaseUri": "https://cdn.plus4u.net/libs/react-dom/%version%/",
+        "localBaseUri": "node_modules/react-dom/dist/"
+      },
+      "create-react-class": {
+        "cdnBaseUri": "https://cdn.plus4u.net/libs/create-react-class/%version%/",
+        "localBaseUri": "node_modules/react-dom/dist/"
+      },
+      "prop-types": {
+        "cdnBaseUri": "https://cdn.plus4u.net/libs/prop-types/%version%/",
         "localBaseUri": "node_modules/react-dom/dist/"
       },
       "bootstrap": {
@@ -51,6 +60,16 @@
       "uu5g04": {
         "cdnBaseUri": "https://cdn.plus4u.net/uu-uu5g04/%version%/",
         "localBaseUri": "node_modules/uu5g04/dist/"
+      },
+      "uu5g04-bricks": {
+        "cdnBaseUri": "https://cdn.plus4u.net/uu-uu5g04/1.0.0/",
+        "main": "uu5g04-bricks.js",
+        "mainMinified": "uu5g04-bricks.min.js"
+      },
+      "uu5g04-forms": {
+        "cdnBaseUri": "https://cdn.plus4u.net/uu-uu5g04/1.0.0/",
+        "main": "uu5g04-forms.js",
+        "mainMinified": "uu5g04-forms.min.js"
       },
       "uu_appg01_core": {
         "cdnBaseUri": "https://cdn.plus4u.net/uu-appg01-core/%version%/",
@@ -66,13 +85,21 @@
         "cdnBaseUri": "https://cdn.plus4u.net/uu-oidcg01/%version%/",
         "localBaseUri": "node_modules/uu_oidcg01/dist/"
       },
-      "uu5codekitg01": {
-        "cdnBaseUri": "https://cdn.plus4u.net/uu-uu5codekitg01/%version%/",
-        "localBaseUri": "node_modules/uu5codekitg01/dist/"
+      "uu_plus4u5g01": {
+        "cdnBaseUri": "https://cdn.plus4u.net/beta/uu-plus4u5g01/%version%/",
+        "localBaseUri": "node_modules/uu_plus4u5g01/dist/"
       },
-      "plus4u5g01": {
-        "cdnBaseUri": "https://cdn.plus4u.net/uu-plus4u5g01/%version%/",
-        "localBaseUri": "node_modules/plus4u5g01/dist/"
+      "uu_plus4u5g01-bricks": {
+        "cdnBaseUri": "https://cdn.plus4u.net/beta/uu-plus4u5g01/1.0.0-beta1.5/",
+        "localBaseUri": "node_modules/uu_plus4u5g01/dist/",
+        "main": "uu_plus4u5g01-bricks.js",
+        "mainMinified": "uu_plus4u5g01-bricks.min.js"
+      },
+      "uu_plus4u5g01-app": {
+        "cdnBaseUri": "https://cdn.plus4u.net/beta/uu-plus4u5g01/1.0.0-beta1.5/",
+        "localBaseUri": "node_modules/uu_plus4u5g01/dist/",
+        "main": "uu_plus4u5g01-app.js",
+        "mainMinified": "uu_plus4u5g01-app.min.js"
       }
     }
   },

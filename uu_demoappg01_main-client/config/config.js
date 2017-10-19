@@ -37,7 +37,8 @@ module.exports.getConfig = function () {
     // this must be configured only in case that client-side router is used and nested routes (routes in subfolders)
     // are required to work
     appBaseUrlPath: (isWithoutServer ? "/" : "<preserve-2-path-segments>"),
-    appAssetsRelativeUrlPath: (isWithoutServer ? "" : "public/" + pkg.version + "/"), // URL path (relative to appBaseUrlPath) where built client-side files are deployed
+//not supported by java server    appAssetsRelativeUrlPath: (isWithoutServer ? "" : "public/" + pkg.version + "/"), // URL path (relative to appBaseUrlPath) where built client-side files are deployed
+    appAssetsRelativeUrlPath: (isWithoutServer ? "" : "public/"), // URL path (relative to appBaseUrlPath) where built client-side files are deployed
 
     // additional aliases usable in "import" statements in JS or CSS
     aliases: {

@@ -1,7 +1,10 @@
 import React from "react";
+import createReactClass from 'create-react-class';
 import * as UU5 from "uu5g04";
-import * as Plus4U5 from "plus4u5g01";
-import {Uri} from "uu_appg01_core";
+import "uu5g04-bricks";
+
+import * as Plus4U5 from "uu_plus4u5g01";
+import "uu_plus4u5g01-app";
 
 import Cfg from "./_config.js";
 import DemoLeft from "./demo-left.js";
@@ -12,7 +15,7 @@ import Calls from "calls";
 
 import "./demo-spa-authenticated.less";
 
-const DemoSpaAuthenticated = React.createClass({
+const DemoSpaAuthenticated = createReactClass({
 
   //@@viewOn:mixins
   mixins: [
@@ -90,7 +93,7 @@ const DemoSpaAuthenticated = React.createClass({
             <Plus4U5.App.Button/>
           ]}
           left={<DemoLeft home/>}
-          leftWidth="!xs-320px !sm-256px !md-256px lg-256px"
+          leftWidth="!xs-320px !s-320px !m-256px l-256px xl-256px"
         >
           <UU5.Common.Router
             urlBuilder={Plus4U5.Common.Url}

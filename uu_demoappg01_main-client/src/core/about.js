@@ -1,11 +1,13 @@
 import React from "react";
+import createReactClass from 'create-react-class';
 import * as UU5 from "uu5g04";
-import * as Plus4U5 from "plus4u5g01";
+import "uu5g04-bricks";
+import * as Plus4U5 from "uu_plus4u5g01";
 
 import Cfg from './_config.js';
 import './about.less';
 
-export const About = React.createClass({
+export const About = createReactClass({
 
   //@@viewOn:mixins
   mixins: [

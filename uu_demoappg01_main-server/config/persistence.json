@@ -1,0 +1,15 @@
+{
+  "maxNoa": 10,
+  "uuSubAppDataStore": {
+    "primary": {
+      "type": "uuAppObjectStore",
+      "realization": "MongoDB",
+      "schemaMap": {
+        "book": {
+          "realization": "dao/BookMongoDB",
+          "maxNoi": 1024
+        }
+      }
+    }
+  }
+}

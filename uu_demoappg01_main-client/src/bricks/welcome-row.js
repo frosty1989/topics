@@ -1,12 +1,15 @@
 import React from "react";
+import createReactClass from 'create-react-class';
+import PropTypes from 'prop-types';
 import * as UU5 from "uu5g04";
+import "uu5g04-bricks";
 
 import Cfg from "./_config.js";
 
 import "./welcome-row.less";
 
 
-const DemoRouteDefault = React.createClass({
+const DemoRouteDefault = createReactClass({
 
   //@@viewOn:mixins
   mixins: [
@@ -29,9 +32,9 @@ const DemoRouteDefault = React.createClass({
 
   //@@viewOn:propTypes
   propTypes: {
-    glyphicon: React.PropTypes.string,
-    description: React.PropTypes.string,
-    textPadding: React.PropTypes.string
+    glyphicon: PropTypes.string,
+    description: PropTypes.string,
+    textPadding: PropTypes.string
   },
   //@@viewOff:propTypes
 
@@ -54,21 +57,19 @@ const DemoRouteDefault = React.createClass({
   render() {
     return (
       <UU5.Bricks.Row {...this.getMainPropsToPass()}>
-        <UU5.Bricks.Div>
           <UU5.Bricks.Column
             className={this.getClassName('iconColumn')}
-            colWidth="xs-12 sm-2 md-2 lg-2"
+            colWidth="xs12 s12 m2 l2 xl2"
           >
             <UU5.Bricks.Span className={this.props.glyphicon} />
           </UU5.Bricks.Column>
           <UU5.Bricks.Column
             style={{paddingTop: this.props.textPadding}}
             className={this.getClassName('text')}
-            colWidth="xs-12 sm-10 md-10 lg-10"
+            colWidth="xs12 s12 m10 l10 xl10"
           >
             {this.props.children}
           </UU5.Bricks.Column>
-        </UU5.Bricks.Div>
       </UU5.Bricks.Row>
     );
   }

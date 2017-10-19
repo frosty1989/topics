@@ -3,7 +3,6 @@
  */
 import {Uri} from "uu_appg01_core"
 import {Client} from "uu_appg01"
-import {Session} from "uu_oidcg01"
 import * as UU5 from "uu5g04"
 
 let Calls = {
