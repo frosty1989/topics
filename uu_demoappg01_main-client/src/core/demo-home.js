@@ -1,15 +1,12 @@
 import React from "react";
-import createReactClass from 'create-react-class';
-import PropTypes from 'prop-types';
 import * as UU5 from "uu5g04";
-import "uu5g04-bricks";
 
 import Cfg from "./_config.js";
 import WelcomeRow from "../bricks/welcome-row.js";
 
 import "./demo-home.less";
 
-const DemoHome = createReactClass({
+const DemoHome = React.createClass({
 
   //@@viewOn:mixins
   mixins: [
@@ -56,17 +53,17 @@ const DemoHome = createReactClass({
       <UU5.Bricks.Div {...this.getMainPropsToPass()}>
         <UU5.Bricks.Row className={this.getClassName("welcomeRow")}>
           <UU5.Bricks.Div className={this.getClassName("welcome")}>
-            <UU5.Bricks.Column colWidth="x12 s12 m3 l3 xl3">
+            <UU5.Bricks.Column colWidth="xs-12 sm-3 md-3 lg-3">
               <Plus4U5.Bricks.UserPhoto style={{margin: "0 auto", width: "100px"}}/>
             </UU5.Bricks.Column>
-            <UU5.Bricks.Column colWidth="x12 s12 m9 l9 xl9">
+            <UU5.Bricks.Column colWidth="xs-12 sm-9 md-9 lg-9">
               <UU5.Bricks.Header
-                style={{marginTop: "10px", fontSize: "30px", borderBottom: "0px"}}
+                style={{marginTop: "10px", fontSize: "30px"}}
                 level="2"
                 content={Cfg.LSILABEL_WELCOME_SHORT}
               />
               <UU5.Bricks.Header
-                style={{marginTop: "10px", paddingBottom: "45px", fontSize: "30px", borderBottom: "0px"}}
+                style={{marginTop: "10px", paddingBottom: "45px", fontSize: "30px"}}
                 level="2"
                 content={identity.name}
               />

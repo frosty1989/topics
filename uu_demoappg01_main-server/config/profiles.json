@@ -26,13 +26,17 @@
       "sys/setAppWorkspaceConfig": ["Authorities", "SysOwner"],
       "sys/getAppWorkspaceConfig": ["Authorities", "SysOwner"],
       "sys/clearAppWorkspaceConfig": ["Authorities", "SysOwner"],
+      "uu-app-binarystore/createBinary": ["Alpha"],
+      "uu-app-binarystore/getBinary": ["Alpha"],
+      "uu-app-binarystore/getBinaryData": ["Alpha"],
       "echo": ["SysOwner", "Alpha", "Public"],
       "defaultVuc": ["Alpha"],
       "deleteBook": ["Alpha"],
       "createBook": ["Alpha"],
       "getBook": ["Alpha"],
-      "listBooks": ["Alpha"]
+      "listBooks": ["Alpha"],
+      "createImage": ["Alpha"],
+      "getImage": ["Alpha"]
     }
   }
 }
-

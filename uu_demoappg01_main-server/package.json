@@ -1,20 +1,29 @@
 {
   "name": "uu_demoappg01_main-server",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Server project template for developing UAF application in Node.js",
   "license": "Licence Commercial",
   "dependencies": {
-    "uu_appg01_server": "^0.1.0"
+    "uu_appg01_server": "^0.9.0",
+    "uu_appg01_binarystore-cmd": "^0.9.0"
   },
   "devDependencies": {
-    "uu_appg01_core-npm": "^0.1.0"
+    "uu_appg01_core-npm": "^0.9.0",
+    "uu_appg01_workspace-test": "^0.9.0"
   },
   "scripts": {
     "clean": "uu-appg01-core-npm clean",
     "test": "uu-appg01-core-npm test",
     "build": "uu-appg01-core-npm build",
     "deploy": "uu-appg01-core-npm deploy",
-    "start": "uu-appg01-core-npm start"
+    "start": "uu-appg01-core-npm start",
+    "uuAppBox": "uu-appg01-core-npm uuAppBox",
+    "uuCloudDeploy": "uu-appg01-core-npm uuCloudDeploy",
+    "uuCloudUndeploy": "uu-appg01-core-npm uuCloudUndeploy",
+    "uuCloudShare": "uu-appg01-core-npm uuCloudShare",
+    "uuCloudUnshare": "uu-appg01-core-npm uuCloudUnshare",
+    "uuCloudDeployList": "uu-appg01-core-npm uuCloudDeployList",
+    "uuLogStoreExport": "uu-appg01-core-npm uuLogStoreExport"
   },
   "main": "app.js",
   "files": [

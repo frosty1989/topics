@@ -1,9 +1,5 @@
 import React from "react";
-import createReactClass from 'create-react-class';
-import PropTypes from 'prop-types';
 import * as UU5 from "uu5g04";
-import "uu5g04-bricks";
-
 import LeftLink from "./left-link.js";
 import About from "./about.js";
 import DemoHome from "./demo-home.js";
@@ -12,7 +8,7 @@ import DemoHome from "./demo-home.js";
 import Cfg from "./_config.js";
 import "./demo-left.less";
 
-export const DemoLeft = createReactClass({
+export const DemoLeft = React.createClass({
 
   //@@viewOn:mixins
   mixins: [

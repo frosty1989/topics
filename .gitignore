@@ -18,3 +18,4 @@
 /*-client/src/lib
 /*-server/gems
 **/package-lock.json
+**/oidc-token

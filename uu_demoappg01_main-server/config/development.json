@@ -1,7 +1,7 @@
 {
   "uuSubAppDataStoreMap": {
-    "primary": "mongodb://127.0.0.1:27017/EchoOS",
-    "binary": "mongodb://127.0.0.1:27017/LibraryMainBS"
+    "primary": "mongodb://127.0.0.1:27017/DemoAppMainOS",
+    "binary": "mongodb://127.0.0.1:27017/DemoAppMainBS"
   },
   "privilegedUserMap": {
     "uuSubAppInstanceSysOwner": "14-8811-1"

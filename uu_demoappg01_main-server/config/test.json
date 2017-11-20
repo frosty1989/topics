@@ -1,0 +1,25 @@
+{
+  "privilegedUserMap": {
+    "uuSubAppInstanceSysOwner": "14-2710-1"
+  },
+  "tid": "00000000000000000000000000000000",
+  "asid": "11111111111111111111111111111111",
+  "sysAppWorkspace": {
+    "awid": "22222222222222222222222222222222",
+    "sysOwner": "14-2710-1",
+    "licenseOwner": {
+      "organization": {
+        "name": "Test Organization",
+        "oId": "ORG_OID",
+        "web": "www.test-organization.com"
+      },
+      "userList": [
+        {
+          "uuIdentity": "14-2710-1",
+          "name": "SysOwner"
+        }
+      ]
+    }
+  },
+  "log_level": "INFO"
+}

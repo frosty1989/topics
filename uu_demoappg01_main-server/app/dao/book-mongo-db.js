@@ -3,7 +3,11 @@ const {UuObjectDao} = require("uu_appg01_server").ObjectStore;
 
 class BookMongoDB extends UuObjectDao {
   createSchema() {
-    super.createIndex({awid: 1, code: 1, name: 1}, {unique: true});
+    super.createIndex({
+      awid: 1,
+      code: 1,
+      name: 1
+    }, {unique: true});
   }
 
   create(uuObject) {
@@ -19,7 +23,9 @@ class BookMongoDB extends UuObjectDao {
   }
 
   list(awid, pageInfo = {}, sort = {}) {
-    return super.find({awid}, pageInfo, sort);
+    return super.find({
+      awid
+    }, pageInfo, sort);
   }
 }
 

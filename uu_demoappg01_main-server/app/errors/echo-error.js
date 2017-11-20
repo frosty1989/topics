@@ -1,3 +1,4 @@
+"use strict";
 const DemoAppError = require("./uu-demoapp-error.js");
 
 const UC_NAME = "echo";

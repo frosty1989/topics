@@ -1,3 +1,4 @@
+"use strict";
 const DemoAppError = require("./uu-demoapp-error");
 
 class CreateBookInvalidDtoInError extends DemoAppError {

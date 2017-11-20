@@ -1,15 +1,12 @@
 import React from "react";
-import createReactClass from 'create-react-class';
-import PropTypes from 'prop-types';
 import * as UU5 from "uu5g04";
-import "uu5g04-bricks";
 
 import Cfg from "./_config.js";
 import WelcomeRow from "../bricks/welcome-row.js";
 
 import "./demo-home.less";
 
-const DemoNotAuthenticated = createReactClass({
+const DemoNotAuthenticated = React.createClass({
 
   //@@viewOn:mixins
   mixins: [

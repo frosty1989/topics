@@ -1,3 +1,4 @@
+/* eslint-disable */
 const createBookDtoInType = shape({
   code: code().isRequired(),
   name: uu5String(4000).isRequired(),

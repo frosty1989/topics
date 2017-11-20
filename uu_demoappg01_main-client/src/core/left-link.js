@@ -1,13 +1,10 @@
 import React from "react";
-import createReactClass from 'create-react-class';
 import * as UU5 from "uu5g04";
-import "uu5g04-bricks";
-
 
 import Cfg from './_config.js';
 import './left-link.less';
 
-const LeftLink = createReactClass({
+const LeftLink = React.createClass({
   //@@viewOn:mixins
   mixins: [
     UU5.Common.BaseMixin,

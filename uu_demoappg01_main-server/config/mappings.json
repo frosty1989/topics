@@ -1,7 +1,7 @@
 {
   "{vendor}-{uuApp}-{uuSubApp}": {
     "useCaseMap": {
-      "": {
+      "defaultVuc": {
         "realization": "index.html",
         "httpMethod": "GET",
         "type": "VUC"
@@ -9,7 +9,7 @@
       "home": {
         "realization": "index.html",
         "httpMethod": "GET",
-        "type": "VUC"
+        "type": "UVE"
       },
       "echo": {
         "realization": "controllers/EchoController.echo",
@@ -34,6 +34,16 @@
       "deleteBook": {
         "realization": "controllers/BookController.deleteBook",
         "httpMethod": "POST",
+        "type": "CMD"
+      },
+      "createImage": {
+        "realization": "controllers/ImageController.createImage",
+        "httpMethod": "POST",
+        "type": "CMD"
+      },
+      "getImage": {
+        "realization": "controllers/ImageController.getImage",
+        "httpMethod": "GET",
         "type": "CMD"
       }
 

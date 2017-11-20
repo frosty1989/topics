@@ -18,7 +18,7 @@ class EchoModel {
     let validationResult = this.validator.validate("echoDtoInType", dtoIn);
     let uuAppErrorMap = validationResult.getValidationErrorMap();
 
-    ValidationHelper.processValidationResult(dtoIn, validationResult, uuAppErrorMap, EchoError.EchoInvalidDtoInError);
+    uuAppErrorMap = ValidationHelper.processValidationResult(dtoIn, validationResult, uuAppErrorMap, "uu-demoappg01-main/echo/unsupportedKey", EchoError.EchoInvalidDtoInError);
 
     let dtoOut = {
       serverTime: new Date(),

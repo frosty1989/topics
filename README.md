@@ -4,8 +4,9 @@
 - uuApp Local Deployment
   1. Prepare uuApp
   2. IntelliJ settings
-  3. Install and run client
-  4. Install and run server
+  3. NPM repository configuration
+  4. Install and run client
+  5. Install and run server
 - uuApp Initialization
   1. Initialize uuAppWorkspace
   2. Configure profiles and permissions
@@ -57,8 +58,21 @@ Example:
 For proper configuration of your IDE go to Settings - Languages & Frameworks - JavaScript and select ECMAScript 6 JavaScript version. 
 Also go to Settings - Languages & Frameworks - Node.js and NPM and enable Node.js Core library.
 
+## 3. NPM repository configuration
+**This step is no longer required as _.npmrc_ file with NPM repository configuration has been added to the project root folder.**
 
-## 3. Install and run client
+To install uuAppg01 node modules, NPM repository has to be configured to [https://repo.plus4u.net/repository/npm/](https://repo.plus4u.net/repository/npm/).
+
+NPM repository can be configured in command line:
+   > npm config set registry https://repo.plus4u.net/repository/npm/
+
+Another way to configure NPM repository is to manually edit file .npmrc in you home folder (or create it if does not exist) and add following line:   
+  
+     registry=https://repo.plus4u.net/repository/npm/
+     
+_Note that only one NPM repository can be configured at the same time. Plus4u repository has set proxy to [https://www.npmjs.com](https://www.npmjs.com) so it can install also third party modules._          
+    
+## 4. Install and run client
 
 1. Change project name
     Edit app.json and change values of attributes name, code, description and vendor. For name use (a-z), number (0-9) and chars (_-.). For code use (A-Z), number (0-9) and chars (_-.).
@@ -76,7 +90,7 @@ Also go to Settings - Languages & Frameworks - Node.js and NPM and enable Node.j
 
 4. In case of developing only client side of application you can open Index in browser - [localhost](http://localhost:1234/)
 
-## 4. Install and run server
+## 5. Install and run server
 1. Mongo DB Installation and startup
     - Download Mongo DB for windows from [MongoDB](https://www.mongodb.com/download-center?jmp=nav#community)
     - Execute downloaded executable and choose complete installation.
