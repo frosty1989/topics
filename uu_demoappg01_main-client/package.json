@@ -7,23 +7,24 @@
     "start-dev": "webpack-dev-server --hot --inline --compress --config tools/webpack.config.js",
     "prestart-prod": "cross-env NODE_ENV=production node tools/build-uc.js --skip-webpack",
     "start-prod": "cross-env NODE_ENV=production webpack-dev-server --compress --config tools/webpack.config.js",
-    "dist": "cross-env NODE_ENV=production node tools/build-uc.js"
+    "dist": "cross-env NODE_ENV=production node tools/build-uc.js",
+    "prettify": "prettier --write \"{src,test}/**/*.js\""
   },
   "engines": {
     "node": ">=6.9.2"
   },
   "dependencies": {
-    "bootstrap": "3.3.7",
-    "react": "15.4.2",
-    "react-dom": "15.4.2",
+    "create-react-class": "15.6.0",
+    "prop-types": "15.6.0",
+    "react": "16.0.0",
+    "react-dom": "16.0.0",
     "systemjs": "0.19.47",
     "systemjs-plugin-json": "0.2.1",
-    "uu5g04": "https://cdn.plus4u.net/uu-uu5g04/0.0.0/uu5g04.tgz",
+    "uu5g04": "https://cdn.plus4u.net/uu-uu5g04/1.0.0/uu5g04.tgz",
     "uu_appg01": "https://cdn.plus4u.net/uu-appg01/3.0.0/uu_appg01.tgz",
     "uu_appg01_core": "https://cdn.plus4u.net/uu-appg01-core/3.0.0/uu_appg01_core.tgz",
     "uu_oidcg01": "https://cdn.plus4u.net/uu-oidcg01/3.0.0/uu_oidcg01.tgz",
-    "uu5codekitg01": "https://cdn.plus4u.net/uu-uu5codekitg01/0.0.0/uu5codekitg01.tgz",
-    "plus4u5g01": "https://cdn.plus4u.net/uu-plus4u5g01/0.0.0/plus4u5g01.tgz"
+    "uu_plus4u5g01": "https://cdn.plus4u.net/uu-plus4u5g01/1.0.0/uu_plus4u5g01.tgz"
   },
   "uuBuildSettings": {
     "useCdn": true,
@@ -36,20 +37,30 @@
       },
       "react": {
         "cdnBaseUri": "https://cdn.plus4u.net/libs/react/%version%/",
-        "localBaseUri": "node_modules/react/dist/"
+        "localBaseUri": "node_modules/react/umd/"
       },
       "react-dom": {
-        "cdnBaseUri": "https://cdn.plus4u.net/libs/react/%version%/",
-        "localBaseUri": "node_modules/react-dom/dist/"
+        "cdnBaseUri": "https://cdn.plus4u.net/libs/react-dom/%version%/",
+        "localBaseUri": "node_modules/react-dom/umd/"
       },
-      "bootstrap": {
-        "cdnBaseUri": "https://cdn.plus4u.net/libs/bootstrap/%version%/",
-        "localBaseUri": "node_modules/bootstrap/dist/",
-        "main": "js/bootstrap.js",
-        "mainMinified": "js/bootstrap.min.js"
+      "create-react-class": {
+        "cdnBaseUri": "https://cdn.plus4u.net/libs/create-react-class/%version%/",
+        "localBaseUri": "node_modules/create-react-class/"
+      },
+      "prop-types": {
+        "cdnBaseUri": "https://cdn.plus4u.net/libs/prop-types/%version%/",
+        "localBaseUri": "node_modules/prop-types/"
       },
       "uu5g04": {
         "cdnBaseUri": "https://cdn.plus4u.net/uu-uu5g04/%version%/",
+        "localBaseUri": "node_modules/uu5g04/dist/"
+      },
+      "uu5g04-bricks": {
+        "cdnBaseUri": "https://cdn.plus4u.net/uu-uu5g04/1.0.0/",
+        "localBaseUri": "node_modules/uu5g04/dist/"
+      },
+      "uu5g04-forms": {
+        "cdnBaseUri": "https://cdn.plus4u.net/uu-uu5g04/1.0.0/",
         "localBaseUri": "node_modules/uu5g04/dist/"
       },
       "uu_appg01_core": {
@@ -66,17 +77,22 @@
         "cdnBaseUri": "https://cdn.plus4u.net/uu-oidcg01/%version%/",
         "localBaseUri": "node_modules/uu_oidcg01/dist/"
       },
-      "uu5codekitg01": {
-        "cdnBaseUri": "https://cdn.plus4u.net/uu-uu5codekitg01/%version%/",
-        "localBaseUri": "node_modules/uu5codekitg01/dist/"
-      },
-      "plus4u5g01": {
+      "uu_plus4u5g01": {
         "cdnBaseUri": "https://cdn.plus4u.net/uu-plus4u5g01/%version%/",
-        "localBaseUri": "node_modules/plus4u5g01/dist/"
+        "localBaseUri": "node_modules/uu_plus4u5g01/dist/"
+      },
+      "uu_plus4u5g01-bricks": {
+        "cdnBaseUri": "https://cdn.plus4u.net/uu-plus4u5g01/1.0.0/",
+        "localBaseUri": "node_modules/uu_plus4u5g01/dist/"
+      },
+      "uu_plus4u5g01-app": {
+        "cdnBaseUri": "https://cdn.plus4u.net/uu-plus4u5g01/1.0.0/",
+        "localBaseUri": "node_modules/uu_plus4u5g01/dist/"
       }
     }
   },
   "devDependencies": {
+    "autoprefixer": "7.1.6",
     "babel-core": "6.26.0",
     "babel-loader": "7.1.2",
     "babel-plugin-transform-object-rest-spread": "6.26.0",
@@ -84,12 +100,16 @@
     "babel-preset-react": "6.24.1",
     "circular-dependency-plugin": "4.2.0",
     "copy-webpack-plugin": "4.0.1",
+    "cors": "2.8.4",
     "cross-env": "5.0.5",
     "css-loader": "0.28.7",
     "ejs-loader": "0.3.0",
-    "eslint": "4.6.1",
+    "eslint": "4.9.0",
+    "eslint-config-prettier": "2.6.0",
+    "eslint-loader": "1.9.0",
     "eslint-plugin-json": "1.2.0",
-    "eslint-plugin-react": "7.3.0",
+    "eslint-plugin-prettier": "2.3.1",
+    "eslint-plugin-react": "7.4.0",
     "extract-text-webpack-plugin": "3.0.0",
     "file-loader": "0.11.2",
     "fs-extra": "4.0.1",
@@ -98,6 +118,8 @@
     "less": "2.7.2",
     "less-loader": "4.0.5",
     "memory-fs": "0.4.1",
+    "postcss-loader": "2.0.8",
+    "prettier": "1.8.1",
     "rimraf": "2.6.2",
     "style-loader": "0.18.2",
     "url-loader": "0.5.9",
@@ -120,12 +142,7 @@
       "transform-object-rest-spread"
     ]
   },
-  "name": "uu_demoappg01",
-  "code": "UU.DEMOAPPG01",
-  "namespace": "UU.DemoApp",
-  "version": "0.1.0",
-  "description": "Project template for developing UAF application with uu5.",
-  "vendor": "<your company>",
-  "license": "Licence Commercial",
-  "template": "uu5-javascript-0.1.0"
+  "prettier": {
+    "printWidth": 120
+  }
 }

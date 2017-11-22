@@ -1,3 +1,4 @@
+// uu5-javascript-0.9.0
 var path = require("path");
 var fs = require("fs-extra");
 var CopyWebpackPlugin = require("copy-webpack-plugin");
@@ -6,13 +7,16 @@ var WriteFilePlugin = require("write-file-webpack-plugin");
 var HtmlWebpackPlugin = require("html-webpack-plugin");
 var CircularDependencyPlugin = require("circular-dependency-plugin");
 var webpack = require("webpack");
+var cors = require("cors");
+var eslintFormatter = require("eslint/lib/formatters/stylish");
+var autoprefixer = require("autoprefixer");
 
 var pkg = require("../package.json");
 
 function fillDefaults(opts) {
   if (opts.minify == null) opts.minify = false;
   if (opts.useSourceMaps == null) opts.useSourceMaps = true;
-  if (opts.separateCss == null) opts.separateCss = false;
+  if (opts.separateCss == null) opts.separateCss = opts.outputFile && opts.outputFile.match(/\.css$/);
   if (opts.sourcePath == null) opts.sourcePath = "src";
   if (opts.outputPath == null) opts.outputPath = "dist";
   if (opts.entryPoints == null) opts.entryPoints = [];
@@ -31,16 +35,27 @@ function getWebpackConfig(options) {
   var src = path.relative(path.resolve("."), srcAbsPath).replace(/\\/g, "/");
 
   // CONFIG webpack rules
+  var eslintLoader = {
+    loader: "eslint-loader",
+    options: {
+      formatter: function () {
+        // omit summary "<number> problems" displayed after each file
+        return eslintFormatter.apply(this, arguments).split(/\n\n/).slice(0, -1).join("\n\n").trim();
+      }
+    }
+  };
   var cssRule, lessRule;
+  var cssLoader = { loader: "css-loader", options: { minimize: opts.minify } };
+  var postCssLoader = { loader: "postcss-loader", options: { plugins: [autoprefixer()] } };
   var rules = [{
     oneOf: [ // use only first matched
-      { test: /\.jsx?$/, use: ["babel-loader"], parser: { import: false, system: false } },
-      cssRule = { test: /\.css$/, use: ["style-loader", {loader: "css-loader", options: {minimize: opts.minify} }] },
-      lessRule = { test: /\.less$/, use: ["style-loader", {loader: "css-loader", options: {minimize: opts.minify} }, "less-loader"] },
+      { test: /\.jsx?$/, use: ["babel-loader", eslintLoader], parser: { import: false, system: false } },
+      cssRule = { test: /\.css$/, use: ["style-loader", cssLoader, postCssLoader] },
+      lessRule = { test: /\.less$/, use: ["style-loader", cssLoader, postCssLoader, "less-loader"] },
       { use: [{ loader: "file-loader", options: { name: "[path][name].[ext]" } }] } // if import-ing anything else just copy it
     ]
   }];
-  var extractCss = (opts.separateCss ? new ExtractTextPlugin(((opts.outputFile || "").replace(/\.js$/, "") || "[name]") + ".css") : null);
+  var extractCss = (opts.separateCss ? new ExtractTextPlugin(((opts.outputFile || "").replace(/\.(js|css)$/, "") || "[name]") + ".css") : null);
   if (extractCss) {
     cssRule.use = extractCss.extract({ fallback: cssRule.use.shift(), use: cssRule.use });
     lessRule.use = extractCss.extract({ fallback: lessRule.use.shift(), use: lessRule.use });
@@ -87,10 +102,11 @@ function getWebpackConfig(options) {
     });
 
     // copy unrecognized files as-is ("from" path is relative to webpack's context, i.e. srcAbsPath)
-    plugins.push(new CopyWebpackPlugin([{ from: "**/*" }], { ignore: ["*.js", "*.jsx", "*.css", "*.less", "lib/**"].concat(htmlPostProcessedFiles) }));
+    plugins.push(new CopyWebpackPlugin([{ from: "**/*" }], { ignore: ["*.js", "*.jsx", "*.css", "*.less", "lib/**", "uu5-environment.json"].concat(htmlPostProcessedFiles) }));
     plugins.push(new CopyWebpackPlugin([{ from: "lib/**" }]));
     plugins.push(new CopyWebpackPlugin([{ context: "../node_modules/uu_oidcg01/dist", from: "callbacks/**" }]));
     (!opts.isProductionBuild) && plugins.push(new CopyWebpackPlugin([{ context: "../", from: "test/**" }]));
+    if (opts.isProductionBuild) plugins.push(new CopyWebpackPlugin([{ from: "uu5-environment.json" }]));
   }
 
   // extract CSS & minify
@@ -129,9 +145,6 @@ function getWebpackConfig(options) {
     "__project__": srcAbsPath, // alias for root of src folder (used by all on-the-fly created modules / chunks)
   });
 
-  if (opts.outputFile && opts.entryPoints.length != 1) {
-    throw new Error("When using \"outputFile\", exactly 1 entry point must be specified, but these were configured: " + JSON.stringify(opts.entryPoints));
-  }
   if (opts.entryPoints.length == 0) {
     throw new Error("At least 1 entry point must be specified in the configuration (config/config.js).");
   }
@@ -189,6 +202,15 @@ function getWebpackConfig(options) {
     }
   }
 
+  // configure output verbosity - https://webpack.js.org/configuration/stats/
+  var stats = {
+    modules: false,
+    moduleTrace: false,
+    colors: true,
+    hash: false,
+    version: false
+  };
+
   // webpack development server
   var devServerConfig = {
     contentBase: outputAbsPath,
@@ -197,8 +219,12 @@ function getWebpackConfig(options) {
     https: opts.https,
     open: opts.autoOpenInBrowser,
     disableHostCheck: true, // to be able to use http://localhost.plus4u.net bound to 127.0.0.1
+    stats: stats,
     setup: function (app) {
       app.set("strict routing", true); // strict routing - "/home" is different than "/home/"
+
+      // allow CORS when running via webpack-dev-server
+      app.use(cors({origin: true, credentials: true}));
 
       // make all requests require URL path prefix according to devServerAppBaseUrlPath, i.e. send redirect
       // if they don't have it
@@ -247,7 +273,7 @@ function getWebpackConfig(options) {
           };
         });
         ucList.sort((a, b) => b.relevancy - a.relevancy || b.key.length - a.key.length);
-        
+
         app.use((req, res, next) => {
           if (req.method == "GET" && (!opts.appAssetsRelativeUrlPath || !req.url.startsWith("/" + opts.appAssetsRelativeUrlPath))) {
             // if requesting application/json from a URL which is listed in mappings.json, return 204 No Content
@@ -262,7 +288,7 @@ function getWebpackConfig(options) {
             var targetUc = ucList.filter(uc => uc.matchFn(urlPath))[0];
             if (targetUc) {
               if (expectsApplicationJsonOnly) return res.status(200).send("{}");
-              
+
               // if requesting text/html from a URL which is listed in mappings.json, return corresponding HTML file (or defaultVuc)
               filePath = expectsHtml ? path.resolve(outputAbsPath, targetUc.value.realization || "") : null;
               // console.log(urlPath, filePath, targetUc);
@@ -289,12 +315,29 @@ function getWebpackConfig(options) {
   // convert entry files from entryPoints to webpack configuration (we'll need to generate different entry file
   // for each of these as a workaround because we need to set publicPath during runtime, not during compile time
   // which is not as straightforward with webpack - https://github.com/webpack/webpack/issues/2776)
-  var chunksAsModules = opts.entryPoints.map(it => "./" + path.relative(srcAbsPath, path.resolve(srcAbsPath, it)).replace(/\\/g, "/"));
-  var chunkNames = chunksAsModules.map(it => it.substr(2).replace(/\.js$/, ""));
-  var chunkNamesMap = chunkNames.reduce((r, it, i) => { r[it] = createEntryPointFile(chunksAsModules[i], opts); return r; }, {}); // e.g. "index" => "./.tmp/index.js"
+  var entryList = opts.outputFile ? [{ files: opts.entryPoints }] : opts.entryPoints.map(it => ({ files: [it] })); // if outputFile is given, assume all entries are to be bundled there; otherwise make separate output for each entry
+  var entryMap = entryList.reduce((result, entry) => {
+    let initialFile = "./" + path.relative(srcAbsPath, path.resolve(srcAbsPath, entry.files[0])).replace(/\\/g, "/"); // "./entry/index.js"
+    let name = initialFile.substr(2).replace(/\.(js|css|less)$/, ""); // "entry/index"
+    let isCssOnly = !entry.files.some(filePath => !filePath.match(/\.(css|less|sass)$/));
+
+    // make sure that the target name was not used yet
+    if (result[name]) {
+      let i = 0;
+      while (result[name + "-" + i]) ++i;
+      name += "-" + i;
+    }
+
+    let files;
+    if (!isCssOnly) files = entry.files.map(filePath => createEntryPointFile("./" + path.relative(srcAbsPath, path.resolve(srcAbsPath, filePath)).replace(/\\/g, "/"), opts));
+    else files = [createTemporaryModuleFile(entry.files.map(filePath => `import ${JSON.stringify("./" + path.relative(path.resolve(".tmp"), path.resolve(srcAbsPath, filePath)).replace(/\\/g, "/"))};`).join("\n"))];
+    result[name] = files;
+    return result;
+  }, {});
+
   webpackConfig.push({
     context: srcAbsPath,
-    entry: chunkNamesMap,
+    entry: entryMap,
     output: {
       filename: opts.outputFile || "[name].js",
       chunkFilename: "chunks/[name]-[hash].js",
@@ -315,6 +358,8 @@ function getWebpackConfig(options) {
     },
     plugins: plugins,
     externals: function (context, request, callback) {
+      if (request.match(/\.less$/)) return callback(); // .less files are always considered non-external
+
       var rootModule = request.replace(/\/.*/, ""); // "module/that/is/nested" => "module"
       var conf = externalsConfig[request] || externalsConfig[rootModule];
       if (!conf || conf.baseUri === false) return callback(); // configured as not external
@@ -327,7 +372,8 @@ function getWebpackConfig(options) {
       return callback(null, loadAs);
     },
     devtool: (opts.useSourceMaps ? "source-map" : false),
-    devServer: devServerConfig
+    devServer: devServerConfig,
+    stats
   });
 
   // add generation of uu5-environment.js file
@@ -345,7 +391,7 @@ window.UU5 = { Environment: config };
         filename: "[name].js",
         path: outputAbsPath
       },
-      plugins: 
+      plugins:
         (opts.minify ? [
           new webpack.optimize.UglifyJsPlugin({
             sourceMap: opts.useSourceMaps,
@@ -549,7 +595,7 @@ function createNamespaceAliasFileForJs() {
     tag: function(component) {return this.namespace + '.' + component;},
     css: function(component) {return this.cssPrefix + '-' + component;},
   };`;
-  return createTemporaryModuleFile(nsConfig);
+  return createTemporaryModuleFile(nsConfig, "ns.js");
 }
 function createNamespaceAliasFileForCss() {
   var nsLess = `@cssNs: ${nsCss};`;

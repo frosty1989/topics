@@ -4,13 +4,13 @@
     <meta charset="utf-8" name="viewport"
           content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1">
     <title>uuAppTemplate</title>
-    
+
     <!-- NOTE Following URLs are automatically replaced during build according to the configuration in config/config.js.
       Additionally, <base> element is automatically inserted here so that relative paths are loaded relatively to app base,
       not relatively to current use case in the URL. -->
     <% template = `
+    <link type="text/css" rel="stylesheet" href="loading.css">
     <link type="text/css" rel="stylesheet" href="https://cdn.plus4u.net/libs/materialdesignicons/2.0.46/css/materialdesignicons.css">
-    <link type="text/css" rel="stylesheet" href="~bootstrap/css/bootstrap.min.css">
     <script src="~systemjs/system.js"></script>
     <script src="uu5-environment.js"></script>
 
@@ -20,7 +20,13 @@
   </head>
 
   <body>
-    <div id="UU5RouterSpace"></div>
+    <div id="UU5RouterSpace">
+      <div class="uu-app-loading">
+        <span class="uu-app-loading-dot"></span>
+        <span class="uu-app-loading-dot"></span>
+        <span class="uu-app-loading-dot"></span>
+      </div>
+    </div>
     <script>
       SystemJS.import("./index.js").then(function (Index) {
         Index.render("UU5RouterSpace");

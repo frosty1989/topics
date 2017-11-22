@@ -1,23 +1,21 @@
 import React from "react";
-import * as UU5 from "uu5g04";
+import createReactClass from "create-react-class";
+import UU5 from "uu5g04";
+import "uu5g04-bricks";
+import ns from "ns";
 
-import Cfg from './_config.js';
-import './left-link.less';
+import "./left-link.less";
 
-const LeftLink = React.createClass({
+const LeftLink = createReactClass({
   //@@viewOn:mixins
-  mixins: [
-    UU5.Common.BaseMixin,
-    UU5.Common.ElementaryMixin,
-    UU5.Common.CcrReaderMixin
-  ],
+  mixins: [UU5.Common.BaseMixin, UU5.Common.ElementaryMixin, UU5.Common.CcrReaderMixin],
   //@@viewOff:mixins
 
   //@@viewOn:statics
   statics: {
-    tagName: Cfg.APP + '.LeftLink',
+    tagName: ns.tag("LeftLink"),
     classNames: {
-      main: Cfg.CSS + '-leftlink'
+      main: ns.css("leftlink")
     }
   },
   //@@viewOff:statics
@@ -42,14 +40,9 @@ const LeftLink = React.createClass({
 
   //@@viewOn:render
   render() {
-    return (
-      <UU5.Bricks.Div {...this.getMainPropsToPass()}>
-        {this.props.children}
-      </UU5.Bricks.Div>
-    );
+    return <UU5.Bricks.Div {...this.getMainPropsToPass()}>{this.props.children}</UU5.Bricks.Div>;
   }
   //@@viewOff:render
-
 });
 
 export default LeftLink;

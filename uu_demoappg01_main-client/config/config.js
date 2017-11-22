@@ -1,3 +1,4 @@
+// uu5-javascript-0.9.0
 var fs = require("fs-extra");
 var path = require("path");
 var buildHelpers = require("../tools/helpers.js");
@@ -26,11 +27,17 @@ module.exports.getConfig = function () {
     // build settings
     sourcePath: srcDir,
     outputPath: (isWithoutServer ? "public" : `../${serverDirName}/public`), // file system folder to build files to
-    entryPoints: buildHelpers.getHtmlFilesFromMappingsJson()
-                    .map(html => html.replace(/\.html?$/i, ".js"))
-                    .filter(jsFile => fs.existsSync(path.join(srcDir, jsFile))), // files to build (relative to "src/", resp. sourcePath)
     minify: isProductionBuild,
     useSourceMaps: true,
+    packs: [{
+      // files to build (relative to "src/", resp. sourcePath)
+      entryPoints: buildHelpers.getHtmlFilesFromMappingsJson()
+                      .map(html => html.replace(/\.html?$/i, ".js"))
+                      .filter(jsFile => fs.existsSync(path.join(srcDir, jsFile)))
+    }, {
+      entryPoints: ["loading.less"],
+      outputFile: "loading.css"
+    }],
 
     // routing settings
     // absolute URL path of the application root where app will be deployed on web server (typically "/" for app on a custom domain);

@@ -1,0 +1,79 @@
+.uu-app-loading {
+  text-align: center;
+  padding: .4em;
+}
+
+.uu-app-loading .uu-app-loading-dot {
+  background-color: #707070;
+  display: inline-block;
+  border-radius: 50%;
+  width: 1em;
+  height: 1em;
+  -webkit-animation: uu-app-loading-animated 1.8s infinite ease-in-out;
+  animation: uu-app-loading-animated 1.8s infinite ease-in-out;
+  -ms-transform: scale(0);
+  -webkit-transform: scale(0);
+  transform: scale(0);
+}
+
+.uu-app-loading .uu-app-loading-dot+.uu-app-loading-dot {
+  margin-left: 0.5em;
+}
+
+.uu-app-loading .uu-app-loading-dot:nth-child(2) {
+  -webkit-animation-delay: 0.2s;
+  animation-delay: 0.2s;
+}
+
+.uu-app-loading .uu-app-loading-dot:nth-child(3) {
+  -webkit-animation-delay: 0.4s;
+  animation-delay: 0.4s;
+}
+
+@-webkit-keyframes uu-app-loading-animated {
+  0% {
+    -ms-transform: scale(0);
+    /* IE 9 */
+    -webkit-transform: scale(0);
+    /* Safari */
+    transform: scale(0);
+  }
+  50% {
+    -ms-transform: scale(1, 1);
+    /* IE 9 */
+    -webkit-transform: scale(1, 1);
+    /* Safari */
+    transform: scale(1, 1);
+  }
+  100% {
+    -ms-transform: scale(0, 0);
+    /* IE 9 */
+    -webkit-transform: scale(0, 0);
+    /* Safari */
+    transform: scale(0, 0);
+  }
+}
+
+@keyframes uu-app-loading-animated {
+  0% {
+    -ms-transform: scale(0);
+    /* IE 9 */
+    -webkit-transform: scale(0);
+    /* Safari */
+    transform: scale(0);
+  }
+  50% {
+    -ms-transform: scale(1, 1);
+    /* IE 9 */
+    -webkit-transform: scale(1, 1);
+    /* Safari */
+    transform: scale(1, 1);
+  }
+  100% {
+    -ms-transform: scale(0, 0);
+    /* IE 9 */
+    -webkit-transform: scale(0, 0);
+    /* Safari */
+    transform: scale(0, 0);
+  }
+}

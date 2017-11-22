@@ -1,3 +1,4 @@
+// uu5-javascript-0.9.0
 var webpack = require("webpack");
 var fs = require("fs-extra");
 var path = require("path");
@@ -83,8 +84,10 @@ function doWebpackBuild(config, callback) {
 
     // show standard output of webpack (if there're errors)
     var stats = statsObj.toJson();
-    console.log(statsObj.toString(true));
+    var statsConfig = (Array.isArray(webpackConfig) ? webpackConfig[0] : webpackConfig).stats;
+    console.log(statsObj.toString(statsConfig));
     if (stats.errors.length > 0) {
+      console.error("\n\x1b[31mBuild ended with errors!\x1b[0m");
       return callback ? callback(stats.errors[0]) : stats.errors[0];
     }
 
