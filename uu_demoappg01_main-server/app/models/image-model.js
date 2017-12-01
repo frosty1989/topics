@@ -34,60 +34,30 @@ class ImageModel {
       image["description"] = dtoIn["description"];
     }
 
-    let contentType, filename;
-    [contentType, filename] = this._getContentType(data, dtoIn);
-    if (contentType) {
-      image["contentType"] = contentType;
-    }
-    if (filename) {
-      image["filename"] = filename;
-    }
-
     try {
       return await this.dao.create(image, data);
     } catch (e) {
-      throw new ImageError.CreateImageFailedError(e);
+      throw new ImageError.CreateImageFailedError({uuAppErrorMap}, null, e);
     }
   }
 
   async getImage(awid, dtoIn, response) {
     let validationResult = this.validator.validate("getImageDtoInType", dtoIn);
     let uuAppErrorMap = validationResult.getValidationErrorMap();
-    ValidationHelper.processValidationResult(dtoIn, validationResult, uuAppErrorMap, "uu-demoappg01-main/getImage/unsupportedKey", ImageError.GetImageInvalidDtoInError);
+    ValidationHelper.processValidationResult(dtoIn, validationResult, uuAppErrorMap,
+      "uu-demoappg01-main/getImage/unsupportedKey", ImageError.GetImageInvalidDtoInError);
 
-    if (!dtoIn["contentDisposition"]) {
-      dtoIn["contentDisposition"] = "attachment";
+    let contentDisposition;
+    if (dtoIn["contentDisposition"] === "inline") {
+      contentDisposition = "inline";
+    } else {
+      contentDisposition = "attachment";
     }
 
     try {
-      await this.dao.getDataByCode(awid, dtoIn["code"], response);
+      await this.dao.getDataByCode(awid, dtoIn["code"], response, contentDisposition);
     } catch (e) {
-      throw new ImageError.GetImageFailedError(e);
-    }
-  }
-
-  _getContentType(data, dtoIn) {
-    let contentType,
-      filename;
-    if (dtoIn["contentType"]) {
-      contentType = dtoIn["contentType"];
-    }
-    if (dtoIn["filename"]) {
-      filename = dtoIn["filename"];
-    }
-
-    if (data.read) {
-      return [
-        contentType || (data.mediaType && data.mediaType),
-        filename || (data.name && data.name)
-      ];
-    } else if (typeof data === "string") {
-      return [
-        contentType || "plain/text",
-        filename || null
-      ];
-    } else {
-      return [null, null];
+      throw new ImageError.GetImageFailedError({uuAppErrorMap}, null, e);
     }
   }
 }

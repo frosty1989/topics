@@ -24,9 +24,7 @@ class BookModel {
     try {
       dtoOut = await this.dao.create(dtoIn);
     } catch (e) {
-      throw new BookError.CreateBookFailedError({
-        uuAppErrorMap
-      }, null, e);
+      throw new BookError.CreateBookFailedError({uuAppErrorMap}, null, e);
     }
 
     dtoOut.uuAppErrorMap = uuAppErrorMap;
@@ -43,9 +41,7 @@ class BookModel {
     try {
       dtoOut = await this.dao.get(awid, dtoIn.id);
     } catch (e) {
-      throw new BookError.GetBookFailedError({
-        uuAppErrorMap
-      }, null, e);
+      throw new BookError.GetBookFailedError({uuAppErrorMap}, null, e);
     }
     dtoOut.uuAppErrorMap = uuAppErrorMap;
     return dtoOut;
@@ -73,9 +69,7 @@ class BookModel {
     try {
       dtoOut = await this.dao.list(awid, dtoIn.pageInfo, {[sort]: order});
     } catch (e) {
-      throw new BookError.ListBooksFailedError({
-        uuAppErrorMap
-      }, null, e);
+      throw new BookError.ListBooksFailedError({uuAppErrorMap}, null, e);
     }
 
     dtoOut.uuAppErrorMap = uuAppErrorMap;
@@ -92,9 +86,7 @@ class BookModel {
     try {
       let dtoOut = await this.dao.remove(awid, dtoIn.id);
     } catch (e) {
-      throw new BookError.DeleteBookFailedError({
-        uuAppErrorMap
-      }, null, e);
+      throw new BookError.DeleteBookFailedError({uuAppErrorMap}, null, e);
     }
 
     dtoOut = dtoOut || {};

@@ -3,7 +3,8 @@
   "uuCloudResourcePoolUri": "ues:DEV0116-BT[84723967990075193]:DEV[590ad6f527928911f9d6078d]",
   "uuCloudDeploymentConfig": {
     "uuSubAppDataStoreMap": {
-      "primary": "mongodb://492248e64b06438db5a62e81b4e6dc26__4qw2ttcf43r0qwq30z60cuqtm42mqcvh14onku5:ZxSMiMVe9liolQyP0AnVm@h-h0dv6qe3.rg-o5ojnm69.mongo-o-s.eu-n-1.cloud.plus4u.net:27017,h-zk893n61.rg-o5ojnm69.mongo-o-s.eu-n-1.cloud.plus4u.net:27017/492248e64b06438db5a62e81b4e6dc26?replicaSet=r-da9gbfgy"
+      "primary": "mongodb://492248e64b06438db5a62e81b4e6dc26__4qw2ttcf43r0qwq30z60cuqtm42mqcvh14onku5:ZxSMiMVe9liolQyP0AnVm@h-h0dv6qe3.rg-o5ojnm69.mongo-o-s.eu-n-1.cloud.plus4u.net:27017,h-zk893n61.rg-o5ojnm69.mongo-o-s.eu-n-1.cloud.plus4u.net:27017/492248e64b06438db5a62e81b4e6dc26?replicaSet=r-da9gbfgy",
+      "binary": "mongodb://pdtboyq4pnjopz4l4fooo3puif2gy0qt__kn548cq446kctuhig2nh87h2g5p77v4xaewxt4x:ryTIobgkfhHNQzo00G0tD@h-0u6kpu9s.rg-y6anef3v.mongo-b-s.eu-n-1.cloud.plus4u.net:27017,h-nup6bnl5.rg-y6anef3v.mongo-b-s.eu-n-1.cloud.plus4u.net:27017/pdtboyq4pnjopz4l4fooo3puif2gy0qt?replicaSet=r-5x0p8mh2"
     },
     "privilegedUserMap": {
       "uuSubAppInstanceSysOwner": "19-3985-1"

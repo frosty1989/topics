@@ -104,6 +104,7 @@
     "cross-env": "5.0.5",
     "css-loader": "0.28.7",
     "ejs-loader": "0.3.0",
+    "eslint-plugin-node": "5.1.1",
     "eslint": "4.9.0",
     "eslint-config-prettier": "2.6.0",
     "eslint-loader": "1.9.0",

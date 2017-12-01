@@ -11,11 +11,11 @@ class ImageMongoDB extends UuBinaryDao {
     return super.insertFromStream(uuBinary, data);
   }
 
-  getDataByCode(awid, code, res) {
+  getDataByCode(awid, code, res, contentDisposition) {
     return super.openDownloadStream({
       awid: awid,
       code: code
-    }, res);
+    }, res, contentDisposition);
   }
 }
 
