@@ -11,41 +11,6 @@
         "httpMethod": "GET",
         "type": "UVE"
       },
-      "echo": {
-        "realization": "controllers/EchoController.echo",
-        "httpMethod": ["GET", "POST"],
-        "type": "CMD"
-      },
-      "createBook": {
-        "realization": "controllers/BookController.createBook",
-        "httpMethod": "POST",
-        "type": "CMD"
-      },
-      "getBook": {
-        "realization": "controllers/BookController.getBook",
-        "httpMethod": "GET",
-        "type": "CMD"
-      },
-      "listBooks": {
-        "realization": "controllers/BookController.listBooks",
-        "httpMethod": "GET",
-        "type": "CMD"
-      },
-      "deleteBook": {
-        "realization": "controllers/BookController.deleteBook",
-        "httpMethod": "POST",
-        "type": "CMD"
-      },
-      "createImage": {
-        "realization": "controllers/ImageController.createImage",
-        "httpMethod": "POST",
-        "type": "CMD"
-      },
-      "getImage": {
-        "realization": "controllers/ImageController.getImage",
-        "httpMethod": "GET",
-        "type": "CMD"
-      },
       "init": {
         "realization": "controllers/AppController.init",
         "httpMethod": "POST",

@@ -4,7 +4,7 @@
     "binary": "mongodb://127.0.0.1:27017/JokesNodejsMainBS"
   },
   "privilegedUserMap": {
-    "uuSubAppInstanceSysOwner": "12-4741-1"
+    "uuSubAppInstanceSysOwner": "20-6544-1"
   },
   "tid": "00000000000000000000000000000000",
   "asid": "00000000000000000000000000000001",

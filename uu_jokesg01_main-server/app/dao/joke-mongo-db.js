@@ -1,12 +1,11 @@
 "use strict";
 const {UuObjectDao} = require("uu_appg01_server").ObjectStore;
 
-class BookMongoDB extends UuObjectDao {
+class JokeMongoDB extends UuObjectDao {
   createSchema() {
     super.createIndex({
       awid: 1,
-      code: 1,
-      name: 1
+      _id: 1
     }, {unique: true});
   }
 
@@ -29,4 +28,4 @@ class BookMongoDB extends UuObjectDao {
   }
 }
 
-module.exports = BookMongoDB;
+module.exports = JokeMongoDB;
