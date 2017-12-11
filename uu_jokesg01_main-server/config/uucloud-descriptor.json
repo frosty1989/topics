@@ -1,21 +1,21 @@
 {
   "schemaUri": "ues:SYSTEM:UU.OS/UUAPP-DEPLOY-SCHEMA-V2.1",
   "data": {
-    "code": "UU.DEMONODEAPPG01.MAIN",
+    "code": "UU.JOKESNODEAPPG01.MAIN",
     "name": "Demo application for uuAppServer (generation 01)",
     "version": null,
     "multitenant": true,
     "packs": [
       {
-        "code": "UU.DEMONODEAPPG01.MAIN/SERVER-PACK",
+        "code": "UU.JOKESNODEAPPG01.MAIN/SERVER-PACK",
         "targetNodeSets": [
-          "UU.DEMONODEAPPG01.MAIN/CMD-CONTAINER"
+          "UU.JOKESNODEAPPG01.MAIN/CMD-CONTAINER"
         ]
       }
     ],
     "nodeSets": [
       {
-        "code": "UU.DEMONODEAPPG01.MAIN/CMD-CONTAINER",
+        "code": "UU.JOKESNODEAPPG01.MAIN/CMD-CONTAINER",
         "nodeSize": "G1_S",
         "runtimeStack": "UU.OS9/UC_NODEJS_STACK-V1.0"
       }

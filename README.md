@@ -15,7 +15,7 @@
 
 # Prerequisites
 - Node.js 8.4+
-- MongoDB 3.4+
+- MongoDB 3.4+1
 
 # uuApp Deployment Requirements
 

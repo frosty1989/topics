@@ -36,7 +36,21 @@
       "getBook": ["Alpha"],
       "listBooks": ["Alpha"],
       "createImage": ["Alpha"],
-      "getImage": ["Alpha"]
+      "getImage": ["Alpha"],
+      "init": ["SysOwner"],
+      "addJokeCategory": ["Authorities", "Executives"],
+      "removeJokeCategory": ["Authorities", "Executives"],
+      "createJoke": ["Authorities", "Executives"],
+      "addJokeRating": ["Authorities", "Executives", "Public"],
+      "getJoke": ["Authorities", "Executives", "Public"],
+      "listJokes": ["Authorities", "Executives", "Public"],
+      "listCategoryJokes": ["Authorities", "Executives", "Public"],
+      "updateJoke": ["Authorities", "Executives"],
+      "deleteJoke": ["Authorities", "Executives"],
+      "createCategory": ["Authorities", "Executives"],
+      "listCategories": ["Authorities", "Executives", "Public"],
+      "updateCategory": ["Authorities", "Executives"],
+      "deleteCategory": ["Authorities", "Executives"]
     }
   }
 }

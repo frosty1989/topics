@@ -1,10 +1,10 @@
 {
   "uuSubAppDataStoreMap": {
-    "primary": "mongodb://127.0.0.1:27017/DemoAppMainOS",
-    "binary": "mongodb://127.0.0.1:27017/DemoAppMainBS"
+    "primary": "mongodb://127.0.0.1:27017/JokesNodejsMainOS",
+    "binary": "mongodb://127.0.0.1:27017/JokesNodejsMainBS"
   },
   "privilegedUserMap": {
-    "uuSubAppInstanceSysOwner": "14-8811-1"
+    "uuSubAppInstanceSysOwner": "12-4741-1"
   },
   "tid": "00000000000000000000000000000000",
   "asid": "00000000000000000000000000000001",

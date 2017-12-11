@@ -1,10 +1,10 @@
 {
-  "name": "uu_demoappg01",
-  "code": "UU.DEMOAPPG01",
-  "namespace": "UU.DemoApp",
+  "name": "uu_jokesg01",
+  "code": "UU.JOKESG01",
+  "namespace": "UU.Jokes",
   "version": "0.9.2",
-  "description": "Project template for developing UAF application with uu5.",
-  "vendor": "<your company>",
+  "description": "Referenční aplikace uuJokesg01 v technologii NodeJs nad uuAppg01ServerKit-NodeJs-0.9.x",
+  "vendor": "Unicorn Universe a.s.",
   "license": "Licence Commercial",
   "template": "uu5-javascript-0.1.0"
 }
