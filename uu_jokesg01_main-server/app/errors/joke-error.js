@@ -76,6 +76,25 @@ class DeleteJokeFailedError extends DemoAppError {
     };
   }
 }
+
+class UpdateJokeInvalidDtoInError extends DemoAppError {
+  setParams() {
+    return {
+      code: "updateJoke/invalidDtoIn",
+      message: "DtoIn is not valid."
+    };
+  }
+}
+
+class UpdateJokeFailedError extends DemoAppError {
+  setParams() {
+    return {
+      code: "updateJoke/failed",
+      message: "Update joke failed.",
+      status: 500
+    };
+  }
+}
 module.exports = {
   CreateJokeInvalidDtoInError,
   CreateJokeFailedError,
@@ -84,5 +103,7 @@ module.exports = {
   ListJokesInvalidDtoInError,
   ListJokesFailedError,
   DeleteJokeInvalidDtoInError,
-  DeleteJokeFailedError
+  DeleteJokeFailedError,
+  UpdateJokeFailedError,
+  UpdateJokeInvalidDtoInError
 };

@@ -1,6 +1,6 @@
 "use strict";
 
-const CategoryModel = require("../models/app-model.js");
+const CategoryModel = require("../models/category-model.js");
 
 class CategoryController {
 

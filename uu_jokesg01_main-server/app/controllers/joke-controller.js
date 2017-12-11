@@ -1,11 +1,11 @@
 "use strict";
 
-const JokeModel = require("../models/app-model.js");
+const JokeModel = require("../models/joke-model.js");
 
 class JokeController {
 
   create(ucEnv) {
-    return JokeModel.create(ucEnv.uri.awid, ucEnv.parameters);
+    return JokeModel.createJoke(ucEnv.uri.awid, ucEnv.parameters);
   }
 
   addRating(ucEnv) {

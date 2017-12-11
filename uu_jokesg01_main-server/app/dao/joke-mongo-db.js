@@ -26,6 +26,10 @@ class JokeMongoDB extends UuObjectDao {
       awid
     }, pageInfo, sort);
   }
+
+  update(filter, uuObject) {
+    return super.findOneAndUpdate(filter, uuObject, "NONE");
+  }
 }
 
 module.exports = JokeMongoDB;

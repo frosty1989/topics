@@ -5,6 +5,10 @@
       "type": "uuAppObjectStore",
       "realization": "MongoDB",
       "schemaMap": {
+        "joke": {
+          "realization": "dao/JokeMongoDB",
+          "maxNoi": 1024
+        }
       }
     },
     "binary": {
