@@ -17,12 +17,12 @@
         "type": "CMD"
       },
       "addJokeCategory": {
-        "realization": "controllers/AppController.addJokeCategory",
+        "realization": "controllers/JokeCategoryController.create",
         "httpMethod": "POST",
         "type": "CMD"
       },
       "removeJokeCategory": {
-        "realization": "controllers/AppController.removeJokeCategory",
+        "realization": "controllers/JokeCategoryController.remove",
         "httpMethod": "POST",
         "type": "CMD"
       },
@@ -32,22 +32,22 @@
         "type": "CMD"
       },
       "addJokeRating": {
-        "realization": "controllers/JokeController.addRating",
+        "realization": "controllers/JokeRatingController.addJokeRating",
         "httpMethod": "POST",
         "type": "CMD"
       },
       "getJoke": {
-        "realization": "controllers/JokeController.get",
+        "realization": "controllers/JokeController.getJoke",
         "httpMethod": "GET",
         "type": "CMD"
       },
       "listJokes": {
-        "realization": "controllers/JokeController.list",
+        "realization": "controllers/JokeController.listJokes",
         "httpMethod": "GET",
         "type": "CMD"
       },
       "listCategoryJokes": {
-        "realization": "controllers/JokeController.listByCategory",
+        "realization": "controllers/JokeController.listCategoryJokes",
         "httpMethod": "GET",
         "type": "CMD"
       },

@@ -95,6 +95,25 @@ class UpdateJokeFailedError extends DemoAppError {
     };
   }
 }
+
+class ListCategoryJokesInvalidDtoInError extends DemoAppError {
+  setParams() {
+    return {
+      code: "listCategoryJokes/invalidDtoIn",
+      message: "DtoIn is not valid."
+    };
+  }
+}
+
+class ListCategoryJokesFailedError extends DemoAppError {
+  setParams() {
+    return {
+      code: "listCategoryJokes/failed",
+      message: "List category joke failed.",
+      status: 500
+    };
+  }
+}
 module.exports = {
   CreateJokeInvalidDtoInError,
   CreateJokeFailedError,
@@ -105,5 +124,7 @@ module.exports = {
   DeleteJokeInvalidDtoInError,
   DeleteJokeFailedError,
   UpdateJokeFailedError,
-  UpdateJokeInvalidDtoInError
+  UpdateJokeInvalidDtoInError,
+  ListCategoryJokesInvalidDtoInError,
+  ListCategoryJokesFailedError
 };

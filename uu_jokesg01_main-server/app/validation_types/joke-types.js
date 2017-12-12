@@ -5,26 +5,21 @@ const createJokeDtoInType = shape({
   categoryList: array(code(), 10)
 });
 
-const addJokeRatingDtoInType = shape({
-  id: mongoId().isRequired(),
-  rating: integer(5).isRequired()
-});
-
 const getJokeDtoInType = shape({
-  // id: mongoId().isRequired()
+  id: mongoId().isRequired()
 });
 
 const listJokesDtoInType = shape({
-  // sortBy: oneOf(["name", "rating"]),
-  // order: oneOf(["asc", "desc"]),
-  // pageInfo: shape({
-  //   pageIndex: integer(),
-  //   pageSize: integer()
-  // })
+  sortBy: oneOf(["name", "rating"]),
+  order: oneOf(["asc", "desc"]),
+  pageInfo: shape({
+    pageIndex: integer(),
+    pageSize: integer()
+  })
 });
 
 const listCategoryJokesDtoInType = shape({
-  // categoryId: mongoId().isRquired()
+  categoryId: mongoId().isRquired()
 });
 
 const updateJokeDtoInType = shape({

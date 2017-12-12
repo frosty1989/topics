@@ -13,15 +13,15 @@ class JokeController {
   }
 
   get(ucEnv) {
-    return JokeModel.get(ucEnv.uri.awid, ucEnv.parameters);
+    return JokeModel.getJoke(ucEnv.uri.awid, ucEnv.parameters);
   }
 
   list(ucEnv) {
-    return JokeModel.list(ucEnv.uri.awid, ucEnv.parameters);
+    return JokeModel.listJokes(ucEnv.uri.awid, ucEnv.parameters);
   }
 
-  listByCategory(ucEnv) {
-    return JokeModel.listByCategory(ucEnv.uri.awid, ucEnv.parameters);
+  listCategoryJokes(ucEnv) {
+    return JokeModel.listCategoryJokes(ucEnv.uri.awid, ucEnv.parameters);
   }
 
   update(ucEnv) {

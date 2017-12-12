@@ -66,6 +66,82 @@ class JokeModel {
     dtoOut.uuAppErrorMap = uuAppErrorMap;
     return dtoOut;
   }
+
+  async getJoke(awid, dtoIn) {
+    let validationResult = this.validator.validate("getJokeDtoInType", dtoIn);
+    let uuAppErrorMap = validationResult.getValidationErrorMap();
+
+    ValidationHelper.processValidationResult(dtoIn, validationResult, uuAppErrorMap, "uu-demoappg01-main/getJoke/unsupportedKey", JokeError.GetJokeInvalidDtoInError);
+
+    let dtoOut;
+    try {
+      dtoOut = await this.dao.get(awid, dtoIn.id);
+    } catch (e) {
+      throw new JokeError.GetJokeFailedError({uuAppErrorMap}, null, e);
+    }
+
+    dtoOut = dtoOut || {};
+    dtoOut.uuAppErrorMap = uuAppErrorMap;
+    return dtoOut;
+  }
+
+  async listJokes(awid, dtoIn) {
+    let validationResult = this.validator.validate("listJokesDtoInType", dtoIn);
+    let uuAppErrorMap = validationResult.getValidationErrorMap();
+
+    ValidationHelper.processValidationResult(dtoIn, validationResult, uuAppErrorMap, "uu-demoappg01-main/listJokes/unsupportedKey", JokeError.ListJokesInvalidDtoInError);
+
+    dtoIn.pageInfo = dtoIn.pageInfo || {
+      pageIndex: 0,
+      pageSize: 100
+    };
+    dtoIn.pageInfo.pageSize = dtoIn.pageInfo.pageSize || 100;
+    let sort = (dtoIn.sortBy === "name"
+      ? "name"
+      : "rating");
+    let order = (dtoIn.order === "desc"
+      ? -1
+      : 1);
+
+    let dtoOut;
+    try {
+      dtoOut = await this.dao.list(awid, dtoIn.pageInfo, {[sort]: order});
+    } catch (e) {
+      throw new JokeError.ListJokesFailedError({uuAppErrorMap}, null, e);
+    }
+
+    dtoOut.uuAppErrorMap = uuAppErrorMap;
+    return dtoOut;
+  }
+
+  async listCategoryJokes(awid, dtoIn) {
+    let validationResult = this.validator.validate("listCategoryJokesDtoInType", dtoIn);
+    let uuAppErrorMap = validationResult.getValidationErrorMap();
+
+    ValidationHelper.processValidationResult(dtoIn, validationResult, uuAppErrorMap, "uu-demoappg01-main/listCategoryJokes/unsupportedKey", JokeError.ListCategoryJokesInvalidDtoInError);
+
+    dtoIn.pageInfo = dtoIn.pageInfo || {
+      pageIndex: 0,
+      pageSize: 100
+    };
+    dtoIn.pageInfo.pageSize = dtoIn.pageInfo.pageSize || 100;
+    let sort = (dtoIn.sortBy === "name"
+      ? "name"
+      : "rating");
+    let order = (dtoIn.order === "desc"
+      ? -1
+      : 1);
+
+    let dtoOut;
+    try {
+      dtoOut = await this.dao.list(awid, dtoIn.pageInfo, {[sort]: order});
+    } catch (e) {
+      throw new JokeError.ListCategoryJokesFailedError({uuAppErrorMap}, null, e);
+    }
+
+    dtoOut.uuAppErrorMap = uuAppErrorMap;
+    return dtoOut;
+  }
 }
 
 module.exports = new JokeModel();
