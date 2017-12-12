@@ -8,6 +8,18 @@
         "joke": {
           "realization": "dao/JokeMongoDB",
           "maxNoi": 1024
+        },
+        "jokeRating": {
+          "realization": "dao/JokeRatingMongoDB",
+          "maxNoi": 10000
+        },
+        "category": {
+          "realization": "dao/CategoryMongoDB",
+          "maxNoi": 128
+        },
+        "jokeCategory": {
+          "realization": "dao/JokeCategoryMongoDB",
+          "maxNoi": 5000
         }
       }
     },

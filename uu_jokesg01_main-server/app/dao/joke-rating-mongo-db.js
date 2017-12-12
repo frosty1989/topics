@@ -1,7 +1,7 @@
 "use strict";
 const {UuObjectDao} = require("uu_appg01_server").ObjectStore;
 
-class CategoryMongoDB extends UuObjectDao {
+class JokeRatingMongoDB extends UuObjectDao {
   createSchema() {
     super.createIndex({
       awid: 1,
@@ -11,7 +11,12 @@ class CategoryMongoDB extends UuObjectDao {
     });
     super.createIndex({
       awid: 1,
-      name: 1
+      jokeId: 1
+    });
+    super.createIndex({
+      awid: 1,
+      jokeId: 1,
+      uuIdentity: 1
     }, {
       unique: true
     });
@@ -21,16 +26,12 @@ class CategoryMongoDB extends UuObjectDao {
     return super.insertOne(uuObject);
   }
 
-  get(awid, id) {
-    return super.findOne({ awid, _id: id });
-  }
-
-  getByName(awid, name) {
-    return super.findOne({ awid, name });
-  }
-
-  list(awid, pageInfo = {}) {
-    return super.find({ awid }, pageInfo)
+  getByJokeAndIdentity(awid, jokeId, uuIdentity) {
+    return super.find({
+      awid,
+      jokeId,
+      uuIdentity
+    });
   }
 
   update(uuObject) {
@@ -39,9 +40,12 @@ class CategoryMongoDB extends UuObjectDao {
     return super.findOneAndUpdate(filter, uuObject, "NONE");
   }
 
-  delete(awid, id) {
-    return super.deleteOne({ awid, _id: id });
+  deleteByJoke(awid, jokeId) {
+    return super.deleteMany({
+      awid,
+      jokeId
+    });
   }
 }
 
-module.exports = CategoryMongoDB;
+module.exports = JokeRatingMongoDB;

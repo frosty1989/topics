@@ -14,11 +14,17 @@ class JokeMongoDB extends UuObjectDao {
   }
 
   get(awid, id) {
-    return super.findOne({awid, id});
+    return super.findOne({ awid, _id: id });
   }
 
-  remove(awid, id) {
-    return super.deleteOne({id, awid});
+  update(uuObject) {
+    let filter = { awid: uuObject.awid, _id: uuObject.id };
+
+    return super.findOneAndUpdate(filter, uuObject, "NONE");
+  }
+
+  delete(awid, id) {
+    return super.deleteOne({ awid, _id: id });
   }
 
   list(awid, pageInfo = {}, sort = {}) {
@@ -27,8 +33,13 @@ class JokeMongoDB extends UuObjectDao {
     }, pageInfo, sort);
   }
 
-  update(filter, uuObject) {
-    return super.findOneAndUpdate(filter, uuObject, "NONE");
+  listByIds(awid, jokeIds = []) {
+    return super.find({
+      awid,
+      _id: {
+        $in: jokeIds
+      }
+    })
   }
 }
 
