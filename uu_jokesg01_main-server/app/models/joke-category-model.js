@@ -37,14 +37,13 @@ class JokeCategoryModel {
 
     ValidationHelper.processValidationResult(dtoIn, validationResult, uuAppErrorMap, "uu-demoappg01-main/removeJokeCategory/unsupportedKey", JokeCategoryError.RemoveJokeCategoryInvalidDtoInError);
 
-    dtoIn.awid = awid;
-    let dtoOut;
+    dtoIn.id = dtoIn.jokeId;
+    let dtoOut = {};
     try {
-      dtoOut = await this.dao.delete(dtoIn);
+      await this.dao.deleteByJokeAndCategory(awid, dtoIn.jokeId, dtoIn.categoryList);
     } catch (e) {
-      throw new CategoryError.CreateCategoryFailedError({uuAppErrorMap}, null, e);
+      throw new JokeCategoryError.RemoveJokeCategoryFailedError({uuAppErrorMap}, null, e);
     }
-
     dtoOut.uuAppErrorMap = uuAppErrorMap;
     return dtoOut;
   }

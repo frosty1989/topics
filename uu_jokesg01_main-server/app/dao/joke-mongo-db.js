@@ -33,6 +33,13 @@ class JokeMongoDB extends UuObjectDao {
     }, pageInfo, sort);
   }
 
+  listCategoryJokes(awid, id) {
+    return super.find({
+      awid,
+      id: id
+    })
+  }
+
   listByIds(awid, jokeIds = []) {
     return super.find({
       awid,

@@ -37,12 +37,12 @@
         "type": "CMD"
       },
       "getJoke": {
-        "realization": "controllers/JokeController.getJoke",
+        "realization": "controllers/JokeController.get",
         "httpMethod": "GET",
         "type": "CMD"
       },
       "listJokes": {
-        "realization": "controllers/JokeController.listJokes",
+        "realization": "controllers/JokeController.list",
         "httpMethod": "GET",
         "type": "CMD"
       },

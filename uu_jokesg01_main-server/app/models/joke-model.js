@@ -120,21 +120,9 @@ class JokeModel {
 
     ValidationHelper.processValidationResult(dtoIn, validationResult, uuAppErrorMap, "uu-demoappg01-main/listCategoryJokes/unsupportedKey", JokeError.ListCategoryJokesInvalidDtoInError);
 
-    dtoIn.pageInfo = dtoIn.pageInfo || {
-      pageIndex: 0,
-      pageSize: 100
-    };
-    dtoIn.pageInfo.pageSize = dtoIn.pageInfo.pageSize || 100;
-    let sort = (dtoIn.sortBy === "name"
-      ? "name"
-      : "rating");
-    let order = (dtoIn.order === "desc"
-      ? -1
-      : 1);
-
     let dtoOut;
     try {
-      dtoOut = await this.dao.list(awid, dtoIn.pageInfo, {[sort]: order});
+      dtoOut = await this.dao.listCategoryJokes(awid, dtoIn.id);
     } catch (e) {
       throw new JokeError.ListCategoryJokesFailedError({uuAppErrorMap}, null, e);
     }

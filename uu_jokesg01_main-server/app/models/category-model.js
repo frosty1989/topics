@@ -4,7 +4,7 @@ const {DaoFactory} = require("uu_appg01_server").ObjectStore;
 const {ValidationHelper} = require("uu_appg01_server").Workspace;
 
 const Path = require("path");
-const JokeError = require("../errors/category-error.js");
+const CategoryError = require("../errors/category-error.js");
 
 class CategoryModel {
   constructor() {
