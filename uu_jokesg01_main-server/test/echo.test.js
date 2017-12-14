@@ -1,8 +1,9 @@
 const {Utils} = require("uu_appg01_server");
 const {TestHelper} = require("uu_appg01_workspace-test");
+const {InitTestEnv} = require("./init-test-env");
 
 beforeEach(async (done) => {
-  await TestHelper.setup();
+  InitTestEnv();
   done();
 });
 

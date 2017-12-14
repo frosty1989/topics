@@ -55,6 +55,13 @@ class CategoryModel {
 
     ValidationHelper.processValidationResult(dtoIn, validationResult, uuAppErrorMap, "uu-demoappg01-main/deleteCategory/unsupportedKey", CategoryError.DeleteCategoryInvalidDtoInError);
 
+    //TODO: do it after update to 0.9.3
+    // let validationResult = this.validator.validate("deleteCategoryDtoInType", dtoIn);
+    // let uuAppErrorMap = ValidationHelper.processValidationResult(
+    //   dtoIn, validationResult, {}, "uu-demoappg01-main/deleteCategory/unsupportedKey",
+    //   CategoryError.DeleteCategoryInvalidDtoInError);
+
+
     let dtoOut;
     try {
       dtoOut = await this.dao.remove(awid, dtoIn.id, dtoIn.forceDelete);

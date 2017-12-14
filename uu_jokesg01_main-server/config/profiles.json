@@ -13,7 +13,7 @@
     }
   },
   "*": {
-    "profileList": ["Authorities", "Executives", "Alpha", "SysOwner", "Public"],
+    "profileList": ["Authorities", "Executives", "SysOwner", "Readers", "Public"],
     "useCaseMap": {
       "sys/getAppWorkspace": ["Authorities", "SysOwner"],
       "sys/setProfile": ["Authorities", "SysOwner"],
@@ -26,10 +26,6 @@
       "sys/setAppWorkspaceConfig": ["Authorities", "SysOwner"],
       "sys/getAppWorkspaceConfig": ["Authorities", "SysOwner"],
       "sys/clearAppWorkspaceConfig": ["Authorities", "SysOwner"],
-      "uu-app-binarystore/createBinary": ["Alpha"],
-      "uu-app-binarystore/getBinary": ["Alpha"],
-      "uu-app-binarystore/getBinaryData": ["Alpha"],
-      "defaultVuc": ["Alpha"],
       "init": ["SysOwner"],
       "addJokeCategory": ["Authorities", "Executives", "SysOwner"],
       "removeJokeCategory": ["Authorities", "Executives", "SysOwner"],
