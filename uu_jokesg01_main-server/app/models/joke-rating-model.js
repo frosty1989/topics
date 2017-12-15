@@ -30,58 +30,6 @@ class JokeRatingModel {
     dtoOut.uuAppErrorMap = uuAppErrorMap;
     return dtoOut;
   }
-
-  async getByJokeAndIdentity(awid, dtoIn) {
-    let validationResult = this.validator.validate("getByJokeAndIdentityDtoInType", dtoIn);
-    let uuAppErrorMap = validationResult.getValidationErrorMap();
-
-    ValidationHelper.processValidationResult(dtoIn, validationResult, uuAppErrorMap, "uu-demoappg01-main/getByJokeAndIdentity/unsupportedKey", GetByJokeAndIdentityError.GetByJokeAndIdentityInvalidDtoInError);
-
-    let dtoOut;
-    try {
-      dtoOut = await this.dao.getByJokeAndIdentity(awid, dtoIn.id, dtoIn.uuIdentity);
-    } catch (e) {
-      throw new AddJokeRatingError.AddJokeRatingFailedError({uuAppErrorMap}, null, e);
-    }
-
-    dtoOut.uuAppErrorMap = uuAppErrorMap;
-    return dtoOut;
-  }
-
-  async update(awid, dtoIn) {
-    let validationResult = this.validator.validate("updateCategoryDtoInType", dtoIn);
-    let uuAppErrorMap = validationResult.getValidationErrorMap();
-
-    ValidationHelper.processValidationResult(dtoIn, validationResult, uuAppErrorMap, "uu-demoappg01-main/updateCategory/unsupportedKey", CategoryError.UpdateCategoryInvalidDtoInError);
-
-    dtoIn.awid = awid;
-    let dtoOut;
-    try {
-      dtoOut = await this.dao.update({awid: awid, id: dtoIn.id, rating: dtoIn.rating});
-    } catch (e) {
-      throw new CategoryError.UpdateCategoryFailedError({uuAppErrorMap}, null, e);
-    }
-
-    dtoOut.uuAppErrorMap = uuAppErrorMap;
-    return dtoOut;
-  }
-
-  async deleteByJoke(awid, dtoIn) {
-    let validationResult = this.validator.validate("deleteJokeDtoInType", dtoIn);
-    let uuAppErrorMap = validationResult.getValidationErrorMap();
-
-    ValidationHelper.processValidationResult(dtoIn, validationResult, uuAppErrorMap, "uu-demoappg01-main/deleteJoke/unsupportedKey", JokeError.DeleteJokeInvalidDtoInError);
-
-    let dtoOut;
-    try {
-      dtoOut = await this.dao.deleteByJoke(awid, dtoIn.id);
-    } catch (e) {
-      throw new JokeError.DeleteJokeFailedError({uuAppErrorMap}, null, e);
-    }
-
-    dtoOut.uuAppErrorMap = uuAppErrorMap;
-    return dtoOut;
-  }
 }
 
 module.exports = new JokeRatingModel();

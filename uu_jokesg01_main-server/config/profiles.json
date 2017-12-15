@@ -2,7 +2,7 @@
   "{tid}-{asid}": {
     "profileList": ["UuSubAppInstanceSysOwner"],
     "permissionMap": {
-      "uuSubAppInstanceSysOwner": ["UuSubAppInstanceSysOwner","SysOwner"]
+      "uuSubAppInstanceSysOwner": ["UuSubAppInstanceSysOwner","SysOwner", "Readers"]
     },
     "useCaseMap": {
       "sys/authorization" : ["UuSubAppInstanceSysOwner"],
@@ -13,13 +13,13 @@
     }
   },
   "*": {
-    "profileList": ["Authorities", "Executives", "Alpha", "SysOwner", "Public"],
+    "profileList": ["Authorities", "Executives", "Readers", "SysOwner", "Public"],
     "useCaseMap": {
       "sys/getAppWorkspace": ["Authorities", "SysOwner"],
       "sys/setProfile": ["Authorities", "SysOwner"],
       "sys/getProfile": ["Authorities", "SysOwner"],
       "sys/listProfiles": ["Authorities", "SysOwner"],
-      "sys/createPermission": ["Authorities", "SysOwner"],
+      "sys/createPermission": ["Authorities", "SysOwner", "Readers"],
       "sys/listPermissions": ["Authorities", "SysOwner"],
       "sys/deletePermission": ["Authorities", "SysOwner"],
       "sys/getLicenseOwner": ["Alpha", "Executives", "Authorities", "SysOwner"],
@@ -33,7 +33,7 @@
       "init": ["SysOwner"],
       "addJokeCategory": ["Authorities", "Executives", "SysOwner"],
       "removeJokeCategory": ["Authorities", "Executives", "SysOwner"],
-      "createJoke": ["SysOwner"],
+      "createJoke": ["SysOwner", "Readers"],
       "addJokeRating": ["Authorities", "Executives", "Public"],
       "getJoke": ["Authorities", "Executives", "Public"],
       "listJokes": ["Authorities", "Executives", "Public"],
