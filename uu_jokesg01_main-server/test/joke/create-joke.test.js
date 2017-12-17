@@ -38,7 +38,6 @@ describe("Test createJoke command", () => {
     await TestHelper.login("Readers");
     let invaliddtoIn = {name: "test name", text: "test desc", categoryList: ["e001", "e001"], notvalid: "not valid key"};
     let responce = await TestHelper.executePostCommand("createJoke", invaliddtoIn);
-    let key = 'uu-demoappg01-main/createJoke/unsupportedKey';
     console.log(responce.data.uuAppErrorMap);
     for(let key in responce.data.uuAppErrorMap){
       if (responce.data.uuAppErrorMap.hasOwnProperty(key)) {
@@ -47,14 +46,25 @@ describe("Test createJoke command", () => {
         console.log(key + " -> " + responce.data.uuAppErrorMap[key].paramMap.unsupportedKeyList);
       }
     }
-    expect(responce.data.name).toEqual("test name");
+    expect(typeof(responce.data.uuAppErrorMap)).toBe("object");
+    expect("warning").toEqual(responce.data.uuAppErrorMap['uu-demoappg01-main/createJoke/unsupportedKey'].type);
+    expect("DtoIn contains unsupported keys.").toEqual(responce.data.uuAppErrorMap['uu-demoappg01-main/createJoke/unsupportedKey'].message);
+    let invalidData = responce.data.uuAppErrorMap['uu-demoappg01-main/createJoke/unsupportedKey'].paramMap['unsupportedKeyList'][0];
+    expect(invalidData).toEqual('$.notvalid');
   });
 });
 
 describe("Test createJoke command", () => {
-  test("fails to verify the existence of Object Category", async () => {
+  test("unsuccessful dtoIn validation", async () => {
     await TestHelper.login("Readers");
-    let invaliddtoIn = {name: "test name", text: "test desc", categoryList: ["e001", "e001", "invalid category name"]};
-    let responce = await TestHelper.executePostCommand("createJoke", invaliddtoIn);
+    let invalidDtoIn = {name: 123, text: 123, categoryList: 123};
+    let status;
+    try{
+      await TestHelper.executePostCommand("createJoke", invalidDtoIn);
+    } catch(error) {
+      status = error.response.status;
+      // console.log(error);
+    }
+    expect(status).toBe(400);
   });
 });

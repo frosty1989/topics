@@ -49,7 +49,7 @@ class JokeModel {
     return dtoOut;
   }
 
-  async delete(awid, dtoIn) {
+  async remove(awid, dtoIn) {
     let validationResult = this.validator.validate("deleteJokeDtoInType", dtoIn);
     let uuAppErrorMap = validationResult.getValidationErrorMap();
 

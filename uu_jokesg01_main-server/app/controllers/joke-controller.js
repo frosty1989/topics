@@ -28,8 +28,8 @@ class JokeController {
     return JokeModel.update(ucEnv.uri.awid, ucEnv.parameters);
   }
 
-  delete(ucEnv) {
-    return JokeModel.delete(ucEnv.uri.awid, ucEnv.parameters);
+  remove(ucEnv) {
+    return JokeModel.remove(ucEnv.uri.awid, ucEnv.parameters);
   }
 
 }

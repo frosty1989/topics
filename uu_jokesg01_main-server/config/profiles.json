@@ -32,18 +32,18 @@
       "defaultVuc": ["Alpha"],
       "init": ["SysOwner"],
       "addJokeCategory": ["Authorities", "Executives", "SysOwner"],
-      "removeJokeCategory": ["Authorities", "Executives", "SysOwner"],
-      "createJoke": ["SysOwner", "Readers"],
+      "removeJokeCategory": ["SysOwner", "Readers", "Authorities", "Executives", "SysOwner"],
+      "createJoke": ["SysOwner"],
       "addJokeRating": ["Authorities", "Executives", "Public"],
       "getJoke": ["Authorities", "Executives", "Public"],
-      "listJokes": ["Authorities", "Executives", "Public"],
+      "listJokes": ["SysOwner", "Readers", "Authorities", "Executives", "Public"],
       "listCategoryJokes": ["Authorities", "Executives", "Public"],
-      "updateJoke": ["SysOwner", "Authorities", "Executives"],
+      "updateJoke": ["SysOwner", "Readers", "Authorities", "Executives"],
       "deleteJoke": ["SysOwner", "Authorities", "Executives"],
-      "createCategory": ["Authorities", "Executives"],
-      "listCategories": ["Authorities", "Executives", "Public"],
-      "updateCategory": ["Authorities", "Executives"],
-      "deleteCategory": ["Authorities", "Executives"]
+      "createCategory": ["SysOwner", "Readers", "Authorities", "Executives"],
+      "listCategories": ["SysOwner", "Readers", "Authorities", "Executives", "Public"],
+      "updateCategory": ["SysOwner", "Readers", "Authorities", "Executives"],
+      "deleteCategory": ["SysOwner", "Readers","Authorities", "Executives"]
     }
   }
 }

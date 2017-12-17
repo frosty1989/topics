@@ -33,14 +33,12 @@ class CategoryMongoDB extends UuObjectDao {
     return super.find({ awid }, pageInfo)
   }
 
-  update(uuObject) {
-    let filter = { awid: uuObject.awid, _id: uuObject.id };
-
+  update(filter, uuObject) {
     return super.findOneAndUpdate(filter, uuObject, "NONE");
   }
 
-  delete(awid, id) {
-    return super.deleteOne({ awid, _id: id });
+  remove(awid, id) {
+    return super.deleteOne(awid, id);
   }
 }
 

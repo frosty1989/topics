@@ -17,14 +17,12 @@ class JokeMongoDB extends UuObjectDao {
     return super.findOne({ awid, _id: id });
   }
 
-  update(uuObject) {
-    let filter = { awid: uuObject.awid, _id: uuObject.id };
-
+  update(filter, uuObject) {
     return super.findOneAndUpdate(filter, uuObject, "NONE");
   }
 
-  delete(awid, id) {
-    return super.deleteOne({ awid, _id: id });
+  remove(awid, id) {
+    return super.deleteOne({ awid, id: id });
   }
 
   list(awid, pageInfo = {}, sort = {}) {

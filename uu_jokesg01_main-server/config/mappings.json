@@ -57,7 +57,7 @@
         "type": "CMD"
       },
       "deleteJoke": {
-        "realization": "controllers/JokeController.delete",
+        "realization": "controllers/JokeController.remove",
         "httpMethod": "POST",
         "type": "CMD"
       },

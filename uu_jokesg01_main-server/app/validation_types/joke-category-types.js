@@ -1,4 +1,4 @@
-const addJokeCategoryDtoInType = shape({
+  const addJokeCategoryDtoInType = shape({
   jokeId: mongoId().isRequired(),
   categoryList: array(code(), 10).isRequired()
 });
