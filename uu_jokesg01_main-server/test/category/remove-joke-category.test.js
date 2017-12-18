@@ -17,13 +17,25 @@ afterEach(async (done) => {
 describe("Test deleteCategory command", () => {
   test("test the deleteCategory method", async () => {
     await TestHelper.login("Readers");
-    let dtoInForAddJokeCategory = {jokeId: "5a3683b73b0c7d2270979cdd", categoryList: ["e001", "e003"]};
-    await TestHelper.executePostCommand("addJokeCategory", dtoInForAddJokeCategory);
-    let itemId = dtoInForAddJokeCategory.jokeId;
-    let dtoIn = {id: "5a3683b73b0c7d2270979ccc", categoryList: ["e001", "e003"]};
-    let responce = await TestHelper.executePostCommand("removeJokeCategory", dtoIn);
 
-    expect(responce.data.uuAppErrorMap).toEqual({});
-    expect(typeof(responce.data.uuAppErrorMap)).toBe("object");
+    let newJoke = await TestHelper.executePostCommand("createJoke", {
+      name: "test name",
+      text: "test desc",
+      categoryList: ["e001", "e001"]
+    });
+    let dtoInForAddJokeCategory = { jokeId: newJoke.data.id, categoryList: ["e001", "e003"] };
+    let newJokeCategory = await TestHelper.executePostCommand("addJokeCategory", dtoInForAddJokeCategory);
+    let itemId = newJokeCategory.data.id;
+    let jokeId = newJokeCategory.data.jokeId;
+    let categories = newJokeCategory.data.categoryList;
+    let response = await TestHelper.executePostCommand("removeJokeCategory", {
+      jokeId: jokeId,
+      categoryList: categories
+    });
+    expect(response.status).toEqual(200);
+    expect(response.data).toBeDefined();
+    expect(response.data.uuAppErrorMap).toBeDefined();
+    expect(response.data.uuAppErrorMap).toBeInstanceOf(Object);
+    expect(response.data.uuAppErrorMap).toEqual({});
   });
 });
