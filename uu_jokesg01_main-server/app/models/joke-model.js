@@ -16,8 +16,8 @@ class JokeModel {
   async createJoke(awid, dtoIn) {
     let validationResult = this.validator.validate("createJokeDtoInType", dtoIn);
     let uuAppErrorMap = validationResult.getValidationErrorMap();
-
-    ValidationHelper.processValidationResult(dtoIn, validationResult, uuAppErrorMap, "uu-demoappg01-main/createJoke/unsupportedKey", JokeError.CreateJokeInvalidDtoInError);
+    
+    ValidationHelper.processValidationResult(dtoIn, validationResult, uuAppErrorMap, "uu-jokesg01-main/createJoke/unsupportedKey", JokeError.CreateJokeInvalidDtoInError);
 
     dtoIn.awid = awid;
     let dtoOut;
@@ -35,7 +35,7 @@ class JokeModel {
     let validationResult = this.validator.validate("updateJokeDtoInType", dtoIn);
     let uuAppErrorMap = validationResult.getValidationErrorMap();
 
-    ValidationHelper.processValidationResult(dtoIn, validationResult, uuAppErrorMap, "uu-demoappg01-main/updateJoke/unsupportedKey", JokeError.UpdateJokeInvalidDtoInError);
+    ValidationHelper.processValidationResult(dtoIn, validationResult, uuAppErrorMap, "uu-jokesg01-main/updateJoke/unsupportedKey", JokeError.UpdateJokeInvalidDtoInError);
 
     dtoIn.awid = awid;
     let dtoOut;
@@ -53,7 +53,7 @@ class JokeModel {
     let validationResult = this.validator.validate("deleteJokeDtoInType", dtoIn);
     let uuAppErrorMap = validationResult.getValidationErrorMap();
 
-    ValidationHelper.processValidationResult(dtoIn, validationResult, uuAppErrorMap, "uu-demoappg01-main/deleteJoke/unsupportedKey", JokeError.DeleteJokeInvalidDtoInError);
+    ValidationHelper.processValidationResult(dtoIn, validationResult, uuAppErrorMap, "uu-jokesg01-main/deleteJoke/unsupportedKey", JokeError.DeleteJokeInvalidDtoInError);
 
     let dtoOut;
     try {
@@ -71,7 +71,7 @@ class JokeModel {
     let validationResult = this.validator.validate("getJokeDtoInType", dtoIn);
     let uuAppErrorMap = validationResult.getValidationErrorMap();
 
-    ValidationHelper.processValidationResult(dtoIn, validationResult, uuAppErrorMap, "uu-demoappg01-main/getJoke/unsupportedKey", JokeError.GetJokeInvalidDtoInError);
+    ValidationHelper.processValidationResult(dtoIn, validationResult, uuAppErrorMap, "uu-jokesg01-main/getJoke/unsupportedKey", JokeError.GetJokeInvalidDtoInError);
 
     let dtoOut;
     try {
@@ -89,7 +89,7 @@ class JokeModel {
     let validationResult = this.validator.validate("listJokesDtoInType", dtoIn);
     let uuAppErrorMap = validationResult.getValidationErrorMap();
 
-    ValidationHelper.processValidationResult(dtoIn, validationResult, uuAppErrorMap, "uu-demoappg01-main/listJokes/unsupportedKey", JokeError.ListJokesInvalidDtoInError);
+    ValidationHelper.processValidationResult(dtoIn, validationResult, uuAppErrorMap, "uu-jokesg01-main/listJokes/unsupportedKey", JokeError.ListJokesInvalidDtoInError);
 
     dtoIn.pageInfo = dtoIn.pageInfo || {
       pageIndex: 0,
@@ -118,7 +118,7 @@ class JokeModel {
     let validationResult = this.validator.validate("listCategoryJokesDtoInType", dtoIn);
     let uuAppErrorMap = validationResult.getValidationErrorMap();
 
-    ValidationHelper.processValidationResult(dtoIn, validationResult, uuAppErrorMap, "uu-demoappg01-main/listCategoryJokes/unsupportedKey", JokeError.ListCategoryJokesInvalidDtoInError);
+    ValidationHelper.processValidationResult(dtoIn, validationResult, uuAppErrorMap, "uu-jokesg01-main/listCategoryJokes/unsupportedKey", JokeError.ListCategoryJokesInvalidDtoInError);
 
     let dtoOut;
     try {

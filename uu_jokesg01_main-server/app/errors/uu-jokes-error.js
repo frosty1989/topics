@@ -1,9 +1,9 @@
 "use strict";
 const {UseCaseError} = require("uu_appg01_server").AppServer;
 
-const ERROR_PREFIX = "uu-demoappg01-main/";
+const ERROR_PREFIX = "uu-jokesg01-main/";
 
-class DemoAppError extends UseCaseError {
+class JokesError extends UseCaseError {
   constructor(dtoOut, paramMap = {}, cause = null) {
     if (dtoOut instanceof Error) {
       cause = dtoOut;
@@ -25,4 +25,4 @@ class DemoAppError extends UseCaseError {
   }
 }
 
-module.exports = DemoAppError;
+module.exports = JokesError;

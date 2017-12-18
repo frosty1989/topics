@@ -4,7 +4,9 @@ const {DaoFactory} = require("uu_appg01_server").ObjectStore;
 const {ValidationHelper} = require("uu_appg01_server").Workspace;
 
 const Path = require("path");
-const JokeError = require("../errors/joke-rating-error.js");
+const JokeRatingError = require("../errors/joke-rating-error.js");
+const JokeError = require("../errors/joke-error");
+const JokeModel = require("../models/joke-model");
 
 class JokeRatingModel {
   constructor() {
@@ -13,13 +15,23 @@ class JokeRatingModel {
     this.dao.createSchema();
   }
 
-  async addJokeRating(awid, dtoIn) {
+  async create(awid, dtoIn) {
     let validationResult = this.validator.validate("addJokeRatingDtoInType", dtoIn);
-    let uuAppErrorMap = validationResult.getValidationErrorMap();
+    let uuAppErrorMap = ValidationHelper.processValidationResult(
+      dtoIn,
+      validationResult,
+      {},
+      `uu-jokesg01-main/${JokeRatingError.Code}/unsupportedKey`,
+      JokeRatingError.InvalidDtoInError
+    );
+    let joke = JokeModel.dao.get(awid, dtoIn.id);
 
-    ValidationHelper.processValidationResult(dtoIn, validationResult, uuAppErrorMap, "uu-demoappg01-main/addJokeRating/unsupportedKey", AddJokeRatingError.AddJokeRatingInvalidDtoInError);
+    if (!joke) {
+      throw new JokeError.GetJokeFailedError({uuAppErrorMap}, null, {})
+    }
 
     dtoIn.awid = awid;
+
     let dtoOut;
     try {
       dtoOut = await this.dao.create(dtoIn);

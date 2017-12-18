@@ -1,7 +1,7 @@
 "use strict";
-const DemoAppError = require("./uu-demoapp-error");
+const DemoAppError = require("./uu-jokes-error");
 
-class CreateJokeInvalidDtoInError extends DemoAppError {
+class InvalidDtoInError extends GenericJokeError {
   setParams() {
     return {
       code: "createJoke/invalidDtoIn",
@@ -10,11 +10,11 @@ class CreateJokeInvalidDtoInError extends DemoAppError {
   }
 }
 
-class CreateJokeFailedError extends DemoAppError {
+class DaoCreatedFailed extends DemoAppError {
   setParams() {
     return {
-      code: "createJoke/failed",
-      message: "Create joke failed.",
+      code: "createJoke/jokeDaoCreateFailed",
+      message: "Create joke by joke Dao create failed.",
       status: 500
     };
   }
@@ -115,8 +115,8 @@ class ListCategoryJokesFailedError extends DemoAppError {
   }
 }
 module.exports = {
-  CreateJokeInvalidDtoInError,
-  CreateJokeFailedError,
+  CreateJokeInvalidDtoInError: InvalidDtoInError,
+  CreateJokeFailedError: DaoCreatedFailed,
   GetJokeInvalidDtoInError,
   GetJokeFailedError,
   ListJokesInvalidDtoInError,

@@ -1,5 +1,6 @@
 const {Utils} = require("uu_appg01_server");
 const {TestHelper} = require("uu_appg01_workspace-test");
+const {CreateJoke} = require("../general-test-hepler");
 
 beforeEach(async (done) => {
   await TestHelper.setup();
@@ -18,16 +19,15 @@ afterEach(async (done) => {
 describe("Test createJoke command", () => {
   test("test the createJoke method", async () => {
     await TestHelper.login("Readers");
-    let dtoIn = {name: "test name", text: "test desc", categoryList: ["e001", "e001"]};
-    let dtoInObjectSize = Object.keys(dtoIn).length;
-    let result = await TestHelper.executePostCommand("createJoke", dtoIn);
+    let result = await CreateJoke();
+    console.log(result);
     expect(result.data.name).toEqual("test name");
     expect(result.data.text).toEqual("test desc");
     expect(result.data.categoryList).toEqual(["e001", "e001"]);
     expect(Array.isArray(result.data.categoryList)).toBe(true);
     expect(result.data.awid).toEqual(Utils.Config.get("sysAppWorkspace")["awid"]);
 
-    expect(dtoInObjectSize).toBe(3);
+    expect(Object.keys(result).length).toBe(3);
     console.log(result.data.uuAppErrorMap);
   });
 });
@@ -47,9 +47,9 @@ describe("Test createJoke command", () => {
       }
     }
     expect(typeof(responce.data.uuAppErrorMap)).toBe("object");
-    expect("warning").toEqual(responce.data.uuAppErrorMap['uu-demoappg01-main/createJoke/unsupportedKey'].type);
-    expect("DtoIn contains unsupported keys.").toEqual(responce.data.uuAppErrorMap['uu-demoappg01-main/createJoke/unsupportedKey'].message);
-    let invalidData = responce.data.uuAppErrorMap['uu-demoappg01-main/createJoke/unsupportedKey'].paramMap['unsupportedKeyList'][0];
+    expect("warning").toEqual(responce.data.uuAppErrorMap['uu-jokesg01-main/createJoke/unsupportedKey'].type);
+    expect("DtoIn contains unsupported keys.").toEqual(responce.data.uuAppErrorMap['uu-jokesg01-main/createJoke/unsupportedKey'].message);
+    let invalidData = responce.data.uuAppErrorMap['uu-jokesg01-main/createJoke/unsupportedKey'].paramMap['unsupportedKeyList'][0];
     expect(invalidData).toEqual('$.notvalid');
   });
 });

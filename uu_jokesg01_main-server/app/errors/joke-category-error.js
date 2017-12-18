@@ -1,5 +1,5 @@
 "use strict";
-const DemoAppError = require("./uu-demoapp-error");
+const DemoAppError = require("./uu-jokes-error");
 
 class AddJokeCategoryInvalidDtoInError extends DemoAppError {
   setParams() {

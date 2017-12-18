@@ -64,9 +64,9 @@ describe("Test updateJoke command", () => {
       }
     }
     expect(typeof(responce.data.uuAppErrorMap)).toBe("object");
-    expect("warning").toEqual(responce.data.uuAppErrorMap['uu-demoappg01-main/updateJoke/unsupportedKey'].type);
-    expect("DtoIn contains unsupported keys.").toEqual(responce.data.uuAppErrorMap['uu-demoappg01-main/updateJoke/unsupportedKey'].message);
-    let invalidData = responce.data.uuAppErrorMap['uu-demoappg01-main/updateJoke/unsupportedKey'].paramMap['unsupportedKeyList'][0];
+    expect("warning").toEqual(responce.data.uuAppErrorMap['uu-jokesg01-main/updateJoke/unsupportedKey'].type);
+    expect("DtoIn contains unsupported keys.").toEqual(responce.data.uuAppErrorMap['uu-jokesg01-main/updateJoke/unsupportedKey'].message);
+    let invalidData = responce.data.uuAppErrorMap['uu-jokesg01-main/updateJoke/unsupportedKey'].paramMap['unsupportedKeyList'][0];
     expect(invalidData).toEqual('$.invalid_key');
   });
 });

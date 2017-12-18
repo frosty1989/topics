@@ -64,9 +64,9 @@ describe("Test updateCategory command", () => {
     let responce = await TestHelper.executePostCommand("updateCategory", dtoInInvalid);
 
     expect(typeof(responce.data.uuAppErrorMap)).toBe("object");
-    expect("warning").toEqual(responce.data.uuAppErrorMap['uu-demoappg01-main/updateCategory/unsupportedKey'].type);
-    expect("DtoIn contains unsupported keys.").toEqual(responce.data.uuAppErrorMap['uu-demoappg01-main/updateCategory/unsupportedKey'].message);
-    let invalidData = responce.data.uuAppErrorMap['uu-demoappg01-main/updateCategory/unsupportedKey'].paramMap['unsupportedKeyList'][0];
+    expect("warning").toEqual(responce.data.uuAppErrorMap['uu-jokesg01-main/updateCategory/unsupportedKey'].type);
+    expect("DtoIn contains unsupported keys.").toEqual(responce.data.uuAppErrorMap['uu-jokesg01-main/updateCategory/unsupportedKey'].message);
+    let invalidData = responce.data.uuAppErrorMap['uu-jokesg01-main/updateCategory/unsupportedKey'].paramMap['unsupportedKeyList'][0];
     expect(invalidData).toEqual('$.invalidKey');
   });
 });

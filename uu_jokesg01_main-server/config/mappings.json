@@ -32,7 +32,7 @@
         "type": "CMD"
       },
       "addJokeRating": {
-        "realization": "controllers/JokeRatingController.addJokeRating",
+        "realization": "controllers/JokeRatingController.create",
         "httpMethod": "POST",
         "type": "CMD"
       },
