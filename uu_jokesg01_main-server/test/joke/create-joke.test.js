@@ -37,19 +37,19 @@ describe("Test createJoke command", () => {
   test("creates object store object in uuAppObjectStore", async () => {
     await TestHelper.login("Readers");
     let invaliddtoIn = {name: "test name", text: "test desc", categoryList: ["e001", "e001"], notvalid: "not valid key"};
-    let responce = await TestHelper.executePostCommand("createJoke", invaliddtoIn);
-    console.log(responce.data.uuAppErrorMap);
-    for(let key in responce.data.uuAppErrorMap){
-      if (responce.data.uuAppErrorMap.hasOwnProperty(key)) {
-        console.log(key + " -> " + responce.data.uuAppErrorMap[key].type);
-        console.log(key + " -> " + responce.data.uuAppErrorMap[key].message);
-        console.log(key + " -> " + responce.data.uuAppErrorMap[key].paramMap.unsupportedKeyList);
+    let response = await TestHelper.executePostCommand("createJoke", invaliddtoIn);
+    console.log(response.data.uuAppErrorMap);
+    for(let key in response.data.uuAppErrorMap){
+      if (response.data.uuAppErrorMap.hasOwnProperty(key)) {
+        console.log(key + " -> " + response.data.uuAppErrorMap[key].type);
+        console.log(key + " -> " + response.data.uuAppErrorMap[key].message);
+        console.log(key + " -> " + response.data.uuAppErrorMap[key].paramMap.unsupportedKeyList);
       }
     }
-    expect(typeof(responce.data.uuAppErrorMap)).toBe("object");
-    expect("warning").toEqual(responce.data.uuAppErrorMap['uu-demoappg01-main/createJoke/unsupportedKey'].type);
-    expect("DtoIn contains unsupported keys.").toEqual(responce.data.uuAppErrorMap['uu-demoappg01-main/createJoke/unsupportedKey'].message);
-    let invalidData = responce.data.uuAppErrorMap['uu-demoappg01-main/createJoke/unsupportedKey'].paramMap['unsupportedKeyList'][0];
+    expect(typeof(response.data.uuAppErrorMap)).toBe("object");
+    expect("warning").toEqual(response.data.uuAppErrorMap['uu-demoappg01-main/createJoke/unsupportedKey'].type);
+    expect("DtoIn contains unsupported keys.").toEqual(response.data.uuAppErrorMap['uu-demoappg01-main/createJoke/unsupportedKey'].message);
+    let invalidData = response.data.uuAppErrorMap['uu-demoappg01-main/createJoke/unsupportedKey'].paramMap['unsupportedKeyList'][0];
     expect(invalidData).toEqual('$.notvalid');
   });
 });
