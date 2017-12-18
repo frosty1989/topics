@@ -37,8 +37,6 @@ class JokeCategoryModel {
 
     ValidationHelper.processValidationResult(dtoIn, validationResult, uuAppErrorMap, "uu-demoappg01-main/removeJokeCategory/unsupportedKey", JokeCategoryError.RemoveJokeCategoryInvalidDtoInError);
 
-    console.log(dtoIn);
-
     dtoIn.id = dtoIn.jokeId;
     let dtoOut = {};
     try {
