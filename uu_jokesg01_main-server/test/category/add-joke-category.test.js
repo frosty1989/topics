@@ -20,16 +20,16 @@ describe("Test addJokeCategory command", () => {
     await TestHelper.login("Readers");
     let dtoIn = {jokeId: "5a3683b73b0c7d2270979ccc", categoryList: ["e001", "e003"]};
     let dtoInObjectSize = Object.keys(dtoIn).length;
-    let response = await TestHelper.executePostCommand("addJokeCategory", dtoIn);
+    let responce = await TestHelper.executePostCommand("addJokeCategory", dtoIn);
 
-    expect(response.data.jokeId).toEqual("5a3683b73b0c7d2270979ccc");
-    expect(response.data.categoryList).toEqual(["e001", "e003"]);
-    expect(typeof (response.data.jokeId)).toBe("string");
-    expect(Array.isArray(response.data.categoryList)).toEqual(true);
-    expect(response.data.awid).toEqual(Utils.Config.get("sysAppWorkspace")["awid"]);
+    expect(responce.data.jokeId).toEqual("5a3683b73b0c7d2270979ccc");
+    expect(responce.data.categoryList).toEqual(["e001", "e003"]);
+    expect(typeof (responce.data.jokeId)).toBe("string");
+    expect(Array.isArray(responce.data.categoryList)).toEqual(true);
+    expect(responce.data.awid).toEqual(Utils.Config.get("sysAppWorkspace")["awid"]);
     expect(dtoInObjectSize).toBe(2);
-    expect(response.data.uuAppErrorMap).toEqual({});
-    console.log(response.data.uuAppErrorMap);
+    expect(responce.data.uuAppErrorMap).toEqual({});
+    console.log(responce.data.uuAppErrorMap);
   });
 });
 
@@ -38,13 +38,13 @@ describe("Test addJokeCategory command", () => {
   test("tests for invalid keys", async () => {
     await TestHelper.login("Readers");
     let invalidDtoIn = {jokeId: "5a3683b73b0c7d2270979ccc", categoryList: ["e001", "e003"], notvalid: "not valid key"};
-    let response = await TestHelper.executePostCommand("addJokeCategory", invalidDtoIn);
-    console.log(response.data.uuAppErrorMap);
+    let responce = await TestHelper.executePostCommand("addJokeCategory", invalidDtoIn);
+    console.log(responce.data.uuAppErrorMap);
 
-    expect(typeof(response.data.uuAppErrorMap)).toBe("object");
-    expect("warning").toEqual(response.data.uuAppErrorMap['uu-demoappg01-main/addJokeCategory/unsupportedKey'].type);
-    expect("DtoIn contains unsupported keys.").toEqual(response.data.uuAppErrorMap['uu-demoappg01-main/addJokeCategory/unsupportedKey'].message);
-    let invalidData = response.data.uuAppErrorMap['uu-demoappg01-main/addJokeCategory/unsupportedKey'].paramMap['unsupportedKeyList'][0];
+    expect(typeof(responce.data.uuAppErrorMap)).toBe("object");
+    expect("warning").toEqual(responce.data.uuAppErrorMap['uu-demoappg01-main/addJokeCategory/unsupportedKey'].type);
+    expect("DtoIn contains unsupported keys.").toEqual(responce.data.uuAppErrorMap['uu-demoappg01-main/addJokeCategory/unsupportedKey'].message);
+    let invalidData = responce.data.uuAppErrorMap['uu-demoappg01-main/addJokeCategory/unsupportedKey'].paramMap['unsupportedKeyList'][0];
     expect(invalidData).toEqual('$.notvalid');
   });
 });

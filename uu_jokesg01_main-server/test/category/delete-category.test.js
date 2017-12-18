@@ -45,9 +45,9 @@ describe("Test deleteCategory command", () => {
 //     console.log("zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz")
 //     console.log(responce.data);
 //     expect(typeof(responce.data.uuAppErrorMap)).toBe("object");
-//     expect("warning").toEqual(responce.data.uuAppErrorMap['uu-demoappg01-main/deleteJoke/unsupportedKey'].type);
-//     expect("DtoIn contains unsupported keys.").toEqual(responce.data.uuAppErrorMap['uu-demoappg01-main/deleteJoke/unsupportedKey'].message);
-//     let invalidData = responce.data.uuAppErrorMap['uu-demoappg01-main/deleteJoke/unsupportedKey'].paramMap['unsupportedKeyList'][0];
+//     expect("warning").toEqual(responce.data.uuAppErrorMap['uu-jokesg01-main/deleteJoke/unsupportedKey'].type);
+//     expect("DtoIn contains unsupported keys.").toEqual(responce.data.uuAppErrorMap['uu-jokesg01-main/deleteJoke/unsupportedKey'].message);
+//     let invalidData = responce.data.uuAppErrorMap['uu-jokesg01-main/deleteJoke/unsupportedKey'].paramMap['unsupportedKeyList'][0];
 //     expect(invalidData).toEqual('$.invalidKey');
 //   });
 // });

@@ -4,8 +4,8 @@ const JokeRatingModel = require("../models/joke-rating-model.js");
 
 class JokeRatingController {
 
-  addJokeRating(ucEnv) {
-    return JokeRatingModel.addJokeRating(ucEnv.uri.awid, ucEnv.parameters);
+  create(ucEnv) {
+    return JokeRatingModel.create(ucEnv.uri.awid, ucEnv.parameters);
   }
 
 }

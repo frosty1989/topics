@@ -30,12 +30,12 @@ describe("Test updateJoke command", () => {
 
     let dtoIn = {id: itemId, name: "Update name", text: "Update text"};
 
-    let response = await TestHelper.executePostCommand("updateJoke", dtoIn);
-    console.log(response.data);
+    let responce = await TestHelper.executePostCommand("updateJoke", dtoIn);
+    console.log(responce.data);
 
-    expect(response.data.name).toEqual("Update name");
-    expect(response.data.text).toEqual("Update text");
-    expect(response.data.uuAppErrorMap).toEqual({});
+    expect(responce.data.name).toEqual("Update name");
+    expect(responce.data.text).toEqual("Update text");
+    expect(responce.data.uuAppErrorMap).toEqual({});
   });
 });
 
@@ -54,19 +54,19 @@ describe("Test updateJoke command", () => {
 
     let invalidDtoIn = {id: itemId, name: "Update name", text: "Update text", invalid_key: "invalid key data"};
 
-    let response = await TestHelper.executePostCommand("updateJoke", invalidDtoIn);
+    let responce = await TestHelper.executePostCommand("updateJoke", invalidDtoIn);
 
-    for(let key in response.data.uuAppErrorMap){
-      if (response.data.uuAppErrorMap.hasOwnProperty(key)) {
-        console.log(key + " -> " + response.data.uuAppErrorMap[key].type);
-        console.log(key + " -> " + response.data.uuAppErrorMap[key].message);
-        console.log(key + " -> " + response.data.uuAppErrorMap[key].paramMap.unsupportedKeyList);
+    for(let key in responce.data.uuAppErrorMap){
+      if (responce.data.uuAppErrorMap.hasOwnProperty(key)) {
+        console.log(key + " -> " + responce.data.uuAppErrorMap[key].type);
+        console.log(key + " -> " + responce.data.uuAppErrorMap[key].message);
+        console.log(key + " -> " + responce.data.uuAppErrorMap[key].paramMap.unsupportedKeyList);
       }
     }
-    expect(typeof(response.data.uuAppErrorMap)).toBe("object");
-    expect("warning").toEqual(response.data.uuAppErrorMap['uu-demoappg01-main/updateJoke/unsupportedKey'].type);
-    expect("DtoIn contains unsupported keys.").toEqual(response.data.uuAppErrorMap['uu-demoappg01-main/updateJoke/unsupportedKey'].message);
-    let invalidData = response.data.uuAppErrorMap['uu-demoappg01-main/updateJoke/unsupportedKey'].paramMap['unsupportedKeyList'][0];
+    expect(typeof(responce.data.uuAppErrorMap)).toBe("object");
+    expect("warning").toEqual(responce.data.uuAppErrorMap['uu-demoappg01-main/updateJoke/unsupportedKey'].type);
+    expect("DtoIn contains unsupported keys.").toEqual(responce.data.uuAppErrorMap['uu-demoappg01-main/updateJoke/unsupportedKey'].message);
+    let invalidData = responce.data.uuAppErrorMap['uu-demoappg01-main/updateJoke/unsupportedKey'].paramMap['unsupportedKeyList'][0];
     expect(invalidData).toEqual('$.invalid_key');
   });
 });

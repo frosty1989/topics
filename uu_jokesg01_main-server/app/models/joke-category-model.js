@@ -17,7 +17,7 @@ class JokeCategoryModel {
     let validationResult = this.validator.validate("addJokeCategoryDtoInType", dtoIn);
     let uuAppErrorMap = validationResult.getValidationErrorMap();
 
-    ValidationHelper.processValidationResult(dtoIn, validationResult, uuAppErrorMap, "uu-demoappg01-main/addJokeCategory/unsupportedKey", JokeCategoryError.AddJokeCategoryInvalidDtoInError);
+    ValidationHelper.processValidationResult(dtoIn, validationResult, uuAppErrorMap, "uu-jokesg01-main/addJokeCategory/unsupportedKey", JokeCategoryError.AddJokeCategoryInvalidDtoInError);
 
     dtoIn.awid = awid;
     let dtoOut;
@@ -35,7 +35,7 @@ class JokeCategoryModel {
     let validationResult = this.validator.validate("removeJokeCategoryDtoInType", dtoIn);
     let uuAppErrorMap = validationResult.getValidationErrorMap();
 
-    ValidationHelper.processValidationResult(dtoIn, validationResult, uuAppErrorMap, "uu-demoappg01-main/removeJokeCategory/unsupportedKey", JokeCategoryError.RemoveJokeCategoryInvalidDtoInError);
+    ValidationHelper.processValidationResult(dtoIn, validationResult, uuAppErrorMap, "uu-jokesg01-main/removeJokeCategory/unsupportedKey", JokeCategoryError.RemoveJokeCategoryInvalidDtoInError);
 
     dtoIn.id = dtoIn.jokeId;
     let dtoOut = {};

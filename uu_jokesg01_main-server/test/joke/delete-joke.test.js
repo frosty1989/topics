@@ -25,11 +25,11 @@ describe("Test deleteJoke command", () => {
     let itemId = listResponce.data.itemList[0].id;
     console.log(itemId);
     let dtoIn = {id: itemId};
-    let response = await TestHelper.executePostCommand("deleteJoke", dtoIn);
+    let responce = await TestHelper.executePostCommand("deleteJoke", dtoIn);
     console.log("zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz")
-    console.log(response.data);
-    expect(response.data.uuAppErrorMap).toEqual({});
-    expect(typeof(response.data.uuAppErrorMap)).toBe("object");
+    console.log(responce.data);
+    expect(responce.data.uuAppErrorMap).toEqual({});
+    expect(typeof(responce.data.uuAppErrorMap)).toBe("object");
   });
 });
 
@@ -44,13 +44,13 @@ describe("Test deleteJoke command", () => {
     let dtoInInvalid = {id: itemId, invalidKey: "invalid key value"};
     console.log(itemId);
     // let dtoIn = {id: itemId};
-    let response = await TestHelper.executePostCommand("deleteJoke", dtoInInvalid);
+    let responce = await TestHelper.executePostCommand("deleteJoke", dtoInInvalid);
     console.log("zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz")
-    console.log(response.data);
-    expect(typeof(response.data.uuAppErrorMap)).toBe("object");
-    expect("warning").toEqual(response.data.uuAppErrorMap['uu-demoappg01-main/deleteJoke/unsupportedKey'].type);
-    expect("DtoIn contains unsupported keys.").toEqual(response.data.uuAppErrorMap['uu-demoappg01-main/deleteJoke/unsupportedKey'].message);
-    let invalidData = response.data.uuAppErrorMap['uu-demoappg01-main/deleteJoke/unsupportedKey'].paramMap['unsupportedKeyList'][0];
+    console.log(responce.data);
+    expect(typeof(responce.data.uuAppErrorMap)).toBe("object");
+    expect("warning").toEqual(responce.data.uuAppErrorMap['uu-demoappg01-main/deleteJoke/unsupportedKey'].type);
+    expect("DtoIn contains unsupported keys.").toEqual(responce.data.uuAppErrorMap['uu-demoappg01-main/deleteJoke/unsupportedKey'].message);
+    let invalidData = responce.data.uuAppErrorMap['uu-demoappg01-main/deleteJoke/unsupportedKey'].paramMap['unsupportedKeyList'][0];
     expect(invalidData).toEqual('$.invalidKey');
   });
 });

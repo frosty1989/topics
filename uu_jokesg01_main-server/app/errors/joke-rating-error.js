@@ -1,21 +1,47 @@
 "use strict";
-const DemoAppError = require("./uu-demoapp-error");
+const DemoAppError = require("./uu-jokes-error");
+const Code = "addJokeRating/";
 
-class AddJokeRatingInvalidDtoInError extends DemoAppError {
+class InvalidDtoInError extends DemoAppError {
   setParams() {
     return {
-      code: "addJokeRating/invalidDtoIn",
+      code: `${Code}/invalidDtoIn`,
       message: "DtoIn is not valid."
     };
   }
 }
 
-class AddJokeRatingFailedError extends DemoAppError {
+class DaoGetByJokeAndIdentityFailed extends DemoAppError {
   setParams() {
     return {
-      code: "addJokeRating/failed",
-      message: "Add joke rating is failed.",
-      status: 500
+      code: `${Code}/jokeRatingDaoGetByJokeAndIdentityFailed`,
+      message: "Get jokeRating by Dao getByJokeAndIdentity failed."
     };
   }
 }
+
+class DaoUpdateFailed extends DemoAppError {
+  setParams() {
+    return {
+      code: `${Code}/jokeRatingDaoUpdateFailed`,
+      message: "Update jokeRating by Dao update failed."
+    };
+  }
+}
+
+class DaoCreateFailed extends DemoAppError {
+  setParams() {
+    return {
+      code: `${Code}/jokeRatingDaoCreateFailed`,
+      message: "Create jokeRating by Dao create failed."
+    };
+  }
+}
+
+module.exports = {
+  Code,
+  InvalidDtoInError,
+  DaoGetByJokeAndIdentityFailed,
+  DaoUpdateFailed,
+  DaoCreateFailed
+};
