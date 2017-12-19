@@ -4,7 +4,7 @@ const {DaoFactory} = require("uu_appg01_server").ObjectStore;
 const {ValidationHelper} = require("uu_appg01_server").Workspace;
 
 const Path = require("path");
-const JokeRatingError = require("../errors/joke-rating-error.js");
+const {Errors} = require("../errors/joke-rating-error.js");
 const JokeError = require("../errors/joke-error");
 const JokeModel = require("../models/joke-model");
 
@@ -22,8 +22,9 @@ class JokeRatingModel {
       validationResult,
       {},
       `uu-jokesg01-main/${JokeRatingError.Code}/unsupportedKey`,
-      JokeRatingError.InvalidDtoInError
+      Errors.addJokeRating.InvalidDtoInError
     );
+
     let joke = JokeModel.dao.get(awid, dtoIn.id);
 
     if (!joke) {
