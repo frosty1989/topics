@@ -1,5 +1,6 @@
 const {Utils} = require("uu_appg01_server");
 const {TestHelper} = require("uu_appg01_workspace-test");
+const {CreateCategory} = require("../general-test-hepler");
 
 beforeEach(async (done) => {
   await TestHelper.setup();
@@ -17,16 +18,13 @@ afterEach(async (done) => {
 describe("Test deleteCategory command", () => {
   test("test the deleteCategory method", async () => {
     await TestHelper.login("Readers");
-    // let dtoInForCreateCategory = {name: "test name", desc: "test desc", glyphicon: "http://test.jpg"};
-    // await TestHelper.executePostCommand("createCategory", dtoInForCreateCategory);
-    //
-    // let listResponce = await TestHelper.executeGetCommand("listCategories");
-    //
-    // let itemId = listResponce.data.itemList[0].id;
-    // let dtoIn = {id: itemId, forceDelete: true};
-    // let responce = await TestHelper.executePostCommand("deleteCategory", dtoIn);
-    // expect(responce.data.uuAppErrorMap).toEqual({});
-    // expect(typeof(responce.data.uuAppErrorMap)).toBe("object");
+    await CreateCategory();
+    let listResponce = await TestHelper.executeGetCommand("listCategories");
+    let itemId = listResponce.data.itemList[0].id;
+    let dtoIn = {id: itemId};
+    let responce = await TestHelper.executePostCommand("deleteCategory", dtoIn);
+    expect(responce.data.uuAppErrorMap).toEqual({});
+    expect(typeof(responce.data.uuAppErrorMap)).toBe("object");
   });
 });
 
@@ -42,8 +40,6 @@ describe("Test deleteCategory command", () => {
 //     console.log(itemId);
 //     // let dtoIn = {id: itemId};
 //     let responce = await TestHelper.executePostCommand("deleteJoke", dtoInInvalid);
-//     console.log("zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz")
-//     console.log(responce.data);
 //     expect(typeof(responce.data.uuAppErrorMap)).toBe("object");
 //     expect("warning").toEqual(responce.data.uuAppErrorMap['uu-jokesg01-main/deleteJoke/unsupportedKey'].type);
 //     expect("DtoIn contains unsupported keys.").toEqual(responce.data.uuAppErrorMap['uu-jokesg01-main/deleteJoke/unsupportedKey'].message);

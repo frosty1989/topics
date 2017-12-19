@@ -1,7 +1,7 @@
 "use strict";
 const DemoAppError = require("./uu-jokes-error");
 
-class InvalidDtoInError extends GenericJokeError {
+class CreateJokeInvalidDtoInError extends DemoAppError {
   setParams() {
     return {
       code: "createJoke/invalidDtoIn",
@@ -10,7 +10,7 @@ class InvalidDtoInError extends GenericJokeError {
   }
 }
 
-class DaoCreatedFailed extends DemoAppError {
+class CreateJokeFailedError extends DemoAppError {
   setParams() {
     return {
       code: "createJoke/jokeDaoCreateFailed",
@@ -32,8 +32,8 @@ class GetJokeInvalidDtoInError extends DemoAppError {
 class GetJokeFailedError extends DemoAppError {
   setParams() {
     return {
-      code: "getJoke/failed",
-      message: "Get joke failed.",
+      code: "jokeDaoGetFailed",
+      message: "Get joke by joke Dao get failed.",
       status: 500
     };
   }
@@ -51,8 +51,8 @@ class ListJokesInvalidDtoInError extends DemoAppError {
 class ListJokesFailedError extends DemoAppError {
   setParams() {
     return {
-      code: "listJokes/failed",
-      message: "List joke failed.",
+      code: "listJokes/jokeDaoListFailed",
+      message: "List jokes by joke Dao list failed.",
       status: 500
     };
   }
@@ -70,8 +70,8 @@ class DeleteJokeInvalidDtoInError extends DemoAppError {
 class DeleteJokeFailedError extends DemoAppError {
   setParams() {
     return {
-      code: "deleteJoke/failed",
-      message: "Delete joke failed.",
+      code: "deleteJoke/jokeDaoDeleteFailed",
+      message: "Delete joke by Dao delete failed.",
       status: 500
     };
   }
@@ -89,8 +89,8 @@ class UpdateJokeInvalidDtoInError extends DemoAppError {
 class UpdateJokeFailedError extends DemoAppError {
   setParams() {
     return {
-      code: "updateJoke/failed",
-      message: "Update joke failed.",
+      code: "updateJoke/jokeDaoUpdateFailed",
+      message: "Update joke by joke Dao update failed.",
       status: 500
     };
   }
@@ -108,15 +108,15 @@ class ListCategoryJokesInvalidDtoInError extends DemoAppError {
 class ListCategoryJokesFailedError extends DemoAppError {
   setParams() {
     return {
-      code: "listCategoryJokes/failed",
-      message: "List category joke failed.",
+      code: "listCategoryJokes/jokeCategoryDaoListByCategoryFailed",
+      message: "List jokeCategory by jokeCategory Dao listByCategory failed.",
       status: 500
     };
   }
 }
 module.exports = {
-  CreateJokeInvalidDtoInError: InvalidDtoInError,
-  CreateJokeFailedError: DaoCreatedFailed,
+  CreateJokeInvalidDtoInError,
+  CreateJokeFailedError,
   GetJokeInvalidDtoInError,
   GetJokeFailedError,
   ListJokesInvalidDtoInError,

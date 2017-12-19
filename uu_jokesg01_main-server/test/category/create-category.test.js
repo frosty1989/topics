@@ -1,5 +1,6 @@
 const {Utils} = require("uu_appg01_server");
 const {TestHelper} = require("uu_appg01_workspace-test");
+const {CreateCategory} = require("../general-test-hepler");
 
 beforeEach(async (done) => {
   await TestHelper.setup();
@@ -18,14 +19,7 @@ afterEach(async (done) => {
 describe("Test createCategory command", () => {
   test("test the createCategory method", async () => {
     await TestHelper.login("Readers");
-    let dtoIn = {
-      name: "test name",
-      desc: "test desc",
-      glyphicon: "http://test.jpg"
-    };
-    let dtoInObjectSize = Object.keys(dtoIn).length;
-    let response = await TestHelper.executePostCommand("createCategory", dtoIn);
-
+    let response = await CreateCategory();
     expect(response.data.name).toEqual("test name");
     expect(response.data.desc).toEqual("test desc");
     expect(response.data.glyphicon).toEqual("http://test.jpg");
@@ -33,9 +27,6 @@ describe("Test createCategory command", () => {
     expect(typeof (response.data.desc)).toBe("string");
     expect(typeof (response.data.glyphicon)).toBe("string");
     expect(response.data.awid).toEqual(Utils.Config.get("sysAppWorkspace")["awid"]);
-
-    expect(dtoInObjectSize).toBe(3);
-    console.log(response.data.uuAppErrorMap);
   });
 });
 
@@ -49,12 +40,12 @@ describe("Test createCategory command", () => {
       glyphicon: "http://test.jpg",
       notvalid: "not valid key"
     };
-    let response = await TestHelper.executePostCommand("createCategory", invalidDtoIn);
+    let response = await CreateCategory(invalidDtoIn);
 
     expect(typeof(response.data.uuAppErrorMap)).toBe("object");
-    expect("warning").toEqual(response.data.uuAppErrorMap['uu-demoappg01-main/createCategory/unsupportedKey'].type);
-    expect("DtoIn contains unsupported keys.").toEqual(response.data.uuAppErrorMap['uu-demoappg01-main/createCategory/unsupportedKey'].message);
-    let invalidData = response.data.uuAppErrorMap['uu-demoappg01-main/createCategory/unsupportedKey'].paramMap['unsupportedKeyList'][0];
+    expect("warning").toEqual(response.data.uuAppErrorMap['uu-jokesg01-main/createCategory/unsupportedKey'].type);
+    expect("DtoIn contains unsupported keys.").toEqual(response.data.uuAppErrorMap['uu-jokesg01-main/createCategory/unsupportedKey'].message);
+    let invalidData = response.data.uuAppErrorMap['uu-jokesg01-main/createCategory/unsupportedKey'].paramMap['unsupportedKeyList'][0];
     expect(invalidData).toEqual('$.notvalid');
   });
 });
@@ -65,10 +56,9 @@ describe("Test createCategory command", () => {
     let invalidDtoIn = {name: 123, desc: 123, glyphicon: 123};
     let status;
     try{
-      await TestHelper.executePostCommand("createCategory", invalidDtoIn);
+      await CreateCategory(invalidDtoIn);
     } catch(error) {
       status = error.response.status;
-      // console.log(error);
     }
     expect(status).toBe(400);
   });

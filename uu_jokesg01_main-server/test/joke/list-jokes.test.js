@@ -1,5 +1,6 @@
 const {Utils} = require("uu_appg01_server");
 const {TestHelper} = require("uu_appg01_workspace-test");
+const {CreateJoke} = require("../general-test-hepler");
 
 beforeEach(async (done) => {
   await TestHelper.setup();
@@ -13,23 +14,13 @@ afterEach(async (done) => {
   done();
 });
 
-
 //Happy day scenario
 describe("Test listJokes command", () => {
   test("test the listJoke method", async () => {
     await TestHelper.login("Readers");
-
-    let dtoInForCreateJoke = {
-      name: "test name",
-      text: "test desc",
-      categoryList: ["e001", "e001"]
-    };
-    await TestHelper.executePostCommand("createJoke", dtoInForCreateJoke);
-
+    await CreateJoke();
     let listResponce = await TestHelper.executeGetCommand("listJokes");
     let itemId = listResponce.data.itemList[0].id;
-
-
     let response = await TestHelper.executeGetCommand("listJokes");
     console.log(response.data.itemList[0].name);
     expect(response.data.itemList[0].name).toEqual("test name");
@@ -38,10 +29,8 @@ describe("Test listJokes command", () => {
     expect(response.data.itemList[0].id).toEqual(itemId);
     expect(Array.isArray(response.data.itemList[0].categoryList)).toBe(true);
     expect(response.data.itemList[0].awid).toEqual(Utils.Config.get("sysAppWorkspace")["awid"]);
-
     expect(response.data.uuAppErrorMap).toEqual({});
     expect(response.data.pageInfo.total).toEqual(1);
-    console.log(response.data.uuAppErrorMap);
   });
 });
 
@@ -49,26 +38,18 @@ describe("Test listJokes command", () => {
 describe("Test listJokes command", () => {
   test("tests for unsupported keys", async () => {
     await TestHelper.login("Readers");
-
-    let dtoInForCreateJoke = {
-      name: "test name",
-      text: "test desc",
-      categoryList: ["e001", "e001"]
-    };
-    await TestHelper.executePostCommand("createJoke", dtoInForCreateJoke);
-
+    await CreateJoke();
     let listResponce = await TestHelper.executeGetCommand("listJokes");
     let itemId = listResponce.data.itemList[0].id;
-
     let invalidDtoIn = {
       notvalid: "not valid key"
     };
     let response = await TestHelper.executeGetCommand("listJokes", invalidDtoIn);
 
     expect(typeof(response.data.uuAppErrorMap)).toBe("object");
-    expect("warning").toEqual(response.data.uuAppErrorMap['uu-demoappg01-main/listJokes/unsupportedKey'].type);
-    expect("DtoIn contains unsupported keys.").toEqual(response.data.uuAppErrorMap['uu-demoappg01-main/listJokes/unsupportedKey'].message);
-    let invalidData = response.data.uuAppErrorMap['uu-demoappg01-main/listJokes/unsupportedKey'].paramMap['unsupportedKeyList'][0];
+    expect("warning").toEqual(response.data.uuAppErrorMap['uu-jokesg01-main/listJokes/unsupportedKey'].type);
+    expect("DtoIn contains unsupported keys.").toEqual(response.data.uuAppErrorMap['uu-jokesg01-main/listJokes/unsupportedKey'].message);
+    let invalidData = response.data.uuAppErrorMap['uu-jokesg01-main/listJokes/unsupportedKey'].paramMap['unsupportedKeyList'][0];
     expect(invalidData).toEqual('$.notvalid');
   });
 });

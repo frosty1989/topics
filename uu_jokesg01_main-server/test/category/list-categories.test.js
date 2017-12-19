@@ -1,5 +1,6 @@
 const {Utils} = require("uu_appg01_server");
 const {TestHelper} = require("uu_appg01_workspace-test");
+const {CreateCategory} = require("../general-test-hepler");
 
 beforeEach(async (done) => {
   await TestHelper.setup();
@@ -18,15 +19,8 @@ afterEach(async (done) => {
 describe("Test listCategories command", () => {
   test("test the listCategories method", async () => {
     await TestHelper.login("Readers");
-
-    let dtoInForCreateCategory = {
-      name: "test name",
-      desc: "test desc",
-      glyphicon: "http://test.jpg"
-    };
-    let responseFromCreate = await TestHelper.executePostCommand("createCategory", dtoInForCreateCategory);
+    let responseFromCreate = await CreateCategory();
     let itemId = responseFromCreate.data.id;
-
     let response = await TestHelper.executeGetCommand("listCategories");
     expect(Array.isArray(response.data.itemList)).toBe(true);
     expect(response.data.itemList[0].name).toEqual("test name");
@@ -42,41 +36,33 @@ describe("Test listCategories command", () => {
 describe("Test listCategories command", () => {
   test("creates object store object in uuAppObjectStore", async () => {
     await TestHelper.login("Readers");
-
-    let dtoInForCreateCategory = {
-      name: "test name",
-      desc: "test desc",
-      glyphicon: "http://test.jpg"
-    };
-    let responseFromCreate = await TestHelper.executePostCommand("createCategory", dtoInForCreateCategory);
-    let itemId = responseFromCreate.data.id;
-
+    await CreateCategory();
     let invalidDtoIn = {
         pageIndex: 0,
         pageSize: 100,
         notvalid: "notvalid"
     };
-
     let response = await TestHelper.executeGetCommand("listCategories", invalidDtoIn);
     console.log(response);
-    // expect(typeof(response.data.uuAppErrorMap)).toBe("object");
-    // expect("warning").toEqual(response.data.uuAppErrorMap['uu-demoappg01-main/listCategories/unsupportedKey'].type);
-    // expect("DtoIn contains unsupported keys.").toEqual(response.data.uuAppErrorMap['uu-demoappg01-main/listCategories/unsupportedKey'].message);
-    // let invalidData = response.data.uuAppErrorMap['uu-demoappg01-main/listCategories/unsupportedKey'].paramMap['unsupportedKeyList'][0];
-    // expect(invalidData).toEqual('$.notvalid');
+    expect(typeof(response.data.uuAppErrorMap)).toBe("object");
+    expect("warning").toEqual(response.data.uuAppErrorMap['uu-jokesg01-main/listCategories/unsupportedKey'].type);
+    expect("DtoIn contains unsupported keys.").toEqual(response.data.uuAppErrorMap['uu-jokesg01-main/listCategories/unsupportedKey'].message);
+    expect(response.data.uuAppErrorMap['uu-jokesg01-main/listCategories/unsupportedKey'].paramMap['unsupportedKeyList'][0]).toEqual('$.pageIndex');
+    expect(response.data.uuAppErrorMap['uu-jokesg01-main/listCategories/unsupportedKey'].paramMap['unsupportedKeyList'][1]).toEqual('$.pageSize');
+    expect(response.data.uuAppErrorMap['uu-jokesg01-main/listCategories/unsupportedKey'].paramMap['unsupportedKeyList'][2]).toEqual('$.notvalid');
   });
 });
 
-// describe("Test listCategoryJokes command", () => {
-//   test("unsuccessful dtoIn validation", async () => {
-//     await TestHelper.login("Readers");
-//     let invalidDtoIn = {categoryId: "invalid string id"};
-//     let status;
-//     try{
-//       await TestHelper.executeGetCommand("listCategoryJokes", invalidDtoIn);
-//     } catch(error) {
-//       status = error.response.status;
-//     }
-//     expect(status).toBe(400);
-//   });
-// });
+describe("Test listCategoryJokes command", () => {
+  test("unsuccessful dtoIn validation", async () => {
+    await TestHelper.login("Readers");
+    let invalidDtoIn = {categoryId: "invalid string id"};
+    let status;
+    try{
+      await TestHelper.executeGetCommand("listCategoryJokes", invalidDtoIn);
+    } catch(error) {
+      status = error.response.status;
+    }
+    expect(status).toBe(400);
+  });
+});

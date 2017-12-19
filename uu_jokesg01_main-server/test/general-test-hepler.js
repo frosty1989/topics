@@ -13,6 +13,22 @@ const createJoke = async (dtoIn) => {
   return result;
 };
 
+const createCategory = async (dtoIn) => {
+  await TestHelper.login("Readers");
+  if (!dtoIn) {
+    dtoIn = {
+      name: "test name",
+      desc: "test desc",
+      glyphicon: "http://test.jpg"
+    };
+  }
+
+  let response = await TestHelper.executePostCommand("createCategory", dtoIn);
+
+  return response;
+};
+
 module.exports = {
-  CreateJoke: createJoke
+  CreateJoke: createJoke,
+  CreateCategory: createCategory
 };

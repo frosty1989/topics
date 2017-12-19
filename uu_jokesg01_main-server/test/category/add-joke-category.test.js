@@ -39,12 +39,11 @@ describe("Test addJokeCategory command", () => {
     await TestHelper.login("Readers");
     let invalidDtoIn = {jokeId: "5a3683b73b0c7d2270979ccc", categoryList: ["e001", "e003"], notvalid: "not valid key"};
     let responce = await TestHelper.executePostCommand("addJokeCategory", invalidDtoIn);
-    console.log(responce.data.uuAppErrorMap);
 
     expect(typeof(responce.data.uuAppErrorMap)).toBe("object");
-    expect("warning").toEqual(responce.data.uuAppErrorMap['uu-demoappg01-main/addJokeCategory/unsupportedKey'].type);
-    expect("DtoIn contains unsupported keys.").toEqual(responce.data.uuAppErrorMap['uu-demoappg01-main/addJokeCategory/unsupportedKey'].message);
-    let invalidData = responce.data.uuAppErrorMap['uu-demoappg01-main/addJokeCategory/unsupportedKey'].paramMap['unsupportedKeyList'][0];
+    expect("warning").toEqual(responce.data.uuAppErrorMap['uu-jokesg01-main/addJokeCategory/unsupportedKey'].type);
+    expect("DtoIn contains unsupported keys.").toEqual(responce.data.uuAppErrorMap['uu-jokesg01-main/addJokeCategory/unsupportedKey'].message);
+    let invalidData = responce.data.uuAppErrorMap['uu-jokesg01-main/addJokeCategory/unsupportedKey'].paramMap['unsupportedKeyList'][0];
     expect(invalidData).toEqual('$.notvalid');
   });
 });
@@ -58,7 +57,6 @@ describe("Test addJokeCategory command", () => {
       await TestHelper.executePostCommand("addJokeCategory", invalidDtoIn);
     } catch(error) {
       status = error.response.status;
-      // console.log(error);
     }
     expect(status).toBe(500);
   });
