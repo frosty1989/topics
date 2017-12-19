@@ -14,7 +14,6 @@ let createJoke = {
     }
   },
 
-
   FailedError: class CreateJokeFailedError extends Errors.JokesError {
     setParams() {
       return {
@@ -26,7 +25,6 @@ let createJoke = {
   }
 };
 
-
 let getJoke = {
   InvalidDtoIn: class GetJokeInvalidDtoInError extends Errors.JokesError {
     setParams() {
@@ -35,7 +33,7 @@ let getJoke = {
         message: "DtoIn is not valid."
       };
     }
-},
+    },
 
   FailedError: class GetJokeFailedError extends Errors.JokesError {
     setParams() {
@@ -50,8 +48,7 @@ let getJoke = {
 
 Errors.createJoke = createJoke;
 
-
-class ListJokesInvalidDtoInError extends DemoAppError {
+class ListJokesInvalidDtoInError extends Errors.JokesError {
   setParams() {
     return {
       code: "listJokes/invalidDtoIn",
@@ -60,7 +57,7 @@ class ListJokesInvalidDtoInError extends DemoAppError {
   }
 }
 
-class ListJokesFailedError extends DemoAppError {
+class ListJokesFailedError extends Errors.JokesError {
   setParams() {
     return {
       code: "listJokes/jokeDaoListFailed",
@@ -70,7 +67,7 @@ class ListJokesFailedError extends DemoAppError {
   }
 }
 
-class DeleteJokeInvalidDtoInError extends DemoAppError {
+class DeleteJokeInvalidDtoInError extends Errors.JokesError {
   setParams() {
     return {
       code: "deleteJoke/invalidDtoIn",
@@ -79,7 +76,7 @@ class DeleteJokeInvalidDtoInError extends DemoAppError {
   }
 }
 
-class DeleteJokeFailedError extends DemoAppError {
+class DeleteJokeFailedError extends Errors.JokesError {
   setParams() {
     return {
       code: "deleteJoke/jokeDaoDeleteFailed",
@@ -89,7 +86,7 @@ class DeleteJokeFailedError extends DemoAppError {
   }
 }
 
-class UpdateJokeInvalidDtoInError extends DemoAppError {
+class UpdateJokeInvalidDtoInError extends Errors.JokesError {
   setParams() {
     return {
       code: "updateJoke/invalidDtoIn",
@@ -98,7 +95,7 @@ class UpdateJokeInvalidDtoInError extends DemoAppError {
   }
 }
 
-class UpdateJokeFailedError extends DemoAppError {
+class UpdateJokeFailedError extends Errors.JokesError {
   setParams() {
     return {
       code: "updateJoke/jokeDaoUpdateFailed",
@@ -108,7 +105,7 @@ class UpdateJokeFailedError extends DemoAppError {
   }
 }
 
-class ListCategoryJokesInvalidDtoInError extends DemoAppError {
+class ListCategoryJokesInvalidDtoInError extends Errors.JokesError {
   setParams() {
     return {
       code: "listCategoryJokes/invalidDtoIn",
@@ -117,7 +114,7 @@ class ListCategoryJokesInvalidDtoInError extends DemoAppError {
   }
 }
 
-class ListCategoryJokesFailedError extends DemoAppError {
+class ListCategoryJokesFailedError extends Errors.JokesError {
   setParams() {
     return {
       code: "listCategoryJokes/jokeCategoryDaoListByCategoryFailed",

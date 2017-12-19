@@ -1,15 +1,21 @@
-const {Utils} = require("uu_appg01_server");
-const {TestHelper} = require("uu_appg01_workspace-test");
-const {CreateJoke} = require("../general-test-hepler");
+const {
+  Utils
+} = require("uu_appg01_server");
+const {
+  TestHelper
+} = require("uu_appg01_workspace-test");
+const {
+  CreateJoke
+} = require("../general-test-hepler");
 
-beforeEach(async (done) => {
+beforeEach(async(done) => {
   await TestHelper.setup();
   await TestHelper.initAppWorkspace();
   await TestHelper.createPermission("Readers");
   done();
 });
 
-afterEach(async (done) => {
+afterEach(async(done) => {
   await TestHelper.teardown();
   done();
 });
@@ -17,7 +23,7 @@ afterEach(async (done) => {
 
 //Happy day scenario
 describe("Test createJoke command", () => {
-  test("test the createJoke method", async () => {
+  test("test the createJoke method", async() => {
     await TestHelper.login("Readers");
     let result = await CreateJoke();
     expect(result.data.name).toEqual("test name");
@@ -27,18 +33,22 @@ describe("Test createJoke command", () => {
     expect(result.data.awid).toEqual(Utils.Config.get("sysAppWorkspace")["awid"]);
 
     expect(Object.keys(result).length).toBe(3);
-    console.log(result.data.uuAppErrorMap);
   });
 });
 
 //Alternative scenarios
 describe("Test createJoke command", () => {
-  test("creates object store object in uuAppObjectStore", async () => {
+  test("creates object store object in uuAppObjectStore", async() => {
     await TestHelper.login("Readers");
-    let invaliddtoIn = {name: "test name", text: "test desc", categoryList: ["e001", "e001"], notvalid: "not valid key"};
+    let invaliddtoIn = {
+      name: "test name",
+      text: "test desc",
+      categoryList: ["e001", "e001"],
+      notvalid: "not valid key"
+    };
     let responce = await TestHelper.executePostCommand("createJoke", invaliddtoIn);
 
-    expect(typeof(responce.data.uuAppErrorMap)).toBe("object");
+    expect(typeof (responce.data.uuAppErrorMap)).toBe("object");
     expect("warning").toEqual(responce.data.uuAppErrorMap['uu-jokesg01-main/createJoke/unsupportedKey'].type);
     expect("DtoIn contains unsupported keys.").toEqual(responce.data.uuAppErrorMap['uu-jokesg01-main/createJoke/unsupportedKey'].message);
     let invalidData = responce.data.uuAppErrorMap['uu-jokesg01-main/createJoke/unsupportedKey'].paramMap['unsupportedKeyList'][0];
@@ -47,13 +57,17 @@ describe("Test createJoke command", () => {
 });
 
 describe("Test createJoke command", () => {
-  test("unsuccessful dtoIn validation", async () => {
+  test("unsuccessful dtoIn validation", async() => {
     await TestHelper.login("Readers");
-    let invalidDtoIn = {name: 123, text: 123, categoryList: 123};
+    let invalidDtoIn = {
+      name: 123,
+      text: 123,
+      categoryList: 123
+    };
     let status;
-    try{
+    try {
       await TestHelper.executePostCommand("createJoke", invalidDtoIn);
-    } catch(error) {
+    } catch (error) {
       status = error.response.status;
     }
     expect(status).toBe(400);
