@@ -23,7 +23,7 @@ class JokeModel {
       validationResult,
       uuAppErrorMap,
       `uu-jokesg01-main/${CreateJokeCode}/unsupportedKey`,
-      Errors.createJoke.CreateJokeInvalidDtoInError
+      Errors.createJoke.InvalidDtoIn
     );
 
     dtoIn.awid = awid;
@@ -31,7 +31,7 @@ class JokeModel {
     try {
       dtoOut = await this.dao.create(dtoIn);
     } catch (e) {
-      throw new JokeError.CreateJokeFailedError({uuAppErrorMap}, null, e);
+      throw new Errors.createJoke.FailedError({uuAppErrorMap}, null, e);
     }
 
     dtoOut.uuAppErrorMap = uuAppErrorMap;
