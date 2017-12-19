@@ -21,6 +21,7 @@ let Errors = {
       let errParams = this.setParams();
       this.message = errParams.message;
       this.code = ERROR_PREFIX + errParams.code;
+      this.methodCode = "";
       errParams.status && (this.status = errParams.status);
     }
   }

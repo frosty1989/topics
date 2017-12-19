@@ -5,6 +5,7 @@ const CreateJokeCode = "createJoke";
 const GetJoke = "getJoke";
 
 let createJoke = {
+  Code: "getJoke",
   InvalidDtoIn: class CreateJokeInvalidDtoInError extends Errors.JokesError {
     setParams() {
       return {
