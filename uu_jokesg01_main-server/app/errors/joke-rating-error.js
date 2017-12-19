@@ -16,7 +16,8 @@ let addJokeRating = {
 Errors.addJokeRating = addJokeRating;
 
 module.exports = {
-  Errors
+  Errors,
+  AddJokeRatingCode
 };
 
 // ns.addJokeRating.JokeDaoGetFailed = class DaoGetByJokeAndIdentityFailed extends Errors {
