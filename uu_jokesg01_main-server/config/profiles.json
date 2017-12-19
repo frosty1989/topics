@@ -33,7 +33,7 @@
       "init": ["SysOwner"],
       "addJokeCategory": ["Authorities", "Executives", "SysOwner"],
       "removeJokeCategory": ["SysOwner", "Readers", "Authorities", "Executives", "SysOwner"],
-      "createJoke": ["SysOwner"],
+      "createJoke": ["Readers"],
       "addJokeRating": ["Authorities", "Executives", "Public"],
       "getJoke": ["Authorities", "Executives", "Public"],
       "listJokes": ["SysOwner", "Readers", "Authorities", "Executives", "Public"],

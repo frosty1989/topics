@@ -1,7 +1,7 @@
 "use strict";
-const DemoAppError = require("./uu-jokes-error");
+const Errors = require("./uu-jokes-error");
 
-class CreateCategoryInvalidDtoInError extends DemoAppError {
+class CreateCategoryInvalidDtoInError extends Errors.JokesError {
   setParams() {
     return {
       code: "createCategory/invalidDtoIn",
@@ -10,7 +10,7 @@ class CreateCategoryInvalidDtoInError extends DemoAppError {
   }
 }
 
-class CreateCategoryFailedError extends DemoAppError {
+class CreateCategoryFailedError extends Errors.JokesError {
   setParams() {
     return {
       code: "createCategory/failed",
@@ -20,7 +20,7 @@ class CreateCategoryFailedError extends DemoAppError {
   }
 }
 
-class ListCategoriesInvalidDtoInError extends DemoAppError {
+class ListCategoriesInvalidDtoInError extends Errors.JokesError {
   setParams() {
     return {
       code: "listCategories/invalidDtoIn",
@@ -29,7 +29,7 @@ class ListCategoriesInvalidDtoInError extends DemoAppError {
   }
 }
 
-class ListCategoriesFailedError extends DemoAppError {
+class ListCategoriesFailedError extends Errors.JokesError {
   setParams() {
     return {
       code: "listCategories/failed",
@@ -39,7 +39,7 @@ class ListCategoriesFailedError extends DemoAppError {
   }
 }
 
-class DeleteCategoryInvalidDtoInError extends DemoAppError {
+class DeleteCategoryInvalidDtoInError extends Errors.JokesError {
   setParams() {
     return {
       code: "deleteCategory/invalidDtoIn",
@@ -48,7 +48,7 @@ class DeleteCategoryInvalidDtoInError extends DemoAppError {
   }
 }
 
-class DeleteCategoryFailedError extends DemoAppError {
+class DeleteCategoryFailedError extends Errors.JokesError {
   setParams() {
     return {
       code: "deleteCategory/failed",
@@ -58,7 +58,7 @@ class DeleteCategoryFailedError extends DemoAppError {
   }
 }
 
-class UpdateCategoryInvalidDtoInError extends DemoAppError {
+class UpdateCategoryInvalidDtoInError extends Errors.JokesError {
   setParams() {
     return {
       code: "updateCategory/invalidDtoIn",
@@ -67,7 +67,7 @@ class UpdateCategoryInvalidDtoInError extends DemoAppError {
   }
 }
 
-class UpdateCategoryFailedError extends DemoAppError {
+class UpdateCategoryFailedError extends Errors.JokesError {
   setParams() {
     return {
       code: "updateCategory/failed",

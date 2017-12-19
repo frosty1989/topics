@@ -1,7 +1,7 @@
 "use strict";
-const DemoAppError = require("./uu-jokes-error");
+const Errors = require("./uu-jokes-error");
 
-class AddJokeCategoryInvalidDtoInError extends DemoAppError {
+class AddJokeCategoryInvalidDtoInError extends Errors.JokesError {
   setParams() {
     return {
       code: "addJokeCategory/invalidDtoIn",
@@ -10,7 +10,7 @@ class AddJokeCategoryInvalidDtoInError extends DemoAppError {
   }
 }
 
-class AddJokeCategoryFailedError extends DemoAppError {
+class AddJokeCategoryFailedError extends Errors.JokesError {
   setParams() {
     return {
       code: "addJokeCategory/failed",
@@ -20,7 +20,7 @@ class AddJokeCategoryFailedError extends DemoAppError {
   }
 }
 
-class RemoveJokeCategoryInvalidDtoInError extends DemoAppError {
+class RemoveJokeCategoryInvalidDtoInError extends Errors.JokesError {
   setParams() {
     return {
       code: "removeJokeCategory/invalidDtoIn",
@@ -29,7 +29,7 @@ class RemoveJokeCategoryInvalidDtoInError extends DemoAppError {
   }
 }
 
-class RemoveJokeCategoryFailedError extends DemoAppError {
+class RemoveJokeCategoryFailedError extends Errors.JokesError {
   setParams() {
     return {
       code: "removeJokeCategory/failed",
