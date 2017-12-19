@@ -3,6 +3,7 @@ const {Validator} = require("uu_appg01_server").Validation;
 const {DaoFactory} = require("uu_appg01_server").ObjectStore;
 const {ValidationHelper} = require("uu_appg01_server").Workspace;
 
+const {Errors, CreateJokeCode} = require("../errors/joke-error");
 const Path = require("path");
 const JokeError = require("../errors/joke-error.js");
 
@@ -16,8 +17,14 @@ class JokeModel {
   async createJoke(awid, dtoIn) {
     let validationResult = this.validator.validate("createJokeDtoInType", dtoIn);
     let uuAppErrorMap = validationResult.getValidationErrorMap();
-    
-    ValidationHelper.processValidationResult(dtoIn, validationResult, uuAppErrorMap, "uu-jokesg01-main/createJoke/unsupportedKey", JokeError.CreateJokeInvalidDtoInError);
+
+    ValidationHelper.processValidationResult(
+      dtoIn,
+      validationResult,
+      uuAppErrorMap,
+      `uu-jokesg01-main/${CreateJokeCode}/unsupportedKey`,
+      Errors.createJoke.CreateJokeInvalidDtoInError
+    );
 
     dtoIn.awid = awid;
     let dtoOut;

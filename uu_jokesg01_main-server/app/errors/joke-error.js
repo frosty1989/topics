@@ -1,43 +1,55 @@
 "use strict";
 const DemoAppError = require("./uu-jokes-error");
+const Errors = require("./uu-jokes-error");
+const CreateJokeCode = "createJoke";
+const GetJoke = "getJoke";
 
-class CreateJokeInvalidDtoInError extends DemoAppError {
-  setParams() {
-    return {
-      code: "createJoke/invalidDtoIn",
-      message: "DtoIn is not valid."
-    };
-  }
-}
+let createJoke = {
+  InvalidDtoIn: class CreateJokeInvalidDtoInError extends Errors.JokesError {
+    setParams() {
+      return {
+        code: `${CreateJokeCode}/invalidDtoIn`,
+        message: "DtoIn is not valid."
+      };
+    }
+  },
 
-class CreateJokeFailedError extends DemoAppError {
-  setParams() {
-    return {
-      code: "createJoke/jokeDaoCreateFailed",
-      message: "Create joke by joke Dao create failed.",
-      status: 500
-    };
-  }
-}
 
-class GetJokeInvalidDtoInError extends DemoAppError {
-  setParams() {
-    return {
-      code: "getJoke/invalidDtoIn",
-      message: "DtoIn is not valid."
-    };
+  FailedError: class CreateJokeFailedError extends Errors.JokesError {
+    setParams() {
+      return {
+        code: `${CreateJokeCode}/jokeDaoCreateFailed`,
+        message: "Create joke by joke Dao create failed.",
+        status: 500
+      };
+    }
   }
-}
+};
 
-class GetJokeFailedError extends DemoAppError {
-  setParams() {
-    return {
-      code: "jokeDaoGetFailed",
-      message: "Get joke by joke Dao get failed.",
-      status: 500
-    };
+
+let getJoke = {
+  InvalidDtoIn: class GetJokeInvalidDtoInError extends Errors.JokesError {
+    setParams() {
+      return {
+        code: "getJoke/invalidDtoIn",
+        message: "DtoIn is not valid."
+      };
+    }
+},
+
+  FailedError: class GetJokeFailedError extends Errors.JokesError {
+    setParams() {
+      return {
+        code: "jokeDaoGetFailed",
+        message: "Get joke by joke Dao get failed.",
+        status: 500
+      };
+    }
   }
-}
+};
+
+Errors.createJoke = createJoke;
+
 
 class ListJokesInvalidDtoInError extends DemoAppError {
   setParams() {
@@ -115,10 +127,10 @@ class ListCategoryJokesFailedError extends DemoAppError {
   }
 }
 module.exports = {
-  CreateJokeInvalidDtoInError,
-  CreateJokeFailedError,
-  GetJokeInvalidDtoInError,
-  GetJokeFailedError,
+  // CreateJokeInvalidDtoInError,
+  // CreateJokeFailedError,
+  // GetJokeInvalidDtoInError,
+  // GetJokeFailedError,
   ListJokesInvalidDtoInError,
   ListJokesFailedError,
   DeleteJokeInvalidDtoInError,
@@ -126,5 +138,7 @@ module.exports = {
   UpdateJokeFailedError,
   UpdateJokeInvalidDtoInError,
   ListCategoryJokesInvalidDtoInError,
-  ListCategoryJokesFailedError
+  ListCategoryJokesFailedError,
+  Errors,
+  CreateJokeCode
 };
