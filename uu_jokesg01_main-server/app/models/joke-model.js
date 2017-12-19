@@ -3,7 +3,7 @@ const { Validator } = require("uu_appg01_server").Validation;
 const { DaoFactory } = require("uu_appg01_server").ObjectStore;
 const { ValidationHelper } = require("uu_appg01_server").Workspace;
 
-const { Errors, CreateJokeCode } = require("../errors/joke-error");
+const { Errors } = require("../errors/joke-error");
 const Path = require("path");
 
 class JokeModel {
@@ -26,7 +26,7 @@ class JokeModel {
       dtoIn,
       validationResult,
       uuAppErrorMap,
-      `uu-jokesg01-main/${CreateJokeCode}/unsupportedKey`,
+      `uu-jokesg01-main/${Errors.createJoke.Code}/unsupportedKey`,
       Errors.createJoke.InvalidDtoIn
     );
 
@@ -53,8 +53,8 @@ class JokeModel {
       dtoIn,
       validationResult,
       uuAppErrorMap,
-      "uu-jokesg01-main/updateJoke/unsupportedKey",
-      Errors.UpdateJokeInvalidDtoInError
+      `uu-jokesg01-main/${Errors.updateJoke.Code}/unsupportedKey`,
+      Errors.updateJoke.InvalidDtoInError
     );
 
     dtoIn.awid = awid;
@@ -65,7 +65,7 @@ class JokeModel {
         { awid: awid, id: dtoIn.id, name: dtoIn.name, text: dtoIn.text }
       );
     } catch (e) {
-      throw new Errors.UpdateJokeFailedError({ uuAppErrorMap }, null, e);
+      throw new Errors.updateJoke.FailedError({ uuAppErrorMap }, null, e);
     }
 
     dtoOut.uuAppErrorMap = uuAppErrorMap;
@@ -83,15 +83,15 @@ class JokeModel {
       dtoIn,
       validationResult,
       uuAppErrorMap,
-      "uu-jokesg01-main/deleteJoke/unsupportedKey",
-      Errors.DeleteJokeInvalidDtoInError
+      `uu-jokesg01-main/${Errors.deleteJoke.Code}/unsupportedKey`,
+      Errors.deleteJoke.InvalidDtoInError
     );
 
     let dtoOut;
     try {
       dtoOut = await this.dao.remove(awid, dtoIn.id);
     } catch (e) {
-      throw new Errors.DeleteJokeFailedError({ uuAppErrorMap }, null, e);
+      throw new Errors.deleteJoke.FailedError({ uuAppErrorMap }, null, e);
     }
 
     dtoOut = dtoOut || {};
@@ -107,15 +107,15 @@ class JokeModel {
       dtoIn,
       validationResult,
       uuAppErrorMap,
-      "uu-jokesg01-main/getJoke/unsupportedKey",
-      Errors.GetJokeInvalidDtoInError
+      `uu-jokesg01-main/${Errors.getJoke.Code}/unsupportedKey`,
+      Errors.getJoke.InvalidDtoIn
     );
 
     let dtoOut;
     try {
       dtoOut = await this.dao.get(awid, dtoIn.id);
     } catch (e) {
-      throw new Errors.GetJokeFailedError({ uuAppErrorMap }, null, e);
+      throw new Errors.getJoke.FailedError({ uuAppErrorMap }, null, e);
     }
 
     dtoOut = dtoOut || {};
@@ -131,8 +131,8 @@ class JokeModel {
       dtoIn,
       validationResult,
       uuAppErrorMap,
-      "uu-jokesg01-main/listJokes/unsupportedKey",
-      Errors.ListJokesInvalidDtoInError
+      `uu-jokesg01-main/${Errors.listJokes.Code}/unsupportedKey`,
+      Errors.listJokes.InvalidDtoInError
     );
 
     dtoIn.pageInfo = dtoIn.pageInfo || {
@@ -147,7 +147,7 @@ class JokeModel {
     try {
       dtoOut = await this.dao.list(awid, dtoIn.pageInfo, { [sort]: order });
     } catch (e) {
-      throw new Errors.ListJokesFailedError({ uuAppErrorMap }, null, e);
+      throw new Errors.listJokes.FailedError({ uuAppErrorMap }, null, e);
     }
 
     dtoOut.uuAppErrorMap = uuAppErrorMap;
@@ -165,15 +165,15 @@ class JokeModel {
       dtoIn,
       validationResult,
       uuAppErrorMap,
-      "uu-jokesg01-main/listCategoryJokes/unsupportedKey",
-      Errors.ListCategoryJokesInvalidDtoInError
+      `uu-jokesg01-main/${Errors.listCategoryJokes.Code}/unsupportedKey`,
+      Errors.listCategoryJokes.InvalidDtoInError
     );
 
     let dtoOut;
     try {
       dtoOut = await this.dao.listCategoryJokes(awid, dtoIn.id);
     } catch (e) {
-      throw new Errors.ListCategoryJokesFailedError(
+      throw new Errors.listCategoryJokes.FailedError(
         { uuAppErrorMap },
         null,
         e

@@ -28,7 +28,7 @@ class JokeRatingModel {
     let joke = JokeModel.dao.get(awid, dtoIn.id);
 
     if (!joke) {
-      throw new JokeError.GetJokeFailedError({uuAppErrorMap}, null, {})
+      throw new Errors.getJoke.FailedError({uuAppErrorMap}, null, {})
     }
 
     dtoIn.awid = awid;
@@ -37,7 +37,7 @@ class JokeRatingModel {
     try {
       dtoOut = await this.dao.create(dtoIn);
     } catch (e) {
-      throw new AddJokeRatingError.AddJokeRatingFailedError({uuAppErrorMap}, null, e);
+      throw new Errors.addJokeRating.InvalidDtoInError({uuAppErrorMap}, null, e);
     }
 
     dtoOut.uuAppErrorMap = uuAppErrorMap;
