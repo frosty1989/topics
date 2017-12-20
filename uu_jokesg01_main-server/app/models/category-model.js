@@ -4,7 +4,8 @@ const { DaoFactory } = require("uu_appg01_server").ObjectStore;
 const { ValidationHelper } = require("uu_appg01_server").Workspace;
 
 const Path = require("path");
-const { Errors } = require("../errors/category-error.js");
+const { Errors } = require("../errors/category-error");
+const { JokeCategoryModel } = require("./joke-category-model");
 
 class CategoryModel {
   constructor() {
@@ -26,7 +27,7 @@ class CategoryModel {
       dtoIn,
       validationResult,
       uuAppErrorMap,
-      "uu-jokesg01-main/createCategory/unsupportedKey",
+      `uu-jokesg01-main/${Errors.createCategory.Code}/unsupportedKey`,
       Errors.createCategory.InvalidDtoInError
     );
 
@@ -35,7 +36,7 @@ class CategoryModel {
     try {
       dtoOut = await this.dao.create(dtoIn);
     } catch (e) {
-      throw new Errors.CreateCategoryFailedError({ uuAppErrorMap }, null, e);
+      throw new Errors.createCategory.FailedError({uuAppErrorMap}, null, e);
     }
 
     dtoOut.uuAppErrorMap = uuAppErrorMap;
@@ -53,8 +54,8 @@ class CategoryModel {
       dtoIn,
       validationResult,
       uuAppErrorMap,
-      "uu-jokesg01-main/updateCategory/unsupportedKey",
-      Errors.UpdateCategoryInvalidDtoInError
+      `uu-jokesg01-main/${Errors.updateCategory.Code}/unsupportedKey`,
+      Errors.updateCategory.InvalidDtoInError
     );
 
     dtoIn.awid = awid;
@@ -71,7 +72,7 @@ class CategoryModel {
         }
       );
     } catch (e) {
-      throw new Errors.UpdateCategoryFailedError({ uuAppErrorMap }, null, e);
+      throw new Errors.updateCategory.FailedError({uuAppErrorMap}, null, e);
     }
 
     dtoOut.uuAppErrorMap = uuAppErrorMap;
@@ -89,25 +90,42 @@ class CategoryModel {
       dtoIn,
       validationResult,
       uuAppErrorMap,
-      "uu-jokesg01-main/deleteCategory/unsupportedKey",
-      Errors.DeleteCategoryInvalidDtoInError
+      `uu-jokesg01-main/${Errors.deleteCategory.Code}/unsupportedKey`,
+      Errors.deleteCategory.InvalidDtoInError
     );
 
-    // let validationResult = this.validator.validate("deleteCategoryDtoInType", dtoIn);
-    // let uuAppErrorMap = ValidationHelper.processValidationResult(
-    //   dtoIn, validationResult, {}, "uu-jokesg01-main/deleteCategory/unsupportedKey",
-    //   CategoryError.DeleteCategoryInvalidDtoInError);
-
     let dtoOut;
-    try {
-      dtoOut = await this.dao.remove(awid, dtoIn.id);
-    } catch (e) {
-      throw new Errors.DeleteCategoryFailedError({ uuAppErrorMap }, null, e);
-    }
+    if(dtoIn.forceDelete === true) {
+      try {
+        await JokeCategoryModel.dao.deleteByCategory(awid, dtoIn.id);
+        dtoOut = await this.dao.remove(awid, dtoIn.id);
+      } catch (e) {
+        throw new Errors.deleteCategory.FailedError({uuAppErrorMap}, null, e);
+      }
 
-    dtoOut = dtoOut || {};
-    dtoOut.uuAppErrorMap = uuAppErrorMap;
-    return dtoOut;
+      dtoOut = dtoOut || {};
+      dtoOut.uuAppErrorMap = uuAppErrorMap;
+      return dtoOut;
+    } else {
+      try {
+        let foundJokeCategories = await JokeCategoryModel.dao.listByCategory(
+          awid,
+          dtoIn.id
+        );
+
+        if (foundJokeCategories.length > 0) {
+          throw new Errors.deleteCategory.relatedJokesExist({ uuAppErrorMap });
+        }
+
+        this.dao.remove(awid, dtoIn.id);
+      } catch (e) {
+        throw new Errors.deleteCategory.FailedError({uuAppErrorMap}, null, e);
+      }
+
+      dtoOut = dtoOut || {};
+      dtoOut.uuAppErrorMap = uuAppErrorMap;
+      return dtoOut;
+    }
   }
 
   async listCategories(awid, dtoIn) {
@@ -121,8 +139,8 @@ class CategoryModel {
       dtoIn,
       validationResult,
       uuAppErrorMap,
-      "uu-jokesg01-main/listCategories/unsupportedKey",
-      Errors.ListCategoriesInvalidDtoInError
+      `uu-jokesg01-main/${Errors.listCategories.Code}/unsupportedKey`,
+      Errors.listCategories.InvalidDtoInError
     );
 
     dtoIn.pageInfo = dtoIn.pageInfo || {
@@ -135,7 +153,7 @@ class CategoryModel {
     try {
       dtoOut = await this.dao.list(awid, dtoIn.pageInfo);
     } catch (e) {
-      throw new Errors.ListCategoriesFailedError({ uuAppErrorMap }, null, e);
+      throw new Errors.listCategories.FailedError({uuAppErrorMap}, null, e);
     }
 
     dtoOut = dtoOut || {};

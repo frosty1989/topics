@@ -23,7 +23,7 @@ class CategoryMongoDB extends UuObjectDao {
       categoryId: 1
     }, {
       unique: true
-    })
+    });
   }
 
   create(uuObject) {
@@ -34,7 +34,7 @@ class CategoryMongoDB extends UuObjectDao {
     return super.findOne({ awid, jokeId, categoryId });
   }
 
-  listByCategory(awid, cajegoryId) {
+  listByCategory(awid, categoryId) {
     return super.find({ awid, categoryId });
   }
 
@@ -53,10 +53,6 @@ class CategoryMongoDB extends UuObjectDao {
   deleteByJoke(awid, jokeId) {
     return super.deleteMany({ awid, jokeId });
   }
-
-  // deleteByJokeAndCategory(awid, jokeId, categoryId) {
-  //   return super.deleteMany({ awid, jokeId, categoryId });
-  // }
 
   deleteByJokeAndCategory(awid, jokeId, categoryListId = []) {
     return super.deleteMany({

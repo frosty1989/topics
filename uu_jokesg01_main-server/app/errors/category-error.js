@@ -59,8 +59,18 @@ let deleteCategory = {
   FailedError: class DeleteCategoryFailedError extends Errors.JokesError {
     setParams() {
       return {
-        code: `${deleteCategory.Code}/failed`,
+        code: `${deleteCategory.Code}/jokeCategoryDaoListByCategoryFailed`,
         message: "Delete category failed.",
+        status: 500
+      };
+    }
+  },
+
+  relatedJokesExist: class RelatedJokesExists extends Errors.JokesError {
+    setParams() {
+      return {
+        code: `${deleteCategory.Code}/relatedJokesExist`,
+        message: "Category is not empty.",
         status: 500
       };
     }
@@ -89,7 +99,7 @@ let updateCategory = {
   }
 };
 
-Errors.createVategory = createCategory;
+Errors.createCategory = createCategory;
 Errors.listCategories = listCategories;
 Errors.deleteCategory = deleteCategory;
 Errors.updateCategory = updateCategory;

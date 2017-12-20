@@ -20,11 +20,14 @@ describe("Test deleteCategory command", () => {
     await TestHelper.login("Readers");
     await CreateCategory();
     let listResponce = await TestHelper.executeGetCommand("listCategories");
-    let itemId = listResponce.data.itemList[0].id;
-    let dtoIn = {id: itemId};
-    let responce = await TestHelper.executePostCommand("deleteCategory", dtoIn);
-    expect(responce.data.uuAppErrorMap).toEqual({});
-    expect(typeof(responce.data.uuAppErrorMap)).toBe("object");
+    console.log(listResponce);
+    let itemId = listResponce.data.itemList[0];
+    console.log(itemId);
+    console.log(itemId.id);
+    let dtoIn = {categoryId: itemId};
+    let response = await TestHelper.executePostCommand("deleteCategory", dtoIn);
+    expect(response.data.uuAppErrorMap).toEqual({});
+    expect(typeof(response.data.uuAppErrorMap)).toBe("object");
   });
 });
 
