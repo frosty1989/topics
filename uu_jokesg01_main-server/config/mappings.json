@@ -77,7 +77,7 @@
         "type": "CMD"
       },
       "deleteCategory": {
-        "realization": "controllers/CategoryController.delete",
+        "realization": "controllers/CategoryController.remove",
         "httpMethod": "POST",
         "type": "CMD"
       }

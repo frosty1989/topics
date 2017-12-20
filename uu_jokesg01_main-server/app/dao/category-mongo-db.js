@@ -1,5 +1,6 @@
 "use strict";
 const {UuObjectDao} = require("uu_appg01_server").ObjectStore;
+const {JokeCategory} = require("../dao/joke-category-mongo-db");
 
 class CategoryMongoDB extends UuObjectDao {
   createSchema() {
@@ -38,7 +39,7 @@ class CategoryMongoDB extends UuObjectDao {
   }
 
   remove(awid, id) {
-    return super.deleteOne(awid, id);
+      return super.deleteOne({awid, id});
   }
 }
 

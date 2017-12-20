@@ -16,7 +16,7 @@ class CategoryController {
     return CategoryModel.updateCategory(ucEnv.uri.awid, ucEnv.parameters);
   }
 
-  delete(ucEnv) {
+  remove(ucEnv) {
     return CategoryModel.deleteCategory(ucEnv.uri.awid, ucEnv.parameters);
   }
 

@@ -10,6 +10,7 @@ class CategoryModel {
   constructor() {
     this.validator = new Validator(Path.join(__dirname, "..", "validation_types", "category-types.js"));
     this.dao = DaoFactory.getDao("category");
+    this.daoJoke = DaoFactory.getDao("jokeCategory");
     this.dao.createSchema();
   }
 
@@ -74,15 +75,27 @@ class CategoryModel {
     );
 
     let dtoOut;
-    try {
-      dtoOut = await this.dao.remove(awid, dtoIn.id);
-    } catch (e) {
-      throw new Errors.deleteCategory.FailedError({uuAppErrorMap}, null, e);
-    }
+    if(dtoIn.forceDelete === true) {
+      try {
+        dtoOut = await this.dao.remove(awid, dtoIn.id);
+      } catch (e) {
+        throw new Errors.deleteCategory.FailedError({uuAppErrorMap}, null, e);
+      }
 
-    dtoOut = dtoOut || {};
-    dtoOut.uuAppErrorMap = uuAppErrorMap;
-    return dtoOut;
+      dtoOut = dtoOut || {};
+      dtoOut.uuAppErrorMap = uuAppErrorMap;
+      return dtoOut;
+    } else {
+      try {
+        dtoOut = await this.daoJoke.listByCategory(awid, dtoIn.id);
+      } catch (e) {
+        throw new Errors.deleteCategory.FailedError({uuAppErrorMap}, null, e);
+      }
+
+      dtoOut = dtoOut || {};
+      dtoOut.uuAppErrorMap = uuAppErrorMap;
+      return dtoOut;
+    }
   }
 
   async listCategories(awid, dtoIn) {

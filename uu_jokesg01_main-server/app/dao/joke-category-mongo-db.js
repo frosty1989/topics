@@ -54,10 +54,6 @@ class CategoryMongoDB extends UuObjectDao {
     return super.deleteMany({ awid, jokeId });
   }
 
-  // deleteByJokeAndCategory(awid, jokeId, categoryId) {
-  //   return super.deleteMany({ awid, jokeId, categoryId });
-  // }
-
   deleteByJokeAndCategory(awid, jokeId, categoryListId = []) {
     return super.deleteMany({
       awid,
