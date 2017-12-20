@@ -60,6 +60,29 @@ class JokeCategoryModel {
     return dtoOut;
   }
 
+  async listByCategory(awid, dtoIn) {
+    let validationResult = this.validator.validate("removeJokeCategoryDtoInType", dtoIn);
+    let uuAppErrorMap = validationResult.getValidationErrorMap();
+
+    ValidationHelper.processValidationResult(
+      dtoIn,
+      validationResult,
+      uuAppErrorMap,
+      `uu-jokesg01-main/${Errors.removeJokeCategory.Code}/unsupportedKey`,
+      JokeCategoryError.RemoveJokeCategoryInvalidDtoInError
+    );
+
+    dtoIn.id = dtoIn.jokeId;
+    let dtoOut = {};
+    try {
+      await this.dao.listByCategory(awid, dtoIn.categoryId);
+    } catch (e) {
+      throw new Errors.removeJokeCategory.FailedError({uuAppErrorMap}, null, e);
+    }
+    dtoOut.uuAppErrorMap = uuAppErrorMap;
+    return dtoOut;
+  }
+
 }
 
 module.exports = new JokeCategoryModel();

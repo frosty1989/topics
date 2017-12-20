@@ -21,24 +21,35 @@ let createJoke = {
       };
     }
   }
+
 };
 
 let getJoke = {
-  Code: "getJoke",
-  InvalidDtoIn: class GetJokeInvalidDtoInError extends Errors.JokesError {
+  code: "getJoke",
+  invalidDtoIn: class GetJokeInvalidDtoInError extends Errors.JokesError {
     setParams() {
       return {
-        code: `${getJoke.Code}/invalidDtoIn`,
+        code: `${getJoke.code}/invalidDtoIn`,
         message: "DtoIn is not valid."
       };
     }
   },
 
-  FailedError: class GetJokeFailedError extends Errors.JokesError {
+  jokeDaoGetFailed: class GetJokeFailedError extends Errors.JokesError {
     setParams() {
       return {
-        code: `${getJoke.Code}/jokeDaoGetFailed`,
+        code: `${getJoke.code}/jokeDaoGetFailed`,
         message: "Get joke by joke Dao get failed.",
+        status: 500
+      };
+    }
+  },
+
+  jokeDoesNotExist: class JokeDoesNotExist extends Errors.JokesError {
+    setParams() {
+      return {
+        code: `${getJoke.code}/jokeDoesNotExist`,
+        message: "Joke does not exist.",
         status: 500
       };
     }
@@ -133,6 +144,54 @@ let listCategoryJokes = {
   }
 };
 
+let jokeCategoryDaoCreateFailed = {
+  Code: "jokeCategoryDaoCreateFailed",
+  FailedError: class JokeCategoryDaoCreateFailedFailedError extends Errors.JokesError {
+    setParams() {
+      return {
+        code: `${jokeCategoryDaoCreateFailed.Code}/jokeCategoryDaoCreateFailed`,
+        message: "Create jokeCategory by jokeCategory Dao create failed.",
+        status: 500
+      };
+    }
+  }
+};
+
+let jokeRatingDaoDeleteByJokeFailed = {
+  Code: "jokeRatingDaoDeleteByJokeFailed",
+  FailedError: class JokeRatingDaoDeleteByJokeFailed extends Errors.JokesError {
+    setParams() {
+      return {
+        code: `${jokeRatingDaoDeleteByJokeFailed.Code}/jokeRatingDaoDeleteByJokeFailed`,
+        message: "Delete jokeRating by Dao deleteByJoke failed.",
+        status: 500
+      };
+    }
+  }
+};
+
+let jokeCategoryDaoDeleteByJokeFailed = {
+  Code: "jokeCategoryDaoDeleteByJokeFailed",
+  FailedError: class JokeCategoryDaoDeleteByJokeFailed extends Errors.JokesError {
+    setParams() {
+      return {
+        code: `${jokeCategoryDaoDeleteByJokeFailed.Code}/jokeCategoryDaoDeleteByJokeFailed`,
+        message: "Delete jokeCategory by Dao deleteByJoke failed.",
+        status: 500
+      };
+    }
+  }
+};
+
+let jokeDoesNotExist = {
+  Code: "jokeDoesNotExist",
+
+};
+
+Errors.jokeDoesNotExist = jokeDoesNotExist;
+Errors.jokeCategoryDaoDeleteByJokeFailed = jokeCategoryDaoDeleteByJokeFailed;
+Errors.jokeRatingDaoDeleteByJokeFailed = jokeCategoryDaoCreateFailed;
+Errors.jokeCategoryDaoCreateFailed = jokeCategoryDaoCreateFailed;
 Errors.createJoke = createJoke;
 Errors.getJoke = getJoke;
 Errors.listJokes = listJokes;

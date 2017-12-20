@@ -99,6 +99,62 @@ let updateCategory = {
   }
 };
 
+let categoryNameNotUnique = {
+  Code: "categoryNameNotUnique",
+  FailedError: class CategoryNameNotUnique extends Errors.JokesError {
+    setParams() {
+      return {
+        code: `${categoryNameNotUnique.Code}/categoryNameNotUnique`,
+        message: "Category name is not unique in awid.",
+        status: 500
+      };
+    }
+  }
+};
+
+let jokeCategoryDaoListByCategoryFailed = {
+  Code: "jokeCategoryDaoListByCategoryFailed",
+  FailedError: class JokeCategoryDaoListByCategoryFailed extends Errors.JokesError {
+    setParams() {
+      return {
+        code: `${jokeCategoryDaoListByCategoryFailed.Code}/jokeCategoryDaoListByCategoryFailed`,
+        message: "List jokeCategory by Dao listByCategory failed.",
+        status: 500
+      };
+    }
+  }
+};
+
+let relatedJokesExist = {
+  Code: "relatedJokesExist",
+  FailedError: class RelatedJokesExist extends Errors.JokesError {
+    setParams() {
+      return {
+        code: `${relatedJokesExist.Code}/relatedJokesExist`,
+        message: "Category is not empty",
+        status: 500
+      };
+    }
+  }
+};
+
+let jokeCategoryDaoDeleteByCategoryFailed = {
+  Code: "jokeCategoryDaoDeleteByCategoryFailed",
+  FailedError: class JokeCategoryDaoDeleteByCategoryFailed extends Errors.JokesError {
+    setParams() {
+      return {
+        code: `${jokeCategoryDaoDeleteByCategoryFailed.Code}/jokeCategoryDaoDeleteByCategoryFailed`,
+        message: "Delete jokeCategory by Dao deleteByCategory failed.",
+        status: 500
+      };
+    }
+  }
+};
+
+Errors.jokeCategoryDaoDeleteByCategoryFailed = jokeCategoryDaoDeleteByCategoryFailed;
+Errors.relatedJokesExist = relatedJokesExist;
+Errors.jokeCategoryDaoListByCategoryFailed = jokeCategoryDaoListByCategoryFailed;
+Errors.categoryNameNotUnique = categoryNameNotUnique;
 Errors.createCategory = createCategory;
 Errors.listCategories = listCategories;
 Errors.deleteCategory = deleteCategory;

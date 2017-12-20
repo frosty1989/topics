@@ -5,7 +5,7 @@ const { ValidationHelper } = require("uu_appg01_server").Workspace;
 
 const Path = require("path");
 const { Errors } = require("../errors/category-error");
-const { JokeCategoryModel } = require("./joke-category-model");
+const JokeCategoryModel = require("./joke-category-model");
 
 class CategoryModel {
   constructor() {
