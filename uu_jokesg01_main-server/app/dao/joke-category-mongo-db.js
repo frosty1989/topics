@@ -1,14 +1,17 @@
 "use strict";
-const {UuObjectDao} = require("uu_appg01_server").ObjectStore;
+const { UuObjectDao } = require("uu_appg01_server").ObjectStore;
 
-class CategoryMongoDB extends UuObjectDao {
+class JokeCategoryMongoDB extends UuObjectDao {
   createSchema() {
-    super.createIndex({
-      awid: 1,
-      _id: 1
-    }, {
-      unique: true
-    });
+    super.createIndex(
+      {
+        awid: 1,
+        _id: 1
+      },
+      {
+        unique: true
+      }
+    );
     super.createIndex({
       awid: 1,
       categoryId: 1
@@ -17,13 +20,16 @@ class CategoryMongoDB extends UuObjectDao {
       awid: 1,
       jokeId: 1
     });
-    super.createIndex({
-      awid: 1,
-      jokeId: 1,
-      categoryId: 1
-    }, {
-      unique: true
-    });
+    super.createIndex(
+      {
+        awid: 1,
+        jokeId: 1,
+        categoryId: 1
+      },
+      {
+        unique: true
+      }
+    );
   }
 
   create(uuObject) {
@@ -43,7 +49,7 @@ class CategoryMongoDB extends UuObjectDao {
   }
 
   delete(awid, id) {
-    return super.deleteOne({awid, _id: id});
+    return super.deleteOne({ awid, _id: id });
   }
 
   deleteByCategory(awid, categoryId) {
@@ -65,4 +71,4 @@ class CategoryMongoDB extends UuObjectDao {
   }
 }
 
-module.exports = CategoryMongoDB;
+module.exports = JokeCategoryMongoDB;

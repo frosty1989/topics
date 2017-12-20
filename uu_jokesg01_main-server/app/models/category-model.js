@@ -95,7 +95,7 @@ class CategoryModel {
     );
 
     let dtoOut;
-    if(dtoIn.forceDelete === true) {
+    if (dtoIn.forceDelete === true) {
       try {
         await JokeCategoryModel.dao.deleteByCategory(awid, dtoIn.id);
         dtoOut = await this.dao.remove(awid, dtoIn.id);
