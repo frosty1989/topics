@@ -20,7 +20,16 @@ let createCategory = {
         status: 500
       };
     }
-  }
+  },
+
+  categoryNameNotIsUnique: class CategoryNameIsNotUnique extends Errors.JokesError {
+    setParams() {
+      return {
+        code: `${createCategory.Code}/categoryNameNotIsUnique`,
+        message: "Category name is not unique in awid."
+      };
+    }
+  },
 };
 
 let listCategories = {
