@@ -1,5 +1,6 @@
 "use strict";
 const Errors = require("./uu-jokes-error");
+
 let addJokeCategory = {
   Code: "addJokeCategory",
   InvalidDtoInError: class AddJokeCategoryInvalidDtoInError extends Errors.JokesError {

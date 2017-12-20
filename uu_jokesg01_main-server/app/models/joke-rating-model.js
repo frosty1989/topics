@@ -1,22 +1,26 @@
 "use strict";
-const {Validator} = require("uu_appg01_server").Validation;
-const {DaoFactory} = require("uu_appg01_server").ObjectStore;
-const {ValidationHelper} = require("uu_appg01_server").Workspace;
+const { Validator } = require("uu_appg01_server").Validation;
+const { DaoFactory } = require("uu_appg01_server").ObjectStore;
+const { ValidationHelper } = require("uu_appg01_server").Workspace;
 
 const Path = require("path");
-const {Errors, AddJokeRatingCode} = require("../errors/joke-rating-error.js");
-const JokeError = require("../errors/joke-error");
+const Errors = require("../errors/joke-rating-error.js");
 const JokeModel = require("../models/joke-model");
 
 class JokeRatingModel {
   constructor() {
-    this.validator = new Validator(Path.join(__dirname, "..", "validation_types", "joke-rating-types.js"));
+    this.validator = new Validator(
+      Path.join(__dirname, "..", "validation_types", "joke-rating-types.js")
+    );
     this.dao = DaoFactory.getDao("jokeRating");
     this.dao.createSchema();
   }
 
   async create(awid, dtoIn) {
-    let validationResult = this.validator.validate("addJokeRatingDtoInType", dtoIn);
+    let validationResult = this.validator.validate(
+      "addJokeRatingDtoInType",
+      dtoIn
+    );
     let uuAppErrorMap = ValidationHelper.processValidationResult(
       dtoIn,
       validationResult,
@@ -28,7 +32,7 @@ class JokeRatingModel {
     let joke = JokeModel.dao.get(awid, dtoIn.id);
 
     if (!joke) {
-      throw new Errors.getJoke.FailedError({uuAppErrorMap}, null, {})
+      throw new Errors.getJoke.FailedError({ uuAppErrorMap }, null, {});
     }
 
     dtoIn.awid = awid;
@@ -37,7 +41,11 @@ class JokeRatingModel {
     try {
       dtoOut = await this.dao.create(dtoIn);
     } catch (e) {
-      throw new Errors.addJokeRating.InvalidDtoInError({uuAppErrorMap}, null, e);
+      throw new Errors.addJokeRating.InvalidDtoInError(
+        { uuAppErrorMap },
+        null,
+        e
+      );
     }
 
     dtoOut.uuAppErrorMap = uuAppErrorMap;

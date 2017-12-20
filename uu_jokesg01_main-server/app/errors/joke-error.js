@@ -32,7 +32,7 @@ let getJoke = {
         message: "DtoIn is not valid."
       };
     }
-    },
+  },
 
   FailedError: class GetJokeFailedError extends Errors.JokesError {
     setParams() {
@@ -67,7 +67,6 @@ let listJokes = {
   }
 };
 
-
 let deleteJoke = {
   Code: "deleteJoke",
   InvalidDtoInError: class DeleteJokeInvalidDtoInError extends Errors.JokesError {
@@ -99,7 +98,7 @@ let updateJoke = {
         message: "DtoIn is not valid."
       };
     }
-},
+  },
 
   FailedError: class UpdateJokeFailedError extends Errors.JokesError {
     setParams() {
@@ -115,13 +114,13 @@ let updateJoke = {
 let listCategoryJokes = {
   Code: "listCategoryJokes",
   InvalidDtoInError: class ListCategoryJokesInvalidDtoInError extends Errors.JokesError {
-  setParams() {
-    return {
-      code: `${listCategoryJokes.Code}/invalidDtoIn`,
-      message: "DtoIn is not valid."
-    };
-  }
-},
+    setParams() {
+      return {
+        code: `${listCategoryJokes.Code}/invalidDtoIn`,
+        message: "DtoIn is not valid."
+      };
+    }
+  },
 
   FailedError: class ListCategoryJokesFailedError extends Errors.JokesError {
     setParams() {
