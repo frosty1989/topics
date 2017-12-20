@@ -2,9 +2,14 @@ const { Utils } = require("uu_appg01_server");
 const { TestHelper } = require("uu_appg01_workspace-test");
 const { CreateJoke } = require("../general-test-hepler");
 //Happy day scenario
+
 describe("Test createJoke command", () => {
-  beforeEach(async(done) => {
+  beforeAll(async(done) => {
     await TestHelper.setup();
+    done();
+  });
+
+  beforeEach(async(done) => {
     await TestHelper.initAppWorkspace();
     await TestHelper.createPermission("Readers");
     done();

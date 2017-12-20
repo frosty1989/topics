@@ -36,7 +36,13 @@ class CategoryModel {
     try {
       dtoOut = await this.dao.create(dtoIn);
     } catch (e) {
-      throw new Errors.createCategory.FailedError({uuAppErrorMap}, null, e);
+      if (e.hasOwnProperty("DuplicateKey")) {
+        throw new Errors.createCategory.categoryNameNotIsUnique({
+          uuAppErrorMap
+        }, null, e);
+      } else {
+        throw new Errors.createCategory.FailedError({uuAppErrorMap}, null, e);
+      }
     }
 
     dtoOut.uuAppErrorMap = uuAppErrorMap;
