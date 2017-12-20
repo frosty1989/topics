@@ -89,7 +89,7 @@ let updateCategory = {
   }
 };
 
-Errors.createVategory = createCategory;
+Errors.createCategory = createCategory;
 Errors.listCategories = listCategories;
 Errors.deleteCategory = deleteCategory;
 Errors.updateCategory = updateCategory;

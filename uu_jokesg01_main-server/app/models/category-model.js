@@ -4,7 +4,7 @@ const {DaoFactory} = require("uu_appg01_server").ObjectStore;
 const {ValidationHelper} = require("uu_appg01_server").Workspace;
 
 const Path = require("path");
-const CategoryError = require("../errors/category-error.js");
+const { Errors } = require("../errors/category-error");
 
 class CategoryModel {
   constructor() {
@@ -17,14 +17,20 @@ class CategoryModel {
     let validationResult = this.validator.validate("createCategoryDtoInType", dtoIn);
     let uuAppErrorMap = validationResult.getValidationErrorMap();
 
-    ValidationHelper.processValidationResult(dtoIn, validationResult, uuAppErrorMap, "uu-jokesg01-main/createCategory/unsupportedKey", CategoryError.CreateCategoryInvalidDtoInError);
+    ValidationHelper.processValidationResult(
+      dtoIn,
+      validationResult,
+      uuAppErrorMap,
+      `uu-jokesg01-main/${Errors.createCategory.Code}/unsupportedKey`,
+      Errors.createCategory.InvalidDtoInError
+    );
 
     dtoIn.awid = awid;
     let dtoOut;
     try {
       dtoOut = await this.dao.create(dtoIn);
     } catch (e) {
-      throw new CategoryError.CreateCategoryFailedError({uuAppErrorMap}, null, e);
+      throw new Errors.createCategory.FailedError({uuAppErrorMap}, null, e);
     }
 
     dtoOut.uuAppErrorMap = uuAppErrorMap;
@@ -35,14 +41,20 @@ class CategoryModel {
     let validationResult = this.validator.validate("updateCategoryDtoInType", dtoIn);
     let uuAppErrorMap = validationResult.getValidationErrorMap();
 
-    ValidationHelper.processValidationResult(dtoIn, validationResult, uuAppErrorMap, "uu-jokesg01-main/updateCategory/unsupportedKey", CategoryError.UpdateCategoryInvalidDtoInError);
+    ValidationHelper.processValidationResult(
+      dtoIn,
+      validationResult,
+      uuAppErrorMap,
+      `uu-jokesg01-main/${Errors.updateCategory.Code}/unsupportedKey`,
+      Errors.updateCategory.InvalidDtoInError
+    );
 
     dtoIn.awid = awid;
     let dtoOut;
     try {
       dtoOut = await this.dao.update( {id: dtoIn.id}, {awid: awid, id: dtoIn.id, name: dtoIn.name, desc: dtoIn.desc, glyphicon: dtoIn.glyphicon });
     } catch (e) {
-      throw new CategoryError.UpdateCategoryFailedError({uuAppErrorMap}, null, e);
+      throw new Errors.updateCategory.FailedError({uuAppErrorMap}, null, e);
     }
 
     dtoOut.uuAppErrorMap = uuAppErrorMap;
@@ -53,19 +65,19 @@ class CategoryModel {
     let validationResult = this.validator.validate("deleteCategoryDtoInType", dtoIn);
     let uuAppErrorMap = validationResult.getValidationErrorMap();
 
-    ValidationHelper.processValidationResult(dtoIn, validationResult, uuAppErrorMap, "uu-jokesg01-main/deleteCategory/unsupportedKey", CategoryError.DeleteCategoryInvalidDtoInError);
-
-    // let validationResult = this.validator.validate("deleteCategoryDtoInType", dtoIn);
-    // let uuAppErrorMap = ValidationHelper.processValidationResult(
-    //   dtoIn, validationResult, {}, "uu-jokesg01-main/deleteCategory/unsupportedKey",
-    //   CategoryError.DeleteCategoryInvalidDtoInError);
-
+    ValidationHelper.processValidationResult(
+      dtoIn,
+      validationResult,
+      uuAppErrorMap,
+      `uu-jokesg01-main/${Errors.deleteCategory.Code}/unsupportedKey`,
+      Errors.deleteCategory.InvalidDtoInError
+    );
 
     let dtoOut;
     try {
       dtoOut = await this.dao.remove(awid, dtoIn.id);
     } catch (e) {
-      throw new CategoryError.DeleteCategoryFailedError({uuAppErrorMap}, null, e);
+      throw new Errors.deleteCategory.FailedError({uuAppErrorMap}, null, e);
     }
 
     dtoOut = dtoOut || {};
@@ -77,7 +89,13 @@ class CategoryModel {
     let validationResult = this.validator.validate("listCategoriesDtoInType", dtoIn);
     let uuAppErrorMap = validationResult.getValidationErrorMap();
 
-    ValidationHelper.processValidationResult(dtoIn, validationResult, uuAppErrorMap, "uu-jokesg01-main/listCategories/unsupportedKey", CategoryError.ListCategoriesInvalidDtoInError);
+    ValidationHelper.processValidationResult(
+      dtoIn,
+      validationResult,
+      uuAppErrorMap,
+      `uu-jokesg01-main/${Errors.listCategories.Code}/unsupportedKey`,
+      Errors.listCategories.InvalidDtoInError
+    );
 
     dtoIn.pageInfo = dtoIn.pageInfo || {
       pageIndex: 0,
@@ -89,7 +107,7 @@ class CategoryModel {
     try {
       dtoOut = await this.dao.list(awid, dtoIn.pageInfo);
     } catch (e) {
-      throw new CategoryError.ListCategoriesFailedError({uuAppErrorMap}, null, e);
+      throw new Errors.listCategories.FailedError({uuAppErrorMap}, null, e);
     }
 
     dtoOut = dtoOut || {};
