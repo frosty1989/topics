@@ -25,14 +25,14 @@ class JokeRatingModel {
       dtoIn,
       validationResult,
       {},
-      `uu-jokesg01-main/${AddJokeRatingCode}/unsupportedKey`,
-      Errors.addJokeRating.InvalidDtoInError
+      `uu-jokesg01-main/${Errors.addJokeRating.code}/unsupportedKey`,
+      Errors.addJokeRating.invalidDtoInError
     );
 
     let joke = JokeModel.dao.get(awid, dtoIn.id);
 
     if (!joke) {
-      throw new Errors.getJoke.FailedError({ uuAppErrorMap }, null, {});
+      throw new Errors.getJoke.jokeDaoGetFailed({ uuAppErrorMap }, null, {});
     }
 
     dtoIn.awid = awid;
@@ -41,11 +41,7 @@ class JokeRatingModel {
     try {
       dtoOut = await this.dao.create(dtoIn);
     } catch (e) {
-      throw new Errors.addJokeRating.InvalidDtoInError(
-        { uuAppErrorMap },
-        null,
-        e
-      );
+      throw new Errors.addJokeRating.invalidDtoIn({ uuAppErrorMap }, null, e);
     }
 
     dtoOut.uuAppErrorMap = uuAppErrorMap;

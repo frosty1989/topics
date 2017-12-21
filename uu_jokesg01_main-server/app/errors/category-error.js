@@ -2,11 +2,11 @@
 const Errors = require("./uu-jokes-error");
 
 let createCategory = {
-  Code: "createCategory",
-  InvalidDtoInError: class CreateCategoryInvalidDtoInError extends Errors.JokesError {
+  code: "createCategory",
+  invalidDtoInError: class CreateCategoryInvalidDtoInError extends Errors.JokesError {
     setParams() {
       return {
-        code: `${createCategory.Code}/invalidDtoIn`,
+        code: `${createCategory.code}/invalidDtoIn`,
         message: "DtoIn is not valid."
       };
     }
@@ -15,7 +15,7 @@ let createCategory = {
   categoryNameNotUnique: class CategoryNameNotUnique extends Errors.JokesError {
     setParams() {
       return {
-        code: `${createCategory.Code}/categoryNameNotUnique`,
+        code: `${createCategory.code}/categoryNameNotUnique`,
         message: "Category name is not unique in awid.",
         status: 500
       };
@@ -25,7 +25,7 @@ let createCategory = {
   categoryDaoCreateFailed: class CategoryDaoCreateFailed extends Errors.JokesError {
     setParams() {
       return {
-        code: `${createCategory.Code}/categoryDaoCreateFailed`,
+        code: `${createCategory.code}/categoryDaoCreateFailed`,
         message: "Create category by category Dao create failed.",
         status: 500
       };
@@ -34,11 +34,11 @@ let createCategory = {
 };
 
 let listCategories = {
-  Code: "listCategories",
-  InvalidDtoInError: class ListCategoriesInvalidDtoInError extends Errors.JokesError {
+  code: "listCategories",
+  invalidDtoInError: class ListCategoriesInvalidDtoInError extends Errors.JokesError {
     setParams() {
       return {
-        code: `${listCategories.Code}/invalidDtoIn`,
+        code: `${listCategories.code}/invalidDtoIn`,
         message: "DtoIn is not valid."
       };
     }
@@ -47,7 +47,7 @@ let listCategories = {
   categoryDaoListFailed: class CategoryDaoListFailed extends Errors.JokesError {
     setParams() {
       return {
-        code: `${listCategories.Code}/categoryDaoListFailed`,
+        code: `${listCategories.code}/categoryDaoListFailed`,
         message: "List categories by category Dao list failed.",
         status: 500
       };
@@ -56,11 +56,11 @@ let listCategories = {
 };
 
 let deleteCategory = {
-  Code: "deleteCategory",
-  InvalidDtoInError: class DeleteCategoryInvalidDtoInError extends Errors.JokesError {
+  code: "deleteCategory",
+  invalidDtoInError: class DeleteCategoryInvalidDtoInError extends Errors.JokesError {
     setParams() {
       return {
-        code: `${deleteCategory.Code}/invalidDtoIn`,
+        code: `${deleteCategory.code}/invalidDtoIn`,
         message: "DtoIn is not valid."
       };
     }
@@ -69,7 +69,7 @@ let deleteCategory = {
   jokeCategoryDaoListByCategoryFailed: class JokeCategoryDaoListByCategoryFailed extends Errors.JokesError {
     setParams() {
       return {
-        code: `${deleteCategory.Code}/jokeCategoryDaoListByCategoryFailed`,
+        code: `${deleteCategory.code}/jokeCategoryDaoListByCategoryFailed`,
         message: "List jokeCategory by Dao listByCategory failed.",
         status: 500
       };
@@ -79,7 +79,7 @@ let deleteCategory = {
   relatedJokesExist: class RelatedJokesExist extends Errors.JokesError {
     setParams() {
       return {
-        code: `${deleteCategory.Code}/relatedJokesExist`,
+        code: `${deleteCategory.code}/relatedJokesExist`,
         message: "Category is not empty.",
         status: 500
       };
@@ -89,7 +89,7 @@ let deleteCategory = {
   jokeCategoryDaoDeleteByCategoryFailed: class JokeCategoryDaoDeleteByCategoryFailed extends Errors.JokesError {
     setParams() {
       return {
-        code: `${deleteCategory.Code}/jokeCategoryDaoDeleteByCategoryFailed`,
+        code: `${deleteCategory.code}/jokeCategoryDaoDeleteByCategoryFailed`,
         message: "Delete jokeCategory by Dao deleteByCategory failed.",
         status: 500
       };
@@ -99,7 +99,7 @@ let deleteCategory = {
   categoryDaoDeleteFailed: class CategoryDaoDeleteFailed extends Errors.JokesError {
     setParams() {
       return {
-        code: `${deleteCategory.Code}/categoryDaoDeleteFailed`,
+        code: `${deleteCategory.code}/categoryDaoDeleteFailed`,
         message: "Delete category by Dao delete failed.",
         status: 500
       };
@@ -108,11 +108,11 @@ let deleteCategory = {
 };
 
 let updateCategory = {
-  Code: "updateCategory",
-  InvalidDtoInError: class UpdateCategoryInvalidDtoInError extends Errors.JokesError {
+  code: "updateCategory",
+  invalidDtoInError: class UpdateCategoryInvalidDtoInError extends Errors.JokesError {
     setParams() {
       return {
-        code: `${updateCategory.Code}/invalidDtoIn`,
+        code: `${updateCategory.code}/invalidDtoIn`,
         message: "DtoIn is not valid."
       };
     }
@@ -121,7 +121,7 @@ let updateCategory = {
   categoryNameNotUnique: class CategoryNameNotUnique extends Errors.JokesError {
     setParams() {
       return {
-        code: `${updateCategory.Code}/categoryNameNotUnique`,
+        code: `${updateCategory.code}/categoryNameNotUnique`,
         message: "Category name is not unique in awid.",
         status: 500
       };
@@ -131,7 +131,7 @@ let updateCategory = {
   categoryDaoUpdateFailed: class CategoryDaoUpdateFailed extends Errors.JokesError {
     setParams() {
       return {
-        code: `${updateCategory.Code}/categoryDaoUpdateFailed`,
+        code: `${updateCategory.code}/categoryDaoUpdateFailed`,
         message: "Update category by category Dao update failed.",
         status: 500
       };

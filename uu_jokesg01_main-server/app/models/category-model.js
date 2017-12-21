@@ -27,8 +27,8 @@ class CategoryModel {
       dtoIn,
       validationResult,
       uuAppErrorMap,
-      `uu-jokesg01-main/${Errors.createCategory.Code}/unsupportedKey`,
-      Errors.createCategory.InvalidDtoInError
+      `uu-jokesg01-main/${Errors.createCategory.code}/unsupportedKey`,
+      Errors.createCategory.invalidDtoInError
     );
 
     dtoIn.awid = awid;
@@ -37,9 +37,9 @@ class CategoryModel {
       dtoOut = await this.dao.create(dtoIn);
     } catch (e) {
       if (e.hasOwnProperty("DuplicateKey")) {
-        throw new Errors.createCategory.categoryNameNotIsUnique({ uuAppErrorMap },null,e );
+        throw new Errors.createCategory.categoryNameNotUnique({ uuAppErrorMap },null,e );
       } else {
-        throw new Errors.createCategory.FailedError({ uuAppErrorMap }, null, e);
+        throw new Errors.createCategory.categoryDaoCreateFailed({ uuAppErrorMap }, null, e);
       }
     }
 
@@ -58,8 +58,8 @@ class CategoryModel {
       dtoIn,
       validationResult,
       uuAppErrorMap,
-      `uu-jokesg01-main/${Errors.updateCategory.Code}/unsupportedKey`,
-      Errors.updateCategory.InvalidDtoInError
+      `uu-jokesg01-main/${Errors.updateCategory.code}/unsupportedKey`,
+      Errors.updateCategory.invalidDtoInError
     );
 
     dtoIn.awid = awid;
@@ -76,7 +76,7 @@ class CategoryModel {
         }
       );
     } catch (e) {
-      throw new Errors.updateCategory.FailedError({ uuAppErrorMap }, null, e);
+      throw new Errors.updateCategory.categoryDaoUpdateFailed({ uuAppErrorMap }, null, e);
     }
 
     dtoOut.uuAppErrorMap = uuAppErrorMap;
@@ -94,8 +94,8 @@ class CategoryModel {
       dtoIn,
       validationResult,
       uuAppErrorMap,
-      `uu-jokesg01-main/${Errors.deleteCategory.Code}/unsupportedKey`,
-      Errors.deleteCategory.InvalidDtoInError
+      `uu-jokesg01-main/${Errors.deleteCategory.code}/unsupportedKey`,
+      Errors.deleteCategory.invalidDtoInError
     );
 
     let dtoOut;
@@ -104,7 +104,7 @@ class CategoryModel {
         await JokeCategoryModel.dao.deleteByCategory(awid, dtoIn.id);
         dtoOut = await this.dao.remove(awid, dtoIn.id);
       } catch (e) {
-        throw new Errors.deleteCategory.FailedError({ uuAppErrorMap }, null, e);
+        throw new Errors.deleteCategory.categoryDaoDeleteFailed({ uuAppErrorMap }, null, e);
       }
 
       dtoOut = dtoOut || {};
@@ -116,14 +116,12 @@ class CategoryModel {
           awid,
           dtoIn.id
         );
-
         if (foundJokeCategories.length > 0) {
           throw new Errors.deleteCategory.relatedJokesExist({ uuAppErrorMap });
         }
-
         this.dao.remove(awid, dtoIn.id);
       } catch (e) {
-        throw new Errors.deleteCategory.FailedError({ uuAppErrorMap }, null, e);
+        throw new Errors.deleteCategory.categoryDaoDeleteFailed({ uuAppErrorMap }, null, e);
       }
 
       dtoOut = dtoOut || {};
@@ -143,8 +141,8 @@ class CategoryModel {
       dtoIn,
       validationResult,
       uuAppErrorMap,
-      `uu-jokesg01-main/${Errors.listCategories.Code}/unsupportedKey`,
-      Errors.listCategories.InvalidDtoInError
+      `uu-jokesg01-main/${Errors.listCategories.code}/unsupportedKey`,
+      Errors.listCategories.invalidDtoInError
     );
 
     dtoIn.pageInfo = dtoIn.pageInfo || {
@@ -157,7 +155,7 @@ class CategoryModel {
     try {
       dtoOut = await this.dao.list(awid, dtoIn.pageInfo);
     } catch (e) {
-      throw new Errors.listCategories.FailedError({ uuAppErrorMap }, null, e);
+      throw new Errors.listCategories.categoryDaoListFailed({ uuAppErrorMap }, null, e);
     }
 
     dtoOut = dtoOut || {};

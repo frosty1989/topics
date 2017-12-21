@@ -2,11 +2,11 @@
 const Errors = require("./uu-jokes-error");
 
 let addJokeCategory = {
-  Code: "addJokeCategory",
-  InvalidDtoInError: class AddJokeCategoryInvalidDtoInError extends Errors.JokesError {
+  code: "addJokeCategory",
+  invalidDtoInError: class AddJokeCategoryInvalidDtoInError extends Errors.JokesError {
     setParams() {
       return {
-        code: `${addJokeCategory.Code}/invalidDtoIn`,
+        code: `${addJokeCategory.code}/invalidDtoIn`,
         message: "DtoIn is not valid."
       };
     }
@@ -15,7 +15,7 @@ let addJokeCategory = {
   jokeDaoGetFailed: class JokeDaoGetFailed extends Errors.JokesError {
     setParams() {
       return {
-        code: `${addJokeCategory.Code}/jokeDaoGetFailed`,
+        code: `${addJokeCategory.code}/jokeDaoGetFailed`,
         message: "Get joke by joke Dao get failed.",
         status: 500
       };
@@ -25,7 +25,7 @@ let addJokeCategory = {
   jokeDoesNotExist: class JokeDoesNotExist extends Errors.JokesError {
     setParams() {
       return {
-        code: `${addJokeCategory.Code}/jokeDoesNotExist`,
+        code: `${addJokeCategory.code}/jokeDoesNotExist`,
         message: "Joke does not exist.",
         status: 500
       };
@@ -35,7 +35,7 @@ let addJokeCategory = {
   categoryDaoGetFailed: class CategoryDaoGetFailed extends Errors.JokesError {
     setParams() {
       return {
-        code: `${addJokeCategory.Code}/categoryDaoGetFailed`,
+        code: `${addJokeCategory.code}/categoryDaoGetFailed`,
         message: "Get category by category Dao get failed.",
         status: 500
       };
@@ -45,7 +45,7 @@ let addJokeCategory = {
   jokeCategoryDaoCreateFailed: class JokeCategoryDaoCreateFailed extends Errors.JokesError {
     setParams() {
       return {
-        code: `${addJokeCategory.Code}/jokeCategoryDaoCreateFailed`,
+        code: `${addJokeCategory.code}/jokeCategoryDaoCreateFailed`,
         message: "Create jokeCategory by jokeCategory Dao create failed.",
         status: 500
       };
@@ -54,11 +54,11 @@ let addJokeCategory = {
 };
 
 let removeJokeCategory = {
-  Code: "removeJokeCategory",
-  InvalidDtoInError: class RemoveJokeCategoryInvalidDtoInError extends Errors.JokesError {
+  code: "removeJokeCategory",
+  invalidDtoInError: class RemoveJokeCategoryInvalidDtoInError extends Errors.JokesError {
     setParams() {
       return {
-        code: `${removeJokeCategory.Code}/invalidDtoIn`,
+        code: `${removeJokeCategory.code}/invalidDtoIn`,
         message: "DtoIn is not valid."
       };
     }
@@ -67,7 +67,7 @@ let removeJokeCategory = {
   jokeCategoryDaoDeleteByJokeAndCategoryFailed: class JokeCategoryDaoDeleteByJokeAndCategoryFailed extends Errors.JokesError {
     setParams() {
       return {
-        code: `${removeJokeCategory.Code}/jokeCategoryDaoDeleteByJokeAndCategoryFailed`,
+        code: `${removeJokeCategory.code}/jokeCategoryDaoDeleteByJokeAndCategoryFailed`,
         message: "Delete jokeCategory by Dao deleteByJokeAndCategory failed.",
         status: 500
       };
