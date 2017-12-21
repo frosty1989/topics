@@ -1,7 +1,7 @@
 "use strict";
 const Errors = require("./uu-jokes-error");
 
-Errors.addJokeRating = {
+let addJokeRating = {
   code: "addJokeRating",
   invalidDtoIn: class InvalidDtoInError extends Errors.JokesError {
     setParams() {
@@ -60,6 +60,8 @@ Errors.addJokeRating = {
     }
   }
 };
+
+Errors.addJokeRating = addJokeRating;
 
 module.exports = {
   Errors

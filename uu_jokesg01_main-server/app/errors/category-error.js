@@ -12,24 +12,25 @@ let createCategory = {
     }
   },
 
-  FailedError: class CreateCategoryFailedError extends Errors.JokesError {
+  categoryNameNotUnique: class CategoryNameNotUnique extends Errors.JokesError {
     setParams() {
       return {
-        code: `${createCategory.Code}/failed`,
-        message: "Create category failed.",
+        code: `${createCategory.Code}/categoryNameNotUnique`,
+        message: "Category name is not unique in awid.",
         status: 500
       };
     }
   },
 
-  categoryNameNotIsUnique: class CategoryNameIsNotUnique extends Errors.JokesError {
+  categoryDaoCreateFailed: class CategoryDaoCreateFailed extends Errors.JokesError {
     setParams() {
       return {
-        code: `${createCategory.Code}/categoryNameNotIsUnique`,
-        message: "Category name is not unique in awid."
+        code: `${createCategory.Code}/categoryDaoCreateFailed`,
+        message: "Create category by category Dao create failed.",
+        status: 500
       };
     }
-  },
+  }
 };
 
 let listCategories = {
@@ -43,11 +44,11 @@ let listCategories = {
     }
   },
 
-  FailedError: class ListCategoriesFailedError extends Errors.JokesError {
+  categoryDaoListFailed: class CategoryDaoListFailed extends Errors.JokesError {
     setParams() {
       return {
-        code: `${listCategories.Code}/failed`,
-        message: "List category failed.",
+        code: `${listCategories.Code}/categoryDaoListFailed`,
+        message: "List categories by category Dao list failed.",
         status: 500
       };
     }
@@ -65,21 +66,41 @@ let deleteCategory = {
     }
   },
 
-  FailedError: class DeleteCategoryFailedError extends Errors.JokesError {
+  jokeCategoryDaoListByCategoryFailed: class JokeCategoryDaoListByCategoryFailed extends Errors.JokesError {
     setParams() {
       return {
         code: `${deleteCategory.Code}/jokeCategoryDaoListByCategoryFailed`,
-        message: "Delete category failed.",
+        message: "List jokeCategory by Dao listByCategory failed.",
         status: 500
       };
     }
   },
 
-  relatedJokesExist: class RelatedJokesExists extends Errors.JokesError {
+  relatedJokesExist: class RelatedJokesExist extends Errors.JokesError {
     setParams() {
       return {
         code: `${deleteCategory.Code}/relatedJokesExist`,
         message: "Category is not empty.",
+        status: 500
+      };
+    }
+  },
+
+  jokeCategoryDaoDeleteByCategoryFailed: class JokeCategoryDaoDeleteByCategoryFailed extends Errors.JokesError {
+    setParams() {
+      return {
+        code: `${deleteCategory.Code}/jokeCategoryDaoDeleteByCategoryFailed`,
+        message: "Delete jokeCategory by Dao deleteByCategory failed.",
+        status: 500
+      };
+    }
+  },
+
+  categoryDaoDeleteFailed: class CategoryDaoDeleteFailed extends Errors.JokesError {
+    setParams() {
+      return {
+        code: `${deleteCategory.Code}/categoryDaoDeleteFailed`,
+        message: "Delete category by Dao delete failed.",
         status: 500
       };
     }
@@ -97,73 +118,27 @@ let updateCategory = {
     }
   },
 
-  FailedError: class UpdateCategoryFailedError extends Errors.JokesError {
+  categoryNameNotUnique: class CategoryNameNotUnique extends Errors.JokesError {
     setParams() {
       return {
-        code: `${updateCategory.Code}/failed`,
-        message: "Update category failed.",
-        status: 500
-      };
-    }
-  }
-};
-
-let categoryNameNotUnique = {
-  Code: "categoryNameNotUnique",
-  FailedError: class CategoryNameNotUnique extends Errors.JokesError {
-    setParams() {
-      return {
-        code: `${categoryNameNotUnique.Code}/categoryNameNotUnique`,
+        code: `${updateCategory.Code}/categoryNameNotUnique`,
         message: "Category name is not unique in awid.",
         status: 500
       };
     }
-  }
-};
+  },
 
-let jokeCategoryDaoListByCategoryFailed = {
-  Code: "jokeCategoryDaoListByCategoryFailed",
-  FailedError: class JokeCategoryDaoListByCategoryFailed extends Errors.JokesError {
+  categoryDaoUpdateFailed: class CategoryDaoUpdateFailed extends Errors.JokesError {
     setParams() {
       return {
-        code: `${jokeCategoryDaoListByCategoryFailed.Code}/jokeCategoryDaoListByCategoryFailed`,
-        message: "List jokeCategory by Dao listByCategory failed.",
+        code: `${updateCategory.Code}/categoryDaoUpdateFailed`,
+        message: "Update category by category Dao update failed.",
         status: 500
       };
     }
   }
 };
 
-let relatedJokesExist = {
-  Code: "relatedJokesExist",
-  FailedError: class RelatedJokesExist extends Errors.JokesError {
-    setParams() {
-      return {
-        code: `${relatedJokesExist.Code}/relatedJokesExist`,
-        message: "Category is not empty",
-        status: 500
-      };
-    }
-  }
-};
-
-let jokeCategoryDaoDeleteByCategoryFailed = {
-  Code: "jokeCategoryDaoDeleteByCategoryFailed",
-  FailedError: class JokeCategoryDaoDeleteByCategoryFailed extends Errors.JokesError {
-    setParams() {
-      return {
-        code: `${jokeCategoryDaoDeleteByCategoryFailed.Code}/jokeCategoryDaoDeleteByCategoryFailed`,
-        message: "Delete jokeCategory by Dao deleteByCategory failed.",
-        status: 500
-      };
-    }
-  }
-};
-
-Errors.jokeCategoryDaoDeleteByCategoryFailed = jokeCategoryDaoDeleteByCategoryFailed;
-Errors.relatedJokesExist = relatedJokesExist;
-Errors.jokeCategoryDaoListByCategoryFailed = jokeCategoryDaoListByCategoryFailed;
-Errors.categoryNameNotUnique = categoryNameNotUnique;
 Errors.createCategory = createCategory;
 Errors.listCategories = listCategories;
 Errors.deleteCategory = deleteCategory;
