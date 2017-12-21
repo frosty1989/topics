@@ -37,11 +37,9 @@ class CategoryModel {
       dtoOut = await this.dao.create(dtoIn);
     } catch (e) {
       if (e.hasOwnProperty("DuplicateKey")) {
-        throw new Errors.createCategory.categoryNameNotIsUnique({
-          uuAppErrorMap
-        }, null, e);
+        throw new Errors.createCategory.categoryNameNotIsUnique({ uuAppErrorMap },null,e );
       } else {
-        throw new Errors.createCategory.FailedError({uuAppErrorMap}, null, e);
+        throw new Errors.createCategory.FailedError({ uuAppErrorMap }, null, e);
       }
     }
 
@@ -78,7 +76,7 @@ class CategoryModel {
         }
       );
     } catch (e) {
-      throw new Errors.updateCategory.FailedError({uuAppErrorMap}, null, e);
+      throw new Errors.updateCategory.FailedError({ uuAppErrorMap }, null, e);
     }
 
     dtoOut.uuAppErrorMap = uuAppErrorMap;
@@ -106,7 +104,7 @@ class CategoryModel {
         await JokeCategoryModel.dao.deleteByCategory(awid, dtoIn.id);
         dtoOut = await this.dao.remove(awid, dtoIn.id);
       } catch (e) {
-        throw new Errors.deleteCategory.FailedError({uuAppErrorMap}, null, e);
+        throw new Errors.deleteCategory.FailedError({ uuAppErrorMap }, null, e);
       }
 
       dtoOut = dtoOut || {};
@@ -125,7 +123,7 @@ class CategoryModel {
 
         this.dao.remove(awid, dtoIn.id);
       } catch (e) {
-        throw new Errors.deleteCategory.FailedError({uuAppErrorMap}, null, e);
+        throw new Errors.deleteCategory.FailedError({ uuAppErrorMap }, null, e);
       }
 
       dtoOut = dtoOut || {};
@@ -159,7 +157,7 @@ class CategoryModel {
     try {
       dtoOut = await this.dao.list(awid, dtoIn.pageInfo);
     } catch (e) {
-      throw new Errors.listCategories.FailedError({uuAppErrorMap}, null, e);
+      throw new Errors.listCategories.FailedError({ uuAppErrorMap }, null, e);
     }
 
     dtoOut = dtoOut || {};
