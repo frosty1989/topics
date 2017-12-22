@@ -26,8 +26,8 @@ class JokeModel {
       dtoIn,
       validationResult,
       uuAppErrorMap,
-      `uu-jokesg01-main/${Errors.createJoke.Code}/unsupportedKey`,
-      Errors.createJoke.InvalidDtoIn
+      `uu-jokesg01-main/${Errors.createJoke.code}/unsupportedKey`,
+      Errors.createJoke.invalidDtoIn
     );
 
     dtoIn.awid = awid;
@@ -35,7 +35,7 @@ class JokeModel {
     try {
       dtoOut = await this.dao.create(dtoIn);
     } catch (e) {
-      throw new Errors.createJoke.FailedError({ uuAppErrorMap }, null, e);
+      throw new Errors.createJoke.jokeDaoCreateFailed({ uuAppErrorMap }, null, e);
     }
 
     dtoOut.uuAppErrorMap = uuAppErrorMap;
@@ -53,8 +53,8 @@ class JokeModel {
       dtoIn,
       validationResult,
       uuAppErrorMap,
-      `uu-jokesg01-main/${Errors.updateJoke.Code}/unsupportedKey`,
-      Errors.updateJoke.InvalidDtoInError
+      `uu-jokesg01-main/${Errors.updateJoke.code}/unsupportedKey`,
+      Errors.updateJoke.invalidDtoInError
     );
 
     dtoIn.awid = awid;
@@ -65,7 +65,7 @@ class JokeModel {
         { awid: awid, id: dtoIn.id, name: dtoIn.name, text: dtoIn.text }
       );
     } catch (e) {
-      throw new Errors.updateJoke.FailedError({ uuAppErrorMap }, null, e);
+      throw new Errors.updateJoke.jokeDaoUpdateFailed({ uuAppErrorMap }, null, e);
     }
 
     dtoOut.uuAppErrorMap = uuAppErrorMap;
@@ -83,15 +83,19 @@ class JokeModel {
       dtoIn,
       validationResult,
       uuAppErrorMap,
-      `uu-jokesg01-main/${Errors.deleteJoke.Code}/unsupportedKey`,
-      Errors.deleteJoke.InvalidDtoInError
+      `uu-jokesg01-main/${Errors.deleteJoke.code}/unsupportedKey`,
+      Errors.deleteJoke.invalidDtoInError
     );
 
     let dtoOut;
     try {
       dtoOut = await this.dao.remove(awid, dtoIn.id);
     } catch (e) {
-      throw new Errors.deleteJoke.FailedError({ uuAppErrorMap }, null, e);
+      throw new Errors.deleteJoke.jokeDaoDeleteFailed(
+        { uuAppErrorMap },
+        null,
+        e
+      );
     }
 
     dtoOut = dtoOut || {};
@@ -107,15 +111,15 @@ class JokeModel {
       dtoIn,
       validationResult,
       uuAppErrorMap,
-      `uu-jokesg01-main/${Errors.getJoke.Code}/unsupportedKey`,
-      Errors.getJoke.InvalidDtoIn
+      `uu-jokesg01-main/${Errors.getJoke.code}/unsupportedKey`,
+      Errors.getJoke.invalidDtoIn
     );
 
     let dtoOut;
     try {
       dtoOut = await this.dao.get(awid, dtoIn.id);
     } catch (e) {
-      throw new Errors.getJoke.FailedError({ uuAppErrorMap }, null, e);
+      throw new Errors.getJoke.jokeDaoGetFailed({ uuAppErrorMap }, null, e);
     }
 
     dtoOut = dtoOut || {};
@@ -131,8 +135,8 @@ class JokeModel {
       dtoIn,
       validationResult,
       uuAppErrorMap,
-      `uu-jokesg01-main/${Errors.listJokes.Code}/unsupportedKey`,
-      Errors.listJokes.InvalidDtoInError
+      `uu-jokesg01-main/${Errors.listJokes.code}/unsupportedKey`,
+      Errors.listJokes.invalidDtoInError
     );
 
     dtoIn.pageInfo = dtoIn.pageInfo || {
@@ -147,7 +151,7 @@ class JokeModel {
     try {
       dtoOut = await this.dao.list(awid, dtoIn.pageInfo, { [sort]: order });
     } catch (e) {
-      throw new Errors.listJokes.FailedError({ uuAppErrorMap }, null, e);
+      throw new Errors.listJokes.jokeDaoListFailed({ uuAppErrorMap }, null, e);
     }
 
     dtoOut.uuAppErrorMap = uuAppErrorMap;
@@ -165,15 +169,15 @@ class JokeModel {
       dtoIn,
       validationResult,
       uuAppErrorMap,
-      `uu-jokesg01-main/${Errors.listCategoryJokes.Code}/unsupportedKey`,
-      Errors.listCategoryJokes.InvalidDtoInError
+      `uu-jokesg01-main/${Errors.listCategoryJokes.code}/unsupportedKey`,
+      Errors.listCategoryJokes.invalidDtoInError
     );
 
     let dtoOut;
     try {
       dtoOut = await this.dao.listCategoryJokes(awid, dtoIn.id);
     } catch (e) {
-      throw new Errors.listCategoryJokes.FailedError(
+      throw new Errors.listCategoryJokes.jokeCategoryDaoListByCategoryFailed(
         { uuAppErrorMap },
         null,
         e
