@@ -1,65 +1,67 @@
 "use strict";
 const Errors = require("./uu-jokes-error");
 
-Errors.addJokeRating = {
+let addJokeRating = {
   code: "addJokeRating",
-  invalidDtoIn: class InvalidDtoInError extends Errors.JokesError {
+  invalidDtoIn: class extends Errors.JokesError {
     setParams() {
       return {
-        code: `${addJokeRating.Code}/invalidDtoIn`,
+        code: `${addJokeRating.code}/invalidDtoIn`,
         message: "DtoIn is not valid."
       };
     }
   },
-  jokeDaoGetFailed: class JokeDaoGetFailed extends Errors.JokesError {
+  jokeDaoGetFailed: class extends Errors.JokesError {
     setParams() {
       return {
-        code: `${addJokeRating.Code}/jokeDaoGetFailed`,
+        code: `${addJokeRating.code}/jokeDaoGetFailed`,
         message: "Get joke by Dao get failed."
       };
     }
   },
-  jokeDoesNotExist: class JokeDoesNotExist extends Errors.JokesError {
+  jokeDoesNotExist: class extends Errors.JokesError {
     setParams() {
       return {
-        code: `${addJokeRating.Code}/jokeDoesNotExist`,
+        code: `${addJokeRating.code}/jokeDoesNotExist`,
         message: "Joke does not exist."
       };
     }
   },
-  jokeRatingDaoGetByJokeAndIdentityFailed: class JokeRatingDaoGetByJokeAndIdentityFailed extends Errors.JokesError {
+  jokeRatingDaoGetByJokeAndIdentityFailed: class extends Errors.JokesError {
     setParams() {
       return {
-        code: `${addJokeRating.Code}/jokeRatingDaoGetByJokeAndIdentityFailed`,
+        code: `${addJokeRating.code}/jokeRatingDaoGetByJokeAndIdentityFailed`,
         message: "Get jokeRating by Dao getByJokeAndIdentity failed."
       };
     }
   },
-  jokeRatingDaoUpdateFailed: class JokeRatingDaoUpdateFailed extends Errors.JokesError {
+  jokeRatingDaoUpdateFailed: class extends Errors.JokesError {
     setParams() {
       return {
-        code: `${addJokeRating.Code}/jokeRatingDaoUpdateFailed`,
+        code: `${addJokeRating.code}/jokeRatingDaoUpdateFailed`,
         message: "Update jokeRating by Dao update failed."
       };
     }
   },
-  jokeRatingDaoCreateFailed: class JokeRatingDaoCreateFailed extends Errors.JokesError {
+  jokeRatingDaoCreateFailed: class extends Errors.JokesError {
     setParams() {
       return {
-        code: `${addJokeRating.Code}/jokeRatingDaoCreateFailed`,
+        code: `${addJokeRating.code}/jokeRatingDaoCreateFailed`,
         message: "Create jokeRating by Dao create failed."
       };
     }
   },
-  jokeDaoUpdateFailed: class JokeDaoUpdateFailed extends Errors.JokesError {
+  jokeDaoUpdateFailed: class extends Errors.JokesError {
     setParams() {
       return {
-        code: `${addJokeRating.Code}/jokeDaoUpdateFailed`,
+        code: `${addJokeRating.code}/jokeDaoUpdateFailed`,
         message: "Update joke by Dao update failed."
       };
     }
   }
 };
+
+Errors.addJokeRating = addJokeRating;
 
 module.exports = {
   Errors

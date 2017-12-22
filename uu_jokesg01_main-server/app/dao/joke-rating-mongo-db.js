@@ -1,25 +1,31 @@
 "use strict";
-const {UuObjectDao} = require("uu_appg01_server").ObjectStore;
+const { UuObjectDao } = require("uu_appg01_server").ObjectStore;
 
 class JokeRatingMongoDB extends UuObjectDao {
   createSchema() {
-    super.createIndex({
-      awid: 1,
-      _id: 1
-    }, {
-      unique: true
-    });
+    super.createIndex(
+      {
+        awid: 1,
+        _id: 1
+      },
+      {
+        unique: true
+      }
+    );
     super.createIndex({
       awid: 1,
       jokeId: 1
     });
-    super.createIndex({
-      awid: 1,
-      jokeId: 1,
-      uuIdentity: 1
-    }, {
-      unique: true
-    });
+    super.createIndex(
+      {
+        awid: 1,
+        jokeId: 1,
+        uuIdentity: 1
+      },
+      {
+        unique: true
+      }
+    );
   }
 
   create(uuObject) {
@@ -27,7 +33,7 @@ class JokeRatingMongoDB extends UuObjectDao {
   }
 
   getByJokeAndIdentity(awid, jokeId, uuIdentity) {
-    return super.find({
+    return super.findOne({
       awid,
       jokeId,
       uuIdentity
