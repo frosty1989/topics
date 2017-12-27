@@ -2,7 +2,7 @@
 const createJokeDtoInType = shape({
   name: string(255).isRequired(),
   text: string(4000).isRequired(),
-  categoryList: array(code(), 10)
+  categoryList: array(mongoId(), 10)
 });
 
 const getJokeDtoInType = shape({
