@@ -36,13 +36,15 @@ class CategoryModel {
     try {
       dtoOut = await this.dao.create(dtoIn);
     } catch (e) {
-      if (e.hasOwnProperty("duplicateKey")) {
+      console.log(e);
+      if (e.code === "uu-app-objectstore/duplicateKey") {
         throw new Errors.createCategory.categoryNameNotUnique(
           { uuAppErrorMap },
           null,
           e
         );
       } else {
+        console.log(e)
         throw new Errors.createCategory.categoryDaoCreateFailed(
           { uuAppErrorMap },
           null,
