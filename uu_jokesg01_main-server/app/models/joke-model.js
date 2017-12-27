@@ -11,6 +11,10 @@ const WARNINGS = {
   categoryDaoGetFailed: {
     code: `${Errors.createJoke.code}/categoryDaoGetFailed`,
     message: "Get category by category Dao get failed,"
+  },
+  categoryDoesNotExist: {
+    code: `${Errors.createJoke.code}/categoryDoesNotExist`,
+    message: "Category with given categoryId does not exist."
   }
 };
 
@@ -30,6 +34,7 @@ class JokeModel {
     );
     let uuAppErrorMap = validationResult.getValidationErrorMap();
     let dtoOut;
+    let validJokeCategories = [];
 
     ValidationHelper.processValidationResult(
       dtoIn,
@@ -41,25 +46,38 @@ class JokeModel {
 
     dtoIn.awid = awid;
 
-    try {
-      if (dtoIn.categoryList && dtoIn.categoryList.length > 0) {
-        dtoIn.categoryList.forEach(async categoryId => {
+    if (dtoIn.categoryList && dtoIn.categoryList.length > 0) {
+      dtoIn.categoryList.forEach(async categoryId => {
+        try {
           let foundCategory = await CategoryModel.dao.get(awid, categoryId);
 
           if (!foundCategory || !foundCategory.hasOwnProperty("id")) {
             ValidationHelper.addWarning(
               uuAppErrorMap,
-              WARNINGS.categoryDaoGetFailed.code,
-              WARNINGS.categoryDaoGetFailed.message
+              WARNINGS.categoryDoesNotExist.code,
+              WARNINGS.categoryDoesNotExist.message,
+              {
+                categoryId: categoryId
+              }
             );
+          } else {
+            validJokeCategories.push(categoryId);
           }
-        });
-      }
-    } catch (err) {
-      console.log(err);
+        } catch (err) {
+          ValidationHelper.addWarning(
+            uuAppErrorMap,
+            WARNINGS.categoryDaoGetFailed.code,
+            WARNINGS.categoryDaoGetFailed.message,
+            {
+              cause: err
+            }
+          );
+        }
+      });
     }
 
     try {
+      dtoIn.categoryList = validJokeCategories;
       dtoOut = await this.dao.create(dtoIn);
     } catch (e) {
       throw new Errors.createJoke.jokeDaoCreateFailed(
@@ -69,7 +87,22 @@ class JokeModel {
       );
     }
 
+    try {
+      JokeCategoryModel.dao.create({
+        awid: awid,
+        jokeId: dtoOut.id,
+        categoryList: validJokeCategories
+      });
+    } catch (err) {
+      throw new Errors.createJoke.jokeCategoryDaoCreateFailed(
+        { uuAppErrorMap },
+        null,
+        err
+      );
+    }
+
     dtoOut.uuAppErrorMap = uuAppErrorMap;
+
     return dtoOut;
   }
 
