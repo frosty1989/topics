@@ -15,83 +15,83 @@ afterEach(async done => {
   done();
 });
 
-// describe("Test createJoke command - HDS", () => {
-//   test("createJoke method", async () => {
-//     await TestHelper.login("Readers", true);
-//     let createCategoryResponse = await CreateCategory();
-//     let categoryId = createCategoryResponse.data.id;
-//     let result = await CreateJoke({}, categoryId);
+describe("Test createJoke command - HDS", () => {
+  test("createJoke method", async () => {
+    await TestHelper.login("Readers", true);
+    let createCategoryResponse = await CreateCategory();
+    let categoryId = createCategoryResponse.data.id;
+    let result = await CreateJoke({}, categoryId);
 
-//     expect(result.status).toEqual(200);
-//     expect(result.data).toBeDefined();
-//     expect(result.data).toBeInstanceOf(Object);
-//     expect(result.data.id).toBeDefined();
-//     expect(result.data.id).toBeInstanceOf(String);
-//     expect(result.data.uuAppErrorMap).toBeDefined();
-//     expect(result.data.uuAppErrorMap).toBeInstanceOf(Object);
-//     expect(result.data.uuAppErrorMap).toMatchObject({});
-//     expect(result.data.categoryList).toBeDefined();
-//     expect(result.data.categoryList).toBeInstanceOf(Array);
-//     expect(result.data.categoryList).toContain(categoryId);
-//   });
-// });
+    expect(result.status).toEqual(200);
+    expect(result.data).toBeDefined();
+    expect(result.data).toBeInstanceOf(Object);
+    expect(result.data.id).toBeDefined();
+    expect(typeof result.data.id == "string").toBeTruthy();
+    expect(result.data.uuAppErrorMap).toBeDefined();
+    expect(result.data.uuAppErrorMap).toBeInstanceOf(Object);
+    expect(result.data.uuAppErrorMap).toMatchObject({});
+    expect(result.data.categoryList).toBeDefined();
+    expect(result.data.categoryList).toBeInstanceOf(Array);
+    expect(result.data.categoryList).toContain(categoryId);
+  });
+});
 
-// describe("Test createJoke command - A1", () => {
-//   test("createJoke method", async () => {
-//     await TestHelper.login("Readers", true);
+describe("Test createJoke command - A1", () => {
+  test("createJoke method", async () => {
+    await TestHelper.login("Readers", true);
 
-//     let result = await CreateJoke({ unsupportedKey: "unsupportedValue" });
-//     const unsupportedKeysWarn = "uu-jokesg01-main/createJoke/unsupportedKey";
+    let result = await CreateJoke({ unsupportedKey: "unsupportedValue" });
+    const unsupportedKeysWarn = "uu-jokesg01-main/createJoke/unsupportedKey";
 
-//     expect(result.status).toEqual(200);
-//     expect(result.data).toBeDefined();
-//     expect(result.data).toBeInstanceOf(Object);
-//     expect(result.data).toHaveProperty("id");
-//     expect(result.data).toHaveProperty("uuAppErrorMap");
-//     expect(result.data.uuAppErrorMap).toBeInstanceOf(Object);
-//     expect(result.data.uuAppErrorMap).toHaveProperty(unsupportedKeysWarn);
-//     expect(result.data.uuAppErrorMap[unsupportedKeysWarn]).toBeInstanceOf(
-//       Object
-//     );
-//   });
-// });
+    expect(result.status).toEqual(200);
+    expect(result.data).toBeDefined();
+    expect(result.data).toBeInstanceOf(Object);
+    expect(result.data).toHaveProperty("id");
+    expect(result.data).toHaveProperty("uuAppErrorMap");
+    expect(result.data.uuAppErrorMap).toBeInstanceOf(Object);
+    expect(result.data.uuAppErrorMap).toHaveProperty(unsupportedKeysWarn);
+    expect(result.data.uuAppErrorMap[unsupportedKeysWarn]).toBeInstanceOf(
+      Object
+    );
+  });
+});
 
-// describe("Test createJoke command - A2", () => {
-//   test("createJoke method", async () => {
-//     await TestHelper.login("Readers", true);
-//     let result;
+describe("Test createJoke command - A2", () => {
+  test("createJoke method", async () => {
+    await TestHelper.login("Readers", true);
+    let result;
 
-//     try {
-//       await TestHelper.executePostCommand("createJoke", {});
-//     } catch (err) {
-//       result = err;
-//     }
+    try {
+      await TestHelper.executePostCommand("createJoke", {});
+    } catch (err) {
+      result = err;
+    }
 
-//     expect(result).toHaveProperty("paramMap");
-//     expect(result.paramMap).toHaveProperty("invalidValueKeyMap");
-//     expect(result.paramMap).toHaveProperty("missingKeyMap");
-//     expect(result.paramMap.missingKeyMap.hasOwnProperty("$.name")).toBeTruthy();
-//     expect(result.paramMap.missingKeyMap.hasOwnProperty("$.text")).toBeTruthy();
-//     expect(result.dtoOut).toHaveProperty("uuAppErrorMap");
-//     expect(result).toHaveProperty("response");
-//     expect(result).toHaveProperty("status");
-//     expect(result.status).toEqual(400);
-//   });
-// });
+    expect(result).toHaveProperty("paramMap");
+    expect(result.paramMap).toHaveProperty("invalidValueKeyMap");
+    expect(result.paramMap).toHaveProperty("missingKeyMap");
+    expect(result.paramMap.missingKeyMap.hasOwnProperty("$.name")).toBeTruthy();
+    expect(result.paramMap.missingKeyMap.hasOwnProperty("$.text")).toBeTruthy();
+    expect(result.dtoOut).toHaveProperty("uuAppErrorMap");
+    expect(result).toHaveProperty("response");
+    expect(result).toHaveProperty("status");
+    expect(result.status).toEqual(400);
+  });
+});
 
-// describe("Test createJoke command - A3", () => {
-//   test("createJoke method that works always", async () => {
-//     await TestHelper.login("Readers", true);
+describe("Test createJoke command - A3", () => {
+  test("createJoke method that works always", async () => {
+    await TestHelper.login("Readers", true);
 
-//     let result = await CreateJoke({
-//       name: "Joke that never ever will be tested",
-//       text: "The text that never will be read"
-//     });
+    let result = await CreateJoke({
+      name: "Joke that never ever will be tested",
+      text: "The text that never will be read"
+    });
 
-//     expect(result.status).toBe(200);
-//     expect(result.data.uuAppErrorMap).toEqual({});
-//   });
-// });
+    expect(result.status).toBe(200);
+    expect(result.data.uuAppErrorMap).toEqual({});
+  });
+});
 
 describe("Test createJoke command - A4", () => {
   test("createJoke method", async () => {
