@@ -8,13 +8,21 @@ const CategoryModel = require("./category-model");
 const JokeCategoryModel = require("./joke-category-model");
 const Path = require("path");
 const WARNINGS = {
-  categoryDaoGetFailed: {
-    code: `${Errors.createJoke.code}/categoryDaoGetFailed`,
-    message: "Get category by category Dao get failed,"
+  createJoke: {
+    categoryDaoGetFailed: {
+      code: `uu-jokesg01-main/${Errors.createJoke.code}/categoryDaoGetFailed`,
+      message: "Get category by category Dao get failed,"
+    },
+    categoryDoesNotExist: {
+      code: `uu-jokesg01-main/${Errors.createJoke.code}/categoryDoesNotExist`,
+      message: "Category with given categoryId does not exist."
+    }
   },
-  categoryDoesNotExist: {
-    code: `${Errors.createJoke.code}/categoryDoesNotExist`,
-    message: "Category with given categoryId does not exist."
+  updateJoke: {
+    jokeDoesNotExist: {
+      code: `uu-jokesg01-main/${Errors.updateJoke.code}/jokeDoesNotExist`,
+      message: "Joke does not exist."
+    }
   }
 };
 
@@ -112,6 +120,7 @@ class JokeModel {
       dtoIn
     );
     let uuAppErrorMap = validationResult.getValidationErrorMap();
+    let dtoOut;
 
     ValidationHelper.processValidationResult(
       dtoIn,
@@ -121,22 +130,38 @@ class JokeModel {
       Errors.updateJoke.invalidDtoInError
     );
 
-    dtoIn.awid = awid;
-    let dtoOut;
+    try {
+      let foundJoke = await this.dao.get(awid, dtoIn.id);
+
+      if (!foundJoke || !foundJoke.hasOwnProperty("id")) {
+        ValidationHelper.addWarning(
+          uuAppErrorMap,
+          WARNINGS.updateJoke.jokeDoesNotExist.code,
+          WARNINGS.updateJoke.jokeDoesNotExist.message,
+          {
+            jokeId: dtoIn.id
+          }
+        );
+      }
+    } catch (err) {
+      throw new Errors.updateJoke.jokeDaoGetFailed({ uuAppErrorMap }, null, {
+        cause: err
+      });
+    }
+
     try {
       dtoOut = await this.dao.update(
-        { id: dtoIn.id },
-        { awid: awid, id: dtoIn.id, name: dtoIn.name, text: dtoIn.text }
+        { _id: dtoIn.id, awid: awid },
+        { name: dtoIn.name, text: dtoIn.text }
       );
     } catch (e) {
-      throw new Errors.updateJoke.jokeDaoUpdateFailed(
-        { uuAppErrorMap },
-        null,
-        e
-      );
+      throw new Errors.updateJoke.jokeDaoUpdateFailed({ uuAppErrorMap }, null, {
+        cause: e
+      });
     }
 
     dtoOut.uuAppErrorMap = uuAppErrorMap;
+
     return dtoOut;
   }
 

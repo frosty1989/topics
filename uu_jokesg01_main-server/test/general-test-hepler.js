@@ -1,6 +1,6 @@
 const { TestHelper } = require("uu_appg01_workspace-test");
 
-const createJoke = async (dtoIn, categoryId = null) => {
+const createJoke = async (dtoIn = {}, categoryId = null) => {
   if (!dtoIn.hasOwnProperty("name")) {
     dtoIn.name = "test joke";
   }
