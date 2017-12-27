@@ -23,7 +23,7 @@ describe("Test createJoke command HDS A1", () => {
     await TestHelper.login("Readers", true);
     let createCategoryResponse = await CreateCategory();
     let categoryId = createCategoryResponse.data.id;
-    let result = await CreateJoke({categoryList: [categoryId], unsupportedKey);
+    let result = await CreateJoke(categoryId);
 
     await expect(Array.isArray(result.data.categoryList)).toBe(true);
     await expect(result.data.categoryList.length).toBe(1);
