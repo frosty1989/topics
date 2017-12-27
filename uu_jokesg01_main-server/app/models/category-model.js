@@ -7,13 +7,6 @@ const Path = require("path");
 const { Errors } = require("../errors/category-error");
 const JokeCategoryModel = require("./joke-category-model");
 
-const WARNINGS = {
-  categoryDaoGetFailed: {
-    code: `categoryDaoGetFailed`,
-    message: `Get category by category Dao get failed`
-  }
-};
-
 class CategoryModel {
   constructor() {
     this.validator = new Validator(
@@ -43,7 +36,7 @@ class CategoryModel {
     try {
       dtoOut = await this.dao.create(dtoIn);
     } catch (e) {
-      if (e.hasOwnProperty("DuplicateKey")) {
+      if (e.hasOwnProperty("duplicateKey")) {
         throw new Errors.createCategory.categoryNameNotUnique(
           { uuAppErrorMap },
           null,
