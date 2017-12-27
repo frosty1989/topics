@@ -31,7 +31,7 @@ class CategoryMongoDB extends UuObjectDao {
   }
 
   list(awid, pageInfo = {}) {
-    return super.find({ awid }, pageInfo)
+    return super.find({ awid }, pageInfo);
   }
 
   update(filter, uuObject) {
@@ -39,7 +39,7 @@ class CategoryMongoDB extends UuObjectDao {
   }
 
   remove(awid, id) {
-      return super.deleteOne({awid, id});
+    return super.deleteOne({ awid, id });
   }
 }
 

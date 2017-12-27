@@ -1,19 +1,16 @@
-const {TestHelper} = require("uu_appg01_workspace-test");
+const { TestHelper } = require("uu_appg01_workspace-test");
 
-const createJoke = async (dtoIn) => {
-  if (!dtoIn) {
-    dtoIn = {
-      name: "test name",
-      text: "test desc",
-      categoryList: ["e001", "e001"]};
-  }
+const createJoke = async categoryId => {
+  let dtoIn = {
+    name: "test name",
+    text: "test desc",
+    categoryList: [categoryId]
+  };
 
-  let result = await TestHelper.executePostCommand("createJoke", dtoIn);
-
-  return result;
+  return await TestHelper.executePostCommand("createJoke", dtoIn);
 };
 
-const createCategory = async (dtoIn) => {
+const createCategory = async dtoIn => {
   await TestHelper.login("Readers");
   if (!dtoIn) {
     dtoIn = {
@@ -23,9 +20,7 @@ const createCategory = async (dtoIn) => {
     };
   }
 
-  let response = await TestHelper.executePostCommand("createCategory", dtoIn);
-
-  return response;
+  return await TestHelper.executePostCommand("createCategory", dtoIn);
 };
 
 module.exports = {

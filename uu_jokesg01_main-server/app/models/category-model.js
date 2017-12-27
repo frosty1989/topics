@@ -7,6 +7,13 @@ const Path = require("path");
 const { Errors } = require("../errors/category-error");
 const JokeCategoryModel = require("./joke-category-model");
 
+const WARNINGS = {
+  categoryDaoGetFailed: {
+    code: `categoryDaoGetFailed`,
+    message: `Get category by category Dao get failed`
+  }
+};
+
 class CategoryModel {
   constructor() {
     this.validator = new Validator(
@@ -37,9 +44,17 @@ class CategoryModel {
       dtoOut = await this.dao.create(dtoIn);
     } catch (e) {
       if (e.hasOwnProperty("DuplicateKey")) {
-        throw new Errors.createCategory.categoryNameNotUnique({ uuAppErrorMap },null,e );
+        throw new Errors.createCategory.categoryNameNotUnique(
+          { uuAppErrorMap },
+          null,
+          e
+        );
       } else {
-        throw new Errors.createCategory.categoryDaoCreateFailed({ uuAppErrorMap }, null, e);
+        throw new Errors.createCategory.categoryDaoCreateFailed(
+          { uuAppErrorMap },
+          null,
+          e
+        );
       }
     }
 
@@ -76,7 +91,11 @@ class CategoryModel {
         }
       );
     } catch (e) {
-      throw new Errors.updateCategory.categoryDaoUpdateFailed({ uuAppErrorMap }, null, e);
+      throw new Errors.updateCategory.categoryDaoUpdateFailed(
+        { uuAppErrorMap },
+        null,
+        e
+      );
     }
 
     dtoOut.uuAppErrorMap = uuAppErrorMap;
@@ -104,12 +123,12 @@ class CategoryModel {
         await JokeCategoryModel.dao.deleteByCategory(awid, dtoIn.id);
         dtoOut = await this.dao.remove(awid, dtoIn.id);
       } catch (e) {
-        throw new Errors.deleteCategory.categoryDaoDeleteFailed({ uuAppErrorMap }, null, e);
+        throw new Errors.deleteCategory.categoryDaoDeleteFailed(
+          { uuAppErrorMap },
+          null,
+          e
+        );
       }
-
-      dtoOut = dtoOut || {};
-      dtoOut.uuAppErrorMap = uuAppErrorMap;
-      return dtoOut;
     } else {
       try {
         let foundJokeCategories = await JokeCategoryModel.dao.listByCategory(
@@ -121,13 +140,15 @@ class CategoryModel {
         }
         this.dao.remove(awid, dtoIn.id);
       } catch (e) {
-        throw new Errors.deleteCategory.categoryDaoDeleteFailed({ uuAppErrorMap }, null, e);
+        throw new Errors.deleteCategory.categoryDaoDeleteFailed(
+          { uuAppErrorMap },
+          null,
+          e
+        );
       }
-
-      dtoOut = dtoOut || {};
-      dtoOut.uuAppErrorMap = uuAppErrorMap;
-      return dtoOut;
     }
+    dtoOut.uuAppErrorMap = uuAppErrorMap;
+    return dtoOut;
   }
 
   async listCategories(awid, dtoIn) {
@@ -155,7 +176,11 @@ class CategoryModel {
     try {
       dtoOut = await this.dao.list(awid, dtoIn.pageInfo);
     } catch (e) {
-      throw new Errors.listCategories.categoryDaoListFailed({ uuAppErrorMap }, null, e);
+      throw new Errors.listCategories.categoryDaoListFailed(
+        { uuAppErrorMap },
+        null,
+        e
+      );
     }
 
     dtoOut = dtoOut || {};
