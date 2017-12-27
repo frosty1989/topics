@@ -1,45 +1,51 @@
 "use strict";
-const {UuObjectDao} = require("uu_appg01_server").ObjectStore;
-const {JokeCategory} = require("../dao/joke-category-mongo-db");
+const { UuObjectDao } = require("uu_appg01_server").ObjectStore;
+const { JokeCategory } = require("../dao/joke-category-mongo-db");
 
 class CategoryMongoDB extends UuObjectDao {
-  createSchema() {
-    super.createIndex({
-      awid: 1,
-      _id: 1
-    }, {
-      unique: true
-    });
-    super.createIndex({
-      awid: 1,
-      name: 1
-    }, {
-      unique: true
-    });
+  async createSchema() {
+    await super.createIndex(
+      {
+        awid: 1,
+        _id: 1
+      },
+      {
+        unique: true
+      }
+    );
+    await super.createIndex(
+      {
+        awid: 1,
+        name: 1
+      },
+      {
+        unique: true
+      }
+    );
   }
 
-  create(uuObject) {
-    return super.insertOne(uuObject);
+  async create(uuObject) {
+    return await super.insertOne(uuObject);
   }
 
-  get(awid, id) {
-    return super.findOne({ awid, _id: id });
+  async get(awid, id) {
+    return await super.findOne({ awid, _id: id });
   }
 
-  getByName(awid, name) {
-    return super.findOne({ awid, name });
+  async getByName(awid, name) {
+    return await super.findOne({ awid, name });
   }
 
-  list(awid, pageInfo = {}) {
-    return super.find({ awid }, pageInfo);
+  async list(awid, pageInfo = {}) {
+    return await super.find({ awid }, pageInfo);
   }
 
-  update(filter, uuObject) {
-    return super.findOneAndUpdate(filter, uuObject, "NONE");
+  async update(filter, uuObject) {
+    return await super.findOneAndUpdate(filter, uuObject, "NONE");
   }
 
-  remove(awid, id) {
-    return super.deleteOne({ awid, id });
+  async remove(awid, id) {
+    return await super.deleteOne({ awid, id });
   }
 }
 

@@ -4,7 +4,15 @@ const { DaoFactory } = require("uu_appg01_server").ObjectStore;
 const { ValidationHelper } = require("uu_appg01_server").Workspace;
 
 const { Errors } = require("../errors/joke-error");
+const CategoryModel = require("./category-model");
+const JokeCategoryModel = require("./joke-category-model");
 const Path = require("path");
+const WARNINGS = {
+  categoryDaoGetFailed: {
+    code: `${Errors.createJoke.code}/categoryDaoGetFailed`,
+    message: "Get category by category Dao get failed,"
+  }
+};
 
 class JokeModel {
   constructor() {
@@ -21,6 +29,7 @@ class JokeModel {
       dtoIn
     );
     let uuAppErrorMap = validationResult.getValidationErrorMap();
+    let dtoOut;
 
     ValidationHelper.processValidationResult(
       dtoIn,
@@ -31,11 +40,33 @@ class JokeModel {
     );
 
     dtoIn.awid = awid;
-    let dtoOut;
+
+    try {
+      if (dtoIn.categoryList && dtoIn.categoryList.length > 0) {
+        dtoIn.categoryList.forEach(async categoryId => {
+          let foundCategory = await CategoryModel.dao.get(awid, categoryId);
+
+          if (!foundCategory || !foundCategory.hasOwnProperty("id")) {
+            ValidationHelper.addWarning(
+              uuAppErrorMap,
+              WARNINGS.categoryDaoGetFailed.code,
+              WARNINGS.categoryDaoGetFailed.message
+            );
+          }
+        });
+      }
+    } catch (err) {
+      console.log(err);
+    }
+
     try {
       dtoOut = await this.dao.create(dtoIn);
     } catch (e) {
-      throw new Errors.createJoke.jokeDaoCreateFailed({ uuAppErrorMap }, null, e);
+      throw new Errors.createJoke.jokeDaoCreateFailed(
+        { uuAppErrorMap },
+        null,
+        e
+      );
     }
 
     dtoOut.uuAppErrorMap = uuAppErrorMap;
@@ -65,7 +96,11 @@ class JokeModel {
         { awid: awid, id: dtoIn.id, name: dtoIn.name, text: dtoIn.text }
       );
     } catch (e) {
-      throw new Errors.updateJoke.jokeDaoUpdateFailed({ uuAppErrorMap }, null, e);
+      throw new Errors.updateJoke.jokeDaoUpdateFailed(
+        { uuAppErrorMap },
+        null,
+        e
+      );
     }
 
     dtoOut.uuAppErrorMap = uuAppErrorMap;

@@ -1,11 +1,15 @@
 const { TestHelper } = require("uu_appg01_workspace-test");
 
-const createJoke = async categoryId => {
-  let dtoIn = {
-    name: "test name",
-    text: "test desc",
-    categoryList: [categoryId]
-  };
+const createJoke = async (dtoIn, categoryId = null) => {
+  if (!dtoIn.hasOwnProperty("name")) {
+    dtoIn.name = "test joke";
+  }
+  if (!dtoIn.hasOwnProperty("text")) {
+    dtoIn.text = "test joke text";
+  }
+  if (categoryId) {
+    dtoIn.categoryList = [categoryId];
+  }
 
   return await TestHelper.executePostCommand("createJoke", dtoIn);
 };
