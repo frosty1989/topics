@@ -89,9 +89,11 @@ class JokeModel {
       dtoOut = await this.dao.create(dtoIn);
     } catch (e) {
       throw new Errors.createJoke.jokeDaoCreateFailed(
-        { uuAppErrorMap },
-        null,
-        e
+        {
+            uuAppErrorMap
+          },
+          null,
+          e
       );
     }
 
@@ -103,9 +105,11 @@ class JokeModel {
       });
     } catch (err) {
       throw new Errors.createJoke.jokeCategoryDaoCreateFailed(
-        { uuAppErrorMap },
-        null,
-        err
+        {
+            uuAppErrorMap
+          },
+          null,
+          err
       );
     }
 
@@ -120,7 +124,7 @@ class JokeModel {
       dtoIn
     );
     let uuAppErrorMap = validationResult.getValidationErrorMap();
-    let dtoOut;
+    let dtoOut = {};
 
     ValidationHelper.processValidationResult(
       dtoIn,
@@ -142,22 +146,36 @@ class JokeModel {
             jokeId: dtoIn.id
           }
         );
+      } else {
+        try {
+          dtoOut = await this.dao.update(
+            {
+              _id: dtoIn.id,
+              awid: awid
+            },
+            {
+              name: dtoIn.name,
+              text: dtoIn.text
+            }
+          );
+        } catch (e) {
+          throw new Errors.updateJoke.jokeDaoUpdateFailed(
+            { uuAppErrorMap },
+            null,
+            { cause: e }
+          );
+        }
       }
     } catch (err) {
-      throw new Errors.updateJoke.jokeDaoGetFailed({ uuAppErrorMap }, null, {
-        cause: err
-      });
-    }
-
-    try {
-      dtoOut = await this.dao.update(
-        { _id: dtoIn.id, awid: awid },
-        { name: dtoIn.name, text: dtoIn.text }
+      throw new Errors.updateJoke.jokeDaoGetFailed(
+        {
+          uuAppErrorMap
+        },
+        null,
+        {
+          cause: err
+        }
       );
-    } catch (e) {
-      throw new Errors.updateJoke.jokeDaoUpdateFailed({ uuAppErrorMap }, null, {
-        cause: e
-      });
     }
 
     dtoOut.uuAppErrorMap = uuAppErrorMap;
@@ -185,9 +203,11 @@ class JokeModel {
       dtoOut = await this.dao.remove(awid, dtoIn.id);
     } catch (e) {
       throw new Errors.deleteJoke.jokeDaoDeleteFailed(
-        { uuAppErrorMap },
-        null,
-        e
+        {
+            uuAppErrorMap
+          },
+          null,
+          e
       );
     }
 
@@ -212,7 +232,13 @@ class JokeModel {
     try {
       dtoOut = await this.dao.get(awid, dtoIn.id);
     } catch (e) {
-      throw new Errors.getJoke.jokeDaoGetFailed({ uuAppErrorMap }, null, e);
+      throw new Errors.getJoke.jokeDaoGetFailed(
+        {
+          uuAppErrorMap
+        },
+        null,
+        e
+      );
     }
 
     dtoOut = dtoOut || {};
@@ -242,9 +268,17 @@ class JokeModel {
 
     let dtoOut;
     try {
-      dtoOut = await this.dao.list(awid, dtoIn.pageInfo, { [sort]: order });
+      dtoOut = await this.dao.list(awid, dtoIn.pageInfo, {
+        [sort]: order
+      });
     } catch (e) {
-      throw new Errors.listJokes.jokeDaoListFailed({ uuAppErrorMap }, null, e);
+      throw new Errors.listJokes.jokeDaoListFailed(
+        {
+          uuAppErrorMap
+        },
+        null,
+        e
+      );
     }
 
     dtoOut.uuAppErrorMap = uuAppErrorMap;
@@ -271,9 +305,11 @@ class JokeModel {
       dtoOut = await this.dao.listCategoryJokes(awid, dtoIn.id);
     } catch (e) {
       throw new Errors.listCategoryJokes.jokeCategoryDaoListByCategoryFailed(
-        { uuAppErrorMap },
-        null,
-        e
+        {
+            uuAppErrorMap
+          },
+          null,
+          e
       );
     }
 
