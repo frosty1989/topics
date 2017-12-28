@@ -99,7 +99,7 @@ let listJokes = {
 
 let deleteJoke = {
   code: "deleteJoke",
-  invalidDtoInError: class DeleteJokeInvalidDtoInError extends Errors.JokesError {
+  invalidDtoIn: class InvalidDtoIn extends Errors.JokesError {
     setParams() {
       return {
         code: `${deleteJoke.code}/invalidDtoIn`,
