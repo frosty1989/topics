@@ -96,7 +96,8 @@ describe("Test createJoke command", () => {
       text: "good text",
       categoryList: [fakeCategoryId]
     });
-    let categoryDoesNotExist = "createJoke/categoryDoesNotExist";
+    let categoryDoesNotExist =
+      "uu-jokesg01-main/createJoke/categoryDoesNotExist";
 
     expect(result.status).toEqual(200);
     expect(result.data).toBeDefined();
@@ -104,9 +105,18 @@ describe("Test createJoke command", () => {
     expect(result.data).toHaveProperty("id");
     expect(result.data).toHaveProperty("uuAppErrorMap");
     expect(result.data.uuAppErrorMap).toBeInstanceOf(Object);
-    expect(result.data.uuAppErrorMap).toHaveProperty(categoryDoesNotExist);
+    expect(result.data.uuAppErrorMap[categoryDoesNotExist]).toBeDefined();
     expect(result.data.uuAppErrorMap[categoryDoesNotExist]).toBeInstanceOf(
       Object
     );
+    expect(
+      result.data.uuAppErrorMap[categoryDoesNotExist].paramMap
+    ).toBeDefined();
+    expect(
+      result.data.uuAppErrorMap[categoryDoesNotExist].paramMap
+    ).toHaveProperty("categoryId");
+    expect(
+      result.data.uuAppErrorMap[categoryDoesNotExist].paramMap.categoryId
+    ).toEqual(fakeCategoryId);
   });
 });

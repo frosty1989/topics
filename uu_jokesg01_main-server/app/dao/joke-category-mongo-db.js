@@ -2,8 +2,8 @@
 const { UuObjectDao } = require("uu_appg01_server").ObjectStore;
 
 class JokeCategoryMongoDB extends UuObjectDao {
-  createSchema() {
-    super.createIndex(
+  async createSchema() {
+    await super.createIndex(
       {
         awid: 1,
         _id: 1
@@ -12,15 +12,15 @@ class JokeCategoryMongoDB extends UuObjectDao {
         unique: true
       }
     );
-    super.createIndex({
+    await super.createIndex({
       awid: 1,
       categoryId: 1
     });
-    super.createIndex({
+    await super.createIndex({
       awid: 1,
       jokeId: 1
     });
-    super.createIndex(
+    await super.createIndex(
       {
         awid: 1,
         jokeId: 1,
@@ -32,36 +32,36 @@ class JokeCategoryMongoDB extends UuObjectDao {
     );
   }
 
-  create(uuObject) {
-    return super.insertOne(uuObject);
+  async create(uuObject) {
+    return await super.insertOne(uuObject);
   }
 
-  getByJokeAndCategory(awid, jokeId, categoryId) {
-    return super.findOne({ awid, jokeId, categoryId });
+  async getByJokeAndCategory(awid, jokeId, categoryId) {
+    return await super.findOne({ awid, jokeId, categoryId });
   }
 
-  listByCategory(awid, categoryId) {
-    return super.find({ awid, categoryId });
+  async listByCategory(awid, categoryId) {
+    return await super.find({ awid, categoryId });
   }
 
-  listByJoke(awid, jokeId) {
-    return super.find({ awid, jokeId });
+  async listByJoke(awid, jokeId) {
+    return await super.find({ awid, jokeId });
   }
 
-  delete(awid, id) {
-    return super.deleteOne({ awid, _id: id });
+  async delete(awid, id) {
+    return await super.deleteOne({ awid, _id: id });
   }
 
-  deleteByCategory(awid, categoryId) {
-    return super.deleteMany({ awid, categoryId });
+  async deleteByCategory(awid, categoryId) {
+    return await super.deleteMany({ awid, categoryId });
   }
 
-  deleteByJoke(awid, jokeId) {
-    return super.deleteMany({ awid, jokeId });
+  async deleteByJoke(awid, jokeId) {
+    return await super.deleteMany({ awid, jokeId });
   }
 
-  deleteByJokeAndCategory(awid, jokeId, categoryListId = []) {
-    return super.deleteMany({
+  async deleteByJokeAndCategory(awid, jokeId, categoryListId = []) {
+    return await super.deleteMany({
       awid,
       jokeId,
       categoryId: {

@@ -6,7 +6,6 @@ const Session = require("uu_appg01_server").Authentication.Session;
 
 const Path = require("path");
 const { addJokeRating } = require("../errors/joke-rating-error.js").Errors;
-const JokeModel = require("../models/joke-model");
 
 class JokeRatingModel {
   constructor() {
@@ -38,13 +37,10 @@ class JokeRatingModel {
     let averageRating = 0;
 
     try {
-      joke = JokeModel.dao.get(awid, dtoIn.id);
+      const JokeModel = require("./joke-model");
+      joke = await JokeModel.dao.get(awid, dtoIn.id);
     } catch (e) {
-      throw new addJokeRating.jokeDaoGetFailed(
-        { uuAppErrorMap },
-        null,
-        e
-      );
+      throw new addJokeRating.jokeDaoGetFailed({ uuAppErrorMap }, null, e);
     }
 
     if (!joke) {
