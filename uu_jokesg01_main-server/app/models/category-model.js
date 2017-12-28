@@ -43,14 +43,12 @@ class CategoryModel {
           null,
           e
         );
-      } else {
-        console.log(e)
-        throw new Errors.createCategory.categoryDaoCreateFailed(
-          { uuAppErrorMap },
-          null,
-          e
-        );
       }
+      throw new Errors.createCategory.categoryDaoCreateFailed(
+        { uuAppErrorMap },
+        null,
+        e
+      );
     }
 
     dtoOut.uuAppErrorMap = uuAppErrorMap;
@@ -112,7 +110,9 @@ class CategoryModel {
       Errors.deleteCategory.invalidDtoInError
     );
 
-    let dtoOut;
+    let dtoOut = {};
+    let foundJokeCategories;
+
     if (dtoIn.forceDelete === true) {
       try {
         await JokeCategoryModel.dao.deleteByCategory(awid, dtoIn.id);
@@ -126,22 +126,29 @@ class CategoryModel {
       }
     } else {
       try {
-        let foundJokeCategories = await JokeCategoryModel.dao.listByCategory(
+        foundJokeCategories = await JokeCategoryModel.dao.listByCategory(
           awid,
           dtoIn.id
         );
-        if (foundJokeCategories.length > 0) {
-          throw new Errors.deleteCategory.relatedJokesExist({ uuAppErrorMap });
-        }
-        this.dao.remove(awid, dtoIn.id);
-      } catch (e) {
-        throw new Errors.deleteCategory.categoryDaoDeleteFailed(
+      } catch (error) {
+        throw new Errors.deleteCategory.jokeCategoryDaoListByCategoryFailed(
           { uuAppErrorMap },
           null,
-          e
+          { cause: error }
+        );
+      }
+
+      if (foundJokeCategories.itemList.length < 1) {
+        throw new Errors.deleteCategory.relatedJokesExist(
+          { uuAppErrorMap },
+          null,
+          {
+            relatedJokes: foundJokeCategories.itemList
+          }
         );
       }
     }
+    dtoOut = dtoOut || {};
     dtoOut.uuAppErrorMap = uuAppErrorMap;
     return dtoOut;
   }

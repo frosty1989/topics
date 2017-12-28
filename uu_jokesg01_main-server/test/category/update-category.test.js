@@ -1,39 +1,49 @@
-const {Utils} = require("uu_appg01_server");
-const {TestHelper} = require("uu_appg01_workspace-test");
-const {CreateCategory} = require("../general-test-hepler");
+const { Utils } = require("uu_appg01_server");
+const { TestHelper } = require("uu_appg01_workspace-test");
+const { CreateCategory } = require("../general-test-hepler");
 
-beforeEach(async (done) => {
+beforeEach(async done => {
   await TestHelper.setup();
   await TestHelper.initAppWorkspace();
   await TestHelper.createPermission("Readers");
   done();
 });
 
-afterEach(async (done) => {
+afterEach(async done => {
   await TestHelper.teardown();
   done();
 });
 
-
-//Happy day scenario
 describe("Test updateCategory command", () => {
-  test("update category test HDS", async () => {
+  test("HDS", async () => {
     await TestHelper.login("Readers");
     await CreateCategory();
     let listResponce = await TestHelper.executeGetCommand("listCategories");
     let itemId = listResponce.data.itemList[0].id;
-    let dtoIn = {id: itemId, name: "Update name", desc: "Update text", glyphicon: "http://update_test.jpg"};
-    let responce = await TestHelper.executePostCommand("updateCategory", dtoIn);
+    let dtoIn = {
+      id: itemId,
+      name: "Update name",
+      desc: "Update text",
+      glyphicon: "http://update_test.jpg"
+    };
+    let response = await TestHelper.executePostCommand("updateCategory", dtoIn);
 
-    expect(responce.data.name).toEqual("Update name");
-    expect(responce.data.desc).toEqual("Update text");
-    expect(responce.data.glyphicon).toEqual("http://update_test.jpg");
-    expect(responce.data.uuAppErrorMap).toEqual({});
+    expect(response.data.name).toEqual("Update name");
+    expect(response.data.desc).toEqual("Update text");
+    expect(response.data.glyphicon).toEqual("http://update_test.jpg");
+    expect(typeof response.data.id === "string").toBeTruthy();
+    expect(typeof response.data.name === "string").toBeTruthy();
+    expect(typeof response.data.desc === "string").toBeTruthy();
+    expect(typeof response.data.glyphicon === "string").toBeTruthy();
+    expect(response.status).toEqual(200);
+    expect(response.data).toBeDefined();
+    expect(response.data).toBeInstanceOf(Object);
+    expect(response.data.id).toBeDefined();
   });
 });
 
 describe("Test updateCategory command", () => {
-  test("invalid optional keys", async () => {
+  test("A1", async () => {
     await TestHelper.login("Readers");
     await CreateCategory();
     let listResponce = await TestHelper.executeGetCommand("listCategories");
@@ -45,26 +55,55 @@ describe("Test updateCategory command", () => {
       glyphicon: "http://update_test.jpg",
       invalidKey: "invalid data value"
     };
-    let responce = await TestHelper.executePostCommand("updateCategory", dtoInInvalid);
+    let response = await TestHelper.executePostCommand(
+      "updateCategory",
+      dtoInInvalid
+    );
 
-    expect(typeof(responce.data.uuAppErrorMap)).toBe("object");
-    expect("warning").toEqual(responce.data.uuAppErrorMap['uu-jokesg01-main/updateCategory/unsupportedKey'].type);
-    expect("DtoIn contains unsupported keys.").toEqual(responce.data.uuAppErrorMap['uu-jokesg01-main/updateCategory/unsupportedKey'].message);
-    let invalidData = responce.data.uuAppErrorMap['uu-jokesg01-main/updateCategory/unsupportedKey'].paramMap['unsupportedKeyList'][0];
-    expect(invalidData).toEqual('$.invalidKey');
+    expect(response.status).toEqual(200);
+    expect(typeof response.data.uuAppErrorMap).toBe("object");
+    expect("warning").toEqual(
+      response.data.uuAppErrorMap[
+        "uu-jokesg01-main/updateCategory/unsupportedKey"
+      ].type
+    );
+    expect("DtoIn contains unsupported keys.").toEqual(
+      response.data.uuAppErrorMap[
+        "uu-jokesg01-main/updateCategory/unsupportedKey"
+      ].message
+    );
+    let invalidData =
+      response.data.uuAppErrorMap[
+        "uu-jokesg01-main/updateCategory/unsupportedKey"
+      ].paramMap["unsupportedKeyList"][0];
+    expect(invalidData).toEqual("$.invalidKey");
   });
 });
 
 describe("Test updateCategory command", () => {
-  test("category does not exist", async () => {
-    await TestHelper.login("Readers");
-    let invalidDtoIn = {id: 123, name: "test name", desc: "test desc", glyphicon: "http://test.jpg"};
-    let status;
-    try{
+  test("A2", async () => {
+    await TestHelper.login("Readers", true);
+    await CreateCategory();
+    let invalidDtoIn = {
+      id: 123,
+      name: "test name",
+      desc: "test desc",
+      glyphicon: "http://test.jpg"
+    };
+    let result;
+    try {
       await TestHelper.executePostCommand("updateCategory", invalidDtoIn);
-    } catch(error) {
-      status = error.response.status;
+    } catch (error) {
+      result = error;
     }
-    expect(status).toBe(400);
+
+    expect(result).toHaveProperty("paramMap");
+    expect(result.paramMap).toHaveProperty("invalidValueKeyMap");
+    expect(result.paramMap).toHaveProperty("invalidTypeKeyMap");
+    expect(result.dtoOut).toHaveProperty("uuAppErrorMap");
+    expect(result.code).toEqual("uu-jokesg01-main/updateCategory/invalidDtoIn");
+    expect(result).toHaveProperty("response");
+    expect(result).toHaveProperty("status");
+    expect(result.status).toEqual(400);
   });
 });

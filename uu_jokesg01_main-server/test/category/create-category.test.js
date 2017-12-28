@@ -1,6 +1,6 @@
-const {Utils} = require("uu_appg01_server");
-const {TestHelper} = require("uu_appg01_workspace-test");
-const {CreateCategory} = require("../general-test-hepler");
+const { Utils } = require("uu_appg01_server");
+const { TestHelper } = require("uu_appg01_workspace-test");
+const { CreateCategory } = require("../general-test-hepler");
 
 beforeEach(async done => {
   await TestHelper.setup();
@@ -52,14 +52,13 @@ describe("Test createCategory command - A1", () => {
     expect(response.data.uuAppErrorMap['uu-jokesg01-main/createCategory/unsupportedKey']).toBeInstanceOf(
       Object
     );
-    expect(invalidData).toEqual('$.unsupportedKey');
   });
 });
 
 describe("Test createCategory command - A2", () => {
   test("unsuccessful dtoIn validation", async () => {
     await TestHelper.login("Readers");
-    let invalidDtoIn = {name: 123, desc: 123, glyphicon: 123};
+    let invalidDtoIn = { name: 123, desc: 123, glyphicon: 123 };
     let response;
     try {
       await CreateCategory(invalidDtoIn);
