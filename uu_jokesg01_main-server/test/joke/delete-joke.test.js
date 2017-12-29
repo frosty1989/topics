@@ -1,4 +1,3 @@
-const { Utils } = require("uu_appg01_server");
 const { TestHelper } = require("uu_appg01_workspace-test");
 const { CreateJoke, CreateCategory } = require("../general-test-hepler");
 const CMD = "deleteJoke";
@@ -22,75 +21,98 @@ describe("Test deleteJoke command", () => {
 
     let joke = await CreateJoke();
     let category = await CreateCategory();
-    let jokeRating = await TestHelper.executePostCommand("addJokeRating", {
+    await TestHelper.executePostCommand("addJokeRating", {
       id: joke.data.id,
       rating: 5
     });
-    let jokeCategory = await TestHelper.executePostCommand("addJokeCategory", {
+    await TestHelper.executePostCommand("addJokeCategory", {
       jokeId: joke.data.id,
       categoryList: [category.data.id]
     });
+    let createdJokesList = await TestHelper.executeGetCommand("listJokes");
     let response = await TestHelper.executePostCommand(CMD, {
       id: joke.data.id
     });
-    let foundJoke;
+    let noJokesFoundList = await TestHelper.executeGetCommand("listJokes");
 
-    try {
-      foundJoke = await TestHelper.executeGetCommand("listJokes");
-      //  {
-      //   id: joke.data.id
-      // });
-      // console.log(foundJoke);
-    } catch (err) {
-      foundJoke = err;
-    }
-
-    // console.log(response);
-
-    // let itemId = listResponse.data.itemList[0].id;
-    // let dtoIn = { id: itemId };
-    // let response = await TestHelper.executePostCommand(CMD, dtoIn);
-
-    expect(response.data.uuAppErrorMap).toEqual({});
+    expect(createdJokesList.data).toBeDefined();
+    expect(createdJokesList.data.itemList).toBeDefined();
+    expect(createdJokesList.data.itemList).toBeInstanceOf(Array);
+    expect(createdJokesList.data.itemList.length).toBeGreaterThan(0);
+    expect(noJokesFoundList.data).toBeDefined();
+    expect(noJokesFoundList.data.itemList).toBeDefined();
+    expect(noJokesFoundList.data.itemList).toBeInstanceOf(Array);
+    expect(noJokesFoundList.data.itemList.length).toBeLessThanOrEqual(0);
+    expect(response.status).toBeDefined();
     expect(response.status).toEqual(200);
     expect(response.data).toBeDefined();
     expect(response.data.uuAppErrorMap).toBeDefined();
-    expect(response.data.uuAppErrorMap).toBeInstanceOf(Object);
+    expect(response.data.uuAppErrorMap).toEqual({});
+  });
+
+  test("A1", async () => {
+    await TestHelper.login("Readers");
+
+    let joke = await CreateJoke({
+      name: "Funny joke",
+      text: "Funny text"
+    });
+    let response = await TestHelper.executePostCommand(CMD, {
+      id: joke.data.id,
+      unsupportedKey: "Unsupported value"
+    });
+    let unsupportedKeyCode = "uu-jokesg01-main/createJoke/unsupportedKey";
+
+    expect(response.status).toBeDefined();
+    expect(response.status).toEqual(200);
+    expect(response.data).toBeDefined();
+    expect(response.data.uuAppErrorMap).toBeDefined();
+    expect(response.data.uuAppErrorMap[unsupportedKeyCode]).toBeDefined();
+    expect(
+      response.data.uuAppErrorMap[unsupportedKeyCode].paramMap
+    ).toBeDefined();
+    expect(
+      response.data.uuAppErrorMap[unsupportedKeyCode].paramMap
+        .unsupportedKeyList
+    ).toBeDefined();
+    expect(
+      response.data.uuAppErrorMap[unsupportedKeyCode].paramMap
+        .unsupportedKeyList
+    ).toContain("$.unsupportedKey");
+  });
+
+  test("A2", async () => {
+    await TestHelper.login("Readers");
+
+    let response;
+
+    try {
+      await TestHelper.executePostCommand(CMD, {
+        wrongKey: "Wrong value"
+      });
+    } catch (err) {
+      response = err;
+    }
+
+    expect(response.status).toEqual(400);
+    expect(response.code).toBeDefined();
+    expect(response.code).toBe("uu-jokesg01-main/deleteJoke/invalidDtoIn");
+    expect(response.response).toBeDefined();
+    expect(response.response.data).toBeDefined();
+    expect(response.response.data.uuAppErrorMap).toBeDefined();
+    expect(
+      response.response.data.uuAppErrorMap.invalidValueKeyMap
+    ).toBeDefined();
+    expect(
+      response.response.data.uuAppErrorMap.invalidValueKeyMap.missingKeyMap
+    ).toBeDefined();
+    expect(
+      response.response.data.uuAppErrorMap.invalidValueKeyMap.missingKeyMap["$"]
+    ).toBeInstanceOf(Object);
+    expect(
+      response.response.data.uuAppErrorMap.invalidValueKeyMap.missingKeyMap[
+        "$.id"
+      ]
+    ).toBeInstanceOf(Object);
   });
 });
-
-//Alternative scenario
-// describe("Test deleteJoke command", () => {
-//   test("invalid keys test", async () => {
-//     await TestHelper.login("Readers");
-
-//     let dtoInForCreateJoke = {name: "test name", text: "test desc", categoryList: ["e001", "e001"]};
-//     await TestHelper.executePostCommand("createJoke", dtoInForCreateJoke);
-//     let listResponce = await TestHelper.executeGetCommand("listJokes");
-//     let itemId = listResponce.data.itemList[0].id;
-//     let dtoInInvalid = {id: itemId, invalidKey: "invalid key value"};
-//     let response = await TestHelper.executePostCommand("deleteJoke", dtoInInvalid);
-
-//     expect(typeof(response.data.uuAppErrorMap)).toBe("object");
-//     expect(response.data.uuAppErrorMap).toBeInstanceOf(Object);
-//     expect("warning").toEqual(response.data.uuAppErrorMap['uu-jokesg01-main/deleteJoke/unsupportedKey'].type);
-//     expect("DtoIn contains unsupported keys.").toEqual(response.data.uuAppErrorMap['uu-jokesg01-main/deleteJoke/unsupportedKey'].message);
-//     let invalidData = response.data.uuAppErrorMap['uu-jokesg01-main/deleteJoke/unsupportedKey'].paramMap['unsupportedKeyList'][0];
-//     expect(invalidData).toEqual('$.invalidKey');
-//     expect(response.status).toEqual(200);
-//   });
-// });
-
-// describe("Test deleteJoke command", () => {
-//   test("if joke does not exist", async () => {
-//     await TestHelper.login("Readers");
-//     let dtoInInvalid = {id: 123};
-//     let status;
-//     try{
-//       await TestHelper.executePostCommand("deleteJoke", dtoInInvalid);
-//     } catch(error) {
-//       status = error.response.status;
-//     }
-//     expect(status).toBe(400);
-//   });
-// });
