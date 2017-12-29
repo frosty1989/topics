@@ -131,17 +131,28 @@ class JokeModel {
       Errors.getJoke.invalidDtoIn
     );
 
-    let dtoOut;
+    let dtoOut = {};
+    let foundJoke;
     try {
       dtoOut = await this.dao.get(awid, dtoIn.id);
-      console.log(dtoOut);
+      foundJoke = dtoOut;
     } catch (e) {
-      throw new Errors.getJoke.jokeDaoGetFailed(
+      throw new Errors.getJoke.jokeDoesNotExist(
         {
           uuAppErrorMap
         },
         null,
         e
+      );
+    }
+    // A4
+    if (typeof foundJoke.name === "undefined") {
+      throw new Errors.getJoke.jokeDoesNotExist(
+        {
+          uuAppErrorMap
+        },
+        null,
+        { jokeId: dtoIn.id }
       );
     }
 
@@ -293,13 +304,6 @@ class JokeModel {
     );
     let uuAppErrorMap = validationResult.getValidationErrorMap();
     let dtoOut = {};
-
-    console.log(
-      "-------------------------------------------------------------------------"
-    );
-    console.log(
-      "-------------------------------------------------------------------------"
-    );
 
     ValidationHelper.processValidationResult(
       dtoIn,
