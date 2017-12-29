@@ -97,6 +97,7 @@ describe("Test updateCategory command", () => {
       result = error;
     }
 
+    console.log(result);
     expect(result).toHaveProperty("paramMap");
     expect(result.paramMap).toHaveProperty("invalidValueKeyMap");
     expect(result.paramMap).toHaveProperty("invalidTypeKeyMap");
@@ -105,5 +106,34 @@ describe("Test updateCategory command", () => {
     expect(result).toHaveProperty("response");
     expect(result).toHaveProperty("status");
     expect(result.status).toEqual(400);
+  });
+});
+
+describe("Test updateCategory command", () => {
+  test("A3", async () => {
+    await TestHelper.login("Readers", true);
+    let createCategoryResponse = await CreateCategory();
+    let dtoIn = {
+      id: createCategoryResponse.data.id,
+      name: "test name",
+      desc: "test desc",
+      glyphicon: "http://test.jpg"
+    };
+    let status;
+    try {
+      await TestHelper.executePostCommand("updateCategory", dtoIn);
+    } catch (error) {
+      status = error;
+    }
+
+    expect(status).toBeInstanceOf(Object);
+    expect(status).toHaveProperty("code");
+    expect(status.dtoOut).toHaveProperty("uuAppErrorMap");
+    expect(status).toHaveProperty("response");
+    expect(status).toHaveProperty("status");
+    expect(status.code).toEqual(
+      "uu-jokesg01-main/updateCategory/categoryNameNotUnique"
+    );
+    expect(status.status).toEqual(500);
   });
 });

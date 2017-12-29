@@ -71,26 +71,50 @@ class CategoryModel {
     );
 
     dtoIn.awid = awid;
-    let dtoOut;
+    let dtoOut = {};
+
     try {
-      dtoOut = await this.dao.update(
-        { id: dtoIn.id },
-        {
-          awid: awid,
-          id: dtoIn.id,
-          name: dtoIn.name,
-          desc: dtoIn.desc,
-          glyphicon: dtoIn.glyphicon
-        }
+      dtoOut = await this.dao.getByName(
+        awid,
+        dtoIn.name
       );
-    } catch (e) {
-      throw new Errors.updateCategory.categoryDaoUpdateFailed(
+    } catch (error) {
+      throw new Errors.listCategories.categoryDaoListFailed(
         { uuAppErrorMap },
         null,
-        e
+        error
       );
     }
 
+    if (dtoIn.name === dtoOut.name) {
+      console.log(dtoIn.name);
+      throw new Errors.updateCategory.categoryNameNotUnique(
+        { uuAppErrorMap },
+        null,
+        {
+          name: dtoIn.name
+        }
+      );
+    } else {
+      try {
+        dtoOut = await this.dao.update(
+          { id: dtoIn.id },
+          {
+            awid: awid,
+            id: dtoIn.id,
+            name: dtoIn.name,
+            desc: dtoIn.desc,
+            glyphicon: dtoIn.glyphicon
+          }
+        );
+      } catch (e) {
+        throw new Errors.updateCategory.categoryDaoUpdateFailed(
+          { uuAppErrorMap },
+          null,
+          e
+        );
+      }
+    }
     dtoOut.uuAppErrorMap = uuAppErrorMap;
     return dtoOut;
   }
