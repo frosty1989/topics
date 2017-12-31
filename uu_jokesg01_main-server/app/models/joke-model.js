@@ -217,7 +217,7 @@ class JokeModel {
 
     let dtoOut;
     try {
-      dtoOut = await this.dao.listCategoryJokes(awid, dtoIn.id);
+      dtoOut = await this.dao.listCategoryJokes(awid, dtoIn.categoryId);
     } catch (e) {
       throw new Errors.listCategoryJokes.jokeCategoryDaoListByCategoryFailed(
         {
