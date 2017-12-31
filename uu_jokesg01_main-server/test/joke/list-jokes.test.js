@@ -24,7 +24,6 @@ describe("Test listJokes command", () => {
     let listResponce = await TestHelper.executeGetCommand("listJokes");
     let itemId = listResponce.data.itemList[0].id;
     let response = await TestHelper.executeGetCommand("listJokes");
-    console.log(response.data.itemList[0].name);
     expect(response.data.itemList[0].name).toEqual("test joke");
     expect(response.data.itemList[0].text).toEqual("test joke text");
     expect(response.data.itemList[0].categoryList).toEqual([categoryId]);
@@ -36,15 +35,13 @@ describe("Test listJokes command", () => {
     expect(response.data.uuAppErrorMap).toEqual({});
     expect(response.data.pageInfo.total).toEqual(1);
   });
-});
 
-describe("Test listJokes command", () => {
   test("A1", async () => {
     await TestHelper.login("Readers");
     let createCategoryResponse = await CreateCategory();
     let categoryId = createCategoryResponse.data.id;
     await CreateJoke({}, categoryId);
-    let listResponce = await TestHelper.executeGetCommand("listJokes");
+    await TestHelper.executeGetCommand("listJokes");
     let invalidDtoIn = {
       notvalid: "not valid key"
     };
@@ -52,7 +49,6 @@ describe("Test listJokes command", () => {
       "listJokes",
       invalidDtoIn
     );
-    console.log(response.data.uuAppErrorMap);
     expect(typeof response.data.uuAppErrorMap).toBe("object");
     expect("warning").toEqual(
       response.data.uuAppErrorMap["uu-jokesg01-main/undefined/unsupportedKey"]
@@ -67,9 +63,7 @@ describe("Test listJokes command", () => {
         .paramMap["unsupportedKeyList"][0];
     expect(invalidData).toEqual("$.notvalid");
   });
-});
 
-describe("Test createJoke command", () => {
   test("A2", async () => {
     await TestHelper.login("Readers");
     let invalidDtoIn = {

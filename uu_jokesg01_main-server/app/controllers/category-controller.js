@@ -3,7 +3,6 @@
 const CategoryModel = require("../models/category-model.js");
 
 class CategoryController {
-
   create(ucEnv) {
     return CategoryModel.createCategory(ucEnv.uri.awid, ucEnv.parameters);
   }
@@ -19,7 +18,6 @@ class CategoryController {
   remove(ucEnv) {
     return CategoryModel.deleteCategory(ucEnv.uri.awid, ucEnv.parameters);
   }
-
 }
 
 module.exports = new CategoryController();

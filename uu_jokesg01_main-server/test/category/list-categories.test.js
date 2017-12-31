@@ -31,9 +31,7 @@ describe("Test listCategories command", () => {
     expect(response.data.uuAppErrorMap).toBeInstanceOf(Object);
     expect(response.data.uuAppErrorMap).toMatchObject({});
   });
-});
 
-describe("Test listCategories command", () => {
   test("A1", async () => {
     await TestHelper.login("Readers");
     await CreateCategory();
@@ -64,9 +62,7 @@ describe("Test listCategories command", () => {
       response.data.uuAppErrorMap[code].paramMap[unsupportedKey][2]
     ).toEqual("$.unsupportedKey");
   });
-});
 
-describe("Test listCategoryJokes command", () => {
   test("A2", async () => {
     await TestHelper.login("Readers");
     let response;

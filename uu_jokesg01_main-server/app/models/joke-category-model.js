@@ -80,7 +80,10 @@ class JokeCategoryModel {
   }
 
   async listByCategory(awid, dtoIn) {
-    let validationResult = this.validator.validate("removeJokeCategoryDtoInType", dtoIn);
+    let validationResult = this.validator.validate(
+      "removeJokeCategoryDtoInType",
+      dtoIn
+    );
     let uuAppErrorMap = validationResult.getValidationErrorMap();
 
     ValidationHelper.processValidationResult(

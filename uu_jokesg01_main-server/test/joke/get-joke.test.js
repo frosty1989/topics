@@ -28,7 +28,9 @@ describe("Test getJoke command", () => {
     expect(response.data.text).toEqual("test joke text");
     expect(response.data.id).toEqual(itemId);
     expect(Array.isArray(response.data.categoryList)).toBe(true);
-    expect(response.data.awid).toEqual(Utils.Config.get("sysAppWorkspace")["awid"]);
+    expect(response.data.awid).toEqual(
+      Utils.Config.get("sysAppWorkspace")["awid"]
+    );
     expect(response.data.uuAppErrorMap).toEqual({});
     expect(response.status).toEqual(200);
     expect(response.data.uuAppErrorMap).toBeDefined();
@@ -95,12 +97,15 @@ describe("Test getJoke command", () => {
     await CreateJoke({}, categoryId);
     let status;
     try {
-      let response = await TestHelper.executeGetCommand("getJoke", { id: nonexistintId });
+      let response = await TestHelper.executeGetCommand("getJoke", {
+        id: nonexistintId
+      });
       console.log(response);
     } catch (error) {
       console.log(error);
       status = error;
     }
-    // expect(status).toBe(200);
+    expect(status.status).toBe(500);
+    expect(status.code).toBe("uu-jokesg01-main/getJoke/jokeDoesNotExist");
   });
 });

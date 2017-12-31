@@ -1,6 +1,5 @@
 "use strict";
 const { UuObjectDao } = require("uu_appg01_server").ObjectStore;
-const { JokeCategory } = require("../dao/joke-category-mongo-db");
 
 class CategoryMongoDB extends UuObjectDao {
   async createSchema() {

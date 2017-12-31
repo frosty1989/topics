@@ -32,9 +32,7 @@ describe("Test listCategoryJokes command", () => {
     expect(response.data.uuAppErrorMap).toMatchObject({});
     expect(Array.isArray(response.data.itemList)).toBe(true);
   });
-});
 
-describe("Test listCategoryJokes command", () => {
   test("A1", async () => {
     await TestHelper.login("Readers");
 
@@ -67,9 +65,7 @@ describe("Test listCategoryJokes command", () => {
       ].paramMap["unsupportedKeyList"][0];
     expect(invalidData).toEqual("$.unsupportedKey");
   });
-});
 
-describe("Test listCategoryJokes command", () => {
   test("A2", async () => {
     await TestHelper.login("Readers");
     let response;
