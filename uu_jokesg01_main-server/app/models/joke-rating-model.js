@@ -30,9 +30,7 @@ class JokeRatingModel {
     );
     let joke;
     let userVote;
-    let dtoOut = {
-      uuAppErrorMap: uuAppErrorMap
-    };
+    let dtoOut;
     let uuObject = Object.create(dtoIn);
     let averageRating = 0;
 
@@ -43,14 +41,18 @@ class JokeRatingModel {
       throw new addJokeRating.jokeDaoGetFailed({ uuAppErrorMap }, null, e);
     }
 
-    if (!joke) {
+    if (!joke.hasOwnProperty("id")) {
       throw new addJokeRating.jokeDoesNotExist({ uuAppErrorMap }, null, {
         jokeId: dtoIn.id
       });
     }
 
     try {
-      userVote = this.dao.getByJokeAndIdentity(awid, dtoIn.id, uuIdentity);
+      userVote = await this.dao.getByJokeAndIdentity(
+        awid,
+        dtoIn.id,
+        uuIdentity
+      );
     } catch (e) {
       throw new addJokeRating.jokeRatingDaoGetByJokeAndIdentityFailed(
         { uuAppErrorMap },
@@ -68,7 +70,7 @@ class JokeRatingModel {
       try {
         averageRating =
           (userVote.rating * 1 + uuObject.rating) / (userVote.rating + 1);
-        dtoOut.item = this.dao.create(uuObject);
+        dtoOut = await this.dao.create(uuObject);
       } catch (e) {
         throw new addJokeRating.jokeRatingDaoCreateFailed(
           { uuAppErrorMap },
@@ -81,7 +83,7 @@ class JokeRatingModel {
     } else {
       try {
         averageRating = 666;
-        dtoOut.item = this.dao.update(uuObject);
+        dtoOut = await this.dao.update(uuObject);
       } catch (e) {
         throw new addJokeRating.jokeRatingDaoUpdateFailed(
           { uuAppErrorMap },
@@ -92,6 +94,8 @@ class JokeRatingModel {
         );
       }
     }
+
+    dtoOut.uuAppErrorMap = uuAppErrorMap;
 
     return dtoOut;
   }

@@ -5,8 +5,6 @@ const { ValidationHelper } = require("uu_appg01_server").Workspace;
 
 const { Errors } = require("../errors/joke-error");
 const CategoryModel = require("./category-model");
-const JokeCategoryModel = require("./joke-category-model");
-const JokeRatingModel = require("./joke-rating-model");
 const Path = require("path");
 const WARNINGS = {
   createJoke: {
@@ -86,7 +84,10 @@ class JokeModel {
     }
 
     try {
-      dtoIn.categoryList = validJokeCategories;
+      if (validJokeCategories.length > 0) {
+        dtoIn.categoryList = validJokeCategories;
+      }
+
       dtoOut = await this.dao.create(dtoIn);
     } catch (e) {
       throw new Errors.createJoke.jokeDaoCreateFailed(
@@ -98,20 +99,24 @@ class JokeModel {
       );
     }
 
-    try {
-      JokeCategoryModel.dao.create({
-        awid: awid,
-        jokeId: dtoOut.id,
-        categoryList: validJokeCategories
-      });
-    } catch (err) {
-      throw new Errors.createJoke.jokeCategoryDaoCreateFailed(
-        {
-          uuAppErrorMap
-        },
-        null,
-        err
-      );
+    if (validJokeCategories.length > 0) {
+      const JokeCategoryModel = require("./joke-category-model");
+
+      try {
+        await JokeCategoryModel.dao.create({
+          awid: awid,
+          jokeId: dtoOut.id,
+          categoryList: validJokeCategories
+        });
+      } catch (err) {
+        throw new Errors.createJoke.jokeCategoryDaoCreateFailed(
+          {
+            uuAppErrorMap
+          },
+          null,
+          err
+        );
+      }
     }
 
     dtoOut.uuAppErrorMap = uuAppErrorMap;
@@ -156,6 +161,8 @@ class JokeModel {
     }
 
     try {
+      const JokeCategoryModel = require("./joke-category-model");
+
       await JokeCategoryModel.dao.listByJoke(awid, dtoIn.id);
     } catch (err) {
       throw new Errors.getJoke.jokeCategoryDaoListByJokeFailed(
@@ -324,6 +331,8 @@ class JokeModel {
     );
 
     try {
+      const JokeRatingModel = require("./joke-rating-model");
+
       await JokeRatingModel.dao.deleteByJoke(awid, dtoIn.id);
     } catch (err) {
       throw new Errors.deleteJoke.jokeRatingDaoDeleteByJokeFailed(
@@ -334,6 +343,8 @@ class JokeModel {
     }
 
     try {
+      const JokeCategoryModel = require("./joke-category-model");
+
       await JokeCategoryModel.dao.deleteByJoke(awid, dtoIn.id);
     } catch (err) {
       throw new Errors.deleteJoke.jokeCategoryDaoDeleteByJokeFailed(

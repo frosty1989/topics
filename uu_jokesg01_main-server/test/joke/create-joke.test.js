@@ -16,7 +16,6 @@ afterEach(async done => {
 
 describe("Test createJoke command", () => {
   test("HDS", async () => {
-    await TestHelper.login("Readers", true);
     let createCategoryResponse = await CreateCategory();
     let categoryId = createCategoryResponse.data.id;
     let result = await CreateJoke({}, categoryId);
@@ -35,8 +34,6 @@ describe("Test createJoke command", () => {
   });
 
   test("A1", async () => {
-    await TestHelper.login("Readers", true);
-
     let result = await CreateJoke({ unsupportedKey: "unsupportedValue" });
     const unsupportedKeysWarn = "uu-jokesg01-main/createJoke/unsupportedKey";
 
@@ -53,7 +50,6 @@ describe("Test createJoke command", () => {
   });
 
   test("A2", async () => {
-    await TestHelper.login("Readers", true);
     let result;
 
     try {
@@ -74,8 +70,6 @@ describe("Test createJoke command", () => {
   });
 
   test("A3 and A4 and A6 - createJoke method that works. Always.", async () => {
-    await TestHelper.login("Readers", true);
-
     let result = await CreateJoke({
       name: "Joke that never ever will be tested",
       text: "The text that never will be read",
@@ -87,8 +81,6 @@ describe("Test createJoke command", () => {
   });
 
   test("A5", async () => {
-    await TestHelper.login("Readers", true);
-
     let fakeCategoryId = "5a3a5bfe85d5a73f585c2d50";
     let result = await CreateJoke({
       name: "BAD joke",

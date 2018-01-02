@@ -16,8 +16,6 @@ afterEach(async done => {
 
 describe("Test deleteJoke command", () => {
   test("HDS", async () => {
-    await TestHelper.login("Readers");
-
     let joke = await CreateJoke();
     let category = await CreateCategory();
     await TestHelper.executePostCommand("addJokeRating", {
@@ -60,7 +58,7 @@ describe("Test deleteJoke command", () => {
       id: joke.data.id,
       unsupportedKey: "Unsupported value"
     });
-    let unsupportedKeyCode = "uu-jokesg01-main/createJoke/unsupportedKey";
+    let unsupportedKeyCode = "uu-jokesg01-main/deleteJoke/unsupportedKey";
 
     expect(response.status).toBeDefined();
     expect(response.status).toEqual(200);
@@ -97,21 +95,9 @@ describe("Test deleteJoke command", () => {
     expect(response.code).toBeDefined();
     expect(response.code).toBe("uu-jokesg01-main/deleteJoke/invalidDtoIn");
     expect(response.response).toBeDefined();
-    expect(response.response.data).toBeDefined();
-    expect(response.response.data.uuAppErrorMap).toBeDefined();
-    expect(
-      response.response.data.uuAppErrorMap.invalidValueKeyMap
-    ).toBeDefined();
-    expect(
-      response.response.data.uuAppErrorMap.invalidValueKeyMap.missingKeyMap
-    ).toBeDefined();
-    expect(
-      response.response.data.uuAppErrorMap.invalidValueKeyMap.missingKeyMap["$"]
-    ).toBeInstanceOf(Object);
-    expect(
-      response.response.data.uuAppErrorMap.invalidValueKeyMap.missingKeyMap[
-        "$.id"
-      ]
-    ).toBeInstanceOf(Object);
+    expect(response.paramMap).toBeDefined();
+    expect(response.paramMap.invalidValueKeyMap).toBeDefined();
+    expect(response.paramMap.missingKeyMap).toBeDefined();
+    expect(response.paramMap.missingKeyMap["$.id"]).toBeDefined();
   });
 });

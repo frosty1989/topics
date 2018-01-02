@@ -27,7 +27,7 @@ describe("Test getJoke command", () => {
     expect(response.data.name).toEqual("test joke");
     expect(response.data.text).toEqual("test joke text");
     expect(response.data.id).toEqual(itemId);
-    expect(Array.isArray(response.data.categoryList)).toBe(true);
+    expect(Array.isArray(response.data.categoryList)).toBeFalsy();
     expect(response.data.awid).toEqual(
       Utils.Config.get("sysAppWorkspace")["awid"]
     );
