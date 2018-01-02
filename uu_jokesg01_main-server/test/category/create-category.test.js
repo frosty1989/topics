@@ -68,7 +68,6 @@ describe("Test createCategory command", () => {
 
     expect(response).toHaveProperty("paramMap");
     expect(response.paramMap).toHaveProperty("invalidValueKeyMap");
-    console.log(response.paramMap);
     expect(
       response.paramMap.invalidTypeKeyMap.hasOwnProperty("$.name")
     ).toBeTruthy();
@@ -86,7 +85,7 @@ describe("Test createCategory command", () => {
 
   test("A3 - uuObject Category with the specified name already exists", async () => {
     await TestHelper.login("Readers");
-    let status;
+    let result;
     let errorCode = "uu-jokesg01-main/createCategory/categoryNameNotUnique";
     try {
       await TestHelper.executePostCommand("createCategory", {
@@ -101,13 +100,12 @@ describe("Test createCategory command", () => {
         glyphicon: "http://test.jpg"
       });
     } catch (error) {
-      console.log(error);
-      status = error;
+      result = error;
     }
 
-    expect(status.code).toBeDefined();
-    expect(status).toHaveProperty("id");
-    expect(status.status).toEqual(500);
-    expect(status.code).toBe(errorCode);
+    expect(result.code).toBeDefined();
+    expect(result).toHaveProperty("id");
+    expect(result.status).toEqual(500);
+    expect(result.code).toBe(errorCode);
   });
 });

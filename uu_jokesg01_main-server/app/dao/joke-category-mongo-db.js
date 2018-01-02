@@ -41,7 +41,12 @@ class JokeCategoryMongoDB extends UuObjectDao {
   }
 
   async listByCategory(awid, categoryId) {
-    return await super.find({ awid, categoryId });
+    //TODO: revise it after BA's anser
+    // return await super.find({ awid, categoryId });
+    return await super.find({
+      awid: awid,
+      categoryList: { $in: [categoryId] }
+    });
   }
 
   async listByJoke(awid, jokeId) {

@@ -5,7 +5,6 @@ const { ValidationHelper } = require("uu_appg01_server").Workspace;
 
 const Path = require("path");
 const { Errors } = require("../errors/category-error");
-const JokeCategoryModel = require("./joke-category-model");
 
 class CategoryModel {
   constructor() {
@@ -74,10 +73,7 @@ class CategoryModel {
     let dtoOut = {};
 
     try {
-      dtoOut = await this.dao.getByName(
-        awid,
-        dtoIn.name
-      );
+      dtoOut = await this.dao.getByName(awid, dtoIn.name);
     } catch (error) {
       throw new Errors.listCategories.categoryDaoListFailed(
         { uuAppErrorMap },
@@ -124,23 +120,20 @@ class CategoryModel {
       "deleteCategoryDtoInType",
       dtoIn
     );
-    let uuAppErrorMap = validationResult.getValidationErrorMap();
-
-    ValidationHelper.processValidationResult(
+    let uuAppErrorMap = ValidationHelper.processValidationResult(
       dtoIn,
       validationResult,
-      uuAppErrorMap,
+      {},
       `uu-jokesg01-main/${Errors.deleteCategory.code}/unsupportedKey`,
       Errors.deleteCategory.invalidDtoInError
     );
-
     let dtoOut = {};
     let foundJokeCategories;
+    const JokeCategoryModel = require("./joke-category-model");
 
-    if (dtoIn.forceDelete === true) {
+    if (dtoIn.forceDelete) {
       try {
         await JokeCategoryModel.dao.deleteByCategory(awid, dtoIn.id);
-        dtoOut = await this.dao.remove(awid, dtoIn.id);
       } catch (e) {
         throw new Errors.deleteCategory.categoryDaoDeleteFailed(
           { uuAppErrorMap },
@@ -162,7 +155,7 @@ class CategoryModel {
         );
       }
 
-      if (foundJokeCategories.itemList.length < 1) {
+      if (foundJokeCategories.itemList.length > 0) {
         throw new Errors.deleteCategory.relatedJokesExist(
           { uuAppErrorMap },
           null,
@@ -172,8 +165,11 @@ class CategoryModel {
         );
       }
     }
-    dtoOut = dtoOut || {};
+
+    await this.dao.remove(awid, dtoIn.id);
+
     dtoOut.uuAppErrorMap = uuAppErrorMap;
+
     return dtoOut;
   }
 
