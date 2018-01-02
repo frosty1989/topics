@@ -122,6 +122,7 @@ class JokeModel {
   async getJoke(awid, dtoIn) {
     let validationResult = this.validator.validate("getJokeDtoInType", dtoIn);
     let uuAppErrorMap = validationResult.getValidationErrorMap();
+    let dtoOut = {};
 
     ValidationHelper.processValidationResult(
       dtoIn,
@@ -131,11 +132,8 @@ class JokeModel {
       Errors.getJoke.invalidDtoIn
     );
 
-    let dtoOut = {};
-    let foundJoke;
     try {
       dtoOut = await this.dao.get(awid, dtoIn.id);
-      foundJoke = dtoOut;
     } catch (e) {
       throw new Errors.getJoke.jokeDoesNotExist(
         {
@@ -145,8 +143,9 @@ class JokeModel {
         e
       );
     }
+
     // A4
-    if (typeof foundJoke.name === "undefined") {
+    if (typeof dtoOut.name === "undefined") {
       throw new Errors.getJoke.jokeDoesNotExist(
         {
           uuAppErrorMap
@@ -156,7 +155,6 @@ class JokeModel {
       );
     }
 
-    dtoOut = dtoOut || {};
     dtoOut.uuAppErrorMap = uuAppErrorMap;
     return dtoOut;
   }
