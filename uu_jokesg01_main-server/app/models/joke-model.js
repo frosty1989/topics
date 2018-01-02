@@ -5,7 +5,6 @@ const { ValidationHelper } = require("uu_appg01_server").Workspace;
 
 const { Errors } = require("../errors/joke-error");
 const CategoryModel = require("./category-model");
-const JokeRatingModel = require("./joke-rating-model");
 const Path = require("path");
 const WARNINGS = {
   createJoke: {
@@ -162,6 +161,8 @@ class JokeModel {
     }
 
     try {
+      const JokeCategoryModel = require("./joke-category-model");
+
       await JokeCategoryModel.dao.listByJoke(awid, dtoIn.id);
     } catch (err) {
       throw new Errors.getJoke.jokeCategoryDaoListByJokeFailed(
@@ -330,6 +331,8 @@ class JokeModel {
     );
 
     try {
+      const JokeRatingModel = require("./joke-rating-model");
+
       await JokeRatingModel.dao.deleteByJoke(awid, dtoIn.id);
     } catch (err) {
       throw new Errors.deleteJoke.jokeRatingDaoDeleteByJokeFailed(
@@ -340,6 +343,8 @@ class JokeModel {
     }
 
     try {
+      const JokeCategoryModel = require("./joke-category-model");
+
       await JokeCategoryModel.dao.deleteByJoke(awid, dtoIn.id);
     } catch (err) {
       throw new Errors.deleteJoke.jokeCategoryDaoDeleteByJokeFailed(
