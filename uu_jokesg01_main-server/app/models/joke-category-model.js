@@ -32,25 +32,30 @@ class JokeCategoryModel {
     );
 
     // A4
-    // let foundJoke;
-    let res;
+    let foundJoke;
     try {
-      res = await JokeModel.dao.get(awid, dtoIn.jokeId);
-    } catch (e){
-      throw new Errors.getJoke.jokeDaoGetFailed(
+      foundJoke = await JokeModel.dao.get(awid, dtoIn.jokeId);
+    } catch (e) {
+      throw new Errors.addJokeCategory.jokeDaoGetFailed(
         {
           uuAppErrorMap
         },
         null,
-        e
+        {
+          cause: e
+        }
       );
     }
 
-    if (Object.keys(res).length === 0) {
-      throw new Errors.getJoke.jokeDoesNotExist({ uuAppErrorMap }, null, e);
+    if (Object.keys(foundJoke).length === 0) {
+      throw new Errors.addJokeCategory.jokeDoesNotExist(
+        { uuAppErrorMap },
+        null,
+        {
+          jokeId: dtoIn.jokeId
+        }
+      );
     }
-    console.log(res);
-    console.log("foo");
 
     dtoIn.awid = awid;
     let dtoOut;
