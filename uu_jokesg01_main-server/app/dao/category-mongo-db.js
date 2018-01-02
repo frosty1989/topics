@@ -28,7 +28,7 @@ class CategoryMongoDB extends UuObjectDao {
   }
 
   async get(awid, id) {
-    return await super.findOne({ awid, _id: id });
+    return await super.findOne({ awid, id: id });
   }
 
   async getByName(awid, name) {
