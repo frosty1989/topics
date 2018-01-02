@@ -155,6 +155,18 @@ class JokeModel {
       );
     }
 
+    try {
+      await JokeCategoryModel.dao.listByJoke(awid, dtoIn.id);
+    } catch (err) {
+      throw new Errors.getJoke.jokeCategoryDaoListByJokeFailed(
+        { uuAppErrorMap },
+        null,
+        {
+          cause: err
+        }
+      );
+    }
+
     dtoOut.uuAppErrorMap = uuAppErrorMap;
     return dtoOut;
   }
