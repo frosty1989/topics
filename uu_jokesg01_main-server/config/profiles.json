@@ -2,10 +2,10 @@
   "{tid}-{asid}": {
     "profileList": ["UuSubAppInstanceSysOwner"],
     "permissionMap": {
-      "uuSubAppInstanceSysOwner": ["UuSubAppInstanceSysOwner","SysOwner", "Readers"]
+      "uuSubAppInstanceSysOwner": ["UuSubAppInstanceSysOwner", "SysOwner", "Readers"]
     },
     "useCaseMap": {
-      "sys/authorization" : ["UuSubAppInstanceSysOwner"],
+      "sys/authorization": ["UuSubAppInstanceSysOwner"],
       "sys/initAppWorkspace": ["UuSubAppInstanceSysOwner"],
       "sys/getAppWorkspace": ["UuSubAppInstanceSysOwner"],
       "sys/createPermission": ["UuSubAppInstanceSysOwner"],
@@ -13,7 +13,7 @@
     }
   },
   "*": {
-    "profileList": ["Authorities", "Executives", "Readers", "SysOwner", "Public"],
+    "profileList": ["SysOwner", "Authorities", "Executives", "Readers"],
     "useCaseMap": {
       "sys/getAppWorkspace": ["Authorities", "SysOwner"],
       "sys/setProfile": ["Authorities", "SysOwner"],
@@ -22,28 +22,28 @@
       "sys/createPermission": ["Authorities", "SysOwner", "Readers"],
       "sys/listPermissions": ["Authorities", "SysOwner"],
       "sys/deletePermission": ["Authorities", "SysOwner"],
-      "sys/getLicenseOwner": ["Alpha", "Executives", "Authorities", "SysOwner"],
+      "sys/getLicenseOwner": ["Readers", "Executives", "Authorities", "SysOwner"],
       "sys/setAppWorkspaceConfig": ["Authorities", "SysOwner"],
       "sys/getAppWorkspaceConfig": ["Authorities", "SysOwner"],
       "sys/clearAppWorkspaceConfig": ["Authorities", "SysOwner"],
-      "uu-app-binarystore/createBinary": ["Alpha"],
-      "uu-app-binarystore/getBinary": ["Alpha"],
-      "uu-app-binarystore/getBinaryData": ["Alpha"],
-      "defaultVuc": ["Alpha"],
+      "uu-app-binarystore/createBinary": ["Readers"],
+      "uu-app-binarystore/getBinary": ["Readers"],
+      "uu-app-binarystore/getBinaryData": ["Readers"],
+      "defaultVuc": ["Readers"],
       "init": ["SysOwner"],
-      "addJokeCategory": ["Authorities", "Executives", "SysOwner"],
-      "removeJokeCategory": ["SysOwner", "Readers", "Authorities", "Executives", "SysOwner"],
-      "createJoke": ["SysOwner"],
-      "addJokeRating": ["Authorities", "Executives", "Public"],
+      "createJoke": ["Authorities", "Executives"],
+      "updateJoke": ["Authorities", "Executives"],
+      "deleteJoke": ["Authorities", "Executives"],
+      "addJokeCategory": ["Authorities", "Executives"],
+      "removeJokeCategory": ["Authorities", "Executives"],
+      "createCategory": ["Authorities", "Executives"],
+      "updateCategory": ["Authorities", "Executives"],
+      "deleteCategory": ["Authorities", "Executives"],
       "getJoke": ["Authorities", "Executives", "Public"],
-      "listJokes": ["SysOwner", "Readers", "Authorities", "Executives", "Public"],
-      "listCategoryJokes": ["Authorities", "Executives", "Public"],
-      "updateJoke": ["SysOwner", "Readers", "Authorities", "Executives"],
-      "deleteJoke": ["SysOwner", "Authorities", "Executives"],
-      "createCategory": ["SysOwner", "Readers", "Authorities", "Executives"],
-      "listCategories": ["SysOwner", "Readers", "Authorities", "Executives", "Public"],
-      "updateCategory": ["SysOwner", "Readers", "Authorities", "Executives"],
-      "deleteCategory": ["SysOwner", "Readers","Authorities", "Executives"]
+      "listJokes": ["Authorities", "Executives", "Readers"],
+      "listCategoryJokes": ["Authorities", "Executives", "Readers"],
+      "listCategories": ["Authorities", "Executives", "Readers"],
+      "addJokeRating": ["Authorities", "Executives", "Readers"]
     }
   }
 }

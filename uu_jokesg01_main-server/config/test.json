@@ -13,12 +13,10 @@
         "oId": "ORG_OID",
         "web": "www.test-organization.com"
       },
-      "userList": [
-        {
-          "uuIdentity": "14-2710-1",
-          "name": "SysOwner"
-        }
-      ]
+      "userList": [{
+        "uuIdentity": "14-2710-1",
+        "name": "SysOwner"
+      }]
     }
   },
   "userMap": {
@@ -32,18 +30,23 @@
       "accessCode2": "Cq%iaz#9w-#z7C8yZlZoC$DsebIK2JGWyDK8lg8J7vLFSKXtYFt5tn3eI3WthZtI",
       "uuIdentity": "14-2710-1"
     },
-    "Authority": {
-      "accessCode1": "3yMhD1qzi0JUwsAJ7UOsWX2YtrGH_Olk5DxgWyssNW6e_WC4wjKrXODHES92cQXp",
+    "Authorities": {
+      "accessCode1":"3yMhD1qzi0JUwsAJ7UOsWX2YtrGH_Olk5DxgWyssNW6e_WC4wjKrXODHES92cQXp",
       "accessCode2": "Cq%iaz#9w-#z7C8yZlZoC$DsebIK2JGWyDK8lg8J7vLFSKXtYFt5tn3eI3WthZtI",
       "uuIdentity": "14-2710-1",
-      "profileList": ["Authorities", "Readers"]
+      "profileList": ["SysOwner", "Authorities", "Executives", "Readers"]
+    },
+    "Executives": {
+      "accessCode1":"3yMhD1qzi0JUwsAJ7UOsWX2YtrGH_Olk5DxgWyssNW6e_WC4wjKrXODHES92cQXp",
+      "accessCode2": "Cq%iaz#9w-#z7C8yZlZoC$DsebIK2JGWyDK8lg8J7vLFSKXtYFt5tn3eI3WthZtI",
+      "uuIdentity": "14-2710-1",
+      "profileList": ["SysOwner", "Authorities", "Executives", "Readers"]
     },
     "Readers": {
-      "accessCode1": "3yMhD1qzi0JUwsAJ7UOsWX2YtrGH_Olk5DxgWyssNW6e_WC4wjKrXODHES92cQXp",
+      "accessCode1":"3yMhD1qzi0JUwsAJ7UOsWX2YtrGH_Olk5DxgWyssNW6e_WC4wjKrXODHES92cQXp",
       "accessCode2": "Cq%iaz#9w-#z7C8yZlZoC$DsebIK2JGWyDK8lg8J7vLFSKXtYFt5tn3eI3WthZtI",
       "uuIdentity": "14-2710-1",
-      "profileList": ["Readers"]
+      "profileList": ["SysOwner", "Authorities", "Executives", "Readers"]
     }
   }
-
 }

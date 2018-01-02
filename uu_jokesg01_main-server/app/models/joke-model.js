@@ -5,7 +5,6 @@ const { ValidationHelper } = require("uu_appg01_server").Workspace;
 
 const { Errors } = require("../errors/joke-error");
 const CategoryModel = require("./category-model");
-const JokeCategoryModel = require("./joke-category-model");
 const JokeRatingModel = require("./joke-rating-model");
 const Path = require("path");
 const WARNINGS = {
@@ -86,7 +85,10 @@ class JokeModel {
     }
 
     try {
-      dtoIn.categoryList = validJokeCategories;
+      if (validJokeCategories.length > 0) {
+        dtoIn.categoryList = validJokeCategories;
+      }
+
       dtoOut = await this.dao.create(dtoIn);
     } catch (e) {
       throw new Errors.createJoke.jokeDaoCreateFailed(
@@ -98,20 +100,24 @@ class JokeModel {
       );
     }
 
-    try {
-      JokeCategoryModel.dao.create({
-        awid: awid,
-        jokeId: dtoOut.id,
-        categoryList: validJokeCategories
-      });
-    } catch (err) {
-      throw new Errors.createJoke.jokeCategoryDaoCreateFailed(
-        {
-          uuAppErrorMap
-        },
-        null,
-        err
-      );
+    if (validJokeCategories.length > 0) {
+      const JokeCategoryModel = require("./joke-category-model");
+
+      try {
+        await JokeCategoryModel.dao.create({
+          awid: awid,
+          jokeId: dtoOut.id,
+          categoryList: validJokeCategories
+        });
+      } catch (err) {
+        throw new Errors.createJoke.jokeCategoryDaoCreateFailed(
+          {
+            uuAppErrorMap
+          },
+          null,
+          err
+        );
+      }
     }
 
     dtoOut.uuAppErrorMap = uuAppErrorMap;
