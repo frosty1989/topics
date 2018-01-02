@@ -1,72 +1,85 @@
-const {Utils} = require("uu_appg01_server");
-const {TestHelper} = require("uu_appg01_workspace-test");
-const {CreateCategory} = require("../general-test-hepler");
+const { TestHelper } = require("uu_appg01_workspace-test");
+const { CreateCategory } = require("../general-test-hepler");
+const { CreateJoke } = require("../general-test-hepler");
 
-beforeEach(async (done) => {
+beforeEach(async done => {
   await TestHelper.setup();
   await TestHelper.initAppWorkspace();
   await TestHelper.createPermission("Readers");
   done();
 });
 
-afterEach(async (done) => {
+afterEach(async done => {
   await TestHelper.teardown();
   done();
 });
 
-
-//Happy day scenario
 describe("Test listCategoryJokes command", () => {
-  test("test the getJoke method", async () => {
+  test("HDS", async () => {
     await TestHelper.login("Readers");
-    let responseFromCreate = await CreateCategory();
-    let itemId = responseFromCreate.data.id;
-    let dtoIn = {categoryId: itemId};
-    let response = await TestHelper.executeGetCommand("listCategoryJokes", dtoIn);
-
-    expect(Array.isArray(response.data.itemList)).toBe(true);
-    expect(typeof response.data.pageInfo).toEqual("object");
+    let createCategoryResponse = await CreateCategory();
+    let categoryId = createCategoryResponse.data.id;
+    await CreateJoke({}, categoryId);
+    let dtoIn = { categoryId: categoryId };
+    let response = await TestHelper.executeGetCommand(
+      "listCategoryJokes",
+      dtoIn
+    );
+    expect(response.status).toEqual(200);
     expect(response.data.uuAppErrorMap).toEqual({});
-    console.log(response.data.uuAppErrorMap);
+    expect(response.data.uuAppErrorMap).toBeDefined();
+    expect(response.data.uuAppErrorMap).toBeInstanceOf(Object);
+    expect(response.data.uuAppErrorMap).toMatchObject({});
+    expect(Array.isArray(response.data.itemList)).toBe(true);
   });
-});
 
-//Alternative scenarios
-describe("Test listCategoryJokes command", () => {
-  test("creates object store object in uuAppObjectStore", async () => {
+  test("A1", async () => {
     await TestHelper.login("Readers");
 
-    let dtoInForCreateCategory = {
-      name: "test name",
-      desc: "test desc",
-      glyphicon: "http://test.jpg"
-    };
-    let responseFromCreate = await CreateCategory(dtoInForCreateCategory);
-    let itemId = responseFromCreate.data.id;
+    let createCategoryResponse = await CreateCategory();
+    let categoryId = createCategoryResponse.data.id;
+    await CreateJoke({}, categoryId);
     let dtoIn = {
-      categoryId: itemId,
-      notvalid: "notvalid"
+      categoryId: categoryId,
+      unsupportedKey: "unsupportedValue"
     };
-    let response = await TestHelper.executeGetCommand("listCategoryJokes", dtoIn);
+    let response = await TestHelper.executeGetCommand(
+      "listCategoryJokes",
+      dtoIn
+    );
 
-    expect(typeof(response.data.uuAppErrorMap)).toBe("object");
-    expect("warning").toEqual(response.data.uuAppErrorMap['uu-jokesg01-main/listCategoryJokes/unsupportedKey'].type);
-    expect("DtoIn contains unsupported keys.").toEqual(response.data.uuAppErrorMap['uu-jokesg01-main/listCategoryJokes/unsupportedKey'].message);
-    let invalidData = response.data.uuAppErrorMap['uu-jokesg01-main/listCategoryJokes/unsupportedKey'].paramMap['unsupportedKeyList'][0];
-    expect(invalidData).toEqual('$.notvalid');
+    expect(response.status).toEqual(200);
+    expect("warning").toEqual(
+      response.data.uuAppErrorMap[
+        "uu-jokesg01-main/listCategoryJokes/unsupportedKey"
+      ].type
+    );
+    expect("DtoIn contains unsupported keys.").toEqual(
+      response.data.uuAppErrorMap[
+        "uu-jokesg01-main/listCategoryJokes/unsupportedKey"
+      ].message
+    );
+    let invalidData =
+      response.data.uuAppErrorMap[
+        "uu-jokesg01-main/listCategoryJokes/unsupportedKey"
+      ].paramMap["unsupportedKeyList"][0];
+    expect(invalidData).toEqual("$.unsupportedKey");
   });
-});
 
-describe("Test listCategoryJokes command", () => {
-  test("unsuccessful dtoIn validation", async () => {
+  test("A2", async () => {
     await TestHelper.login("Readers");
-    let invalidDtoIn = {categoryId: "invalid string id"};
-    let status;
-    try{
-      await TestHelper.executeGetCommand("listCategoryJokes", invalidDtoIn);
-    } catch(error) {
-      status = error.response.status;
+    let response;
+    try {
+      await TestHelper.executeGetCommand("listCategoryJokes", {});
+    } catch (error) {
+      response = error;
     }
-    expect(status).toBe(400);
+    expect(response.status).toBe(400);
+    expect(response).toHaveProperty("paramMap");
+    expect(response.paramMap).toHaveProperty("invalidValueKeyMap");
+    expect(response.paramMap).toHaveProperty("missingKeyMap");
+    expect(response.dtoOut).toHaveProperty("uuAppErrorMap");
+    expect(response).toHaveProperty("response");
+    expect(response).toHaveProperty("status");
   });
 });

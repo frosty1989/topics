@@ -4,6 +4,7 @@ const { DaoFactory } = require("uu_appg01_server").ObjectStore;
 const { ValidationHelper } = require("uu_appg01_server").Workspace;
 
 const Path = require("path");
+const JokeModel = require("./joke-model");
 const { Errors } = require("../errors/joke-category-error");
 
 class JokeCategoryModel {
@@ -29,6 +30,27 @@ class JokeCategoryModel {
       `uu-jokesg01-main/${Errors.addJokeCategory.code}/unsupportedKey`,
       Errors.addJokeCategory.invalidDtoInError
     );
+
+    // A4
+    // let foundJoke;
+    let res;
+    try {
+      res = await JokeModel.dao.get(awid, dtoIn.jokeId);
+    } catch (e){
+      throw new Errors.getJoke.jokeDaoGetFailed(
+        {
+          uuAppErrorMap
+        },
+        null,
+        e
+      );
+    }
+
+    if (Object.keys(res).length === 0) {
+      throw new Errors.getJoke.jokeDoesNotExist({ uuAppErrorMap }, null, e);
+    }
+    console.log(res);
+    console.log("foo");
 
     dtoIn.awid = awid;
     let dtoOut;
@@ -80,7 +102,10 @@ class JokeCategoryModel {
   }
 
   async listByCategory(awid, dtoIn) {
-    let validationResult = this.validator.validate("removeJokeCategoryDtoInType", dtoIn);
+    let validationResult = this.validator.validate(
+      "removeJokeCategoryDtoInType",
+      dtoIn
+    );
     let uuAppErrorMap = validationResult.getValidationErrorMap();
 
     ValidationHelper.processValidationResult(

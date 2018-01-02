@@ -1,4 +1,3 @@
-const { Utils } = require("uu_appg01_server");
 const { TestHelper } = require("uu_appg01_workspace-test");
 const { CreateCategory } = require("../general-test-hepler");
 
@@ -40,9 +39,7 @@ describe("Test updateCategory command", () => {
     expect(response.data).toBeInstanceOf(Object);
     expect(response.data.id).toBeDefined();
   });
-});
 
-describe("Test updateCategory command", () => {
   test("A1", async () => {
     await TestHelper.login("Readers");
     await CreateCategory();
@@ -55,6 +52,7 @@ describe("Test updateCategory command", () => {
       glyphicon: "http://update_test.jpg",
       invalidKey: "invalid data value"
     };
+    let unsupportedKey = "uu-jokesg01-main/updateCategory/unsupportedKey";
     let response = await TestHelper.executePostCommand(
       "updateCategory",
       dtoInInvalid
@@ -64,23 +62,21 @@ describe("Test updateCategory command", () => {
     expect(typeof response.data.uuAppErrorMap).toBe("object");
     expect("warning").toEqual(
       response.data.uuAppErrorMap[
-        "uu-jokesg01-main/updateCategory/unsupportedKey"
+        unsupportedKey
       ].type
     );
     expect("DtoIn contains unsupported keys.").toEqual(
       response.data.uuAppErrorMap[
-        "uu-jokesg01-main/updateCategory/unsupportedKey"
+        unsupportedKey
       ].message
     );
     let invalidData =
       response.data.uuAppErrorMap[
-        "uu-jokesg01-main/updateCategory/unsupportedKey"
+        unsupportedKey
       ].paramMap["unsupportedKeyList"][0];
     expect(invalidData).toEqual("$.invalidKey");
   });
-});
 
-describe("Test updateCategory command", () => {
   test("A2", async () => {
     await TestHelper.login("Readers", true);
     await CreateCategory();
@@ -107,9 +103,7 @@ describe("Test updateCategory command", () => {
     expect(result).toHaveProperty("status");
     expect(result.status).toEqual(400);
   });
-});
 
-describe("Test updateCategory command", () => {
   test("A3", async () => {
     await TestHelper.login("Readers", true);
     let createCategoryResponse = await CreateCategory();

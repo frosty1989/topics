@@ -1,4 +1,3 @@
-const { Utils } = require("uu_appg01_server");
 const { TestHelper } = require("uu_appg01_workspace-test");
 const { CreateJoke } = require("../general-test-hepler");
 const { CreateCategory } = require("../general-test-hepler");
@@ -26,7 +25,7 @@ describe("Test createJoke command", () => {
     expect(result.data).toBeDefined();
     expect(result.data).toBeInstanceOf(Object);
     expect(result.data.id).toBeDefined();
-    expect(typeof result.data.id == "string").toBeTruthy();
+    expect(typeof result.data.id === "string").toBeTruthy();
     expect(result.data.uuAppErrorMap).toBeDefined();
     expect(result.data.uuAppErrorMap).toBeInstanceOf(Object);
     expect(result.data.uuAppErrorMap).toMatchObject({});

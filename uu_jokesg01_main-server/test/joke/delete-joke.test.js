@@ -14,7 +14,6 @@ afterEach(async done => {
   done();
 });
 
-//Happy day scenario
 describe("Test deleteJoke command", () => {
   test("HDS", async () => {
     await TestHelper.login("Readers");

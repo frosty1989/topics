@@ -1,4 +1,3 @@
-const { Utils } = require("uu_appg01_server");
 const { TestHelper } = require("uu_appg01_workspace-test");
 const { CreateCategory } = require("../general-test-hepler");
 const { CreateJoke } = require("../general-test-hepler");
@@ -30,9 +29,7 @@ describe("Test deleteCategory command", () => {
     expect(response.data.uuAppErrorMap).toBeInstanceOf(Object);
     expect(response.data.uuAppErrorMap).toMatchObject({});
   });
-});
 
-describe("Test deleteCategory command", () => {
   test("A1", async () => {
     await TestHelper.login("Readers");
 
@@ -44,27 +41,26 @@ describe("Test deleteCategory command", () => {
       forceDelete: true,
       unsupportedKey: "unsupportedValue"
     };
+    let unsuportedKey = "uu-jokesg01-main/deleteCategory/unsupportedKey";
     let response = await TestHelper.executePostCommand("deleteCategory", dtoIn);
     expect(response.status).toEqual(200);
     expect("warning").toEqual(
       response.data.uuAppErrorMap[
-        "uu-jokesg01-main/deleteCategory/unsupportedKey"
+        unsuportedKey
       ].type
     );
     expect("DtoIn contains unsupported keys.").toEqual(
       response.data.uuAppErrorMap[
-        "uu-jokesg01-main/deleteCategory/unsupportedKey"
+        unsuportedKey
       ].message
     );
     let invalidData =
       response.data.uuAppErrorMap[
-        "uu-jokesg01-main/deleteCategory/unsupportedKey"
+        unsuportedKey
       ].paramMap["unsupportedKeyList"][0];
     expect(invalidData).toEqual("$.unsupportedKey");
   });
-});
 
-describe("Test deleteCategory command", () => {
   test("A2", async () => {
     await TestHelper.login("Readers", true);
     let response;
@@ -83,9 +79,7 @@ describe("Test deleteCategory command", () => {
     expect(response).toHaveProperty("status");
     expect(response.status).toEqual(400);
   });
-});
 
-describe("Test deleteCategory command", () => {
   test("A4 related jokes exists", async () => {
     await TestHelper.login("Readers", true);
     let createCategoryResponse = await CreateCategory();
