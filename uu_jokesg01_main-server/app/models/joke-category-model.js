@@ -5,7 +5,24 @@ const { ValidationHelper } = require("uu_appg01_server").Workspace;
 
 const Path = require("path");
 const JokeModel = require("./joke-model");
+const CategoryModel = require("./category-model");
 const { Errors } = require("../errors/joke-category-error");
+const WARNINGS = {
+  addJokeCategory: {
+    categoryDoesNotExist: {
+      code: `uu-jokesg01-main/${
+        Errors.addJokeCategory.code
+      }/categoryDoesNotExist`,
+      message: "Category does not exist."
+    },
+    jokeCategoryAlreadyExists: {
+      code: `uu-jokesg01-main/${
+        Errors.addJokeCategory.code
+      }/jokeCategoryAlreadyExists`,
+      message: "uuObject jokeCategory already exists."
+    }
+  }
+};
 
 class JokeCategoryModel {
   constructor() {
@@ -32,7 +49,9 @@ class JokeCategoryModel {
     );
 
     // A4
+    let dtoOut;
     let foundJoke;
+    dtoIn.awid = awid;
     try {
       foundJoke = await JokeModel.dao.get(awid, dtoIn.jokeId);
     } catch (e) {
@@ -57,8 +76,31 @@ class JokeCategoryModel {
       );
     }
 
-    dtoIn.awid = awid;
-    let dtoOut;
+    // A6, A8 - categoryDoesNotExist, jokeCategoryAlreadyExists, Warnings
+    let foundCategory;
+    let categoryIdList = dtoIn.categoryList;
+    categoryIdList.forEach(async (elem, i) => {
+      foundCategory = await CategoryModel.dao.get(awid, elem);
+      if (Object.keys(foundCategory).length === 0) {
+        ValidationHelper.addWarning(
+          uuAppErrorMap,
+          WARNINGS.addJokeCategory.categoryDoesNotExist.code,
+          WARNINGS.addJokeCategory.categoryDoesNotExist.message,
+          {
+            categoryId: dtoIn.categoryList.elem
+          }
+        );
+      } else if (foundCategory.id.toString() === categoryIdList[i]) {
+        ValidationHelper.addWarning(
+          uuAppErrorMap,
+          WARNINGS.addJokeCategory.jokeCategoryAlreadyExists.code,
+          WARNINGS.addJokeCategory.jokeCategoryAlreadyExists.message,
+          {
+            categoryId: dtoIn.categoryList.elem
+          }
+        );
+      }
+    });
     try {
       dtoOut = await this.dao.create(dtoIn);
     } catch (e) {
