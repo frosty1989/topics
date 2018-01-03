@@ -4,11 +4,10 @@ const JokeRatingModel = require("../models/joke-rating-model.js");
 
 class JokeRatingController {
   create(ucEnv) {
-    return JokeRatingModel.create(
-      ucEnv.uri.awid,
-      ucEnv.parameters,
-      ucEnv.session._identity._uuIdentity
-    );
+    let identity = ucEnv.session.getIdentity();
+    let uuIdentity = identity.getUUIdentity();
+
+    return JokeRatingModel.create(ucEnv.uri.awid, ucEnv.parameters, uuIdentity);
   }
 }
 

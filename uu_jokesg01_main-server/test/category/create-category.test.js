@@ -32,7 +32,7 @@ describe("Test createCategory command", () => {
     );
   });
 
-  test("A2", async () => {
+  test("A1", async () => {
     await TestHelper.login("Readers");
     let invalidDtoIn = {
       name: "test name",
@@ -56,7 +56,7 @@ describe("Test createCategory command", () => {
     ).toBeInstanceOf(Object);
   });
 
-  test("A2 - unsuccessful dtoIn validation", async () => {
+  test("A2", async () => {
     await TestHelper.login("Readers");
     let invalidDtoIn = { name: 123, desc: 123, glyphicon: 123 };
     let response;

@@ -1,9 +1,10 @@
 "use strict";
-const Errors = require("./uu-jokes-error");
+const { jokesError } = require("./uu-jokes-error");
 
 let createCategory = {
   code: "createCategory",
-  invalidDtoInError: class CreateCategoryInvalidDtoInError extends Errors.JokesError {
+
+  invalidDtoInError: class invalidDtoInError extends jokesError {
     setParams() {
       return {
         code: `${createCategory.code}/invalidDtoIn`,
@@ -12,7 +13,7 @@ let createCategory = {
     }
   },
 
-  categoryNameNotUnique: class CategoryNameNotUnique extends Errors.JokesError {
+  categoryNameNotUnique: class categoryNameNotUnique extends jokesError {
     setParams() {
       return {
         code: `${createCategory.code}/categoryNameNotUnique`,
@@ -22,7 +23,7 @@ let createCategory = {
     }
   },
 
-  categoryDaoCreateFailed: class CategoryDaoCreateFailed extends Errors.JokesError {
+  categoryDaoCreateFailed: class categoryDaoCreateFailed extends jokesError {
     setParams() {
       return {
         code: `${createCategory.code}/categoryDaoCreateFailed`,
@@ -35,7 +36,7 @@ let createCategory = {
 
 let listCategories = {
   code: "listCategories",
-  invalidDtoInError: class ListCategoriesInvalidDtoInError extends Errors.JokesError {
+  invalidDtoInError: class ListCategoriesInvalidDtoInError extends jokesError {
     setParams() {
       return {
         code: `${listCategories.code}/invalidDtoIn`,
@@ -44,7 +45,7 @@ let listCategories = {
     }
   },
 
-  categoryDaoListFailed: class CategoryDaoListFailed extends Errors.JokesError {
+  categoryDaoListFailed: class CategoryDaoListFailed extends jokesError {
     setParams() {
       return {
         code: `${listCategories.code}/categoryDaoListFailed`,
@@ -57,7 +58,7 @@ let listCategories = {
 
 let deleteCategory = {
   code: "deleteCategory",
-  invalidDtoInError: class DeleteCategoryInvalidDtoInError extends Errors.JokesError {
+  invalidDtoInError: class DeleteCategoryInvalidDtoInError extends jokesError {
     setParams() {
       return {
         code: `${deleteCategory.code}/invalidDtoIn`,
@@ -66,7 +67,7 @@ let deleteCategory = {
     }
   },
 
-  jokeCategoryDaoListByCategoryFailed: class JokeCategoryDaoListByCategoryFailed extends Errors.JokesError {
+  jokeCategoryDaoListByCategoryFailed: class JokeCategoryDaoListByCategoryFailed extends jokesError {
     setParams() {
       return {
         code: `${deleteCategory.code}/jokeCategoryDaoListByCategoryFailed`,
@@ -76,7 +77,7 @@ let deleteCategory = {
     }
   },
 
-  relatedJokesExist: class RelatedJokesExist extends Errors.JokesError {
+  relatedJokesExist: class RelatedJokesExist extends jokesError {
     setParams() {
       return {
         code: `${deleteCategory.code}/relatedJokesExist`,
@@ -86,7 +87,7 @@ let deleteCategory = {
     }
   },
 
-  jokeCategoryDaoDeleteByCategoryFailed: class JokeCategoryDaoDeleteByCategoryFailed extends Errors.JokesError {
+  jokeCategoryDaoDeleteByCategoryFailed: class JokeCategoryDaoDeleteByCategoryFailed extends jokesError {
     setParams() {
       return {
         code: `${deleteCategory.code}/jokeCategoryDaoDeleteByCategoryFailed`,
@@ -96,7 +97,7 @@ let deleteCategory = {
     }
   },
 
-  categoryDaoDeleteFailed: class CategoryDaoDeleteFailed extends Errors.JokesError {
+  categoryDaoDeleteFailed: class CategoryDaoDeleteFailed extends jokesError {
     setParams() {
       return {
         code: `${deleteCategory.code}/categoryDaoDeleteFailed`,
@@ -109,7 +110,7 @@ let deleteCategory = {
 
 let updateCategory = {
   code: "updateCategory",
-  invalidDtoInError: class UpdateCategoryInvalidDtoInError extends Errors.JokesError {
+  invalidDtoInError: class UpdateCategoryInvalidDtoInError extends jokesError {
     setParams() {
       return {
         code: `${updateCategory.code}/invalidDtoIn`,
@@ -118,7 +119,7 @@ let updateCategory = {
     }
   },
 
-  categoryNameNotUnique: class CategoryNameNotUnique extends Errors.JokesError {
+  categoryNameNotUnique: class CategoryNameNotUnique extends jokesError {
     setParams() {
       return {
         code: `${updateCategory.code}/categoryNameNotUnique`,
@@ -128,7 +129,7 @@ let updateCategory = {
     }
   },
 
-  categoryDaoUpdateFailed: class CategoryDaoUpdateFailed extends Errors.JokesError {
+  categoryDaoUpdateFailed: class CategoryDaoUpdateFailed extends jokesError {
     setParams() {
       return {
         code: `${updateCategory.code}/categoryDaoUpdateFailed`,
@@ -139,9 +140,9 @@ let updateCategory = {
   }
 };
 
-Errors.createCategory = createCategory;
-Errors.listCategories = listCategories;
-Errors.deleteCategory = deleteCategory;
-Errors.updateCategory = updateCategory;
-
-module.exports = { Errors };
+module.exports = {
+  createCategory,
+  listCategories,
+  deleteCategory,
+  updateCategory
+};

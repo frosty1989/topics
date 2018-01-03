@@ -49,7 +49,9 @@ class JokeCategoryModel {
     );
 
     // A4
-    let dtoOut;
+    let dtoOut = {
+      categoryList: []
+    };
     let foundJoke;
     dtoIn.awid = awid;
     try {
@@ -77,40 +79,62 @@ class JokeCategoryModel {
     }
 
     // A6, A8 - categoryDoesNotExist, jokeCategoryAlreadyExists, Warnings
-    let foundCategory;
-    let categoryIdList = dtoIn.categoryList;
-    categoryIdList.forEach(async (elem, i) => {
-      foundCategory = await CategoryModel.dao.get(awid, elem);
+    dtoIn.categoryList.forEach(async dtoInCategoryId => {
+      let foundCategory = {};
+
+      try {
+        foundCategory = await CategoryModel.dao.get(awid, dtoInCategoryId);
+      } catch (err) {
+        throw new Errors.addJokeCategory.categoryDaoGetFailed(
+          { uuAppErrorMap },
+          null,
+          {
+            cause: err
+          }
+        );
+      }
+
       if (Object.keys(foundCategory).length === 0) {
         ValidationHelper.addWarning(
           uuAppErrorMap,
           WARNINGS.addJokeCategory.categoryDoesNotExist.code,
           WARNINGS.addJokeCategory.categoryDoesNotExist.message,
           {
-            categoryId: dtoIn.categoryList.elem
+            categoryId: dtoInCategoryId
           }
         );
-      } else if (foundCategory.id.toString() === categoryIdList[i]) {
-        ValidationHelper.addWarning(
-          uuAppErrorMap,
-          WARNINGS.addJokeCategory.jokeCategoryAlreadyExists.code,
-          WARNINGS.addJokeCategory.jokeCategoryAlreadyExists.message,
-          {
-            categoryId: dtoIn.categoryList.elem
+      } else {
+        try {
+          await this.dao.create({
+            awid: awid,
+            jokeId: dtoIn.jokeId,
+            categoryId: dtoInCategoryId
+          });
+          dtoOut.categoryList.push(dtoInCategoryId);
+        } catch (e) {
+          if (e.code === "uu-app-objectstore/duplicateKey") {
+            ValidationHelper.addWarning(
+              uuAppErrorMap,
+              WARNINGS.addJokeCategory.jokeCategoryAlreadyExists.code,
+              WARNINGS.addJokeCategory.jokeCategoryAlreadyExists.message,
+              {
+                jokeId: dtoIn.jokeId,
+                categoryId: foundCategory.data.id
+              }
+            );
+          } else {
+            throw new Errors.addJokeCategory.jokeCategoryDaoCreateFailed(
+              { uuAppErrorMap },
+              null,
+              e
+            );
           }
-        );
+        }
       }
     });
-    try {
-      dtoOut = await this.dao.create(dtoIn);
-    } catch (e) {
-      throw new Errors.addJokeCategory.jokeCategoryDaoCreateFailed(
-        { uuAppErrorMap },
-        null,
-        e
-      );
-    }
+
     dtoOut.uuAppErrorMap = uuAppErrorMap;
+
     return dtoOut;
   }
 

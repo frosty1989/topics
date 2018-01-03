@@ -1,9 +1,9 @@
 "use strict";
-const Errors = require("./uu-jokes-error");
-
+const { jokesError } = require("./uu-jokes-error");
+let Errors = {};
 let createJoke = {
   code: "createJoke",
-  invalidDtoIn: class CreateJokeInvalidDtoInError extends Errors.JokesError {
+  invalidDtoIn: class CreateJokeInvalidDtoInError extends jokesError {
     setParams() {
       return {
         code: `${createJoke.code}/invalidDtoIn`,
@@ -12,7 +12,7 @@ let createJoke = {
     }
   },
 
-  jokeDaoCreateFailed: class JokeDaoCreateFailed extends Errors.JokesError {
+  jokeDaoCreateFailed: class JokeDaoCreateFailed extends jokesError {
     setParams() {
       return {
         code: `${createJoke.code}/jokeDaoCreateFailed`,
@@ -22,7 +22,7 @@ let createJoke = {
     }
   },
 
-  jokeCategoryDaoCreateFailed: class JokeCategoryDaoCreateFailed extends Errors.JokesError {
+  jokeCategoryDaoCreateFailed: class JokeCategoryDaoCreateFailed extends jokesError {
     setParams() {
       return {
         code: `${createJoke.code}/jokeCategoryDaoCreateFailed`,
@@ -35,7 +35,7 @@ let createJoke = {
 
 let getJoke = {
   code: "getJoke",
-  invalidDtoIn: class GetJokeInvalidDtoInError extends Errors.JokesError {
+  invalidDtoIn: class GetJokeInvalidDtoInError extends jokesError {
     setParams() {
       return {
         code: `${getJoke.code}/invalidDtoIn`,
@@ -44,7 +44,7 @@ let getJoke = {
     }
   },
 
-  jokeDaoGetFailed: class GetJokeFailedError extends Errors.JokesError {
+  jokeDaoGetFailed: class GetJokeFailedError extends jokesError {
     setParams() {
       return {
         code: `${getJoke.code}/jokeDaoGetFailed`,
@@ -54,7 +54,7 @@ let getJoke = {
     }
   },
 
-  jokeDoesNotExist: class JokeDoesNotExist extends Errors.JokesError {
+  jokeDoesNotExist: class JokeDoesNotExist extends jokesError {
     setParams() {
       return {
         code: `${getJoke.code}/jokeDoesNotExist`,
@@ -64,7 +64,7 @@ let getJoke = {
     }
   },
 
-  jokeCategoryDaoListByJokeFailed: class JokeCategoryDaoListByJokeFailed extends Errors.JokesError {
+  jokeCategoryDaoListByJokeFailed: class JokeCategoryDaoListByJokeFailed extends jokesError {
     setParams() {
       return {
         code: `${getJoke.code}/jokeCategoryDaoListByJokeFailed`,
@@ -77,7 +77,7 @@ let getJoke = {
 
 let listJokes = {
   Code: "listJokes",
-  invalidDtoInError: class ListJokesInvalidDtoInError extends Errors.JokesError {
+  invalidDtoInError: class ListJokesInvalidDtoInError extends jokesError {
     setParams() {
       return {
         code: `${listJokes.code}/invalidDtoIn`,
@@ -86,7 +86,7 @@ let listJokes = {
     }
   },
 
-  jokeDaoListFailed: class JokeDaoListFailed extends Errors.JokesError {
+  jokeDaoListFailed: class JokeDaoListFailed extends jokesError {
     setParams() {
       return {
         code: `${listJokes.code}/jokeDaoListFailed`,
@@ -99,7 +99,7 @@ let listJokes = {
 
 let deleteJoke = {
   code: "deleteJoke",
-  invalidDtoIn: class InvalidDtoIn extends Errors.JokesError {
+  invalidDtoIn: class InvalidDtoIn extends jokesError {
     setParams() {
       return {
         code: `${deleteJoke.code}/invalidDtoIn`,
@@ -108,7 +108,7 @@ let deleteJoke = {
     }
   },
 
-  jokeRatingDaoDeleteByJokeFailed: class JokeRatingDaoDeleteByJokeFailed extends Errors.JokesError {
+  jokeRatingDaoDeleteByJokeFailed: class JokeRatingDaoDeleteByJokeFailed extends jokesError {
     setParams() {
       return {
         code: `${deleteJoke.code}/jokeRatingDaoDeleteByJokeFailed`,
@@ -118,7 +118,7 @@ let deleteJoke = {
     }
   },
 
-  jokeCategoryDaoDeleteByJokeFailed: class JokeCategoryDaoDeleteByJokeFailed extends Errors.JokesError {
+  jokeCategoryDaoDeleteByJokeFailed: class JokeCategoryDaoDeleteByJokeFailed extends jokesError {
     setParams() {
       return {
         code: `${deleteJoke.code}/jokeCategoryDaoDeleteByJokeFailed`,
@@ -128,7 +128,7 @@ let deleteJoke = {
     }
   },
 
-  jokeDaoDeleteFailed: class JokeDaoDeleteFailed extends Errors.JokesError {
+  jokeDaoDeleteFailed: class JokeDaoDeleteFailed extends jokesError {
     setParams() {
       return {
         code: `${deleteJoke.code}/jokeDaoDeleteFailed`,
@@ -141,7 +141,7 @@ let deleteJoke = {
 
 let updateJoke = {
   code: "updateJoke",
-  invalidDtoInError: class UpdateJokeInvalidDtoInError extends Errors.JokesError {
+  invalidDtoInError: class UpdateJokeInvalidDtoInError extends jokesError {
     setParams() {
       return {
         code: `${updateJoke.code}/invalidDtoIn`,
@@ -150,7 +150,7 @@ let updateJoke = {
     }
   },
 
-  jokeDaoUpdateFailed: class JokeDaoUpdateFailed extends Errors.JokesError {
+  jokeDaoUpdateFailed: class JokeDaoUpdateFailed extends jokesError {
     setParams() {
       return {
         code: `${updateJoke.code}/jokeDaoUpdateFailed`,
@@ -160,7 +160,7 @@ let updateJoke = {
     }
   },
 
-  jokeDaoGetFailed: class JokeDaoGetFailed extends Errors.JokesError {
+  jokeDaoGetFailed: class JokeDaoGetFailed extends jokesError {
     setParams() {
       return {
         code: `${updateJoke.code}/jokeDaoGetFailed`,
@@ -173,7 +173,7 @@ let updateJoke = {
 
 let listCategoryJokes = {
   code: "listCategoryJokes",
-  invalidDtoInError: class ListCategoryJokesInvalidDtoInError extends Errors.JokesError {
+  invalidDtoInError: class ListCategoryJokesInvalidDtoInError extends jokesError {
     setParams() {
       return {
         code: `${listCategoryJokes.code}/invalidDtoIn`,
@@ -182,7 +182,7 @@ let listCategoryJokes = {
     }
   },
 
-  jokeCategoryDaoListByCategoryFailed: class JokeCategoryDaoListByCategoryFailed extends Errors.JokesError {
+  jokeCategoryDaoListByCategoryFailed: class JokeCategoryDaoListByCategoryFailed extends jokesError {
     setParams() {
       return {
         code: `${listCategoryJokes.code}/jokeCategoryDaoListByCategoryFailed`,
@@ -192,7 +192,7 @@ let listCategoryJokes = {
     }
   },
 
-  jokeDaoListByIdsFailed: class JokeDaoListByIdsFailed extends Errors.JokesError {
+  jokeDaoListByIdsFailed: class JokeDaoListByIdsFailed extends jokesError {
     setParams() {
       return {
         code: `${listCategoryJokes.code}/jokeDaoListByIdsFailed`,

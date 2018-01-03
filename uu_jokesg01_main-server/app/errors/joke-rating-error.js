@@ -1,9 +1,9 @@
 "use strict";
-const Errors = require("./uu-jokes-error");
-
+const { jokesError } = require("./uu-jokes-error");
+let Errors = {};
 let addJokeRating = {
   code: "addJokeRating",
-  invalidDtoIn: class extends Errors.JokesError {
+  invalidDtoIn: class extends jokesError {
     setParams() {
       return {
         code: `${addJokeRating.code}/invalidDtoIn`,
@@ -11,7 +11,7 @@ let addJokeRating = {
       };
     }
   },
-  jokeDaoGetFailed: class extends Errors.JokesError {
+  jokeDaoGetFailed: class extends jokesError {
     setParams() {
       return {
         code: `${addJokeRating.code}/jokeDaoGetFailed`,
@@ -19,7 +19,7 @@ let addJokeRating = {
       };
     }
   },
-  jokeDoesNotExist: class extends Errors.JokesError {
+  jokeDoesNotExist: class extends jokesError {
     setParams() {
       return {
         code: `${addJokeRating.code}/jokeDoesNotExist`,
@@ -27,7 +27,7 @@ let addJokeRating = {
       };
     }
   },
-  jokeRatingDaoGetByJokeAndIdentityFailed: class extends Errors.JokesError {
+  jokeRatingDaoGetByJokeAndIdentityFailed: class extends jokesError {
     setParams() {
       return {
         code: `${addJokeRating.code}/jokeRatingDaoGetByJokeAndIdentityFailed`,
@@ -35,7 +35,7 @@ let addJokeRating = {
       };
     }
   },
-  jokeRatingDaoUpdateFailed: class extends Errors.JokesError {
+  jokeRatingDaoUpdateFailed: class extends jokesError {
     setParams() {
       return {
         code: `${addJokeRating.code}/jokeRatingDaoUpdateFailed`,
@@ -43,7 +43,7 @@ let addJokeRating = {
       };
     }
   },
-  jokeRatingDaoCreateFailed: class extends Errors.JokesError {
+  jokeRatingDaoCreateFailed: class extends jokesError {
     setParams() {
       return {
         code: `${addJokeRating.code}/jokeRatingDaoCreateFailed`,
@@ -51,7 +51,7 @@ let addJokeRating = {
       };
     }
   },
-  jokeDaoUpdateFailed: class extends Errors.JokesError {
+  jokeDaoUpdateFailed: class extends jokesError {
     setParams() {
       return {
         code: `${addJokeRating.code}/jokeDaoUpdateFailed`,
