@@ -1,6 +1,8 @@
 "use strict";
+
 const { UseCaseError } = require("uu_appg01_server").AppServer;
 const ISSUE_PREFIX = "uu-jokesg01-main";
+
 const jokesError = class JokesError extends UseCaseError {
   constructor(dtoOut, paramMap = {}, cause = null) {
     if (dtoOut instanceof Error) {

@@ -1,6 +1,7 @@
 "use strict";
+
 const { jokesError } = require("./uu-jokes-error");
-let Errors = {};
+
 let addJokeCategory = {
   code: "addJokeCategory",
   invalidDtoInError: class AddJokeCategoryInvalidDtoInError extends jokesError {
@@ -77,7 +78,7 @@ let removeJokeCategory = {
   }
 };
 
-Errors.addJokeCategory = addJokeCategory;
-Errors.removeJokeCategory = removeJokeCategory;
-
-module.exports = { Errors };
+module.exports = {
+  addJokeCategory,
+  removeJokeCategory
+};

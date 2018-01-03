@@ -2,10 +2,8 @@
 const { Validator } = require("uu_appg01_server").Validation;
 const { DaoFactory } = require("uu_appg01_server").ObjectStore;
 const { ValidationHelper } = require("uu_appg01_server").Workspace;
-const Session = require("uu_appg01_server").Authentication.Session;
-
 const Path = require("path");
-const { addJokeRating } = require("../errors/joke-rating-error.js").Errors;
+const { prefix, addJokeRating } = require("../errors/errors");
 
 class JokeRatingModel {
   constructor() {
@@ -25,7 +23,7 @@ class JokeRatingModel {
       dtoIn,
       validationResult,
       {},
-      `uu-jokesg01-main/${addJokeRating.code}/unsupportedKey`,
+      `${prefix}/${addJokeRating.code}/unsupportedKey`,
       addJokeRating.invalidDtoIn
     );
     let joke;
@@ -82,7 +80,7 @@ class JokeRatingModel {
       }
     } else {
       try {
-        averageRating = 666;
+        averageRating = 3;
         dtoOut = await this.dao.update(uuObject);
       } catch (e) {
         throw new addJokeRating.jokeRatingDaoUpdateFailed(

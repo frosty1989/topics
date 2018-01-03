@@ -7,13 +7,34 @@ const {
   deleteCategory,
   updateCategory
 } = require("./category-error");
-// cownst {} = require("./joke-category-error");
+const {
+  addJokeCategory,
+  removeJokeCategory
+} = require("./joke-category-error");
+const {
+  createJoke,
+  getJoke,
+  listJokes,
+  deleteJoke,
+  updateJoke,
+  listCategoryJokes
+} = require("./joke-error");
+const { addJokeRating } = require("./joke-rating-error");
 
 module.exports = {
   prefix: issuePrefix,
   generalError: jokesError,
-  createCategoryError: createCategory,
-  listCategoriesError: listCategories,
-  deleteCategoryError: deleteCategory,
-  updateCategoryError: updateCategory
+  createCategory,
+  listCategories,
+  deleteCategory,
+  updateCategory,
+  addJokeCategory,
+  removeJokeCategory,
+  createJoke,
+  getJoke,
+  listJokes,
+  deleteJoke,
+  updateJoke,
+  listCategoryJokes,
+  addJokeRating
 };

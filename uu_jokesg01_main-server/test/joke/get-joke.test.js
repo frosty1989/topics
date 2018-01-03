@@ -37,9 +37,7 @@ describe("Test getJoke command", () => {
     expect(response.data.uuAppErrorMap).toBeInstanceOf(Object);
     expect(response.data.uuAppErrorMap).toMatchObject({});
   });
-});
 
-describe("Test getJoke command", () => {
   test("A1", async () => {
     await TestHelper.login("Readers");
     await CreateJoke();
@@ -66,9 +64,7 @@ describe("Test getJoke command", () => {
         .paramMap["unsupportedKeyList"][0];
     expect(invalidData).toEqual("$.notvalid");
   });
-});
 
-describe("Test getJoke command", () => {
   test("A2", async () => {
     await TestHelper.login("Readers");
     let invalidDtoIn = { id: "invalid string id" };
@@ -86,9 +82,7 @@ describe("Test getJoke command", () => {
     expect(status).toHaveProperty("status");
     expect(status.dtoOut.uuAppErrorMap).toBeInstanceOf(Object);
   });
-});
 
-describe("Test getJoke command", () => {
   test("A4", async () => {
     await TestHelper.login("Readers");
     let nonexistintId = "5a33ba462eb85507bcf0c444";
