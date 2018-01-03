@@ -1,6 +1,6 @@
 "use strict";
 
-const { jokesError } = require("./uu-jokes-error");
+const { prefix, jokesError } = require("./uu-jokes-error");
 
 let addJokeRating = {
   code: "addJokeRating",
@@ -63,5 +63,6 @@ let addJokeRating = {
 };
 
 module.exports = {
+  prefix,
   addJokeRating
 };

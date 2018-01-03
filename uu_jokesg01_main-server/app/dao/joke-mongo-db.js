@@ -20,7 +20,12 @@ class JokeMongoDB extends UuObjectDao {
     return await super.findOne({ awid, _id: id });
   }
 
-  async update(filter, uuObject) {
+  async update(uuObject) {
+    let filter = {
+      id: uuObject.id,
+      awid: uuObject.awid
+    };
+
     return await super.findOneAndUpdate(filter, uuObject, "NONE");
   }
 

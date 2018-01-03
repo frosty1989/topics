@@ -1,7 +1,6 @@
 {
   "uuSubAppDataStoreMap": {
-    "primary": "mongodb://127.0.0.1:27017/JokesNodejsMainOS",
-    "binary": "mongodb://127.0.0.1:27017/JokesNodejsMainBS"
+    "primary": "mongodb://127.0.0.1:27017/JokesNodejsMainOS"
   },
   "privilegedUserMap": {
     "uuSubAppInstanceSysOwner": "12-4741-1"

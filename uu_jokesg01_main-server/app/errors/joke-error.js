@@ -1,6 +1,6 @@
 "use strict";
 
-const { jokesError } = require("./uu-jokes-error");
+const { prefix, jokesError } = require("./uu-jokes-error");
 
 let createJoke = {
   code: "createJoke",
@@ -59,8 +59,7 @@ let getJoke = {
     setParams() {
       return {
         code: `${getJoke.code}/jokeDoesNotExist`,
-        message: "Joke does not exist.",
-        status: 500
+        message: "Joke does not exist."
       };
     }
   },
@@ -205,6 +204,7 @@ let listCategoryJokes = {
 };
 
 module.exports = {
+  prefix,
   createJoke,
   getJoke,
   listJokes,

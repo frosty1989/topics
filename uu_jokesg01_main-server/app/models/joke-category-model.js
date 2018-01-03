@@ -9,7 +9,7 @@ const {
   prefix,
   addJokeCategory,
   removeJokeCategory
-} = require("../errors/errors");
+} = require("../errors/joke-category-error");
 const WARNINGS = {
   addJokeCategory: {
     categoryDoesNotExist: {
@@ -29,7 +29,6 @@ class JokeCategoryModel {
       Path.join(__dirname, "..", "validation_types", "joke-category-types.js")
     );
     this.dao = DaoFactory.getDao("jokeCategory");
-    this.dao.createSchema();
   }
 
   async addJokeCategory(awid, dtoIn) {

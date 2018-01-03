@@ -27,5 +27,5 @@ const jokesError = class JokesError extends UseCaseError {
 
 module.exports = {
   jokesError,
-  issuePrefix: ISSUE_PREFIX
+  prefix: ISSUE_PREFIX
 };

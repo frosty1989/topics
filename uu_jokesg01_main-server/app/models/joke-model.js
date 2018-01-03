@@ -10,7 +10,7 @@ const {
   deleteJoke,
   updateJoke,
   listCategoryJokes
-} = require("../errors/errors");
+} = require("../errors/joke-error");
 const CategoryModel = require("./category-model");
 const Path = require("path");
 const WARNINGS = {
@@ -38,7 +38,6 @@ class JokeModel {
       Path.join(__dirname, "..", "validation_types", "joke-types.js")
     );
     this.dao = DaoFactory.getDao("joke");
-    this.dao.createSchema();
   }
 
   async createJoke(awid, dtoIn) {
@@ -261,6 +260,9 @@ class JokeModel {
       `${prefix}/${updateJoke.code}/unsupportedKey`,
       updateJoke.invalidDtoInError
     );
+    let uuObject = Object.assign({}, dtoIn);
+
+    uuObject.awid = awid;
 
     try {
       let foundJoke = await this.dao.get(awid, dtoIn.id);
@@ -276,16 +278,7 @@ class JokeModel {
         );
       } else {
         try {
-          dtoOut = await this.dao.update(
-            {
-              _id: dtoIn.id,
-              awid: awid
-            },
-            {
-              name: dtoIn.name,
-              text: dtoIn.text
-            }
-          );
+          dtoOut = await this.dao.update(uuObject);
         } catch (e) {
           throw new updateJoke.jokeDaoUpdateFailed({ uuAppErrorMap }, null, {
             cause: e

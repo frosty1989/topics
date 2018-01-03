@@ -10,7 +10,7 @@ const {
   listCategories,
   deleteCategory,
   updateCategory
-} = require("../errors/errors");
+} = require("../errors/category-error");
 
 class CategoryModel {
   constructor() {
@@ -18,7 +18,6 @@ class CategoryModel {
       Path.join(__dirname, "..", "validation_types", "category-types.js")
     );
     this.dao = DaoFactory.getDao("category");
-    this.dao.createSchema();
   }
 
   async createCategory(awid, dtoIn) {
@@ -42,7 +41,7 @@ class CategoryModel {
       if (e.code === "uu-app-objectstore/duplicateKey") {
         throw new createCategory.categoryNameNotUnique(
           { uuAppErrorMap },
-          null,
+          { name: dtoIn.name },
           e
         );
       }
@@ -69,9 +68,10 @@ class CategoryModel {
       `${prefix}/${updateCategory.code}/unsupportedKey`,
       updateCategory.invalidDtoInError
     );
-
-    dtoIn.awid = awid;
+    let uuObject = Object.assign({}, dtoIn);
     let dtoOut = {};
+
+    uuObject.awid = awid;
 
     try {
       dtoOut = await this.dao.getByName(awid, dtoIn.name);
@@ -89,16 +89,7 @@ class CategoryModel {
       });
     } else {
       try {
-        dtoOut = await this.dao.update(
-          { id: dtoIn.id },
-          {
-            awid: awid,
-            id: dtoIn.id,
-            name: dtoIn.name,
-            desc: dtoIn.desc,
-            glyphicon: dtoIn.glyphicon
-          }
-        );
+        dtoOut = await this.dao.update(uuObject);
       } catch (e) {
         throw new updateCategory.categoryDaoUpdateFailed(
           { uuAppErrorMap },

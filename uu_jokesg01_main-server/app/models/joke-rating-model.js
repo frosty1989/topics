@@ -3,7 +3,7 @@ const { Validator } = require("uu_appg01_server").Validation;
 const { DaoFactory } = require("uu_appg01_server").ObjectStore;
 const { ValidationHelper } = require("uu_appg01_server").Workspace;
 const Path = require("path");
-const { prefix, addJokeRating } = require("../errors/errors");
+const { prefix, addJokeRating } = require("../errors/joke-rating-error");
 
 class JokeRatingModel {
   constructor() {
@@ -11,10 +11,9 @@ class JokeRatingModel {
       Path.join(__dirname, "..", "validation_types", "joke-rating-types.js")
     );
     this.dao = DaoFactory.getDao("jokeRating");
-    this.dao.createSchema();
   }
 
-  async create(awid, dtoIn, uuIdentity) {
+  async create(awid, dtoIn, session) {
     let validationResult = this.validator.validate(
       "addJokeRatingDtoInType",
       dtoIn
@@ -31,6 +30,8 @@ class JokeRatingModel {
     let dtoOut;
     let uuObject = Object.create(dtoIn);
     let averageRating = 0;
+    let identity = session.getIdentity();
+    let uuIdentity = identity.getUUIdentity();
 
     try {
       const JokeModel = require("./joke-model");
