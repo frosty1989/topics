@@ -95,19 +95,17 @@ describe("Test deleteCategory command", () => {
       text: "Text 3",
       categoryList: [category.data.id]
     });
-    let result;
+    expect.assertions(2);
 
     try {
       await TestHelper.executePostCommand(CMD, {
         id: category.data.id,
         forceDelete: false
       });
-    } catch (err) {
-      result = err;
+    } catch (error) {
+      expect(error.status).toBe(500);
+      expect(error.code).toBe(relatedJokesExist);
     }
-
-    expect(result.status).toBe(500);
-    expect(result.code).toBe(relatedJokesExist);
   });
 
   test("A1", async () => {
@@ -137,21 +135,19 @@ describe("Test deleteCategory command", () => {
 
   test("A2", async () => {
     await TestHelper.login("Readers", true);
-    let response;
 
+    expect.assertions(7);
     try {
       await TestHelper.executePostCommand("deleteCategory", {});
-    } catch (err) {
-      response = err;
+    } catch (error) {
+      expect(error).toHaveProperty("paramMap");
+      expect(error.paramMap).toHaveProperty("invalidValueKeyMap");
+      expect(error.paramMap).toHaveProperty("missingKeyMap");
+      expect(error.dtoOut).toHaveProperty("uuAppErrorMap");
+      expect(error).toHaveProperty("response");
+      expect(error).toHaveProperty("status");
+      expect(error.status).toEqual(400);
     }
-
-    expect(response).toHaveProperty("paramMap");
-    expect(response.paramMap).toHaveProperty("invalidValueKeyMap");
-    expect(response.paramMap).toHaveProperty("missingKeyMap");
-    expect(response.dtoOut).toHaveProperty("uuAppErrorMap");
-    expect(response).toHaveProperty("response");
-    expect(response).toHaveProperty("status");
-    expect(response.status).toEqual(400);
   });
 
   test("A4 related jokes exists", async () => {
@@ -159,22 +155,20 @@ describe("Test deleteCategory command", () => {
     let createCategoryResponse = await CreateCategory();
     let categoryId = createCategoryResponse.data.id;
     await CreateJoke({}, categoryId);
-    let result;
+    expect.assertions(6);
     try {
       await TestHelper.executePostCommand("deleteCategory", {
         id: createCategoryResponse.data.id
       });
     } catch (error) {
-      result = error;
+      expect(error).toHaveProperty("id");
+      expect(error).toHaveProperty("status");
+      expect(error.status).toEqual(500);
+      expect(error.code).toEqual(
+        "uu-jokesg01-main/deleteCategory/relatedJokesExist"
+      );
+      expect(error).toBeInstanceOf(Object);
+      expect(error).toHaveProperty("response");
     }
-
-    expect(result).toHaveProperty("id");
-    expect(result).toHaveProperty("status");
-    expect(result.status).toEqual(500);
-    expect(result.code).toEqual(
-      "uu-jokesg01-main/deleteCategory/relatedJokesExist"
-    );
-    expect(result).toBeInstanceOf(Object);
-    expect(result).toHaveProperty("response");
   });
 });
