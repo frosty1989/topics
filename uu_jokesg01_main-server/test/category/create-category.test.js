@@ -58,35 +58,33 @@ describe("Test createCategory command", () => {
 
   test("A2", async () => {
     await TestHelper.login("Readers");
-    let invalidDtoIn = { name: 123, desc: 123, glyphicon: 123 };
-    let response;
+    expect.assertions(9);
     try {
+      let invalidDtoIn = { name: 123, desc: 123, glyphicon: 123 };
       await CreateCategory(invalidDtoIn);
-    } catch (error) {
-      response = error;
+    } catch (e) {
+      expect(e).toHaveProperty("paramMap");
+      expect(e.paramMap).toHaveProperty("invalidValueKeyMap");
+      expect(
+        e.paramMap.invalidTypeKeyMap.hasOwnProperty("$.name")
+      ).toBeTruthy();
+      expect(
+        e.paramMap.invalidTypeKeyMap.hasOwnProperty("$.desc")
+      ).toBeTruthy();
+      expect(
+        e.paramMap.invalidTypeKeyMap.hasOwnProperty("$.glyphicon")
+      ).toBeTruthy();
+      expect(e.dtoOut).toHaveProperty("uuAppErrorMap");
+      expect(e).toHaveProperty("response");
+      expect(e).toHaveProperty("status");
+      expect(e.status).toBe(400);
     }
-
-    expect(response).toHaveProperty("paramMap");
-    expect(response.paramMap).toHaveProperty("invalidValueKeyMap");
-    expect(
-      response.paramMap.invalidTypeKeyMap.hasOwnProperty("$.name")
-    ).toBeTruthy();
-    expect(
-      response.paramMap.invalidTypeKeyMap.hasOwnProperty("$.desc")
-    ).toBeTruthy();
-    expect(
-      response.paramMap.invalidTypeKeyMap.hasOwnProperty("$.glyphicon")
-    ).toBeTruthy();
-    expect(response.dtoOut).toHaveProperty("uuAppErrorMap");
-    expect(response).toHaveProperty("response");
-    expect(response).toHaveProperty("status");
-    expect(response.status).toBe(400);
   });
 
   test("A3 - uuObject Category with the specified name already exists", async () => {
     await TestHelper.login("Readers");
-    let result;
     let errorCode = "uu-jokesg01-main/createCategory/categoryNameNotUnique";
+    expect.assertions(4);
     try {
       await TestHelper.executePostCommand("createCategory", {
         name: "test name",
@@ -100,12 +98,10 @@ describe("Test createCategory command", () => {
         glyphicon: "http://test.jpg"
       });
     } catch (error) {
-      result = error;
+      expect(error.code).toBeDefined();
+      expect(error).toHaveProperty("id");
+      expect(error.status).toEqual(500);
+      expect(error.code).toBe(errorCode);
     }
-
-    expect(result.code).toBeDefined();
-    expect(result).toHaveProperty("id");
-    expect(result.status).toEqual(500);
-    expect(result.code).toBe(errorCode);
   });
 });

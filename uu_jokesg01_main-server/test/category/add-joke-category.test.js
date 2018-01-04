@@ -73,7 +73,9 @@ describe("Test addJokeCategory command", () => {
     expect(response.status).toEqual(200);
     expect(response.data).toBeDefined();
     expect(response.data).toBeInstanceOf(Object);
-    expect(response.data).toHaveProperty("uuAppErrorMap");
+    expect(response.data.categoryList).toBeDefined();
+    expect(response.data.categoryList).toBeInstanceOf(Array);
+    expect(response.data.uuAppErrorMap).toBeDefined();
     expect(response.data.uuAppErrorMap).toBeInstanceOf(Object);
     expect(response.data.uuAppErrorMap[unsupportedKeysWarn]).toBeDefined();
     expect(response.data.uuAppErrorMap[unsupportedKeysWarn]).toBeInstanceOf(
@@ -107,26 +109,78 @@ describe("Test addJokeCategory command", () => {
     expect(response.status).toEqual(400);
   });
 
+  test("A1", async () => {
+    await TestHelper.login("Readers");
+    const unsupportedKeysWarn =
+      "uu-jokesg01-main/addJokeCategory/unsupportedKey";
+    let createCategoryResponse = await CreateCategory();
+    let categoryId = createCategoryResponse.data.id;
+    let result = await CreateJoke({}, categoryId);
+    let jokeId = result.data.id;
+
+    let dtoIn = {
+      jokeId: jokeId,
+      categoryList: [categoryId],
+      unsupportedKey: "unsupportedValue"
+    };
+    let response = await TestHelper.executePostCommand(
+      "addJokeCategory",
+      dtoIn
+    );
+    expect(response.status).toEqual(200);
+    expect(response.data).toBeDefined();
+    expect(response.data).toBeInstanceOf(Object);
+    expect(response.data).toHaveProperty("uuAppErrorMap");
+    expect(response.data.uuAppErrorMap).toBeInstanceOf(Object);
+    expect(response.data.uuAppErrorMap[unsupportedKeysWarn]).toBeDefined();
+    expect(response.data.uuAppErrorMap[unsupportedKeysWarn]).toBeInstanceOf(
+      Object
+    );
+  });
+
+  test("A2", async () => {
+    await TestHelper.login("Readers");
+
+    expect.assertions(9);
+
+    try {
+      await TestHelper.executePostCommand("addJokeCategory", {});
+    } catch (error) {
+      expect(error).toHaveProperty("paramMap");
+      expect(error.paramMap).toHaveProperty("invalidValueKeyMap");
+      expect(error.paramMap).toHaveProperty("missingKeyMap");
+      expect(
+        error.paramMap.missingKeyMap.hasOwnProperty("$.jokeId")
+      ).toBeTruthy();
+      expect(
+        error.paramMap.missingKeyMap.hasOwnProperty("$.categoryList")
+      ).toBeTruthy();
+      expect(error.dtoOut).toHaveProperty("uuAppErrorMap");
+      expect(error).toHaveProperty("response");
+      expect(error).toHaveProperty("status");
+      expect(error.status).toEqual(400);
+    }
+  });
+
   test("A4", async () => {
     await TestHelper.login("Readers");
 
     const jokeDoesNotExistCode =
       "uu-jokesg01-main/addJokeCategory/jokeDoesNotExist";
     const fakeJokeId = "5a33ba462eb85507bcf0c444";
-    let createCategoryResponse = await CreateCategory();
-    let categoryId = createCategoryResponse.data.id;
-    let response;
 
+    expect.assertions(2);
     try {
+      let createCategoryResponse = await CreateCategory();
+      let categoryId = createCategoryResponse.data.id;
+
       await TestHelper.executePostCommand("addJokeCategory", {
         jokeId: fakeJokeId,
         categoryList: [categoryId]
       });
     } catch (error) {
-      response = error;
+      expect(error.code).toBe(jokeDoesNotExistCode);
+      expect(error.status).toBe(500);
     }
-
-    expect(response.code).toBe(jokeDoesNotExistCode);
-    expect(response.status).toBe(500);
   });
 });

@@ -46,7 +46,6 @@ describe("Test listCategories command", () => {
       "listCategories",
       invalidDtoIn
     );
-    console.log(response);
     expect(typeof response.data.uuAppErrorMap).toBe("object");
     expect("warning").toEqual(response.data.uuAppErrorMap[code].type);
     expect("DtoIn contains unsupported keys.").toEqual(
@@ -65,18 +64,17 @@ describe("Test listCategories command", () => {
 
   test("A2", async () => {
     await TestHelper.login("Readers");
-    let response;
+    expect.assertions(7);
     try {
       await TestHelper.executeGetCommand("listCategoryJokes", {});
     } catch (error) {
-      response = error;
+      expect(error.status).toBe(400);
+      expect(error).toHaveProperty("paramMap");
+      expect(error.paramMap).toHaveProperty("invalidValueKeyMap");
+      expect(error.paramMap).toHaveProperty("missingKeyMap");
+      expect(error.dtoOut).toHaveProperty("uuAppErrorMap");
+      expect(error).toHaveProperty("response");
+      expect(error).toHaveProperty("status");
     }
-    expect(response.status).toBe(400);
-    expect(response).toHaveProperty("paramMap");
-    expect(response.paramMap).toHaveProperty("invalidValueKeyMap");
-    expect(response.paramMap).toHaveProperty("missingKeyMap");
-    expect(response.dtoOut).toHaveProperty("uuAppErrorMap");
-    expect(response).toHaveProperty("response");
-    expect(response).toHaveProperty("status");
   });
 });
