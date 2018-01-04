@@ -1,25 +1,26 @@
 "use strict";
-const { Validator } = require("uu_appg01_server").Validation;
-const { DaoFactory } = require("uu_appg01_server").ObjectStore;
-const { ValidationHelper } = require("uu_appg01_server").Workspace;
+const {Validator} = require("uu_appg01_server").Validation;
+const {DaoFactory} = require("uu_appg01_server").ObjectStore;
+const {ValidationHelper} = require("uu_appg01_server").Workspace;
 const Path = require("path");
 const JokeModel = require("./joke-model");
 const CategoryModel = require("./category-model");
-const {
-  prefix,
-  addJokeCategory,
-  removeJokeCategory
-} = require("../errors/joke-category-error");
+const Errors = require("../errors/joke-category-error");
+
 const WARNINGS = {
-  addJokeCategory: {
-    categoryDoesNotExist: {
-      code: `${prefix}/${addJokeCategory.code}/categoryDoesNotExist`,
-      message: "Category does not exist."
-    },
-    jokeCategoryAlreadyExists: {
-      code: `${prefix}/${addJokeCategory.code}/jokeCategoryAlreadyExists`,
-      message: "uuObject jokeCategory already exists."
-    }
+  addJokeCategoryUnsupportedKeys: {
+    code: `${Errors.AddJokeCategory.UC_CODE}unsupportedKeys`
+  },
+  removeJokeCategoryUnsupportedKeys: {
+    code: `${Errors.RemoveJokeCategory.UC_CODE}unsupportedKeys`
+  },
+  categoryDoesNotExist: {
+    code: `${prefix}/${addJokeCategory.code}/categoryDoesNotExist`,
+    message: "Category does not exist."
+  },
+  jokeCategoryAlreadyExists: {
+    code: `${prefix}/${addJokeCategory.code}/jokeCategoryAlreadyExists`,
+    message: "uuObject jokeCategory already exists."
   }
 };
 
@@ -39,9 +40,8 @@ class JokeCategoryModel {
     let uuAppErrorMap = ValidationHelper.processValidationResult(
       dtoIn,
       validationResult,
-      {},
-      `${prefix}/${addJokeCategory.code}/unsupportedKey`,
-      addJokeCategory.invalidDtoInError
+      WARNINGS.addJokeCategoryUnsupportedKeys.code,
+      Errors.AddJokeCategory.InvalidDtoInError
     );
     let dtoOut = {
       categoryList: []
@@ -51,11 +51,11 @@ class JokeCategoryModel {
     try {
       foundJoke = await JokeModel.dao.get(awid, dtoIn.jokeId);
     } catch (e) {
-      throw new addJokeCategory.jokeDaoGetFailed({ uuAppErrorMap }, null, e);
+      throw new Errors.AddJokeCategory.JokeDaoGetFailed({uuAppErrorMap}, e);
     }
 
     if (Object.keys(foundJoke).length === 0) {
-      throw new addJokeCategory.jokeDoesNotExist({ uuAppErrorMap }, null, {
+      throw new Errors.AddJokeCategory.JokeDoesNotExist({uuAppErrorMap}, {
         jokeId: dtoIn.jokeId
       });
     }
@@ -67,9 +67,8 @@ class JokeCategoryModel {
       try {
         foundCategory = await CategoryModel.dao.get(awid, dtoInCategoryId);
       } catch (err) {
-        throw new addJokeCategory.categoryDaoGetFailed(
-          { uuAppErrorMap },
-          null,
+        throw new Errors.AddJokeCategory.CategoryDaoGetFailed(
+          {uuAppErrorMap},
           err
         );
       }
@@ -77,8 +76,8 @@ class JokeCategoryModel {
       if (Object.keys(foundCategory).length === 0) {
         ValidationHelper.addWarning(
           uuAppErrorMap,
-          WARNINGS.addJokeCategory.categoryDoesNotExist.code,
-          WARNINGS.addJokeCategory.categoryDoesNotExist.message,
+          WARNINGS.categoryDoesNotExist.code,
+          WARNINGS.categoryDoesNotExist.message,
           {
             categoryId: dtoInCategoryId
           }
@@ -95,17 +94,16 @@ class JokeCategoryModel {
           if (e.code === "uu-app-objectstore/duplicateKey") {
             ValidationHelper.addWarning(
               uuAppErrorMap,
-              WARNINGS.addJokeCategory.jokeCategoryAlreadyExists.code,
-              WARNINGS.addJokeCategory.jokeCategoryAlreadyExists.message,
+              WARNINGS.jokeCategoryAlreadyExists.code,
+              WARNINGS.jokeCategoryAlreadyExists.message,
               {
                 jokeId: dtoIn.jokeId,
                 categoryId: foundCategory.data.id
               }
             );
           } else {
-            throw new addJokeCategory.jokeCategoryDaoCreateFailed(
-              { uuAppErrorMap },
-              null,
+            throw new Errors.AddJokeCategory.JokeCategoryDaoCreateFailed(
+              {uuAppErrorMap},
               e
             );
           }
@@ -114,7 +112,6 @@ class JokeCategoryModel {
     }
 
     dtoOut.uuAppErrorMap = uuAppErrorMap;
-
     return dtoOut;
   }
 
@@ -126,9 +123,8 @@ class JokeCategoryModel {
     let uuAppErrorMap = ValidationHelper.processValidationResult(
       dtoIn,
       validationResult,
-      {},
-      `${prefix}/${removeJokeCategory.code}/unsupportedKey`,
-      removeJokeCategory.invalidDtoInError
+      WARNINGS.removeJokeCategoryUnsupportedKeys,
+      Errors.RemoveJokeCategory.InvalidDtoInError
     );
 
     dtoIn.id = dtoIn.jokeId;
@@ -140,9 +136,8 @@ class JokeCategoryModel {
         dtoIn.categoryList
       );
     } catch (e) {
-      throw new removeJokeCategory.jokeCategoryDaoDeleteByJokeAndCategoryFailed(
-        { uuAppErrorMap },
-        null,
+      throw new Errors.RemoveJokeCategory.JokeCategoryDaoDeleteByJokeAndCategoryFailed(
+        {uuAppErrorMap},
         e
       );
     }

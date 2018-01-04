@@ -19,6 +19,9 @@
       }]
     }
   },
+  "log_level": "WARN",
+  "uuapp.perflog.logger.log_level": "OFF",
+  "uuapp.appserver.monitoring.accesslog.log_level": "OFF",
   "userMap": {
     "UuSubAppInstanceSysOwner": {
       "accessCode1": "3yMhD1qzi0JUwsAJ7UOsWX2YtrGH_Olk5DxgWyssNW6e_WC4wjKrXODHES92cQXp",
