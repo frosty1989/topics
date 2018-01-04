@@ -61,7 +61,7 @@ class JokeModel {
       dtoIn.categoryList.forEach(async categoryId => {
         try {
           let foundCategory = await CategoryModel.dao.get(awid, categoryId);
-
+          // HDS 3.1 // A5
           if (!foundCategory.hasOwnProperty("id")) {
             ValidationHelper.addWarning(
               uuAppErrorMap,
@@ -75,6 +75,7 @@ class JokeModel {
             validJokeCategories.push(categoryId);
           }
         } catch (err) {
+          // HDS 3.1 // A4
           ValidationHelper.addWarning(
             uuAppErrorMap,
             WARNINGS.createJoke.categoryDaoGetFailed.code,
@@ -86,7 +87,7 @@ class JokeModel {
         }
       });
     }
-
+    // HDS 2 // A3
     try {
       if (validJokeCategories.length > 0) {
         dtoIn.categoryList = validJokeCategories;
@@ -102,7 +103,7 @@ class JokeModel {
         e
       );
     }
-
+    // HDS 3.2 // A6
     if (validJokeCategories.length > 0) {
       const JokeCategoryModel = require("./joke-category-model");
 
@@ -138,7 +139,7 @@ class JokeModel {
       `${prefix}/${getJoke.code}/unsupportedKey`,
       getJoke.invalidDtoIn
     );
-
+    // HDS 2 // A4
     try {
       dtoOut = await this.dao.get(awid, dtoIn.id);
     } catch (e) {
@@ -161,7 +162,7 @@ class JokeModel {
         { jokeId: dtoIn.id }
       );
     }
-
+    // HDS 2 // A5
     try {
       const JokeCategoryModel = require("./joke-category-model");
 
@@ -197,6 +198,7 @@ class JokeModel {
     let order = dtoIn.order === "desc" ? -1 : 1;
 
     let dtoOut;
+    // HDS 2 // A3
     try {
       dtoOut = await this.dao.list(awid, dtoIn.pageInfo, {
         [sort]: order
@@ -229,9 +231,23 @@ class JokeModel {
     );
 
     let dtoOut;
+    // HDS 2 // A3
     try {
       dtoOut = await this.dao.listCategoryJokes(awid, dtoIn.categoryId);
     } catch (e) {
+      throw new listCategoryJokes.jokeCategoryDaoListByCategoryFailed(
+        {
+          uuAppErrorMap
+        },
+        null,
+        e
+      );
+    }
+
+    try {
+      dtoOut = await this.dao.listByIds(awid, dtoIn.categoryId);
+    } catch (e) {
+      throw new list
       throw new listCategoryJokes.jokeCategoryDaoListByCategoryFailed(
         {
           uuAppErrorMap

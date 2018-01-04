@@ -1,214 +1,197 @@
 "use strict";
 
-const { prefix, jokesError } = require("./uu-jokes-error");
+const UuJokesError = require("./uu-jokes-error");
 
-let createJoke = {
-  code: "createJoke",
-  invalidDtoIn: class CreateJokeInvalidDtoInError extends jokesError {
-    setParams() {
-      return {
-        code: `${createJoke.code}/invalidDtoIn`,
-        message: "DtoIn is not valid."
-      };
+let CreateJoke = {
+  UC_CODE: `${UuJokesError.ERROR_PREFIX}createJoke/`,
+  InvalidDtoIn: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${CreateJoke.UC_CODE}invalidDtoIn`;
+      this.message = "DtoIn is not valid.";
     }
   },
 
-  jokeDaoCreateFailed: class JokeDaoCreateFailed extends jokesError {
-    setParams() {
-      return {
-        code: `${createJoke.code}/jokeDaoCreateFailed`,
-        message: "Create joke by joke Dao create failed.",
-        status: 500
-      };
+  JokeDaoCreateFailed: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${CreateJoke.UC_CODE}jokeDaoCreateFailed`;
+      this.message = "Create joke by joke Dao create failed.";
+      this.status = 500;
     }
   },
 
-  jokeCategoryDaoCreateFailed: class JokeCategoryDaoCreateFailed extends jokesError {
-    setParams() {
-      return {
-        code: `${createJoke.code}/jokeCategoryDaoCreateFailed`,
-        message: "Create jokeCategory by jokeCategory Dao create failed.",
-        status: 500
-      };
+  JokeCategoryDaoCreateFailed: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${CreateJoke.UC_CODE}jokeCategoryDaoCreateFailed`;
+      this.message = "Create jokeCategory by jokeCategory Dao create failed.";
+      this.status = 500;
     }
   }
 };
 
-let getJoke = {
-  code: "getJoke",
-  invalidDtoIn: class GetJokeInvalidDtoInError extends jokesError {
-    setParams() {
-      return {
-        code: `${getJoke.code}/invalidDtoIn`,
-        message: "DtoIn is not valid."
-      };
+let GetJoke = {
+  UC_CODE: `${UuJokesError.ERROR_PREFIX}getJoke/`,
+  InvalidDtoIn: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${GetJoke.UC_CODE}invalidDtoIn`;
+      this.message = "DtoIn is not valid.";
     }
   },
 
-  jokeDaoGetFailed: class GetJokeFailedError extends jokesError {
-    setParams() {
-      return {
-        code: `${getJoke.code}/jokeDaoGetFailed`,
-        message: "Get joke by joke Dao get failed.",
-        status: 500
-      };
+  JokeDaoGetFailed: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${GetJoke.UC_CODE}jokeDaoGetFailed`;
+      this.message = "Get joke by joke Dao get failed.";
+      this.status = 500;
     }
   },
 
-  jokeDoesNotExist: class JokeDoesNotExist extends jokesError {
-    setParams() {
-      return {
-        code: `${getJoke.code}/jokeDoesNotExist`,
-        message: "Joke does not exist."
-      };
+  JokeDoesNotExist: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${GetJoke.UC_CODE}jokeDoesNotExist`;
+      this.message = "Joke does not exist.";
     }
   },
 
-  jokeCategoryDaoListByJokeFailed: class JokeCategoryDaoListByJokeFailed extends jokesError {
-    setParams() {
-      return {
-        code: `${getJoke.code}/jokeCategoryDaoListByJokeFailed`,
-        message: "List jokeCategoty by joke Dao listByCategory failed.",
-        status: 500
-      };
+  JokeCategoryDaoListByJokeFailed: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${GetJoke.UC_CODE}jokeCategoryDaoListByJokeFailed`;
+      this.message = "List jokeCategoty by joke Dao listByCategory failed.";
+      this.status = 500;
     }
   }
 };
 
-let listJokes = {
-  Code: "listJokes",
-  invalidDtoInError: class ListJokesInvalidDtoInError extends jokesError {
-    setParams() {
-      return {
-        code: `${listJokes.code}/invalidDtoIn`,
-        message: "DtoIn is not valid."
-      };
+let ListJokes = {
+  UC_CODE: `${UuJokesError.ERROR_PREFIX}listJokes/`,
+  InvalidDtoInError: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${ListJokes.UC_CODE}invalidDtoIn`;
+      this.message = "DtoIn is not valid.";
     }
   },
 
-  jokeDaoListFailed: class JokeDaoListFailed extends jokesError {
-    setParams() {
-      return {
-        code: `${listJokes.code}/jokeDaoListFailed`,
-        message: "List jokes by joke Dao list failed.",
-        status: 500
-      };
+  JokeDaoListFailed: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${ListJokes.UC_CODE}jokeDaoListFailed`;
+      this.message = "List jokes by joke Dao list failed.";
+      this.status = 500;
     }
   }
 };
 
-let deleteJoke = {
-  code: "deleteJoke",
-  invalidDtoIn: class InvalidDtoIn extends jokesError {
-    setParams() {
-      return {
-        code: `${deleteJoke.code}/invalidDtoIn`,
-        message: "DtoIn is not valid."
-      };
+let DeleteJoke = {
+  UC_CODE: `${UuJokesError.ERROR_PREFIX}deleteJoke/`,
+  InvalidDtoIn: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${DeleteJoke.UC_CODE}invalidDtoIn`;
+      this.message = "DtoIn is not valid.";
     }
   },
 
-  jokeRatingDaoDeleteByJokeFailed: class JokeRatingDaoDeleteByJokeFailed extends jokesError {
-    setParams() {
-      return {
-        code: `${deleteJoke.code}/jokeRatingDaoDeleteByJokeFailed`,
-        message: "Delete jokeRating by Dao deleteByJoke failed.",
-        status: 500
-      };
+  JokeRatingDaoDeleteByJokeFailed: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${DeleteJoke.UC_CODE}jokeRatingDaoDeleteByJokeFailed`;
+      this.message = "Delete jokeRating by Dao deleteByJoke failed.";
+      this.status = 500;
     }
   },
 
-  jokeCategoryDaoDeleteByJokeFailed: class JokeCategoryDaoDeleteByJokeFailed extends jokesError {
-    setParams() {
-      return {
-        code: `${deleteJoke.code}/jokeCategoryDaoDeleteByJokeFailed`,
-        message: "Delete jokeCategory by Dao deleteByJoke failed.",
-        status: 500
-      };
+  JokeCategoryDaoDeleteByJokeFailed: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${DeleteJoke.UC_CODE}jokeCategoryDaoDeleteByJokeFailed`;
+      this.message = "Delete jokeCategory by Dao deleteByJoke failed.";
+      this.status = 500;
     }
   },
 
-  jokeDaoDeleteFailed: class JokeDaoDeleteFailed extends jokesError {
-    setParams() {
-      return {
-        code: `${deleteJoke.code}/jokeDaoDeleteFailed`,
-        message: "Delete joke by Dao delete failed.",
-        status: 500
-      };
+  JokeDaoDeleteFailed: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${DeleteJoke.UC_CODE}jokeDaoDeleteFailed`;
+      this.message = "Delete joke by Dao delete failed.";
+      this.status = 500;
     }
   }
 };
 
-let updateJoke = {
-  code: "updateJoke",
-  invalidDtoInError: class UpdateJokeInvalidDtoInError extends jokesError {
-    setParams() {
-      return {
-        code: `${updateJoke.code}/invalidDtoIn`,
-        message: "DtoIn is not valid."
-      };
+let UpdateJoke = {
+  UC_CODE: `${UuJokesError.ERROR_PREFIX}updateJoke/`,
+  InvalidDtoInError: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${UpdateJoke.UC_CODE}invalidDtoIn`;
+      this.message = "DtoIn is not valid.";
     }
   },
 
-  jokeDaoUpdateFailed: class JokeDaoUpdateFailed extends jokesError {
-    setParams() {
-      return {
-        code: `${updateJoke.code}/jokeDaoUpdateFailed`,
-        message: "Update joke by joke Dao update failed.",
-        status: 500
-      };
+  JokeDaoUpdateFailed: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${UpdateJoke.UC_CODE}jokeDaoUpdateFailed`;
+      this.message = "Update joke by joke Dao update failed.";
+      this.status = 500;
     }
   },
 
-  jokeDaoGetFailed: class JokeDaoGetFailed extends jokesError {
-    setParams() {
-      return {
-        code: `${updateJoke.code}/jokeDaoGetFailed`,
-        message: "Get joke by joke Dao get failed.",
-        status: 500
-      };
+  JokeDaoGetFailed: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${UpdateJoke.UC_CODE}jokeDaoGetFailed`;
+      this.message = "Get joke by joke Dao get failed.";
+      this.status = 500;
     }
   }
 };
 
-let listCategoryJokes = {
-  code: "listCategoryJokes",
-  invalidDtoInError: class ListCategoryJokesInvalidDtoInError extends jokesError {
-    setParams() {
-      return {
-        code: `${listCategoryJokes.code}/invalidDtoIn`,
-        message: "DtoIn is not valid."
-      };
+let ListCategoryJokes = {
+  UC_CODE: `${UuJokesError.ERROR_PREFIX}listCategoryJokes/`,
+  InvalidDtoInError: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${ListCategoryJokes.UC_CODE}invalidDtoIn`;
+      this.message = "DtoIn is not valid.";
     }
   },
 
-  jokeCategoryDaoListByCategoryFailed: class JokeCategoryDaoListByCategoryFailed extends jokesError {
-    setParams() {
-      return {
-        code: `${listCategoryJokes.code}/jokeCategoryDaoListByCategoryFailed`,
-        message: "List jokeCategory by jokeCategory Dao listByCategory failed.",
-        status: 500
-      };
+  JokeCategoryDaoListByCategoryFailed: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${
+        ListCategoryJokes.UC_CODE
+      }jokeCategoryDaoListByCategoryFailed`;
+      this.message =
+        "List jokeCategory by jokeCategory Dao listByCategory failed.";
+      this.status = 500;
     }
   },
 
-  jokeDaoListByIdsFailed: class JokeDaoListByIdsFailed extends jokesError {
-    setParams() {
-      return {
-        code: `${listCategoryJokes.code}/jokeDaoListByIdsFailed`,
-        message: "List jokes by joke Dao listByIds failed.",
-        status: 500
-      };
+  JokeDaoListByIdsFailed: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${ListCategoryJokes.UC_CODE}jokeDaoListByIdsFailed`;
+      this.message = "List jokes by joke Dao listByIds failed.";
+      this.status = 500;
     }
   }
 };
 
 module.exports = {
-  prefix,
-  createJoke,
-  getJoke,
-  listJokes,
-  deleteJoke,
-  updateJoke,
-  listCategoryJokes
+  CreateJoke,
+  GetJoke,
+  ListJokes,
+  DeleteJoke,
+  UpdateJoke,
+  ListCategoryJokes
 };
