@@ -138,7 +138,7 @@ class CategoryModel {
         throw new deleteCategory.jokeCategoryDaoListByCategoryFailed(
           { uuAppErrorMap },
           null,
-          { cause: error }
+          error
         );
       }
 

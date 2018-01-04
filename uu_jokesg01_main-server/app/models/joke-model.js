@@ -170,9 +170,7 @@ class JokeModel {
       throw new getJoke.jokeCategoryDaoListByJokeFailed(
         { uuAppErrorMap },
         null,
-        {
-          cause: err
-        }
+        err
       );
     }
 
@@ -280,9 +278,7 @@ class JokeModel {
         try {
           dtoOut = await this.dao.update(uuObject);
         } catch (e) {
-          throw new updateJoke.jokeDaoUpdateFailed({ uuAppErrorMap }, null, {
-            cause: e
-          });
+          throw new updateJoke.jokeDaoUpdateFailed({ uuAppErrorMap }, null, e);
         }
       }
     } catch (err) {
@@ -291,9 +287,7 @@ class JokeModel {
           uuAppErrorMap
         },
         null,
-        {
-          cause: err
-        }
+        err
       );
     }
 
@@ -324,7 +318,7 @@ class JokeModel {
       throw new deleteJoke.jokeRatingDaoDeleteByJokeFailed(
         { uuAppErrorMap },
         null,
-        { cause: err }
+        err
       );
     }
 
@@ -336,22 +330,14 @@ class JokeModel {
       throw new deleteJoke.jokeCategoryDaoDeleteByJokeFailed(
         { uuAppErrorMap },
         null,
-        { cause: err }
+        err
       );
     }
 
     try {
       await this.dao.remove(awid, dtoIn.id);
     } catch (e) {
-      throw new deleteJoke.jokeDaoDeleteFailed(
-        {
-          uuAppErrorMap
-        },
-        null,
-        {
-          cause: e
-        }
-      );
+      throw new deleteJoke.jokeDaoDeleteFailed({ uuAppErrorMap }, null, e);
     }
 
     dtoOut.uuAppErrorMap = uuAppErrorMap;

@@ -35,10 +35,6 @@ class CategoryMongoDB extends UuObjectDao {
     return await super.findOne({ awid, name });
   }
 
-  async list(awid, pageInfo = {}) {
-    return await super.find({ awid }, pageInfo);
-  }
-
   async update(uuObject) {
     let filter = {
       id: uuObject.id,
@@ -50,6 +46,10 @@ class CategoryMongoDB extends UuObjectDao {
 
   async remove(awid, id) {
     return await super.deleteOne({ awid, id });
+  }
+
+  async list(awid, pageInfo = {}) {
+    return await super.find({ awid }, pageInfo);
   }
 }
 

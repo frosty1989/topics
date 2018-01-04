@@ -56,9 +56,7 @@ class JokeRatingModel {
       throw new addJokeRating.jokeRatingDaoGetByJokeAndIdentityFailed(
         { uuAppErrorMap },
         null,
-        {
-          cause: e
-        }
+        e
       );
     }
 
@@ -74,9 +72,7 @@ class JokeRatingModel {
         throw new addJokeRating.jokeRatingDaoCreateFailed(
           { uuAppErrorMap },
           null,
-          {
-            cause: e
-          }
+          e
         );
       }
     } else {
@@ -87,9 +83,7 @@ class JokeRatingModel {
         throw new addJokeRating.jokeRatingDaoUpdateFailed(
           { uuAppErrorMap },
           null,
-          {
-            cause: e
-          }
+          e
         );
       }
     }

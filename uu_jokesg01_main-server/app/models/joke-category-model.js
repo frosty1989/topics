@@ -51,9 +51,7 @@ class JokeCategoryModel {
     try {
       foundJoke = await JokeModel.dao.get(awid, dtoIn.jokeId);
     } catch (e) {
-      throw new addJokeCategory.jokeDaoGetFailed({ uuAppErrorMap }, null, {
-        cause: e
-      });
+      throw new addJokeCategory.jokeDaoGetFailed({ uuAppErrorMap }, null, e);
     }
 
     if (Object.keys(foundJoke).length === 0) {
@@ -72,9 +70,7 @@ class JokeCategoryModel {
         throw new addJokeCategory.categoryDaoGetFailed(
           { uuAppErrorMap },
           null,
-          {
-            cause: err
-          }
+          err
         );
       }
 

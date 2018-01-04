@@ -41,13 +41,13 @@ class JokeRatingMongoDB extends UuObjectDao {
   }
 
   async update(uuObject) {
-    let filter = { awid: uuObject.awid, _id: uuObject.id };
+    let filter = { awid: uuObject.awid, id: uuObject.id };
 
     return await super.findOneAndUpdate(filter, uuObject, "NONE");
   }
 
   async deleteByJoke(awid, jokeId) {
-    return await super.deleteMany({
+    return await super.deleteOne({
       awid,
       jokeId
     });
