@@ -74,30 +74,22 @@ class CategoryModel {
     uuObject.awid = awid;
 
     try {
-      dtoOut = await this.dao.getByName(awid, dtoIn.name);
-    } catch (error) {
-      throw new listCategories.categoryDaoListFailed(
-        { uuAppErrorMap },
-        null,
-        error
-      );
-    }
-
-    if (dtoIn.name === dtoOut.name) {
-      throw new updateCategory.categoryNameNotUnique({ uuAppErrorMap }, null, {
-        name: dtoIn.name
-      });
-    } else {
-      try {
-        dtoOut = await this.dao.update(uuObject);
-      } catch (e) {
-        throw new updateCategory.categoryDaoUpdateFailed(
+      dtoOut = await this.dao.update(uuObject);
+    } catch (e) {
+      if (e.code === "uu-jokesg01-main/updateCategory/categoryNameNotUnique") {
+        throw new updateCategory.categoryNameNotUnique(
           { uuAppErrorMap },
-          null,
+          { name: dtoIn.name },
           e
         );
       }
+      throw new updateCategory.categoryDaoUpdateFailed(
+        { uuAppErrorMap },
+        null,
+        e
+      );
     }
+
     dtoOut.uuAppErrorMap = uuAppErrorMap;
     return dtoOut;
   }

@@ -103,7 +103,7 @@ describe("Test updateCategory command", () => {
 
   test("A3", async () => {
     await TestHelper.login("Readers", true);
-    expect.assertions(7);
+
     let createCategoryResponse = await CreateCategory();
     let dtoIn = {
       id: createCategoryResponse.data.id,
@@ -111,6 +111,7 @@ describe("Test updateCategory command", () => {
       desc: "test desc",
       glyphicon: "http://test.jpg"
     };
+    expect.assertions(7);
     try {
       await TestHelper.executePostCommand("updateCategory", dtoIn);
     } catch (error) {
