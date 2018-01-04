@@ -80,24 +80,20 @@ describe("Test deleteJoke command", () => {
 
   test("A2", async () => {
     await TestHelper.login("Readers");
-
-    let response;
-
+    expect.assertions(8);
     try {
       await TestHelper.executePostCommand(CMD, {
         wrongKey: "Wrong value"
       });
-    } catch (err) {
-      response = err;
+    } catch (error) {
+      expect(error.status).toEqual(400);
+      expect(error.code).toBeDefined();
+      expect(error.code).toBe("uu-jokesg01-main/deleteJoke/invalidDtoIn");
+      expect(error.response).toBeDefined();
+      expect(error.paramMap).toBeDefined();
+      expect(error.paramMap.invalidValueKeyMap).toBeDefined();
+      expect(error.paramMap.missingKeyMap).toBeDefined();
+      expect(error.paramMap.missingKeyMap["$.id"]).toBeDefined();
     }
-
-    expect(response.status).toEqual(400);
-    expect(response.code).toBeDefined();
-    expect(response.code).toBe("uu-jokesg01-main/deleteJoke/invalidDtoIn");
-    expect(response.response).toBeDefined();
-    expect(response.paramMap).toBeDefined();
-    expect(response.paramMap.invalidValueKeyMap).toBeDefined();
-    expect(response.paramMap.missingKeyMap).toBeDefined();
-    expect(response.paramMap.missingKeyMap["$.id"]).toBeDefined();
   });
 });

@@ -20,13 +20,15 @@ describe("Test removeJokeCategory command", () => {
     let category = await CreateCategory();
     let categoryId = category.id;
     let joke = await CreateJoke({}, categoryId);
-    console.log(joke);
     let jokeId = joke.data.id;
     let dtoInForAddJokeCategory = {
       jokeId: jokeId,
       categoryList: [categoryId]
     };
-    let newJokeCategory = await TestHelper.executePostCommand("addJokeCategory", dtoInForAddJokeCategory);
+    let newJokeCategory = await TestHelper.executePostCommand(
+      "addJokeCategory",
+      dtoInForAddJokeCategory
+    );
     let categories = newJokeCategory.data.categoryList;
     let response = await TestHelper.executePostCommand("removeJokeCategory", {
       jokeId: jokeId,
@@ -48,7 +50,6 @@ describe("Test removeJokeCategory command", () => {
     let category = await CreateCategory();
     let categoryId = category.id;
     let joke = await CreateJoke({}, categoryId);
-    console.log(joke);
     let jokeId = joke.data.id;
     let dtoInForAddJokeCategory = {
       jokeId: jokeId,
@@ -64,6 +65,7 @@ describe("Test removeJokeCategory command", () => {
       categoryList: categories,
       invalid: "invalid"
     });
+    expect(response.status).toEqual(200);
     expect(typeof response.data.uuAppErrorMap).toBe("object");
     expect(response.data.uuAppErrorMap).toBeInstanceOf(Object);
     expect("warning").toEqual(
@@ -87,10 +89,10 @@ describe("Test removeJokeCategory command", () => {
 describe("Test removeJokeCategory command", () => {
   test("if joke category does not exist", async () => {
     await TestHelper.login("Readers");
+    expect.assertions(6);
     let category = await CreateCategory();
     let categoryId = category.id;
     let joke = await CreateJoke({}, categoryId);
-    console.log(joke);
     let jokeId = joke.data.id;
     let dtoInForAddJokeCategory = {
       jokeId: jokeId,
@@ -101,25 +103,25 @@ describe("Test removeJokeCategory command", () => {
       dtoInForAddJokeCategory
     );
     let categories = newJokeCategory.data.categoryList;
-    let response = await TestHelper.executePostCommand("removeJokeCategory", {
+    await TestHelper.executePostCommand("removeJokeCategory", {
       jokeId: jokeId,
       categoryList: categories,
       invalid: "invalid"
     });
-    let result;
     try {
       await TestHelper.executePostCommand("removeJokeCategory", {
         wrongKey: 123,
         categoryList: "Wrong value"
       });
     } catch (error) {
-      result = error;
+      expect(error.status).toEqual(400);
+      expect(error.code).toBeDefined();
+      expect(error.code).toBe(
+        "uu-jokesg01-main/removeJokeCategory/invalidDtoIn"
+      );
+      expect(error.paramMap).toBeDefined();
+      expect(error.paramMap.invalidValueKeyMap).toBeDefined();
+      expect(error.paramMap.missingKeyMap).toBeDefined();
     }
-    expect(result.status).toEqual(400);
-    expect(result.code).toBeDefined();
-    expect(result.code).toBe("uu-jokesg01-main/removeJokeCategory/invalidDtoIn");
-    expect(result.paramMap).toBeDefined();
-    expect(result.paramMap.invalidValueKeyMap).toBeDefined();
-    expect(result.paramMap.missingKeyMap).toBeDefined();
   });
 });

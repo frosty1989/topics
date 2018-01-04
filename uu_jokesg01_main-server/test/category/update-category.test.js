@@ -79,6 +79,7 @@ describe("Test updateCategory command", () => {
 
   test("A2", async () => {
     await TestHelper.login("Readers", true);
+    expect.assertions(8)
     await CreateCategory();
     let invalidDtoIn = {
       id: 123,
@@ -86,26 +87,23 @@ describe("Test updateCategory command", () => {
       desc: "test desc",
       glyphicon: "http://test.jpg"
     };
-    let result;
     try {
       await TestHelper.executePostCommand("updateCategory", invalidDtoIn);
     } catch (error) {
-      result = error;
+      expect(error).toHaveProperty("paramMap");
+      expect(error.paramMap).toHaveProperty("invalidValueKeyMap");
+      expect(error.paramMap).toHaveProperty("invalidTypeKeyMap");
+      expect(error.dtoOut).toHaveProperty("uuAppErrorMap");
+      expect(error.code).toEqual("uu-jokesg01-main/updateCategory/invalidDtoIn");
+      expect(error).toHaveProperty("response");
+      expect(error).toHaveProperty("status");
+      expect(error.status).toEqual(400);
     }
-
-    console.log(result);
-    expect(result).toHaveProperty("paramMap");
-    expect(result.paramMap).toHaveProperty("invalidValueKeyMap");
-    expect(result.paramMap).toHaveProperty("invalidTypeKeyMap");
-    expect(result.dtoOut).toHaveProperty("uuAppErrorMap");
-    expect(result.code).toEqual("uu-jokesg01-main/updateCategory/invalidDtoIn");
-    expect(result).toHaveProperty("response");
-    expect(result).toHaveProperty("status");
-    expect(result.status).toEqual(400);
   });
 
   test("A3", async () => {
     await TestHelper.login("Readers", true);
+    expect.assertions(7);
     let createCategoryResponse = await CreateCategory();
     let dtoIn = {
       id: createCategoryResponse.data.id,
@@ -113,21 +111,18 @@ describe("Test updateCategory command", () => {
       desc: "test desc",
       glyphicon: "http://test.jpg"
     };
-    let status;
     try {
       await TestHelper.executePostCommand("updateCategory", dtoIn);
     } catch (error) {
-      status = error;
+      expect(error).toBeInstanceOf(Object);
+      expect(error).toHaveProperty("code");
+      expect(error.dtoOut).toHaveProperty("uuAppErrorMap");
+      expect(error).toHaveProperty("response");
+      expect(error).toHaveProperty("status");
+      expect(error.code).toEqual(
+        "uu-jokesg01-main/updateCategory/categoryNameNotUnique"
+      );
+      expect(error.status).toEqual(500);
     }
-
-    expect(status).toBeInstanceOf(Object);
-    expect(status).toHaveProperty("code");
-    expect(status.dtoOut).toHaveProperty("uuAppErrorMap");
-    expect(status).toHaveProperty("response");
-    expect(status).toHaveProperty("status");
-    expect(status.code).toEqual(
-      "uu-jokesg01-main/updateCategory/categoryNameNotUnique"
-    );
-    expect(status.status).toEqual(500);
   });
 });

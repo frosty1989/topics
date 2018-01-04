@@ -74,12 +74,11 @@ describe("Test listJokes command", () => {
         pageSize: "string"
       }
     };
-    let status;
+    expect.assertions(1);
     try {
       await TestHelper.executeGetCommand("listJokes", invalidDtoIn);
     } catch (error) {
-      status = error.response.status;
+      expect(error.status).toBe(400);
     }
-    expect(status).toBe(400);
   });
 });

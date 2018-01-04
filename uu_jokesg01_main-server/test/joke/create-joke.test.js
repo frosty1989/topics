@@ -50,23 +50,24 @@ describe("Test createJoke command", () => {
   });
 
   test("A2", async () => {
-    let result;
-
+    expect.assertions(9);
     try {
       await TestHelper.executePostCommand("createJoke", {});
-    } catch (err) {
-      result = err;
+    } catch (error) {
+      expect(error).toHaveProperty("paramMap");
+      expect(error.paramMap).toHaveProperty("invalidValueKeyMap");
+      expect(error.paramMap).toHaveProperty("missingKeyMap");
+      expect(
+        error.paramMap.missingKeyMap.hasOwnProperty("$.name")
+      ).toBeTruthy();
+      expect(
+        error.paramMap.missingKeyMap.hasOwnProperty("$.text")
+      ).toBeTruthy();
+      expect(error.dtoOut).toHaveProperty("uuAppErrorMap");
+      expect(error).toHaveProperty("response");
+      expect(error).toHaveProperty("status");
+      expect(error.status).toEqual(400);
     }
-
-    expect(result).toHaveProperty("paramMap");
-    expect(result.paramMap).toHaveProperty("invalidValueKeyMap");
-    expect(result.paramMap).toHaveProperty("missingKeyMap");
-    expect(result.paramMap.missingKeyMap.hasOwnProperty("$.name")).toBeTruthy();
-    expect(result.paramMap.missingKeyMap.hasOwnProperty("$.text")).toBeTruthy();
-    expect(result.dtoOut).toHaveProperty("uuAppErrorMap");
-    expect(result).toHaveProperty("response");
-    expect(result).toHaveProperty("status");
-    expect(result.status).toEqual(400);
   });
 
   test("A3 and A4 and A6 - createJoke method that works. Always.", async () => {

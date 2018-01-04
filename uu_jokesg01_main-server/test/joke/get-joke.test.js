@@ -71,20 +71,19 @@ describe("Test getJoke command", () => {
 describe("Test getJoke command", () => {
   test("A2", async () => {
     await TestHelper.login("Readers");
+    expect.assertions(7);
     let invalidDtoIn = { id: "invalid string id" };
-    let status;
     try {
       await TestHelper.executeGetCommand("getJoke", invalidDtoIn);
     } catch (error) {
-      status = error;
+      expect(error.status).toEqual(400);
+      expect(error).toHaveProperty("paramMap");
+      expect(error.paramMap).toHaveProperty("invalidValueKeyMap");
+      expect(error.dtoOut).toHaveProperty("uuAppErrorMap");
+      expect(error).toHaveProperty("response");
+      expect(error).toHaveProperty("status");
+      expect(error.dtoOut.uuAppErrorMap).toBeInstanceOf(Object);
     }
-    expect(status.status).toEqual(400);
-    expect(status).toHaveProperty("paramMap");
-    expect(status.paramMap).toHaveProperty("invalidValueKeyMap");
-    expect(status.dtoOut).toHaveProperty("uuAppErrorMap");
-    expect(status).toHaveProperty("response");
-    expect(status).toHaveProperty("status");
-    expect(status.dtoOut.uuAppErrorMap).toBeInstanceOf(Object);
   });
 });
 
@@ -98,16 +97,15 @@ describe("Test getJoke command", () => {
     let response;
     let jokeDoesNotExistCode = "uu-jokesg01-main/getJoke/jokeDoesNotExist";
 
+    expect.assertions(2);
     try {
       await TestHelper.executeGetCommand("getJoke", {
         id: nonexistintId
       });
     } catch (error) {
-      response = error;
+      expect(error.status).toBe(500);
+      expect(error.code).toBe(jokeDoesNotExistCode);
     }
-
-    expect(response.status).toBe(500);
-    expect(response.code).toBe(jokeDoesNotExistCode);
   });
 
   test("A5", async () => {

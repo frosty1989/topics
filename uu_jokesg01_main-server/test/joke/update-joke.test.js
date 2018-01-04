@@ -74,24 +74,21 @@ describe("Test updateJoke command", () => {
   test("A2", async () => {
     await TestHelper.login("Readers");
 
-    let response;
-
+    expect.assertions(10);
     try {
       await TestHelper.executePostCommand(CMD, { name: "Non updatable joke?" });
-    } catch (err) {
-      response = err;
+    } catch (error) {
+      expect(error).toHaveProperty("status");
+      expect(error.status).toBe(400);
+      expect(error).toHaveProperty("code");
+      expect(error.code).toBe("uu-jokesg01-main/updateJoke/invalidDtoIn");
+      expect(error).toHaveProperty("paramMap");
+      expect(error.paramMap).toBeDefined();
+      expect(error.paramMap).toHaveProperty("invalidValueKeyMap");
+      expect(error.paramMap).toHaveProperty("missingKeyMap");
+      expect(error.paramMap.missingKeyMap).toBeDefined();
+      expect(error.paramMap.missingKeyMap["$.id"]).toBeDefined();
     }
-
-    expect(response).toHaveProperty("status");
-    expect(response.status).toBe(400);
-    expect(response).toHaveProperty("code");
-    expect(response.code).toBe("uu-jokesg01-main/updateJoke/invalidDtoIn");
-    expect(response).toHaveProperty("paramMap");
-    expect(response.paramMap).toBeDefined();
-    expect(response.paramMap).toHaveProperty("invalidValueKeyMap");
-    expect(response.paramMap).toHaveProperty("missingKeyMap");
-    expect(response.paramMap.missingKeyMap).toBeDefined();
-    expect(response.paramMap.missingKeyMap["$.id"]).toBeDefined();
   });
 
   test("A3 and A4 tests are working just fine, because mongoDB is immortal", async () => {
