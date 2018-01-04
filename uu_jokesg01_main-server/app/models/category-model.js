@@ -76,7 +76,7 @@ class CategoryModel {
     try {
       dtoOut = await this.dao.update(uuObject);
     } catch (e) {
-      if (e.code === "uu-jokesg01-main/updateCategory/categoryNameNotUnique") {
+      if (e.code === "uu-app-objectstore/duplicateKey") {
         throw new updateCategory.categoryNameNotUnique(
           { uuAppErrorMap },
           { name: dtoIn.name },

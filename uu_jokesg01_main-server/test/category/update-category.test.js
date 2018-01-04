@@ -4,6 +4,10 @@ const { CreateCategory } = require("../general-test-hepler");
 beforeEach(async done => {
   await TestHelper.setup();
   await TestHelper.initAppWorkspace();
+  await TestHelper.login("SysOwner");
+  await TestHelper.executePostCommand("init", {
+    uuAppProfileAuthorities: "urn:uu:GGALL"
+  });
   await TestHelper.createPermission("Readers");
   done();
 });
@@ -15,7 +19,7 @@ afterEach(async done => {
 
 describe("Test updateCategory command", () => {
   test("HDS", async () => {
-    await TestHelper.login("Readers");
+    await TestHelper.login("Authorities");
     await CreateCategory();
     let listResponce = await TestHelper.executeGetCommand("listCategories");
     let itemId = listResponce.data.itemList[0].id;
@@ -41,7 +45,7 @@ describe("Test updateCategory command", () => {
   });
 
   test("A1", async () => {
-    await TestHelper.login("Readers");
+    await TestHelper.login("Authorities");
     await CreateCategory();
     let listResponce = await TestHelper.executeGetCommand("listCategories");
     let itemId = listResponce.data.itemList[0].id;
@@ -60,26 +64,20 @@ describe("Test updateCategory command", () => {
 
     expect(response.status).toEqual(200);
     expect(typeof response.data.uuAppErrorMap).toBe("object");
-    expect("warning").toEqual(
-      response.data.uuAppErrorMap[
-        unsupportedKey
-      ].type
-    );
+    expect("warning").toEqual(response.data.uuAppErrorMap[unsupportedKey].type);
     expect("DtoIn contains unsupported keys.").toEqual(
-      response.data.uuAppErrorMap[
-        unsupportedKey
-      ].message
+      response.data.uuAppErrorMap[unsupportedKey].message
     );
     let invalidData =
-      response.data.uuAppErrorMap[
-        unsupportedKey
-      ].paramMap["unsupportedKeyList"][0];
+      response.data.uuAppErrorMap[unsupportedKey].paramMap[
+        "unsupportedKeyList"
+      ][0];
     expect(invalidData).toEqual("$.invalidKey");
   });
 
   test("A2", async () => {
-    await TestHelper.login("Readers", true);
-    expect.assertions(8)
+    await TestHelper.login("Authorities");
+    expect.assertions(8);
     await CreateCategory();
     let invalidDtoIn = {
       id: 123,
@@ -94,7 +92,9 @@ describe("Test updateCategory command", () => {
       expect(error.paramMap).toHaveProperty("invalidValueKeyMap");
       expect(error.paramMap).toHaveProperty("invalidTypeKeyMap");
       expect(error.dtoOut).toHaveProperty("uuAppErrorMap");
-      expect(error.code).toEqual("uu-jokesg01-main/updateCategory/invalidDtoIn");
+      expect(error.code).toEqual(
+        "uu-jokesg01-main/updateCategory/invalidDtoIn"
+      );
       expect(error).toHaveProperty("response");
       expect(error).toHaveProperty("status");
       expect(error.status).toEqual(400);
@@ -102,18 +102,19 @@ describe("Test updateCategory command", () => {
   });
 
   test("A3", async () => {
-    await TestHelper.login("Readers", true);
+    await TestHelper.login("Authorities");
 
-    let createCategoryResponse = await CreateCategory();
-    let dtoIn = {
-      id: createCategoryResponse.data.id,
-      name: "test name",
-      desc: "test desc",
-      glyphicon: "http://test.jpg"
-    };
     expect.assertions(7);
+
+    const categoryName = "Category 2";
+    let category1 = await CreateCategory({ name: "Category 1", desc: "Desc" });
+    await CreateCategory({ name: categoryName, desc: "Desc" });
+
     try {
-      await TestHelper.executePostCommand("updateCategory", dtoIn);
+      await TestHelper.executePostCommand("updateCategory", {
+        id: category1.data.id,
+        name: categoryName
+      });
     } catch (error) {
       expect(error).toBeInstanceOf(Object);
       expect(error).toHaveProperty("code");
@@ -123,7 +124,7 @@ describe("Test updateCategory command", () => {
       expect(error.code).toEqual(
         "uu-jokesg01-main/updateCategory/categoryNameNotUnique"
       );
-      expect(error.status).toEqual(500);
+      expect(error.status).toEqual(400);
     }
   });
 });
