@@ -1,6 +1,7 @@
 "use strict";
-const { jokesError } = require("./uu-jokes-error");
-let Errors = {};
+
+const { prefix, jokesError } = require("./uu-jokes-error");
+
 let createJoke = {
   code: "createJoke",
   invalidDtoIn: class CreateJokeInvalidDtoInError extends jokesError {
@@ -58,8 +59,7 @@ let getJoke = {
     setParams() {
       return {
         code: `${getJoke.code}/jokeDoesNotExist`,
-        message: "Joke does not exist.",
-        status: 500
+        message: "Joke does not exist."
       };
     }
   },
@@ -203,11 +203,12 @@ let listCategoryJokes = {
   }
 };
 
-Errors.createJoke = createJoke;
-Errors.getJoke = getJoke;
-Errors.listJokes = listJokes;
-Errors.deleteJoke = deleteJoke;
-Errors.updateJoke = updateJoke;
-Errors.listCategoryJokes = listCategoryJokes;
-
-module.exports = { Errors };
+module.exports = {
+  prefix,
+  createJoke,
+  getJoke,
+  listJokes,
+  deleteJoke,
+  updateJoke,
+  listCategoryJokes
+};

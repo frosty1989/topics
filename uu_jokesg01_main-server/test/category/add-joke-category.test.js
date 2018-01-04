@@ -17,16 +17,59 @@ afterEach(async done => {
 describe("Test addJokeCategory command", () => {
   test("HDS", async () => {
     await TestHelper.login("Readers");
+    let category1 = await CreateCategory({
+      name: "Very funny jokes",
+      desc: "Category description"
+    });
+    let category2 = await CreateCategory({
+      name: "Another one category",
+      desc: "Category description"
+    });
+    let categoryList = [category1.data.id, category2.data.id];
+    let joke = await CreateJoke({
+      name: "Very funny joke",
+      text: "Text"
+    });
+    let jokeId = joke.data.id;
+    let dtoIn = {
+      jokeId: jokeId,
+      categoryList
+    };
+    let response = await TestHelper.executePostCommand(
+      "addJokeCategory",
+      dtoIn
+    );
+
+    expect(response.status).toEqual(200);
+    expect(response.data).toBeDefined();
+    expect(response.data).toBeInstanceOf(Object);
+    expect(response.data.uuAppErrorMap).toBeDefined();
+    expect(response.data.uuAppErrorMap).toMatchObject({});
+    expect(response.data.categoryList).toBeDefined();
+    expect(response.data.categoryList).toBeInstanceOf(Array);
+    expect(response.data.categoryList).toEqual(categoryList);
+    expect(response.data.categoryList.length).toBe(categoryList.length);
+  });
+
+  test("A1", async () => {
+    await TestHelper.login("Readers");
     let createCategoryResponse = await CreateCategory();
     let categoryId = createCategoryResponse.data.id;
     let result = await CreateJoke({}, categoryId);
     let jokeId = result.data.id;
 
-    let dtoIn = { jokeId: jokeId, categoryList: [categoryId] };
+    let dtoIn = {
+      jokeId: jokeId,
+      categoryList: [categoryId],
+      unsupportedKey: "unsupportedValue"
+    };
     let response = await TestHelper.executePostCommand(
       "addJokeCategory",
       dtoIn
     );
+    const unsupportedKeysWarn =
+      "uu-jokesg01-main/addJokeCategory/unsupportedKey";
+
     expect(response.status).toEqual(200);
     expect(response.data).toBeDefined();
     expect(response.data).toBeInstanceOf(Object);
@@ -34,7 +77,36 @@ describe("Test addJokeCategory command", () => {
     expect(response.data.categoryList).toBeInstanceOf(Array);
     expect(response.data.uuAppErrorMap).toBeDefined();
     expect(response.data.uuAppErrorMap).toBeInstanceOf(Object);
-    expect(response.data.uuAppErrorMap).toMatchObject({});
+    expect(response.data.uuAppErrorMap[unsupportedKeysWarn]).toBeDefined();
+    expect(response.data.uuAppErrorMap[unsupportedKeysWarn]).toBeInstanceOf(
+      Object
+    );
+  });
+
+  test("A2", async () => {
+    await TestHelper.login("Readers");
+
+    let response;
+
+    try {
+      await TestHelper.executePostCommand("addJokeCategory", {});
+    } catch (error) {
+      response = error;
+    }
+
+    expect(response).toHaveProperty("paramMap");
+    expect(response.paramMap).toHaveProperty("invalidValueKeyMap");
+    expect(response.paramMap).toHaveProperty("missingKeyMap");
+    expect(
+      response.paramMap.missingKeyMap.hasOwnProperty("$.jokeId")
+    ).toBeTruthy();
+    expect(
+      response.paramMap.missingKeyMap.hasOwnProperty("$.categoryList")
+    ).toBeTruthy();
+    expect(response.dtoOut).toHaveProperty("uuAppErrorMap");
+    expect(response).toHaveProperty("response");
+    expect(response).toHaveProperty("status");
+    expect(response.status).toEqual(400);
   });
 
   test("A1", async () => {

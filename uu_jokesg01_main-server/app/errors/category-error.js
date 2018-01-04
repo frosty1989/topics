@@ -1,5 +1,6 @@
 "use strict";
-const { jokesError } = require("./uu-jokes-error");
+
+const { prefix, jokesError } = require("./uu-jokes-error");
 
 let createCategory = {
   code: "createCategory",
@@ -17,8 +18,7 @@ let createCategory = {
     setParams() {
       return {
         code: `${createCategory.code}/categoryNameNotUnique`,
-        message: "Category name is not unique in awid.",
-        status: 500
+        message: "Category name is not unique in awid."
       };
     }
   },
@@ -81,8 +81,7 @@ let deleteCategory = {
     setParams() {
       return {
         code: `${deleteCategory.code}/relatedJokesExist`,
-        message: "Category is not empty.",
-        status: 500
+        message: "Category is not empty."
       };
     }
   },
@@ -123,8 +122,7 @@ let updateCategory = {
     setParams() {
       return {
         code: `${updateCategory.code}/categoryNameNotUnique`,
-        message: "Category name is not unique in awid.",
-        status: 500
+        message: "Category name is not unique in awid."
       };
     }
   },
@@ -141,6 +139,7 @@ let updateCategory = {
 };
 
 module.exports = {
+  prefix,
   createCategory,
   listCategories,
   deleteCategory,

@@ -41,9 +41,7 @@ describe("Test removeJokeCategory command", () => {
     expect(response.data.uuAppErrorMap).toBeInstanceOf(Object);
     expect(response.data.uuAppErrorMap).toEqual({});
   });
-});
 
-describe("Test removeJokeCategory command", () => {
   test("A1", async () => {
     await TestHelper.login("Readers");
 
@@ -84,9 +82,7 @@ describe("Test removeJokeCategory command", () => {
       ].paramMap["unsupportedKeyList"][0];
     expect(invalidData).toEqual("$.invalid");
   });
-});
 
-describe("Test removeJokeCategory command", () => {
   test("if joke category does not exist", async () => {
     await TestHelper.login("Readers");
     expect.assertions(6);

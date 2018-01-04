@@ -1,16 +1,6 @@
 {
   "{vendor}-{uuApp}-{uuSubApp}": {
     "useCaseMap": {
-      "defaultVuc": {
-        "realization": "index.html",
-        "httpMethod": "GET",
-        "type": "VUC"
-      },
-      "home": {
-        "realization": "index.html",
-        "httpMethod": "GET",
-        "type": "UVE"
-      },
       "init": {
         "realization": "controllers/AppController.init",
         "httpMethod": "POST",

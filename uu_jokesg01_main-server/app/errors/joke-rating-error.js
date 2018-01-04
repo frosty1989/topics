@@ -1,6 +1,7 @@
 "use strict";
-const { jokesError } = require("./uu-jokes-error");
-let Errors = {};
+
+const { prefix, jokesError } = require("./uu-jokes-error");
+
 let addJokeRating = {
   code: "addJokeRating",
   invalidDtoIn: class extends jokesError {
@@ -61,8 +62,7 @@ let addJokeRating = {
   }
 };
 
-Errors.addJokeRating = addJokeRating;
-
 module.exports = {
-  Errors
+  prefix,
+  addJokeRating
 };

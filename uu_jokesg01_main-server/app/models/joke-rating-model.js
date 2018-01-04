@@ -2,10 +2,8 @@
 const { Validator } = require("uu_appg01_server").Validation;
 const { DaoFactory } = require("uu_appg01_server").ObjectStore;
 const { ValidationHelper } = require("uu_appg01_server").Workspace;
-const Session = require("uu_appg01_server").Authentication.Session;
-
 const Path = require("path");
-const { addJokeRating } = require("../errors/joke-rating-error.js").Errors;
+const { prefix, addJokeRating } = require("../errors/joke-rating-error");
 
 class JokeRatingModel {
   constructor() {
@@ -13,10 +11,9 @@ class JokeRatingModel {
       Path.join(__dirname, "..", "validation_types", "joke-rating-types.js")
     );
     this.dao = DaoFactory.getDao("jokeRating");
-    this.dao.createSchema();
   }
 
-  async create(awid, dtoIn, uuIdentity) {
+  async create(awid, dtoIn, session) {
     let validationResult = this.validator.validate(
       "addJokeRatingDtoInType",
       dtoIn
@@ -25,7 +22,7 @@ class JokeRatingModel {
       dtoIn,
       validationResult,
       {},
-      `uu-jokesg01-main/${addJokeRating.code}/unsupportedKey`,
+      `${prefix}/${addJokeRating.code}/unsupportedKey`,
       addJokeRating.invalidDtoIn
     );
     let joke;
@@ -33,6 +30,8 @@ class JokeRatingModel {
     let dtoOut;
     let uuObject = Object.create(dtoIn);
     let averageRating = 0;
+    let identity = session.getIdentity();
+    let uuIdentity = identity.getUUIdentity();
 
     try {
       const JokeModel = require("./joke-model");
@@ -57,9 +56,7 @@ class JokeRatingModel {
       throw new addJokeRating.jokeRatingDaoGetByJokeAndIdentityFailed(
         { uuAppErrorMap },
         null,
-        {
-          cause: e
-        }
+        e
       );
     }
 
@@ -75,22 +72,18 @@ class JokeRatingModel {
         throw new addJokeRating.jokeRatingDaoCreateFailed(
           { uuAppErrorMap },
           null,
-          {
-            cause: e
-          }
+          e
         );
       }
     } else {
       try {
-        averageRating = 666;
+        averageRating = 3;
         dtoOut = await this.dao.update(uuObject);
       } catch (e) {
         throw new addJokeRating.jokeRatingDaoUpdateFailed(
           { uuAppErrorMap },
           null,
-          {
-            cause: e
-          }
+          e
         );
       }
     }

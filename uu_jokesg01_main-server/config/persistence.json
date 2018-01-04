@@ -22,12 +22,6 @@
           "maxNoi": 5000
         }
       }
-    },
-    "binary": {
-      "type": "uuAppBinaryStore",
-      "realization": "mongodb",
-      "schemaMap": {
-      }
     }
   }
 }

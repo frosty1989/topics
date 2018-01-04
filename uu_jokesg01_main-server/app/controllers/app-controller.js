@@ -3,8 +3,8 @@
 const AppModel = require("../models/app-model.js");
 
 class AppController {
-  init() {
-    return AppModel.init();
+  init(ucEnv) {
+    return AppModel.init(ucEnv.uri.awid, ucEnv.parameters);
   }
 }
 
