@@ -1,147 +1,137 @@
 "use strict";
 
-const { prefix, jokesError } = require("./uu-jokes-error");
+const UuJokesError = require("./uu-jokes-error");
 
-let createCategory = {
-  code: "createCategory",
+const CreateCategory = {
+  UC_CODE: `${UuJokesError.ERROR_PREFIX}createCategory/`,
 
-  invalidDtoInError: class invalidDtoInError extends jokesError {
-    setParams() {
-      return {
-        code: `${createCategory.code}/invalidDtoIn`,
-        message: "DtoIn is not valid."
-      };
+  InvalidDtoInError: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${CreateCategory.UC_CODE}invalidDtoIn`;
+      this.message = "DtoIn is not valid.";
     }
   },
 
-  categoryNameNotUnique: class categoryNameNotUnique extends jokesError {
-    setParams() {
-      return {
-        code: `${createCategory.code}/categoryNameNotUnique`,
-        message: "Category name is not unique in awid."
-      };
+  CategoryNameNotUnique: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${CreateCategory.UC_CODE}categoryNameNotUnique`;
+      this.message = "Category name is not unique in awid.";
     }
   },
 
-  categoryDaoCreateFailed: class categoryDaoCreateFailed extends jokesError {
-    setParams() {
-      return {
-        code: `${createCategory.code}/categoryDaoCreateFailed`,
-        message: "Create category by category Dao create failed.",
-        status: 500
-      };
+  CategoryDaoCreateFailed: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${CreateCategory.UC_CODE}categoryDaoCreateFailed`;
+      this.message = "Create category by category Dao create failed.";
+      this.status = 500;
     }
   }
 };
 
-let listCategories = {
-  code: "listCategories",
-  invalidDtoInError: class ListCategoriesInvalidDtoInError extends jokesError {
-    setParams() {
-      return {
-        code: `${listCategories.code}/invalidDtoIn`,
-        message: "DtoIn is not valid."
-      };
+const ListCategories = {
+  UC_CODE: `${UuJokesError.ERROR_PREFIX}listCategories/`,
+  InvalidDtoInError: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${ListCategories.code}invalidDtoIn`;
+      this.message = "DtoIn is not valid.";
     }
   },
 
-  categoryDaoListFailed: class CategoryDaoListFailed extends jokesError {
-    setParams() {
-      return {
-        code: `${listCategories.code}/categoryDaoListFailed`,
-        message: "List categories by category Dao list failed.",
-        status: 500
-      };
+  CategoryDaoListFailed: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${ListCategories.UC_CODE}categoryDaoListFailed`;
+      this.message = "List categories by category Dao list failed.";
+      this.status = 500;
     }
   }
 };
 
-let deleteCategory = {
-  code: "deleteCategory",
-  invalidDtoInError: class DeleteCategoryInvalidDtoInError extends jokesError {
-    setParams() {
-      return {
-        code: `${deleteCategory.code}/invalidDtoIn`,
-        message: "DtoIn is not valid."
-      };
+const DeleteCategory = {
+  UC_CODE: `${UuJokesError.ERROR_PREFIX}deleteCategory/`,
+  InvalidDtoInError: class DeleteCategoryInvalidDtoInError extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${DeleteCategory.UC_CODE}invalidDtoIn`;
+      this.message = "DtoIn is not valid.";
     }
   },
 
-  jokeCategoryDaoListByCategoryFailed: class JokeCategoryDaoListByCategoryFailed extends jokesError {
-    setParams() {
-      return {
-        code: `${deleteCategory.code}/jokeCategoryDaoListByCategoryFailed`,
-        message: "List jokeCategory by Dao listByCategory failed.",
-        status: 500
-      };
+  JokeCategoryDaoListByCategoryFailed: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${
+        DeleteCategory.UC_CODE
+      }jokeCategoryDaoListByCategoryFailed`;
+      this.message = "List jokeCategory by Dao listByCategory failed.";
+      this.status = 500;
     }
   },
 
-  relatedJokesExist: class RelatedJokesExist extends jokesError {
-    setParams() {
-      return {
-        code: `${deleteCategory.code}/relatedJokesExist`,
-        message: "Category is not empty."
-      };
+  RelatedJokesExist: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${DeleteCategory.UC_CODE}relatedJokesExist`;
+      this.message = "Category is not empty.";
     }
   },
 
-  jokeCategoryDaoDeleteByCategoryFailed: class JokeCategoryDaoDeleteByCategoryFailed extends jokesError {
-    setParams() {
-      return {
-        code: `${deleteCategory.code}/jokeCategoryDaoDeleteByCategoryFailed`,
-        message: "Delete jokeCategory by Dao deleteByCategory failed.",
-        status: 500
-      };
+  JokeCategoryDaoDeleteByCategoryFailed: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${
+        DeleteCategory.UC_CODE
+      }jokeCategoryDaoDeleteByCategoryFailed`;
+      this.message = "Delete jokeCategory by Dao deleteByCategory failed.";
+      this.status = 500;
     }
   },
 
-  categoryDaoDeleteFailed: class CategoryDaoDeleteFailed extends jokesError {
-    setParams() {
-      return {
-        code: `${deleteCategory.code}/categoryDaoDeleteFailed`,
-        message: "Delete category by Dao delete failed.",
-        status: 500
-      };
+  CategoryDaoDeleteFailed: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${DeleteCategory.UC_CODE}categoryDaoDeleteFailed`;
+      this.message = "Delete category by Dao delete failed.";
+      this.status = 500;
     }
   }
 };
 
-let updateCategory = {
-  code: "updateCategory",
-  invalidDtoInError: class UpdateCategoryInvalidDtoInError extends jokesError {
-    setParams() {
-      return {
-        code: `${updateCategory.code}/invalidDtoIn`,
-        message: "DtoIn is not valid."
-      };
+const UpdateCategory = {
+  UC_CODE: `${UuJokesError.ERROR_PREFIX}updateCategory/`,
+  InvalidDtoInError: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${UpdateCategory.UC_CODE}/invalidDtoIn`;
+      this.message = "DtoIn is not valid.";
     }
   },
 
-  categoryNameNotUnique: class CategoryNameNotUnique extends jokesError {
-    setParams() {
-      return {
-        code: `${updateCategory.code}/categoryNameNotUnique`,
-        message: "Category name is not unique in awid."
-      };
+  CategoryNameNotUnique: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${UpdateCategory.UC_CODE}/categoryNameNotUnique`;
+      this.message = "Category name is not unique in awid.";
     }
   },
 
-  categoryDaoUpdateFailed: class CategoryDaoUpdateFailed extends jokesError {
-    setParams() {
-      return {
-        code: `${updateCategory.code}/categoryDaoUpdateFailed`,
-        message: "Update category by category Dao update failed.",
-        status: 500
-      };
+  CategoryDaoUpdateFailed: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${UpdateCategory.UC_CODE}/categoryDaoUpdateFailed`;
+      this.message = "Update category by category Dao update failed.";
+      this.status = 500;
     }
   }
 };
 
 module.exports = {
-  prefix,
-  createCategory,
-  listCategories,
-  deleteCategory,
-  updateCategory
+  CreateCategory,
+  ListCategories,
+  DeleteCategory,
+  UpdateCategory
 };

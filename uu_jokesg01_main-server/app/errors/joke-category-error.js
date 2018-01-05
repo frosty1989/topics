@@ -1,84 +1,76 @@
 "use strict";
 
-const { prefix, jokesError } = require("./uu-jokes-error");
+const UuJokesError = require("./uu-jokes-error");
 
-let addJokeCategory = {
-  code: "addJokeCategory",
-  invalidDtoInError: class AddJokeCategoryInvalidDtoInError extends jokesError {
-    setParams() {
-      return {
-        code: `${addJokeCategory.code}/invalidDtoIn`,
-        message: "DtoIn is not valid."
-      };
+const AddJokeCategory = {
+  UC_CODE: `${UuJokesError.ERROR_PREFIX}addJokeCategory/`,
+
+  InvalidDtoInError: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${AddJokeCategory.UC_CODE}invalidDtoIn`;
+      this.message = "DtoIn is not valid.";
     }
   },
 
-  jokeDaoGetFailed: class JokeDaoGetFailed extends jokesError {
-    setParams() {
-      return {
-        code: `${addJokeCategory.code}/jokeDaoGetFailed`,
-        message: "Get joke by joke Dao get failed.",
-        status: 500
-      };
+  JokeDaoGetFailed: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${AddJokeCategory.UC_CODE}jokeDaoGetFailed`;
+      this.message = "Get joke by joke Dao get failed.";
+      this.status = 500;
     }
   },
 
-  jokeDoesNotExist: class JokeDoesNotExist extends jokesError {
-    setParams() {
-      return {
-        code: `${addJokeCategory.code}/jokeDoesNotExist`,
-        message: "Joke does not exist."
-      };
+  JokeDoesNotExist: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${AddJokeCategory.UC_CODE}jokeDoesNotExist`;
+      this.message = "Joke does not exist.";
     }
   },
 
-  categoryDaoGetFailed: class CategoryDaoGetFailed extends jokesError {
-    setParams() {
-      return {
-        code: `${addJokeCategory.code}/categoryDaoGetFailed`,
-        message: "Get category by category Dao get failed.",
-        status: 500
-      };
+  CategoryDaoGetFailed: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${AddJokeCategory.UC_CODE}categoryDaoGetFailed`;
+      this.message = "Get category by category Dao get failed.";
+      this.status = 500;
     }
   },
 
-  jokeCategoryDaoCreateFailed: class JokeCategoryDaoCreateFailed extends jokesError {
-    setParams() {
-      return {
-        code: `${addJokeCategory.code}/jokeCategoryDaoCreateFailed`,
-        message: "Create jokeCategory by jokeCategory Dao create failed.",
-        status: 500
-      };
+  JokeCategoryDaoCreateFailed: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${AddJokeCategory.UC_CODE}jokeCategoryDaoCreateFailed`;
+      this.message = "Create jokeCategory by jokeCategory Dao create failed.";
+      this.status = 500;
     }
   }
 };
 
-let removeJokeCategory = {
-  code: "removeJokeCategory",
-  invalidDtoInError: class RemoveJokeCategoryInvalidDtoInError extends jokesError {
-    setParams() {
-      return {
-        code: `${removeJokeCategory.code}/invalidDtoIn`,
-        message: "DtoIn is not valid."
-      };
+let RemoveJokeCategory = {
+  UC_CODE: `${UuJokesError.ERROR_PREFIX}removeJokeCategory/`,
+
+  InvalidDtoInError: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${RemoveJokeCategory.UC_CODE}invalidDtoIn`;
+      this.message = "DtoIn is not valid.";
     }
   },
 
-  jokeCategoryDaoDeleteByJokeAndCategoryFailed: class JokeCategoryDaoDeleteByJokeAndCategoryFailed extends jokesError {
-    setParams() {
-      return {
-        code: `${
-          removeJokeCategory.code
-        }/jokeCategoryDaoDeleteByJokeAndCategoryFailed`,
-        message: "Delete jokeCategory by Dao deleteByJokeAndCategory failed.",
-        status: 500
-      };
+  JokeCategoryDaoDeleteByJokeAndCategoryFailed: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${RemoveJokeCategory.UC_CODE}jokeCategoryDaoDeleteByJokeAndCategoryFailed`;
+      this.message = "Delete jokeCategory by Dao deleteByJokeAndCategory failed.";
+      this.status = 500;
     }
   }
 };
 
 module.exports = {
-  prefix,
-  addJokeCategory,
-  removeJokeCategory
+  AddJokeCategory,
+  RemoveJokeCategory
 };

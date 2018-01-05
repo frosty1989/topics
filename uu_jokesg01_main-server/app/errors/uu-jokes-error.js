@@ -1,31 +1,20 @@
 "use strict";
+const {UseCaseError} = require("uu_appg01_server").AppServer;
 
-const { UseCaseError } = require("uu_appg01_server").AppServer;
-const ISSUE_PREFIX = "uu-jokesg01-main";
+class UuJokesError extends UseCaseError {
 
-const jokesError = class JokesError extends UseCaseError {
+  static get ERROR_PREFIX() {
+    return "uu-jokes-main/";
+  }
+
   constructor(dtoOut, paramMap = {}, cause = null) {
-    if (dtoOut instanceof Error) {
-      cause = dtoOut;
-      dtoOut = null;
+    if (paramMap instanceof Error) {
+      cause = paramMap;
       paramMap = {};
     }
 
-    super({
-      dtoOut: dtoOut,
-      paramMap: paramMap,
-      status: 400,
-      cause: cause
-    });
-
-    let errParams = this.setParams();
-    this.message = errParams.message;
-    this.code = `${ISSUE_PREFIX}/${errParams.code}`;
-    errParams.status && (this.status = errParams.status);
+    super({dtoOut: dtoOut, paramMap: paramMap, status: 400, cause: cause});
   }
-};
+}
 
-module.exports = {
-  jokesError,
-  prefix: ISSUE_PREFIX
-};
+module.exports = UuJokesError;
