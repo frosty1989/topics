@@ -4,13 +4,21 @@ const { DaoFactory } = require("uu_appg01_server").ObjectStore;
 const { ValidationHelper } = require("uu_appg01_server").Workspace;
 
 const Path = require("path");
-const {
-  prefix,
-  createCategory,
-  listCategories,
-  deleteCategory,
-  updateCategory
-} = require("../errors/category-error");
+const Errors = require("../errors/category-error");
+const WARNINGS = {
+  createCategory: {
+    code: `${Errors.CreateCategory.UC_CODE}unsupportedKeys`
+  },
+  updateCategory: {
+    code: `${Errors.UpdateCategory.UC_CODE}unsupportedKeys`
+  },
+  deleteCategory: {
+    code: `${Errors.DeleteCategory.UC_CODE}unsupportedKeys`
+  },
+  listCategories: {
+    code: `${Errors.ListCategories.UC_CODE}unsupportedKeys`
+  }
+};
 
 class CategoryModel {
   constructor() {
@@ -29,8 +37,8 @@ class CategoryModel {
       dtoIn,
       validationResult,
       {},
-      `${prefix}/${createCategory.code}/unsupportedKey`,
-      createCategory.invalidDtoInError
+      WARNINGS.createCategory.code,
+      Errors.CreateCategory.InvalidDtoInError
     );
 
     dtoIn.awid = awid;
@@ -39,13 +47,13 @@ class CategoryModel {
       dtoOut = await this.dao.create(dtoIn);
     } catch (e) {
       if (e.code === "uu-app-objectstore/duplicateKey") {
-        throw new createCategory.categoryNameNotUnique(
+        throw new Errors.CreateCategory.CategoryNameNotUnique(
           { uuAppErrorMap },
           { name: dtoIn.name },
           e
         );
       }
-      throw new createCategory.categoryDaoCreateFailed(
+      throw new Errors.CreateCategory.CategoryDaoCreateFailed(
         { uuAppErrorMap },
         null,
         e
@@ -65,8 +73,8 @@ class CategoryModel {
       dtoIn,
       validationResult,
       {},
-      `${prefix}/${updateCategory.code}/unsupportedKey`,
-      updateCategory.invalidDtoInError
+      WARNINGS.updateCategory.code,
+      Errors.UpdateCategory.InvalidDtoInError
     );
     let uuObject = Object.assign({}, dtoIn);
     let dtoOut = {};
@@ -77,13 +85,13 @@ class CategoryModel {
       dtoOut = await this.dao.update(uuObject);
     } catch (e) {
       if (e.code === "uu-app-objectstore/duplicateKey") {
-        throw new updateCategory.categoryNameNotUnique(
+        throw new Errors.UpdateCategory.CategoryNameNotUnique(
           { uuAppErrorMap },
           { name: dtoIn.name },
           e
         );
       }
-      throw new updateCategory.categoryDaoUpdateFailed(
+      throw new Errors.UpdateCategory.CategoryDaoUpdateFailed(
         { uuAppErrorMap },
         null,
         e
@@ -103,8 +111,8 @@ class CategoryModel {
       dtoIn,
       validationResult,
       {},
-      `${prefix}/${deleteCategory.code}/unsupportedKey`,
-      deleteCategory.invalidDtoInError
+      WARNINGS.deleteCategory.code,
+      Errors.DeleteCategory.InvalidDtoInError
     );
     let dtoOut = {};
     let foundJokeCategories;
@@ -114,7 +122,7 @@ class CategoryModel {
       try {
         await JokeCategoryModel.dao.deleteByCategory(awid, dtoIn.id);
       } catch (e) {
-        throw new deleteCategory.categoryDaoDeleteFailed(
+        throw new Errors.DeleteCategory.CategoryDaoDeleteFailed(
           { uuAppErrorMap },
           null,
           e
@@ -127,7 +135,7 @@ class CategoryModel {
           dtoIn.id
         );
       } catch (error) {
-        throw new deleteCategory.jokeCategoryDaoListByCategoryFailed(
+        throw new Errors.DeleteCategory.JokeCategoryDaoListByCategoryFailed(
           { uuAppErrorMap },
           null,
           error
@@ -135,9 +143,13 @@ class CategoryModel {
       }
 
       if (foundJokeCategories.itemList.length > 0) {
-        throw new deleteCategory.relatedJokesExist({ uuAppErrorMap }, null, {
-          relatedJokes: foundJokeCategories.itemList
-        });
+        throw new Errors.DeleteCategory.RelatedJokesExist(
+          { uuAppErrorMap },
+          null,
+          {
+            relatedJokes: foundJokeCategories.itemList
+          }
+        );
       }
     }
 
@@ -157,8 +169,8 @@ class CategoryModel {
       dtoIn,
       validationResult,
       {},
-      `${prefix}/${listCategories.code}/unsupportedKey`,
-      listCategories.invalidDtoInError
+      WARNINGS.listCategories.code,
+      Errors.ListCategories.InvalidDtoInError
     );
 
     dtoIn.pageInfo = dtoIn.pageInfo || {
@@ -171,7 +183,7 @@ class CategoryModel {
     try {
       dtoOut = await this.dao.list(awid, dtoIn.pageInfo);
     } catch (e) {
-      throw new listCategories.categoryDaoListFailed(
+      throw new Errors.ListCategories.CategoryDaoListFailed(
         { uuAppErrorMap },
         null,
         e

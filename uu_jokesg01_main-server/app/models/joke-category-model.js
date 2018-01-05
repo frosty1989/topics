@@ -1,7 +1,7 @@
 "use strict";
-const {Validator} = require("uu_appg01_server").Validation;
-const {DaoFactory} = require("uu_appg01_server").ObjectStore;
-const {ValidationHelper} = require("uu_appg01_server").Workspace;
+const { Validator } = require("uu_appg01_server").Validation;
+const { DaoFactory } = require("uu_appg01_server").ObjectStore;
+const { ValidationHelper } = require("uu_appg01_server").Workspace;
 const Path = require("path");
 const JokeModel = require("./joke-model");
 const CategoryModel = require("./category-model");
@@ -15,11 +15,11 @@ const WARNINGS = {
     code: `${Errors.RemoveJokeCategory.UC_CODE}unsupportedKeys`
   },
   categoryDoesNotExist: {
-    code: `${prefix}/${addJokeCategory.code}/categoryDoesNotExist`,
+    code: `${Errors.AddJokeCategory.UC_CODE}/categoryDoesNotExist`,
     message: "Category does not exist."
   },
   jokeCategoryAlreadyExists: {
-    code: `${prefix}/${addJokeCategory.code}/jokeCategoryAlreadyExists`,
+    code: `${Errors.AddJokeCategory.UC_CODE}/jokeCategoryAlreadyExists`,
     message: "uuObject jokeCategory already exists."
   }
 };
@@ -51,13 +51,16 @@ class JokeCategoryModel {
     try {
       foundJoke = await JokeModel.dao.get(awid, dtoIn.jokeId);
     } catch (e) {
-      throw new Errors.AddJokeCategory.JokeDaoGetFailed({uuAppErrorMap}, e);
+      throw new Errors.AddJokeCategory.JokeDaoGetFailed({ uuAppErrorMap }, e);
     }
 
     if (Object.keys(foundJoke).length === 0) {
-      throw new Errors.AddJokeCategory.JokeDoesNotExist({uuAppErrorMap}, {
-        jokeId: dtoIn.jokeId
-      });
+      throw new Errors.AddJokeCategory.JokeDoesNotExist(
+        { uuAppErrorMap },
+        {
+          jokeId: dtoIn.jokeId
+        }
+      );
     }
 
     for (let index = 0; index < dtoIn.categoryList.length; index++) {
@@ -68,7 +71,7 @@ class JokeCategoryModel {
         foundCategory = await CategoryModel.dao.get(awid, dtoInCategoryId);
       } catch (err) {
         throw new Errors.AddJokeCategory.CategoryDaoGetFailed(
-          {uuAppErrorMap},
+          { uuAppErrorMap },
           err
         );
       }
@@ -103,7 +106,7 @@ class JokeCategoryModel {
             );
           } else {
             throw new Errors.AddJokeCategory.JokeCategoryDaoCreateFailed(
-              {uuAppErrorMap},
+              { uuAppErrorMap },
               e
             );
           }
@@ -137,7 +140,7 @@ class JokeCategoryModel {
       );
     } catch (e) {
       throw new Errors.RemoveJokeCategory.JokeCategoryDaoDeleteByJokeAndCategoryFailed(
-        {uuAppErrorMap},
+        { uuAppErrorMap },
         e
       );
     }
