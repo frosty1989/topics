@@ -8,10 +8,11 @@ class JokeCategoryController {
   }
 
   remove(ucEnv) {
-    return JokeCategoryModel.removeJokeCategory(
-      ucEnv.uri.awid,
-      ucEnv.parameters
-    );
+    return JokeCategoryModel.removeJokeCategory(ucEnv.uri.awid, ucEnv.parameters);
+  }
+
+  listByCategory(ucEnv) {
+    return JokeCategoryModel.listByCategory(ucEnv.uri.awid, ucEnv.parameters);
   }
 }
 

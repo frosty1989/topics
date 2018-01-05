@@ -57,7 +57,7 @@
         "type": "CMD"
       },
       "listCategoryJokes": {
-        "realization": "controllers/JokeCategoryController.list",
+        "realization": "controllers/JokeCategoryController.listByCategory",
         "httpMethod": "GET",
         "type": "CMD"
       },

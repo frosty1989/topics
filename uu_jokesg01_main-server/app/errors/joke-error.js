@@ -155,43 +155,10 @@ let UpdateJoke = {
   }
 };
 
-let ListCategoryJokes = {
-  UC_CODE: `${UuJokesError.ERROR_PREFIX}listCategoryJokes/`,
-  InvalidDtoInError: class extends UuJokesError {
-    constructor() {
-      super(...arguments);
-      this.code = `${ListCategoryJokes.UC_CODE}invalidDtoIn`;
-      this.message = "DtoIn is not valid.";
-    }
-  },
-
-  JokeCategoryDaoListByCategoryFailed: class extends UuJokesError {
-    constructor() {
-      super(...arguments);
-      this.code = `${
-        ListCategoryJokes.UC_CODE
-      }jokeCategoryDaoListByCategoryFailed`;
-      this.message =
-        "List jokeCategory by jokeCategory Dao listByCategory failed.";
-      this.status = 500;
-    }
-  },
-
-  JokeDaoListByIdsFailed: class extends UuJokesError {
-    constructor() {
-      super(...arguments);
-      this.code = `${ListCategoryJokes.UC_CODE}jokeDaoListByIdsFailed`;
-      this.message = "List jokes by joke Dao listByIds failed.";
-      this.status = 500;
-    }
-  }
-};
-
 module.exports = {
   CreateJoke,
   GetJoke,
   ListJokes,
   DeleteJoke,
-  UpdateJoke,
-  ListCategoryJokes
+  UpdateJoke
 };
