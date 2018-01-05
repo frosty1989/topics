@@ -18,7 +18,7 @@ let AddJokeRating = {
       this.message = "Get joke by Dao get failed.";
     }
   },
-  jokeDoesNotExist: class extends UuJokesError {
+  JokeDoesNotExist: class extends UuJokesError {
     constructor() {
       super(...arguments);
       this.code = `${AddJokeRating.UC_CODE}jokeDoesNotExist`;
