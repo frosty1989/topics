@@ -6,6 +6,21 @@
         "httpMethod": "POST",
         "type": "CMD"
       },
+      "createJoke": {
+        "realization": "controllers/JokeController.create",
+        "httpMethod": "POST",
+        "type": "CMD"
+      },
+      "updateJoke": {
+        "realization": "controllers/JokeController.update",
+        "httpMethod": "POST",
+        "type": "CMD"
+      },
+      "deleteJoke": {
+        "realization": "controllers/JokeController.remove",
+        "httpMethod": "POST",
+        "type": "CMD"
+      },
       "addJokeCategory": {
         "realization": "controllers/JokeCategoryController.create",
         "httpMethod": "POST",
@@ -16,13 +31,18 @@
         "httpMethod": "POST",
         "type": "CMD"
       },
-      "createJoke": {
-        "realization": "controllers/JokeController.create",
+      "createCategory": {
+        "realization": "controllers/CategoryController.create",
         "httpMethod": "POST",
         "type": "CMD"
       },
-      "addJokeRating": {
-        "realization": "controllers/JokeRatingController.create",
+      "updateCategory": {
+        "realization": "controllers/CategoryController.update",
+        "httpMethod": "POST",
+        "type": "CMD"
+      },
+      "deleteCategory": {
+        "realization": "controllers/CategoryController.remove",
         "httpMethod": "POST",
         "type": "CMD"
       },
@@ -37,23 +57,8 @@
         "type": "CMD"
       },
       "listCategoryJokes": {
-        "realization": "controllers/JokeController.listCategoryJokes",
+        "realization": "controllers/JokeCategoryController.list",
         "httpMethod": "GET",
-        "type": "CMD"
-      },
-      "updateJoke": {
-        "realization": "controllers/JokeController.update",
-        "httpMethod": "POST",
-        "type": "CMD"
-      },
-      "deleteJoke": {
-        "realization": "controllers/JokeController.remove",
-        "httpMethod": "POST",
-        "type": "CMD"
-      },
-      "createCategory": {
-        "realization": "controllers/CategoryController.create",
-        "httpMethod": "POST",
         "type": "CMD"
       },
       "listCategories": {
@@ -61,13 +66,8 @@
         "httpMethod": "GET",
         "type": "CMD"
       },
-      "updateCategory": {
-        "realization": "controllers/CategoryController.update",
-        "httpMethod": "POST",
-        "type": "CMD"
-      },
-      "deleteCategory": {
-        "realization": "controllers/CategoryController.remove",
+      "addJokeRating": {
+        "realization": "controllers/JokeRatingController.create",
         "httpMethod": "POST",
         "type": "CMD"
       }

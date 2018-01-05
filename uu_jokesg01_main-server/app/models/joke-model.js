@@ -40,13 +40,14 @@ class JokeModel {
     this.dao = DaoFactory.getDao("joke");
   }
 
-  async createJoke(awid, dtoIn) {
+  async create(awid, dtoIn) {
+    //HDS 1
+    //A1
     let validationResult = this.validator.validate(
       "createJokeDtoInType",
       dtoIn
     );
-    let dtoOut;
-    let validJokeCategories = [];
+    //A2
     let uuAppErrorMap = ValidationHelper.processValidationResult(
       dtoIn,
       validationResult,
@@ -54,15 +55,39 @@ class JokeModel {
       `${prefix}/${createJoke.code}/unsupportedKey`,
       createJoke.invalidDtoIn
     );
+    let dtoOut;
+    let validCategories = [];
+    let categoryList = dtoIn.categoryList || [];
 
     dtoIn.awid = awid;
+    //HDS 1.4
+    dtoIn.averageRating = 0;
+    dtoIn.ratingCount = 0;
 
-    if (dtoIn.categoryList && dtoIn.categoryList.length > 0) {
-      dtoIn.categoryList.forEach(async categoryId => {
+    try {
+      //HDS2
+      dtoOut = await this.dao.create(dtoIn);
+    } catch (e) {
+      //A3
+      throw new createJoke.jokeDaoCreateFailed({ uuAppErrorMap }, null, e);
+    }
+
+    if (categoryList.length > 0) {
+      const JokeCategoryModel = require("./joke-category-model");
+
+      //HDS 3
+      for (let index = 0; index < categoryList.length; index++) {
+        const categoryId = categoryList[index];
+
         try {
-          let foundCategory = await CategoryModel.dao.get(awid, categoryId);
+          //HDS 3.1
+          let category = await CategoryModel.dao.get(awid, categoryId);
 
-          if (!foundCategory.hasOwnProperty("id")) {
+          if (
+            !category.hasOwnProperty("data") &&
+            !category.data.hasOwnProperty("id")
+          ) {
+            //A5
             ValidationHelper.addWarning(
               uuAppErrorMap,
               WARNINGS.createJoke.categoryDoesNotExist.code,
@@ -71,10 +96,10 @@ class JokeModel {
                 categoryId: categoryId
               }
             );
-          } else {
-            validJokeCategories.push(categoryId);
+            continue;
           }
         } catch (err) {
+          //A4
           ValidationHelper.addWarning(
             uuAppErrorMap,
             WARNINGS.createJoke.categoryDaoGetFailed.code,
@@ -83,165 +108,32 @@ class JokeModel {
               cause: err
             }
           );
+          continue;
         }
-      });
-    }
 
-    try {
-      if (validJokeCategories.length > 0) {
-        dtoIn.categoryList = validJokeCategories;
-      }
-
-      dtoOut = await this.dao.create(dtoIn);
-    } catch (e) {
-      throw new createJoke.jokeDaoCreateFailed(
-        {
-          uuAppErrorMap
-        },
-        null,
-        e
-      );
-    }
-
-    if (validJokeCategories.length > 0) {
-      const JokeCategoryModel = require("./joke-category-model");
-
-      try {
-        await JokeCategoryModel.dao.create({
-          awid: awid,
-          jokeId: dtoOut.id,
-          categoryList: validJokeCategories
-        });
-      } catch (err) {
-        throw new createJoke.jokeCategoryDaoCreateFailed(
-          {
-            uuAppErrorMap
-          },
-          null,
-          err
-        );
+        try {
+          //HDS 3.2
+          await JokeCategoryModel.dao.create({
+            awid: awid,
+            jokeId: dtoOut.data.id,
+            categoryId: categoryId
+          });
+          validCategories.push(categoryId);
+        } catch (err) {
+          //A6
+          throw new createJoke.jokeCategoryDaoCreateFailed(
+            { uuAppErrorMap },
+            null,
+            err
+          );
+        }
       }
     }
 
+    dtoOut.categoryList = validCategories;
     dtoOut.uuAppErrorMap = uuAppErrorMap;
 
-    return dtoOut;
-  }
-
-  async getJoke(awid, dtoIn) {
-    let validationResult = this.validator.validate("getJokeDtoInType", dtoIn);
-    let dtoOut = {};
-    let uuAppErrorMap = ValidationHelper.processValidationResult(
-      dtoIn,
-      validationResult,
-      {},
-      `${prefix}/${getJoke.code}/unsupportedKey`,
-      getJoke.invalidDtoIn
-    );
-
-    try {
-      dtoOut = await this.dao.get(awid, dtoIn.id);
-    } catch (e) {
-      throw new getJoke.jokeDoesNotExist(
-        {
-          uuAppErrorMap
-        },
-        null,
-        e
-      );
-    }
-
-    // A4
-    if (typeof dtoOut.name === "undefined") {
-      throw new getJoke.jokeDoesNotExist(
-        {
-          uuAppErrorMap
-        },
-        null,
-        { jokeId: dtoIn.id }
-      );
-    }
-
-    try {
-      const JokeCategoryModel = require("./joke-category-model");
-
-      await JokeCategoryModel.dao.listByJoke(awid, dtoIn.id);
-    } catch (err) {
-      throw new getJoke.jokeCategoryDaoListByJokeFailed(
-        { uuAppErrorMap },
-        null,
-        err
-      );
-    }
-
-    dtoOut.uuAppErrorMap = uuAppErrorMap;
-    return dtoOut;
-  }
-
-  async listJokes(awid, dtoIn) {
-    let validationResult = this.validator.validate("listJokesDtoInType", dtoIn);
-    let uuAppErrorMap = ValidationHelper.processValidationResult(
-      dtoIn,
-      validationResult,
-      {},
-      `${prefix}/${listJokes.code}/unsupportedKey`,
-      listJokes.invalidDtoInError
-    );
-
-    dtoIn.pageInfo = dtoIn.pageInfo || {
-      pageIndex: 0,
-      pageSize: 100
-    };
-    dtoIn.pageInfo.pageSize = dtoIn.pageInfo.pageSize || 100;
-    let sort = dtoIn.sortBy === "name" ? "name" : "rating";
-    let order = dtoIn.order === "desc" ? -1 : 1;
-
-    let dtoOut;
-    try {
-      dtoOut = await this.dao.list(awid, dtoIn.pageInfo, {
-        [sort]: order
-      });
-    } catch (e) {
-      throw new listJokes.jokeDaoListFailed(
-        {
-          uuAppErrorMap
-        },
-        null,
-        e
-      );
-    }
-
-    dtoOut.uuAppErrorMap = uuAppErrorMap;
-    return dtoOut;
-  }
-
-  async listCategoryJokes(awid, dtoIn) {
-    let validationResult = this.validator.validate(
-      "listCategoryJokesDtoInType",
-      dtoIn
-    );
-    let uuAppErrorMap = ValidationHelper.processValidationResult(
-      dtoIn,
-      validationResult,
-      {},
-      `${prefix}/${listCategoryJokes.code}/unsupportedKey`,
-      listCategoryJokes.invalidDtoInError
-    );
-
-    let dtoOut;
-    try {
-      dtoOut = await this.dao.listCategoryJokes(awid, dtoIn.categoryId);
-    } catch (e) {
-      throw new listCategoryJokes.jokeCategoryDaoListByCategoryFailed(
-        {
-          uuAppErrorMap
-        },
-        null,
-        e
-      );
-    }
-
-    dtoOut.uuAppErrorMap = uuAppErrorMap;
+    //HDS 4
     return dtoOut;
   }
 
@@ -342,6 +234,93 @@ class JokeModel {
 
     dtoOut.uuAppErrorMap = uuAppErrorMap;
 
+    return dtoOut;
+  }
+
+  async get(awid, dtoIn) {
+    let validationResult = this.validator.validate("getJokeDtoInType", dtoIn);
+    let dtoOut = {};
+    let uuAppErrorMap = ValidationHelper.processValidationResult(
+      dtoIn,
+      validationResult,
+      {},
+      `${prefix}/${getJoke.code}/unsupportedKey`,
+      getJoke.invalidDtoIn
+    );
+
+    try {
+      dtoOut = await this.dao.get(awid, dtoIn.id);
+    } catch (e) {
+      throw new getJoke.jokeDoesNotExist(
+        {
+          uuAppErrorMap
+        },
+        null,
+        e
+      );
+    }
+
+    // A4
+    if (typeof dtoOut.name === "undefined") {
+      throw new getJoke.jokeDoesNotExist(
+        {
+          uuAppErrorMap
+        },
+        null,
+        { jokeId: dtoIn.id }
+      );
+    }
+
+    try {
+      const JokeCategoryModel = require("./joke-category-model");
+
+      await JokeCategoryModel.dao.listByJoke(awid, dtoIn.id);
+    } catch (err) {
+      throw new getJoke.jokeCategoryDaoListByJokeFailed(
+        { uuAppErrorMap },
+        null,
+        err
+      );
+    }
+
+    dtoOut.uuAppErrorMap = uuAppErrorMap;
+    return dtoOut;
+  }
+
+  async list(awid, dtoIn) {
+    let validationResult = this.validator.validate("listJokesDtoInType", dtoIn);
+    let uuAppErrorMap = ValidationHelper.processValidationResult(
+      dtoIn,
+      validationResult,
+      {},
+      `${prefix}/${listJokes.code}/unsupportedKey`,
+      listJokes.invalidDtoInError
+    );
+
+    dtoIn.pageInfo = dtoIn.pageInfo || {
+      pageIndex: 0,
+      pageSize: 100
+    };
+    dtoIn.pageInfo.pageSize = dtoIn.pageInfo.pageSize || 100;
+    let sort = dtoIn.sortBy === "name" ? "name" : "rating";
+    let order = dtoIn.order === "desc" ? -1 : 1;
+
+    let dtoOut;
+    try {
+      dtoOut = await this.dao.list(awid, dtoIn.pageInfo, {
+        [sort]: order
+      });
+    } catch (e) {
+      throw new listJokes.jokeDaoListFailed(
+        {
+          uuAppErrorMap
+        },
+        null,
+        e
+      );
+    }
+
+    dtoOut.uuAppErrorMap = uuAppErrorMap;
     return dtoOut;
   }
 }

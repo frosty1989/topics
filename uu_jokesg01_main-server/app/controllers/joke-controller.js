@@ -4,23 +4,7 @@ const JokeModel = require("../models/joke-model.js");
 
 class JokeController {
   create(ucEnv) {
-    return JokeModel.createJoke(ucEnv.uri.awid, ucEnv.parameters);
-  }
-
-  addRating(ucEnv) {
-    return JokeModel.addRating(ucEnv.uri.awid, ucEnv.parameters);
-  }
-
-  get(ucEnv) {
-    return JokeModel.getJoke(ucEnv.uri.awid, ucEnv.parameters);
-  }
-
-  list(ucEnv) {
-    return JokeModel.listJokes(ucEnv.uri.awid, ucEnv.parameters);
-  }
-
-  listCategoryJokes(ucEnv) {
-    return JokeModel.listCategoryJokes(ucEnv.uri.awid, ucEnv.parameters);
+    return JokeModel.create(ucEnv.uri.awid, ucEnv.parameters);
   }
 
   update(ucEnv) {
@@ -29,6 +13,14 @@ class JokeController {
 
   remove(ucEnv) {
     return JokeModel.remove(ucEnv.uri.awid, ucEnv.parameters);
+  }
+
+  get(ucEnv) {
+    return JokeModel.get(ucEnv.uri.awid, ucEnv.parameters);
+  }
+
+  list(ucEnv) {
+    return JokeModel.list(ucEnv.uri.awid, ucEnv.parameters);
   }
 }
 

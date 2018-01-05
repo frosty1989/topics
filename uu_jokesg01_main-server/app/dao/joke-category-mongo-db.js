@@ -6,10 +6,7 @@ class JokeCategoryMongoDB extends UuObjectDao {
     await super.createIndex({ awid: 1, _id: 1 }, { unique: true });
     await super.createIndex({ awid: 1, categoryId: 1 });
     await super.createIndex({ awid: 1, jokeId: 1 });
-    await super.createIndex(
-      { awid: 1, jokeId: 1, categoryId: 1 },
-      { unique: true }
-    );
+    await super.createIndex({ awid: 1, jokeId: 1, categoryId: 1 }, { unique: true });
   }
 
   async create(uuObject) {
