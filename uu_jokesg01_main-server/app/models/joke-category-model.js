@@ -21,6 +21,9 @@ const WARNINGS = {
   jokeCategoryAlreadyExists: {
     code: `${Errors.AddJokeCategory.UC_CODE}/jokeCategoryAlreadyExists`,
     message: "uuObject jokeCategory already exists."
+  },
+  listCategoryJokesUnsupportedKeys: {
+    code: `${Errors.ListCategoryJokes.UC_CODE}/unsupportedKeys`
   }
 };
 
@@ -145,6 +148,40 @@ class JokeCategoryModel {
       );
     }
     dtoOut.uuAppErrorMap = uuAppErrorMap;
+    return dtoOut;
+  }
+
+  async listByCategory(awid, dtoIn) {
+    //HDS 1
+    let validationResult = this.validator.validate("listCategoryJokesDtoInType", dtoIn);
+    //A1, A2
+    let uuAppErrorMap = ValidationHelper.processValidationResult(
+      dtoIn,
+      validationResult,
+      WARNINGS.listCategoryJokesUnsupportedKeys.code,
+      Errors.ListCategoryJokes.InvalidDtoIn
+    );
+    let jokeIds = [];
+    let dtoOut;
+
+    try {
+      //HDS 2
+      jokeIds = await this.dao.listByCategory(awid, dtoIn.categoryId).itemList.map(x => x.jokeId);
+    } catch (e) {
+      //A3
+      throw new Errors.ListCategoryJokes.JokeCategoryDaoListByCategoryFailed({ uuAppErrorMap }, e);
+    }
+
+    try {
+      //HDS 3
+      dtoOut = JokeModel.dao.listByIds(awid, jokeIds);
+    } catch (e) {
+      throw new Errors.ListCategoryJokes.JokeDaoListByIdsFailed({ uuAppErrorMap }, e);
+    }
+
+    dtoOut.uuAppErrorMap = uuAppErrorMap;
+
+    //HDS 4
     return dtoOut;
   }
 }
