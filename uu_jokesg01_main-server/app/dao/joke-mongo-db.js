@@ -1,5 +1,6 @@
 "use strict";
 const { UuObjectDao } = require("uu_appg01_server").ObjectStore;
+const { ObjectId } = require("bson");
 
 class JokeMongoDB extends UuObjectDao {
   async createSchema() {
@@ -11,7 +12,7 @@ class JokeMongoDB extends UuObjectDao {
   }
 
   async get(awid, id) {
-    return await super.findOne({ awid, id });
+    return await super.findOne({ _id: id, awid: awid });
   }
 
   async update(uuObject) {
@@ -29,7 +30,7 @@ class JokeMongoDB extends UuObjectDao {
   }
 
   async listByIds(awid, jokeIds = []) {
-    return await super.find({ awid, id: { $in: jokeIds } });
+    return await super.find({ awid, _id: { $in: jokeIds.map(x => new ObjectId(x)) }});
   }
 }
 

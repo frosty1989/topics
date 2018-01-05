@@ -7,3 +7,7 @@ const removeJokeCategoryDtoInType = shape({
   jokeId: mongoId().isRequired(),
   categoryList: array(mongoId(), 10).isRequired()
 });
+
+const listCategoryJokesDtoInType = shape({
+  categoryId: mongoId().isRequired()
+});
