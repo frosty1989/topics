@@ -24,8 +24,8 @@ class JokeMongoDB extends UuObjectDao {
     return await super.deleteOne({ awid, id });
   }
 
-  async list(awid, pageInfo = {}, sort = {}, order = {}) {
-    return await super.find({ awid }, pageInfo, sort, order);
+  async list(awid, pageInfo = {}, sortBy = {}, order = {}) {
+    return await super.find({ awid }, pageInfo, sortBy, order);
   }
 
   async listByIds(awid, jokeIds = []) {

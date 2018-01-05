@@ -128,7 +128,7 @@ let DeleteJoke = {
 
 let UpdateJoke = {
   UC_CODE: `${UuJokesError.ERROR_PREFIX}updateJoke/`,
-  InvalidDtoInError: class extends UuJokesError {
+  InvalidDtoIn: class extends UuJokesError {
     constructor() {
       super(...arguments);
       this.code = `${UpdateJoke.UC_CODE}invalidDtoIn`;
