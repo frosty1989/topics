@@ -6,7 +6,7 @@ const Path = require("path");
 const Errors = require("../errors/joke-rating-error");
 const WARNINGS = {
   createRating: {
-    code: `${Errors.CreateCategory.UC_CODE}unsupportedKeys`,
+    code: `${Errors.AddJokeRating.UC_CODE}unsupportedKeys`,
     message: "DtoIn contains unsupported keys."
   }
 };
