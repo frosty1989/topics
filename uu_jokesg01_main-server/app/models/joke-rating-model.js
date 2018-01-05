@@ -3,7 +3,13 @@ const { Validator } = require("uu_appg01_server").Validation;
 const { DaoFactory } = require("uu_appg01_server").ObjectStore;
 const { ValidationHelper } = require("uu_appg01_server").Workspace;
 const Path = require("path");
-const { prefix, addJokeRating } = require("../errors/joke-rating-error");
+const Errors = require("../errors/joke-rating-error");
+const WARNINGS = {
+  createRating: {
+    code: `${Errors.CreateCategory.UC_CODE}unsupportedKeys`,
+    message: "DtoIn contains unsupported keys."
+  }
+};
 
 class JokeRatingModel {
   constructor() {
@@ -22,8 +28,8 @@ class JokeRatingModel {
       dtoIn,
       validationResult,
       {},
-      `${prefix}/${addJokeRating.code}/unsupportedKey`,
-      addJokeRating.invalidDtoIn
+      WARNINGS.createRating.code,
+      Errors.AddJokeRating.invalidDtoIn
     );
     let joke;
     let userVote;
@@ -37,11 +43,11 @@ class JokeRatingModel {
       const JokeModel = require("./joke-model");
       joke = await JokeModel.dao.get(awid, dtoIn.id);
     } catch (e) {
-      throw new addJokeRating.jokeDaoGetFailed({ uuAppErrorMap }, null, e);
+      throw new Errors.AddJokeRating.JokeDaoGetFailed({ uuAppErrorMap }, null, e);
     }
 
     if (!joke.hasOwnProperty("id")) {
-      throw new addJokeRating.jokeDoesNotExist({ uuAppErrorMap }, null, {
+      throw new Errors.AddJokeRating.JokeDoesNotExist({ uuAppErrorMap }, null, {
         jokeId: dtoIn.id
       });
     }
@@ -53,7 +59,7 @@ class JokeRatingModel {
         uuIdentity
       );
     } catch (e) {
-      throw new addJokeRating.jokeRatingDaoGetByJokeAndIdentityFailed(
+      throw new Errors.AddJokeRating.JokeRatingDaoGetByJokeAndIdentityFailed(
         { uuAppErrorMap },
         null,
         e
@@ -69,7 +75,7 @@ class JokeRatingModel {
           (userVote.rating * 1 + uuObject.rating) / (userVote.rating + 1);
         dtoOut = await this.dao.create(uuObject);
       } catch (e) {
-        throw new addJokeRating.jokeRatingDaoCreateFailed(
+        throw new Errors.AddJokeRating.JokeRatingDaoCreateFailed(
           { uuAppErrorMap },
           null,
           e
@@ -80,7 +86,7 @@ class JokeRatingModel {
         averageRating = 3;
         dtoOut = await this.dao.update(uuObject);
       } catch (e) {
-        throw new addJokeRating.jokeRatingDaoUpdateFailed(
+        throw new Errors.AddJokeRating.JokeRatingDaoUpdateFailed(
           { uuAppErrorMap },
           null,
           e
