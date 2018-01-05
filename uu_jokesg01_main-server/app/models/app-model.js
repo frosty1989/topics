@@ -4,7 +4,13 @@ const { Validator } = require("uu_appg01_server").Validation;
 const { DaoFactory } = require("uu_appg01_server").ObjectStore;
 const { ValidationHelper, SysProfile } = require("uu_appg01_server").Workspace;
 const Path = require("path");
-const { prefix, init } = require("../errors/app-error");
+const Errors = require("../errors/app-error");
+
+const WARNINGS = {
+  initUnsupportedKeys: {
+    code: `${Errors.Init.UC_CODE}unsupportedKeys`
+  }
+};
 
 class AppModel {
   constructor() {
@@ -14,14 +20,15 @@ class AppModel {
   }
 
   async init(awid, dtoIn) {
-    let schemas = ["joke", "jokeRating", "category", "jokeCategory"];
+    const schemas = ["joke", "jokeRating", "category", "jokeCategory"];
+    //HDS 1
     let validationResult = this.validator.validate("initDtoInType", dtoIn);
+    //A1, A2
     let uuAppErrorMap = ValidationHelper.processValidationResult(
       dtoIn,
       validationResult,
-      {},
-      `${prefix}/${init.code}/unsupportedKey`,
-      init.invalidDtoIn
+      WARNINGS.initUnsupportedKeys.code,
+      Errors.Init.InvalidDtoIn
     );
     let dtoOut = {};
 
@@ -29,31 +36,28 @@ class AppModel {
       const schema = schemas[index];
 
       try {
+        //HDS 2
         await DaoFactory.getDao(schema).createSchema();
-      } catch (cause) {
-        throw new init.schemaDaoCreateSchemaFailed(
-          { uuAppErrorMap },
-          { schema },
-          cause
-        );
+      } catch (e) {
+        //A3
+        throw new Errors.Init.SchemaDaoCreateSchemaFailed({ uuAppErrorMap }, { schema }, e);
       }
     }
 
     try {
+      //HDS 3
       await SysProfile.setProfile(awid, {
         code: "Authorities",
         roleUri: dtoIn.uuAppProfileAuthorities
       });
-    } catch (cause) {
-      throw new init.sysSetProfileFailed(
-        { uuAppErrorMap },
-        { role: dtoIn.uuAppProfileAuthorities },
-        cause
-      );
+    } catch (e) {
+      //A4
+      throw new Errors.Init.SysSetProfileFailed({ uuAppErrorMap }, { role: dtoIn.uuAppProfileAuthorities }, e);
     }
 
     dtoOut.uuAppErrorMap = uuAppErrorMap;
 
+    //HDS 4
     return dtoOut;
   }
 }
