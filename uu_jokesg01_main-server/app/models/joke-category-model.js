@@ -41,7 +41,7 @@ class JokeCategoryModel {
       dtoIn,
       validationResult,
       WARNINGS.addJokeCategoryUnsupportedKeys.code,
-      Errors.AddJokeCategory.InvalidDtoInError
+      Errors.AddJokeCategory.InvalidDtoIn
     );
     let dtoOut = {
       categoryList: []
@@ -124,7 +124,7 @@ class JokeCategoryModel {
       dtoIn,
       validationResult,
       WARNINGS.removeJokeCategoryUnsupportedKeys,
-      Errors.RemoveJokeCategory.InvalidDtoInError
+      Errors.RemoveJokeCategory.InvalidDtoIn
     );
 
     dtoIn.id = dtoIn.jokeId;

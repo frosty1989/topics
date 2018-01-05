@@ -1,8 +1,7 @@
 "use strict";
-const {UseCaseError} = require("uu_appg01_server").AppServer;
+const { UseCaseError } = require("uu_appg01_server").AppServer;
 
 class UuJokesError extends UseCaseError {
-
   static get ERROR_PREFIX() {
     return "uu-jokes-main/";
   }
@@ -13,7 +12,7 @@ class UuJokesError extends UseCaseError {
       paramMap = {};
     }
 
-    super({dtoOut: dtoOut, paramMap: paramMap, status: 400, cause: cause});
+    super({ dtoOut: dtoOut, paramMap: paramMap, status: 400, cause: cause });
   }
 }
 
