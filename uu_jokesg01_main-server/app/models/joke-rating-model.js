@@ -43,7 +43,11 @@ class JokeRatingModel {
       const JokeModel = require("./joke-model");
       joke = await JokeModel.dao.get(awid, dtoIn.id);
     } catch (e) {
-      throw new Errors.AddJokeRating.JokeDaoGetFailed({ uuAppErrorMap }, null, e);
+      throw new Errors.AddJokeRating.JokeDaoGetFailed(
+        { uuAppErrorMap },
+        null,
+        e
+      );
     }
 
     if (!joke.hasOwnProperty("id")) {

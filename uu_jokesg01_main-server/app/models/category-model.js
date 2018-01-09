@@ -29,10 +29,12 @@ class CategoryModel {
   }
 
   async createCategory(awid, dtoIn) {
+    // HDS 1 // A1
     let validationResult = this.validator.validate(
       "createCategoryDtoInType",
       dtoIn
     );
+    // A2
     let uuAppErrorMap = ValidationHelper.processValidationResult(
       dtoIn,
       validationResult,
@@ -67,6 +69,7 @@ class CategoryModel {
   }
 
   async updateCategory(awid, dtoIn) {
+    // HDS 1 // A1
     let validationResult = this.validator.validate(
       "updateCategoryDtoInType",
       dtoIn
@@ -108,10 +111,12 @@ class CategoryModel {
   }
 
   async deleteCategory(awid, dtoIn) {
+    // HDS 1 // A1
     let validationResult = this.validator.validate(
       "deleteCategoryDtoInType",
       dtoIn
     );
+    // A2
     let uuAppErrorMap = ValidationHelper.processValidationResult(
       dtoIn,
       validationResult,
@@ -178,6 +183,7 @@ class CategoryModel {
   }
 
   async listCategories(awid, dtoIn) {
+    // HDS 1 // A1
     let validationResult = this.validator.validate(
       "listCategoriesDtoInType",
       dtoIn

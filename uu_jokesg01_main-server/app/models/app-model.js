@@ -40,7 +40,11 @@ class AppModel {
         await DaoFactory.getDao(schema).createSchema();
       } catch (e) {
         //A3
-        throw new Errors.Init.SchemaDaoCreateSchemaFailed({ uuAppErrorMap }, { schema }, e);
+        throw new Errors.Init.SchemaDaoCreateSchemaFailed(
+          { uuAppErrorMap },
+          { schema },
+          e
+        );
       }
     }
 
@@ -52,7 +56,11 @@ class AppModel {
       });
     } catch (e) {
       //A4
-      throw new Errors.Init.SysSetProfileFailed({ uuAppErrorMap }, { role: dtoIn.uuAppProfileAuthorities }, e);
+      throw new Errors.Init.SysSetProfileFailed(
+        { uuAppErrorMap },
+        { role: dtoIn.uuAppProfileAuthorities },
+        e
+      );
     }
 
     dtoOut.uuAppErrorMap = uuAppErrorMap;
