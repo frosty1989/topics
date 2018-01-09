@@ -106,7 +106,7 @@ const UpdateCategory = {
   InvalidDtoInError: class extends UuJokesError {
     constructor() {
       super(...arguments);
-      this.code = `${UpdateCategory.UC_CODE}/invalidDtoIn`;
+      this.code = `${UpdateCategory.UC_CODE}invalidDtoIn`;
       this.message = "DtoIn is not valid.";
     }
   },
@@ -114,7 +114,7 @@ const UpdateCategory = {
   CategoryNameNotUnique: class extends UuJokesError {
     constructor() {
       super(...arguments);
-      this.code = `${UpdateCategory.UC_CODE}/categoryNameNotUnique`;
+      this.code = `${UpdateCategory.UC_CODE}categoryNameNotUnique`;
       this.message = "Category name is not unique in awid.";
     }
   },
@@ -122,7 +122,7 @@ const UpdateCategory = {
   CategoryDaoUpdateFailed: class extends UuJokesError {
     constructor() {
       super(...arguments);
-      this.code = `${UpdateCategory.UC_CODE}/categoryDaoUpdateFailed`;
+      this.code = `${UpdateCategory.UC_CODE}categoryDaoUpdateFailed`;
       this.message = "Update category by category Dao update failed.";
       this.status = 500;
     }

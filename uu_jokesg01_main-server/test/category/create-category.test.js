@@ -5,6 +5,10 @@ const { CreateCategory } = require("../general-test-hepler");
 beforeEach(async done => {
   await TestHelper.setup();
   await TestHelper.initAppWorkspace();
+  await TestHelper.login("SysOwner");
+  await TestHelper.executePostCommand("init", {
+    uuAppProfileAuthorities: "urn:uu:GGALL"
+  });
   await TestHelper.createPermission("Readers");
   done();
 });
@@ -41,7 +45,7 @@ describe("Test createCategory command", () => {
       unsupportedKey: "unsupported value"
     };
     let response = await CreateCategory(invalidDtoIn);
-
+    let unsupportedKey = "uu-jokes-main/createCategory/unsupportedKeys";
     expect(response.status).toEqual(200);
     expect(response.data.uuAppErrorMap).toBeInstanceOf(Object);
     expect(response.data).toHaveProperty("id");
@@ -49,9 +53,13 @@ describe("Test createCategory command", () => {
     expect(response.data).toHaveProperty("desc");
     expect(response.data).toHaveProperty("glyphicon");
     expect(response.data).toHaveProperty("uuAppErrorMap");
+    expect("warning").toEqual(response.data.uuAppErrorMap[unsupportedKey].type);
+    expect("DtoIn contains unsupported keys.").toEqual(
+      response.data.uuAppErrorMap[unsupportedKey].message
+    );
     expect(
       response.data.uuAppErrorMap[
-        "uu-jokesg01-main/createCategory/unsupportedKey"
+        "uu-jokes-main/createCategory/unsupportedKeys"
       ]
     ).toBeInstanceOf(Object);
   });
@@ -82,25 +90,24 @@ describe("Test createCategory command", () => {
   });
 
   test("A3 - uuObject Category with the specified name already exists", async () => {
-    await TestHelper.login("Readers");
-    let errorCode = "uu-jokesg01-main/createCategory/categoryNameNotUnique";
+    await TestHelper.login("Authorities");
+    let errorCode = "uu-jokes-main/createCategory/categoryNameNotUnique";
     expect.assertions(4);
     try {
-      await TestHelper.executePostCommand("createCategory", {
-        name: "test name",
-        desc: "test desc",
-        glyphicon: "http://test.jpg"
+      const categoryName = "Category 1";
+      let category1 = await CreateCategory({
+        name: categoryName,
+        desc: "Desc"
       });
-
       await TestHelper.executePostCommand("createCategory", {
-        name: "test name",
+        name: category1.data.name,
         desc: "test desc",
         glyphicon: "http://test.jpg"
       });
     } catch (error) {
       expect(error.code).toBeDefined();
       expect(error).toHaveProperty("id");
-      expect(error.status).toEqual(500);
+      expect(error.status).toEqual(400);
       expect(error.code).toBe(errorCode);
     }
   });

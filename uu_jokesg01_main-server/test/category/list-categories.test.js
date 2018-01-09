@@ -40,7 +40,7 @@ describe("Test listCategories command", () => {
       pageSize: 100,
       unsupportedKey: "unsupportedValue"
     };
-    let code = "uu-jokesg01-main/listCategories/unsupportedKey";
+    let code = "uu-jokes-main/listCategories/unsupportedKeys";
     let unsupportedKey = "unsupportedKeyList";
     let response = await TestHelper.executeGetCommand(
       "listCategories",

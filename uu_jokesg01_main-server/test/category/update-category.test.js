@@ -56,7 +56,7 @@ describe("Test updateCategory command", () => {
       glyphicon: "http://update_test.jpg",
       invalidKey: "invalid data value"
     };
-    let unsupportedKey = "uu-jokesg01-main/updateCategory/unsupportedKey";
+    let unsupportedKey = "uu-jokes-main/updateCategory/unsupportedKeys";
     let response = await TestHelper.executePostCommand(
       "updateCategory",
       dtoInInvalid
@@ -93,7 +93,7 @@ describe("Test updateCategory command", () => {
       expect(error.paramMap).toHaveProperty("invalidTypeKeyMap");
       expect(error.dtoOut).toHaveProperty("uuAppErrorMap");
       expect(error.code).toEqual(
-        "uu-jokesg01-main/updateCategory/invalidDtoIn"
+        "uu-jokes-main/updateCategory/invalidDtoIn"
       );
       expect(error).toHaveProperty("response");
       expect(error).toHaveProperty("status");
@@ -122,7 +122,7 @@ describe("Test updateCategory command", () => {
       expect(error).toHaveProperty("response");
       expect(error).toHaveProperty("status");
       expect(error.code).toEqual(
-        "uu-jokesg01-main/updateCategory/categoryNameNotUnique"
+        "uu-jokes-main/updateCategory/categoryNameNotUnique"
       );
       expect(error.status).toEqual(400);
     }

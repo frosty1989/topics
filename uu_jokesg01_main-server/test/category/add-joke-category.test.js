@@ -67,8 +67,7 @@ describe("Test addJokeCategory command", () => {
       "addJokeCategory",
       dtoIn
     );
-    const unsupportedKeysWarn =
-      "uu-jokesg01-main/addJokeCategory/unsupportedKey";
+    const unsupportedKeysWarn = "uu-jokes-main/addJokeCategory/unsupportedKeys";
 
     expect(response.status).toEqual(200);
     expect(response.data).toBeDefined();
@@ -85,34 +84,33 @@ describe("Test addJokeCategory command", () => {
 
   test("A2", async () => {
     await TestHelper.login("Readers");
-
-    let response;
-
+    await CreateCategory();
+    let dtoInInvalid = {
+      jokeId: 123,
+      categoryList: 123
+    };
     try {
-      await TestHelper.executePostCommand("addJokeCategory", {});
+      await TestHelper.executePostCommand("addJokeCategory", dtoInInvalid);
     } catch (error) {
-      response = error;
+      expect(error).toHaveProperty("paramMap");
+      expect(error.paramMap).toHaveProperty("invalidValueKeyMap");
+      expect(error.paramMap).toHaveProperty("invalidTypeKeyMap");
+      expect(
+        error.paramMap.invalidTypeKeyMap.hasOwnProperty("$.jokeId")
+      ).toBeTruthy();
+      expect(
+        error.paramMap.invalidTypeKeyMap.hasOwnProperty("$.categoryList")
+      ).toBeTruthy();
+      expect(error.dtoOut).toHaveProperty("uuAppErrorMap");
+      expect(error).toHaveProperty("response");
+      expect(error).toHaveProperty("status");
+      expect(error.status).toEqual(400);
     }
-
-    expect(response).toHaveProperty("paramMap");
-    expect(response.paramMap).toHaveProperty("invalidValueKeyMap");
-    expect(response.paramMap).toHaveProperty("missingKeyMap");
-    expect(
-      response.paramMap.missingKeyMap.hasOwnProperty("$.jokeId")
-    ).toBeTruthy();
-    expect(
-      response.paramMap.missingKeyMap.hasOwnProperty("$.categoryList")
-    ).toBeTruthy();
-    expect(response.dtoOut).toHaveProperty("uuAppErrorMap");
-    expect(response).toHaveProperty("response");
-    expect(response).toHaveProperty("status");
-    expect(response.status).toEqual(400);
   });
 
   test("A1", async () => {
     await TestHelper.login("Readers");
-    const unsupportedKeysWarn =
-      "uu-jokesg01-main/addJokeCategory/unsupportedKey";
+    const unsupportedKeysWarn = "uu-jokes-main/addJokeCategory/unsupportedKeys";
     let createCategoryResponse = await CreateCategory();
     let categoryId = createCategoryResponse.data.id;
     let result = await CreateJoke({}, categoryId);
@@ -166,7 +164,7 @@ describe("Test addJokeCategory command", () => {
     await TestHelper.login("Readers");
 
     const jokeDoesNotExistCode =
-      "uu-jokesg01-main/addJokeCategory/jokeDoesNotExist";
+      "uu-jokes-main/addJokeCategory/jokeDoesNotExist";
     const fakeJokeId = "5a33ba462eb85507bcf0c444";
 
     expect.assertions(2);
@@ -180,7 +178,7 @@ describe("Test addJokeCategory command", () => {
       });
     } catch (error) {
       expect(error.code).toBe(jokeDoesNotExistCode);
-      expect(error.status).toBe(500);
+      expect(error.status).toBe(400);
     }
   });
 });

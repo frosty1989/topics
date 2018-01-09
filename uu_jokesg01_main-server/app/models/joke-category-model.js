@@ -13,21 +13,19 @@ const WARNINGS = {
       code: `${Errors.AddJokeCategory.UC_CODE}unsupportedKeys`
     },
     categoryDoesNotExist: {
-      code: `${Errors.AddJokeCategory.UC_CODE}/categoryDoesNotExist`,
+      code: `${Errors.AddJokeCategory.UC_CODE}categoryDoesNotExist`,
       message: "Category does not exist."
     },
     jokeCategoryAlreadyExists: {
-      code: `${Errors.AddJokeCategory.UC_CODE}/jokeCategoryAlreadyExists`,
+      code: `${Errors.AddJokeCategory.UC_CODE}jokeCategoryAlreadyExists`,
       message: "uuObject jokeCategory already exists."
     }
   },
   removeJokeCategory: {
-    unsupportedKeys: {
-      code: `${Errors.RemoveJokeCategory.UC_CODE}unsupportedKeys`
-    }
+    code: `${Errors.RemoveJokeCategory.UC_CODE}unsupportedKeys`
   },
   listCategoryJokesUnsupportedKeys: {
-    code: `${Errors.ListCategoryJokes.UC_CODE}/unsupportedKeys`
+    code: `${Errors.ListCategoryJokes.UC_CODE}unsupportedKeys`
   }
 };
 
@@ -50,7 +48,7 @@ class JokeCategoryModel {
       dtoIn,
       validationResult,
       WARNINGS.addJokeCategory.unsupportedKeys.code,
-      Errors.AddJokeCategory.InvalidDtoIn
+      Errors.AddJokeCategory.InvalidDtoInError
     );
     let dtoOut = { categoryList: [] };
     let foundJoke;
@@ -142,8 +140,9 @@ class JokeCategoryModel {
     let uuAppErrorMap = ValidationHelper.processValidationResult(
       dtoIn,
       validationResult,
-      WARNINGS.removeJokeCategory.unsupportedKeys.code,
-      Errors.RemoveJokeCategory.InvalidDtoIn
+      {},
+      WARNINGS.removeJokeCategory.code,
+      Errors.RemoveJokeCategory.InvalidDtoInError
     );
     let dtoOut = {};
 

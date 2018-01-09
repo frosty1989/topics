@@ -75,7 +75,7 @@ describe("Test deleteCategory command", () => {
     await TestHelper.login("Readers");
 
     const relatedJokesExist =
-      "uu-jokesg01-main/deleteCategory/relatedJokesExist";
+      "uu-jokes-main/deleteCategory/relatedJokesExist";
     let category = await CreateCategory({
       name: "Category 1",
       desc: "Category 1 desc"
@@ -103,7 +103,7 @@ describe("Test deleteCategory command", () => {
         forceDelete: false
       });
     } catch (error) {
-      expect(error.status).toBe(500);
+      expect(error.status).toBe(400);
       expect(error.code).toBe(relatedJokesExist);
     }
   });
@@ -119,15 +119,15 @@ describe("Test deleteCategory command", () => {
       forceDelete: true,
       unsupportedKey: "unsupportedValue"
     };
-    let unsuportedKey = "uu-jokesg01-main/deleteCategory/unsupportedKey";
+    let unsupportedKey = "uu-jokes-main/deleteCategory/unsupportedKeys";
     let response = await TestHelper.executePostCommand("deleteCategory", dtoIn);
     expect(response.status).toEqual(200);
-    expect("warning").toEqual(response.data.uuAppErrorMap[unsuportedKey].type);
+    expect("warning").toEqual(response.data.uuAppErrorMap[unsupportedKey].type);
     expect("DtoIn contains unsupported keys.").toEqual(
-      response.data.uuAppErrorMap[unsuportedKey].message
+      response.data.uuAppErrorMap[unsupportedKey].message
     );
     let invalidData =
-      response.data.uuAppErrorMap[unsuportedKey].paramMap[
+      response.data.uuAppErrorMap[unsupportedKey].paramMap[
         "unsupportedKeyList"
       ][0];
     expect(invalidData).toEqual("$.unsupportedKey");
@@ -163,9 +163,9 @@ describe("Test deleteCategory command", () => {
     } catch (error) {
       expect(error).toHaveProperty("id");
       expect(error).toHaveProperty("status");
-      expect(error.status).toEqual(500);
+      expect(error.status).toEqual(400);
       expect(error.code).toEqual(
-        "uu-jokesg01-main/deleteCategory/relatedJokesExist"
+        "uu-jokes-main/deleteCategory/relatedJokesExist"
       );
       expect(error).toBeInstanceOf(Object);
       expect(error).toHaveProperty("response");

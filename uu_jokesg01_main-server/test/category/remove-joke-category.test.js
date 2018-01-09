@@ -61,7 +61,7 @@ describe("Test removeJokeCategory command", () => {
     let response = await TestHelper.executePostCommand("removeJokeCategory", {
       jokeId: jokeId,
       categoryList: categories,
-      invalid: "invalid"
+      unsupportedKey: "unsupportedValue"
     });
     expect(response.status).toEqual(200);
     expect(typeof response.data.uuAppErrorMap).toBe("object");
