@@ -158,10 +158,10 @@ _Note that only one NPM repository can be configured at the same time. Plus4u re
 
     POST: http://localhost:6221/uu-demoappg01-main/00000000000000000000000000000000-11111111111111111111111111111111/sys/setProfile
     Request body:
-    {
-        "code": "Guests",
-        "roleUri": "urn:uu:GGALL"
-    }
+      {
+          "code": "Guests",
+          "roleUri": "urn:uu:GGALL"
+      }
     Request sets all users as Guests for public rights.
 
 ## 3. Test functionality
