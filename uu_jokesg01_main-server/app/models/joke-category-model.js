@@ -128,8 +128,6 @@ class JokeCategoryModel {
     );
     let dtoOut = {};
 
-    console.log("error map: ", uuAppErrorMap);
-
     //HDS 2
     for (let index = 0; index < dtoIn.categoryList.length; index++) {
       const categoryId = dtoIn.categoryList[index];

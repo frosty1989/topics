@@ -108,6 +108,8 @@ class JokeModel {
               }
             );
             continue;
+          } else {
+            validCategories.push(categoryId);
           }
         } catch (err) {
           //A4
@@ -129,7 +131,6 @@ class JokeModel {
             jokeId: dtoOut.id.toString(),
             categoryId: categoryId
           });
-          validCategories.push(categoryId);
         } catch (e) {
           //A6
           throw new Errors.CreateJoke.JokeCategoryDaoCreateFailed({ uuAppErrorMap }, e);
