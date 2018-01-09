@@ -44,6 +44,7 @@ class CategoryModel {
     dtoIn.awid = awid;
     let dtoOut;
     try {
+      //HDS 2
       dtoOut = await this.dao.create(dtoIn);
     } catch (e) {
       // A3
@@ -57,11 +58,10 @@ class CategoryModel {
       // A4
       throw new Errors.CreateCategory.CategoryDaoCreateFailed(
         { uuAppErrorMap },
-        null,
         e
       );
     }
-
+    // HDS 3
     dtoOut.uuAppErrorMap = uuAppErrorMap;
     return dtoOut;
   }
@@ -71,6 +71,7 @@ class CategoryModel {
       "updateCategoryDtoInType",
       dtoIn
     );
+    //HDS 1.3 //A2
     let uuAppErrorMap = ValidationHelper.processValidationResult(
       dtoIn,
       validationResult,
@@ -84,6 +85,7 @@ class CategoryModel {
     uuObject.awid = awid;
 
     try {
+      //HDS 2
       dtoOut = await this.dao.update(uuObject);
     } catch (e) {
       // A3
@@ -97,7 +99,6 @@ class CategoryModel {
       // A4
       throw new Errors.UpdateCategory.CategoryDaoUpdateFailed(
         { uuAppErrorMap },
-        null,
         e
       );
     }
@@ -121,36 +122,38 @@ class CategoryModel {
     let dtoOut = {};
     let foundJokeCategories;
     const JokeCategoryModel = require("./joke-category-model");
-    // HDS 4 // A6
+    // HDS 3
     if (dtoIn.forceDelete) {
       try {
+        //HDS 3.1
         await JokeCategoryModel.dao.deleteByCategory(awid, dtoIn.id);
       } catch (e) {
-        throw new Errors.DeleteCategory.CategoryDaoDeleteFailed(
+        //A5
+        throw new Errors.DeleteCategory.JokeCategoryDaoDeleteByCategoryFailed(
           { uuAppErrorMap },
-          null,
           e
         );
       }
     } else {
-      // HDS 2.1 // A3
+      //HDS 2
       try {
+        // HDS 2.1
         foundJokeCategories = await JokeCategoryModel.dao.listByCategory(
           awid,
           dtoIn.id
         );
       } catch (error) {
+        //A3
         throw new Errors.DeleteCategory.JokeCategoryDaoListByCategoryFailed(
           { uuAppErrorMap },
-          null,
           error
         );
       }
-      // HDS 2.1 // A4
+      // HDS 2.1
       if (foundJokeCategories.itemList.length > 0) {
+        // A4
         throw new Errors.DeleteCategory.RelatedJokesExist(
           { uuAppErrorMap },
-          null,
           {
             relatedJokes: foundJokeCategories.itemList
           }
@@ -158,7 +161,16 @@ class CategoryModel {
       }
     }
 
-    await this.dao.remove(awid, dtoIn.id);
+    try {
+      //HDS 4
+      await this.dao.remove(awid, dtoIn.id);
+    } catch (e) {
+      //A6
+      throw new Errors.DeleteCategory.CategoryDaoDeleteFailed(
+        { uuAppErrorMap },
+        e
+      );
+    }
 
     dtoOut.uuAppErrorMap = uuAppErrorMap;
 
@@ -170,6 +182,7 @@ class CategoryModel {
       "listCategoriesDtoInType",
       dtoIn
     );
+    // HDS 1.3 // A2
     let uuAppErrorMap = ValidationHelper.processValidationResult(
       dtoIn,
       validationResult,
@@ -186,15 +199,16 @@ class CategoryModel {
 
     let dtoOut;
     try {
+      // HDS 2
       dtoOut = await this.dao.list(awid, dtoIn.pageInfo);
     } catch (e) {
+      // A3
       throw new Errors.ListCategories.CategoryDaoListFailed(
         { uuAppErrorMap },
-        null,
         e
       );
     }
-
+    // HDS 3
     dtoOut = dtoOut || {};
     dtoOut.uuAppErrorMap = uuAppErrorMap;
     return dtoOut;
