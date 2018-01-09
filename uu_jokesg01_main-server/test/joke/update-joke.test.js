@@ -29,6 +29,7 @@ describe("Test updateJoke command", () => {
 
     expect(response.status).toBe(200);
     expect(response.data).toBeDefined();
+    expect(response.data.awid).toBe(TestHelper.awid);
     expect(response.data.uuAppErrorMap).toBeDefined();
     expect(response.data.uuAppErrorMap).toEqual({});
     expect(response.data.name).toBeDefined();
@@ -38,8 +39,6 @@ describe("Test updateJoke command", () => {
   });
 
   test("A1", async () => {
-    await TestHelper.login("Readers");
-
     let joke = await CreateJoke({
       name: "Joke to be updated later...",
       text: "Joke text that will be updated later..."
@@ -50,7 +49,7 @@ describe("Test updateJoke command", () => {
       name: newJokeName,
       unrealKey: "Unreal value"
     });
-    let unsupportedKeysCode = "uu-jokesg01-main/updateJoke/unsupportedKey";
+    let unsupportedKeysCode = "uu-jokes-main/updateJoke/unsupportedKeys";
 
     expect(response.status).toBe(200);
     expect(response.data).toBeDefined();
@@ -81,7 +80,7 @@ describe("Test updateJoke command", () => {
       expect(error).toHaveProperty("status");
       expect(error.status).toBe(400);
       expect(error).toHaveProperty("code");
-      expect(error.code).toBe("uu-jokesg01-main/updateJoke/invalidDtoIn");
+      expect(error.code).toBe("uu-jokes-main/updateJoke/invalidDtoIn");
       expect(error).toHaveProperty("paramMap");
       expect(error.paramMap).toBeDefined();
       expect(error.paramMap).toHaveProperty("invalidValueKeyMap");
@@ -98,32 +97,27 @@ describe("Test updateJoke command", () => {
   });
 
   test("A5", async () => {
-    await TestHelper.login("Readers");
+    const fakeJokeId = "5a3a5c1b85d5a73f585c2d52";
+    const jokeDoesNotExistCode = "uu-jokes-main/updateJoke/jokeDoesNotExist";
 
-    let fakeJokeId = "5a3a5c1b85d5a73f585c2d52";
-    let response = await TestHelper.executePostCommand(CMD, {
-      id: fakeJokeId,
-      name: "Very funny joke",
-      text: "Very funny text of very funny joke"
-    });
-    let jokeDoesNotExistCode = "uu-jokesg01-main/updateJoke/jokeDoesNotExist";
+    expect.assertions(8);
 
-    expect(response.status).toBe(200);
-    expect(response.data).toBeDefined();
-    expect(response.data.uuAppErrorMap).toBeDefined();
-    expect(response.data.uuAppErrorMap).toHaveProperty(jokeDoesNotExistCode);
-    expect(response.data.uuAppErrorMap[jokeDoesNotExistCode]).toBeDefined();
-    expect(response.data.uuAppErrorMap[jokeDoesNotExistCode]).toHaveProperty(
-      "paramMap"
-    );
-    expect(
-      response.data.uuAppErrorMap[jokeDoesNotExistCode].paramMap
-    ).toBeDefined();
-    expect(
-      response.data.uuAppErrorMap[jokeDoesNotExistCode].paramMap
-    ).toHaveProperty("jokeId");
-    expect(
-      response.data.uuAppErrorMap[jokeDoesNotExistCode].paramMap.jokeId
-    ).toBe(fakeJokeId);
+    try {
+      await TestHelper.login("Readers");
+      await TestHelper.executePostCommand(CMD, {
+        id: fakeJokeId,
+        name: "Very funny joke",
+        text: "Very funny text of very funny joke"
+      });
+    } catch (e) {
+      expect(e.status).toBe(500);
+      expect(e.dtoOut.uuAppErrorMap[jokeDoesNotExistCode]).toBeDefined();
+      expect(e.dtoOut.uuAppErrorMap[jokeDoesNotExistCode].type).toBeDefined();
+      expect(e.dtoOut.uuAppErrorMap[jokeDoesNotExistCode].type).toEqual("warning");
+      expect(e.dtoOut.uuAppErrorMap[jokeDoesNotExistCode].paramMap).toBeDefined();
+      expect(e.dtoOut.uuAppErrorMap[jokeDoesNotExistCode].paramMap).toBeInstanceOf(Object);
+      expect(e.dtoOut.uuAppErrorMap[jokeDoesNotExistCode].paramMap.jokeId).toBeDefined();
+      expect(e.dtoOut.uuAppErrorMap[jokeDoesNotExistCode].paramMap.jokeId).toEqual(fakeJokeId);
+    }
   });
 });

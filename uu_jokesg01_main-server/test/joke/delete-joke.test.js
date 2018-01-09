@@ -58,7 +58,7 @@ describe("Test deleteJoke command", () => {
       id: joke.data.id,
       unsupportedKey: "Unsupported value"
     });
-    let unsupportedKeyCode = "uu-jokesg01-main/deleteJoke/unsupportedKey";
+    let unsupportedKeyCode = "uu-jokes-main/deleteJoke/unsupportedKeys";
 
     expect(response.status).toBeDefined();
     expect(response.status).toEqual(200);
@@ -88,7 +88,7 @@ describe("Test deleteJoke command", () => {
     } catch (error) {
       expect(error.status).toEqual(400);
       expect(error.code).toBeDefined();
-      expect(error.code).toBe("uu-jokesg01-main/deleteJoke/invalidDtoIn");
+      expect(error.code).toBe("uu-jokes-main/deleteJoke/invalidDtoIn");
       expect(error.response).toBeDefined();
       expect(error.paramMap).toBeDefined();
       expect(error.paramMap.invalidValueKeyMap).toBeDefined();

@@ -16,57 +16,73 @@ afterEach(async done => {
 
 describe("Test createJoke command", () => {
   test("HDS", async () => {
-    let createCategoryResponse = await CreateCategory();
-    let categoryId = createCategoryResponse.data.id;
-    let result = await CreateJoke({}, categoryId);
+    const category1 = await CreateCategory({ name: "Category 1", desc: "Desc" });
+    const category2 = await CreateCategory({ name: "Category 2", desc: "Desc" });
+    const result = await CreateJoke({
+      name: "Joke",
+      text: "Text",
+      categoryList: [category1.data.id, category2.data.id]
+    });
 
     expect(result.status).toEqual(200);
     expect(result.data).toBeDefined();
     expect(result.data).toBeInstanceOf(Object);
     expect(result.data.id).toBeDefined();
     expect(typeof result.data.id === "string").toBeTruthy();
+    expect(result.data.name).toBeDefined();
+    expect(result.data.text).toBeDefined();
+    expect(result.data.awid).toBeDefined();
+    expect(result.data.awid).toBe(TestHelper.awid);
+    expect(result.data.averageRating).toBeDefined();
+    expect(result.data.ratingCount).toBeDefined();
     expect(result.data.uuAppErrorMap).toBeDefined();
     expect(result.data.uuAppErrorMap).toBeInstanceOf(Object);
     expect(result.data.uuAppErrorMap).toMatchObject({});
     expect(result.data.categoryList).toBeDefined();
     expect(result.data.categoryList).toBeInstanceOf(Array);
-    expect(result.data.categoryList).toContain(categoryId);
+    expect(result.data.categoryList).toEqual([category1.data.id, category2.data.id]);
   });
 
   test("A1", async () => {
-    let result = await CreateJoke({ unsupportedKey: "unsupportedValue" });
-    const unsupportedKeysWarn = "uu-jokesg01-main/createJoke/unsupportedKey";
+    const result = await CreateJoke({ unsupportedKey: "unsupportedValue" });
+    const unsupportedKeys = "uu-jokes-main/createJoke/unsupportedKeys";
 
     expect(result.status).toEqual(200);
     expect(result.data).toBeDefined();
     expect(result.data).toBeInstanceOf(Object);
-    expect(result.data).toHaveProperty("id");
-    expect(result.data).toHaveProperty("uuAppErrorMap");
+    expect(result.data.id).toBeDefined();
+    expect(result.data.uuAppErrorMap).toBeDefined();
     expect(result.data.uuAppErrorMap).toBeInstanceOf(Object);
-    expect(result.data.uuAppErrorMap).toHaveProperty(unsupportedKeysWarn);
-    expect(result.data.uuAppErrorMap[unsupportedKeysWarn]).toBeInstanceOf(
-      Object
-    );
+    expect(result.data.uuAppErrorMap[unsupportedKeys]).toBeDefined();
+    expect(result.data.uuAppErrorMap[unsupportedKeys]).toBeInstanceOf(Object);
+    expect(result.data.uuAppErrorMap[unsupportedKeys].type).toBeDefined();
+    expect(result.data.uuAppErrorMap[unsupportedKeys].type).toEqual("warning");
+    expect(result.data.uuAppErrorMap[unsupportedKeys].paramMap).toBeDefined();
+    expect(result.data.uuAppErrorMap[unsupportedKeys].paramMap["unsupportedKeyList"]).toBeDefined();
+    expect(result.data.uuAppErrorMap[unsupportedKeys].paramMap["unsupportedKeyList"]).toContain("$.unsupportedKey");
   });
 
   test("A2", async () => {
-    expect.assertions(9);
+    expect.assertions(13);
+    const invalidDtoIn = "uu-jokes-main/createJoke/invalidDtoIn";
+
     try {
+      await TestHelper.login("Readers");
       await TestHelper.executePostCommand("createJoke", {});
-    } catch (error) {
-      expect(error).toHaveProperty("paramMap");
-      expect(error.paramMap).toHaveProperty("invalidValueKeyMap");
-      expect(error.paramMap).toHaveProperty("missingKeyMap");
-      expect(
-        error.paramMap.missingKeyMap.hasOwnProperty("$.name")
-      ).toBeTruthy();
-      expect(
-        error.paramMap.missingKeyMap.hasOwnProperty("$.text")
-      ).toBeTruthy();
-      expect(error.dtoOut).toHaveProperty("uuAppErrorMap");
-      expect(error).toHaveProperty("response");
-      expect(error).toHaveProperty("status");
-      expect(error.status).toEqual(400);
+    } catch (e) {
+      expect(e.status).toEqual(400);
+      expect(e.code).toEqual(invalidDtoIn);
+      expect(e.paramMap).toBeDefined();
+      expect(e.paramMap.invalidValueKeyMap).toBeDefined();
+      expect(e.paramMap.invalidValueKeyMap).toBeInstanceOf(Object);
+      expect(e.paramMap.invalidValueKeyMap["$"]).toBeDefined();
+      expect(e.paramMap.invalidValueKeyMap["$"]).toBeInstanceOf(Object);
+      expect(e.paramMap.missingKeyMap).toBeDefined();
+      expect(e.paramMap.missingKeyMap).toBeInstanceOf(Object);
+      expect(e.paramMap.missingKeyMap["$.name"]).toBeDefined();
+      expect(e.paramMap.missingKeyMap["$.name"]).toBeInstanceOf(Object);
+      expect(e.paramMap.missingKeyMap["$.text"]).toBeDefined();
+      expect(e.paramMap.missingKeyMap["$.text"]).toBeInstanceOf(Object);
     }
   });
 
@@ -84,16 +100,17 @@ describe("Test createJoke command", () => {
   test("A5", async () => {
     let fakeCategoryId = "5a3a5bfe85d5a73f585c2d50";
     let result = await CreateJoke({
-      name: "BAD joke",
-      text: "good text",
+      name: "Joke",
+      text: "Text",
       categoryList: [fakeCategoryId]
     });
-    let categoryDoesNotExist =
-      "uu-jokesg01-main/createJoke/categoryDoesNotExist";
+    let categoryDoesNotExist = "uu-jokes-main/createJoke/categoryDoesNotExist";
 
     expect(result.status).toEqual(200);
     expect(result.data).toBeDefined();
     expect(result.data).toBeInstanceOf(Object);
+    expect(result.data.categoryList).toBeDefined();
+    expect(result.data.categoryList).toEqual([]);
     expect(result.data).toHaveProperty("id");
     expect(result.data).toHaveProperty("uuAppErrorMap");
     expect(result.data.uuAppErrorMap).toBeInstanceOf(Object);
@@ -101,12 +118,14 @@ describe("Test createJoke command", () => {
     expect(result.data.uuAppErrorMap[categoryDoesNotExist]).toBeInstanceOf(
       Object
     );
+    expect(result.data.uuAppErrorMap[categoryDoesNotExist].type).toBeDefined();
+    expect(result.data.uuAppErrorMap[categoryDoesNotExist].type).toEqual("warning");
     expect(
       result.data.uuAppErrorMap[categoryDoesNotExist].paramMap
     ).toBeDefined();
     expect(
-      result.data.uuAppErrorMap[categoryDoesNotExist].paramMap
-    ).toHaveProperty("categoryId");
+      result.data.uuAppErrorMap[categoryDoesNotExist].paramMap.categoryId
+    ).toBeDefined();
     expect(
       result.data.uuAppErrorMap[categoryDoesNotExist].paramMap.categoryId
     ).toEqual(fakeCategoryId);
