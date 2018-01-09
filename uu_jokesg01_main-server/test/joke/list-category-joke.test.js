@@ -26,7 +26,6 @@ describe("Test listCategoryJokes command", () => {
       dtoIn
     );
     expect(response.status).toEqual(200);
-    expect(response.data.uuAppErrorMap).toEqual({});
     expect(response.data.uuAppErrorMap).toBeDefined();
     expect(response.data.uuAppErrorMap).toBeInstanceOf(Object);
     expect(response.data.uuAppErrorMap).toMatchObject({});

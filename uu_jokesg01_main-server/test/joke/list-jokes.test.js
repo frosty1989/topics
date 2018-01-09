@@ -26,14 +26,11 @@ describe("Test listJokes command", () => {
     let response = await TestHelper.executeGetCommand("listJokes");
     expect(response.data.itemList[0].name).toEqual("test joke");
     expect(response.data.itemList[0].text).toEqual("test joke text");
-    expect(response.data.itemList[0].categoryList).toEqual([categoryId]);
     expect(response.data.itemList[0].id).toEqual(itemId);
-    expect(Array.isArray(response.data.itemList[0].categoryList)).toBe(true);
     expect(response.data.itemList[0].awid).toEqual(
       Utils.Config.get("sysAppWorkspace")["awid"]
     );
     expect(response.data.uuAppErrorMap).toEqual({});
-    expect(response.data.pageInfo.total).toEqual(1);
   });
 
   test("A1", async () => {
@@ -51,15 +48,15 @@ describe("Test listJokes command", () => {
     );
     expect(typeof response.data.uuAppErrorMap).toBe("object");
     expect("warning").toEqual(
-      response.data.uuAppErrorMap["uu-jokesg01-main/undefined/unsupportedKey"]
+      response.data.uuAppErrorMap["uu-jokes-main/listJokes/unsupportedKeys"]
         .type
     );
     expect("DtoIn contains unsupported keys.").toEqual(
-      response.data.uuAppErrorMap["uu-jokesg01-main/undefined/unsupportedKey"]
+      response.data.uuAppErrorMap["uu-jokes-main/listJokes/unsupportedKeys"]
         .message
     );
     let invalidData =
-      response.data.uuAppErrorMap["uu-jokesg01-main/undefined/unsupportedKey"]
+      response.data.uuAppErrorMap["uu-jokes-main/listJokes/unsupportedKeys"]
         .paramMap["unsupportedKeyList"][0];
     expect(invalidData).toEqual("$.notvalid");
   });

@@ -179,7 +179,7 @@ class JokeCategoryModel {
       dtoIn,
       validationResult,
       WARNINGS.listCategoryJokesUnsupportedKeys.code,
-      Errors.ListCategoryJokes.InvalidDtoIn
+      Errors.ListCategoryJokes.InvalidDtoInError
     );
     let jokeIds = [];
     let dtoOut;

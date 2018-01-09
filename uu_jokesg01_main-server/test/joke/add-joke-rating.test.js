@@ -113,7 +113,7 @@ describe("Test addJokeRating command", () => {
     } catch (error) {
       expect(error.status).toBe(400);
       expect(error.code).toBeDefined();
-      expect(error.code).toBe("uu-jokesg01-main/addJokeRating/jokeDoesNotExist");
+      expect(error.code).toBe("uu-jokes-main/addJokeRating/jokeDoesNotExist");
     }
   });
 });
