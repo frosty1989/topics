@@ -8,19 +8,23 @@ const CategoryModel = require("./category-model");
 const Errors = require("../errors/joke-category-error");
 
 const WARNINGS = {
-  addJokeCategoryUnsupportedKeys: {
-    code: `${Errors.AddJokeCategory.UC_CODE}unsupportedKeys`
+  addJokeCategory: {
+    unsupportedKeys: {
+      code: `${Errors.AddJokeCategory.UC_CODE}unsupportedKeys`
+    },
+    categoryDoesNotExist: {
+      code: `${Errors.AddJokeCategory.UC_CODE}/categoryDoesNotExist`,
+      message: "Category does not exist."
+    },
+    jokeCategoryAlreadyExists: {
+      code: `${Errors.AddJokeCategory.UC_CODE}/jokeCategoryAlreadyExists`,
+      message: "uuObject jokeCategory already exists."
+    }
   },
-  removeJokeCategoryUnsupportedKeys: {
-    code: `${Errors.RemoveJokeCategory.UC_CODE}unsupportedKeys`
-  },
-  categoryDoesNotExist: {
-    code: `${Errors.AddJokeCategory.UC_CODE}/categoryDoesNotExist`,
-    message: "Category does not exist."
-  },
-  jokeCategoryAlreadyExists: {
-    code: `${Errors.AddJokeCategory.UC_CODE}/jokeCategoryAlreadyExists`,
-    message: "uuObject jokeCategory already exists."
+  removeJokeCategory: {
+    unsupportedKeys: {
+      code: `${Errors.RemoveJokeCategory.UC_CODE}unsupportedKeys`
+    }
   },
   listCategoryJokesUnsupportedKeys: {
     code: `${Errors.ListCategoryJokes.UC_CODE}/unsupportedKeys`
@@ -36,118 +40,110 @@ class JokeCategoryModel {
   }
 
   async addJokeCategory(awid, dtoIn) {
-    let validationResult = this.validator.validate(
-      "addJokeCategoryDtoInType",
-      dtoIn
-    );
+    //HDS 1
+    let validationResult = this.validator.validate("addJokeCategoryDtoInType", dtoIn);
+    //A1, A2
     let uuAppErrorMap = ValidationHelper.processValidationResult(
       dtoIn,
       validationResult,
-      WARNINGS.addJokeCategoryUnsupportedKeys.code,
+      WARNINGS.addJokeCategory.unsupportedKeys.code,
       Errors.AddJokeCategory.InvalidDtoIn
     );
-    let dtoOut = {
-      categoryList: []
-    };
+    let dtoOut = { categoryList: [] };
     let foundJoke;
 
     try {
+      //HDS 2
       foundJoke = await JokeModel.dao.get(awid, dtoIn.jokeId);
     } catch (e) {
+      //A3
       throw new Errors.AddJokeCategory.JokeDaoGetFailed({ uuAppErrorMap }, e);
     }
 
-    if (Object.keys(foundJoke).length === 0) {
-      throw new Errors.AddJokeCategory.JokeDoesNotExist(
-        { uuAppErrorMap },
-        {
-          jokeId: dtoIn.jokeId
-        }
-      );
+    if (foundJoke && !foundJoke.hasOwnProperty("id")) {
+      //A4
+      throw new Errors.AddJokeCategory.JokeDoesNotExist({ uuAppErrorMap }, { jokeId: dtoIn.jokeId });
     }
 
+    dtoOut.joke = foundJoke;
+
+    //HDS 3
     for (let index = 0; index < dtoIn.categoryList.length; index++) {
       const dtoInCategoryId = dtoIn.categoryList[index];
       let foundCategory;
 
       try {
+        //HDS 3.1
         foundCategory = await CategoryModel.dao.get(awid, dtoInCategoryId);
       } catch (err) {
-        throw new Errors.AddJokeCategory.CategoryDaoGetFailed(
-          { uuAppErrorMap },
-          err
-        );
+        //A5
+        throw new Errors.AddJokeCategory.CategoryDaoGetFailed({ uuAppErrorMap }, err);
       }
 
       if (Object.keys(foundCategory).length === 0) {
+        //A6
         ValidationHelper.addWarning(
           uuAppErrorMap,
-          WARNINGS.categoryDoesNotExist.code,
-          WARNINGS.categoryDoesNotExist.message,
-          {
-            categoryId: dtoInCategoryId
-          }
+          WARNINGS.addJokeCategory.categoryDoesNotExist.code,
+          WARNINGS.addJokeCategory.categoryDoesNotExist.message,
+          { categoryId: dtoInCategoryId }
         );
       } else {
         try {
-          await this.dao.create({
-            awid: awid,
-            jokeId: dtoIn.jokeId,
-            categoryId: dtoInCategoryId
-          });
+          //HDS 3.2
+          await this.dao.create({ awid: awid, jokeId: dtoIn.jokeId, categoryId: dtoInCategoryId });
           dtoOut.categoryList.push(dtoInCategoryId);
         } catch (e) {
           if (e.code === "uu-app-objectstore/duplicateKey") {
+            //A8
             ValidationHelper.addWarning(
               uuAppErrorMap,
-              WARNINGS.jokeCategoryAlreadyExists.code,
-              WARNINGS.jokeCategoryAlreadyExists.message,
-              {
-                jokeId: dtoIn.jokeId,
-                categoryId: foundCategory.data.id
-              }
+              WARNINGS.addJokeCategory.jokeCategoryAlreadyExists.code,
+              WARNINGS.addJokeCategory.jokeCategoryAlreadyExists.message,
+              { jokeId: dtoIn.jokeId, categoryId: foundCategory.id }
             );
           } else {
-            throw new Errors.AddJokeCategory.JokeCategoryDaoCreateFailed(
-              { uuAppErrorMap },
-              e
-            );
+            //A7
+            throw new Errors.AddJokeCategory.JokeCategoryDaoCreateFailed({ uuAppErrorMap }, e);
           }
         }
       }
     }
 
     dtoOut.uuAppErrorMap = uuAppErrorMap;
+
+    //HDS 4
     return dtoOut;
   }
 
   async removeJokeCategory(awid, dtoIn) {
-    let validationResult = this.validator.validate(
-      "removeJokeCategoryDtoInType",
-      dtoIn
-    );
+    //HDS 1
+    let validationResult = this.validator.validate("removeJokeCategoryDtoInType", dtoIn);
+    //A1, A2
     let uuAppErrorMap = ValidationHelper.processValidationResult(
       dtoIn,
       validationResult,
-      WARNINGS.removeJokeCategoryUnsupportedKeys,
+      WARNINGS.removeJokeCategory.unsupportedKeys.code,
       Errors.RemoveJokeCategory.InvalidDtoIn
     );
-
-    dtoIn.id = dtoIn.jokeId;
     let dtoOut = {};
-    try {
-      await this.dao.deleteByJokeAndCategory(
-        awid,
-        dtoIn.jokeId,
-        dtoIn.categoryList
-      );
-    } catch (e) {
-      throw new Errors.RemoveJokeCategory.JokeCategoryDaoDeleteByJokeAndCategoryFailed(
-        { uuAppErrorMap },
-        e
-      );
+
+    //HDS 2
+    for (let index = 0; index < dtoIn.categoryList.length; index++) {
+      const categoryId = dtoIn.categoryList[index];
+
+      try {
+        //HDS 2.1
+        await this.dao.deleteByJokeAndCategory(awid, dtoIn.jokeId, categoryId);
+      } catch (e) {
+        //A3
+        throw new Errors.RemoveJokeCategory.JokeCategoryDaoDeleteByJokeAndCategoryFailed({ uuAppErrorMap }, e);
+      }
     }
+
     dtoOut.uuAppErrorMap = uuAppErrorMap;
+
+    //HDS3
     return dtoOut;
   }
 
@@ -166,7 +162,8 @@ class JokeCategoryModel {
 
     try {
       //HDS 2
-      jokeIds = await this.dao.listByCategory(awid, dtoIn.categoryId).itemList.map(x => x.jokeId);
+      let listByCategory = await this.dao.listByCategory(awid, dtoIn.categoryId);
+      jokeIds = listByCategory.itemList.map(x => x.jokeId);
     } catch (e) {
       //A3
       throw new Errors.ListCategoryJokes.JokeCategoryDaoListByCategoryFailed({ uuAppErrorMap }, e);

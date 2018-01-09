@@ -2,31 +2,31 @@
 
 const UuJokesError = require("./uu-jokes-error");
 
-let init = {
-  code: "init",
-  invalidDtoIn: class extends UuJokesError {
+const Init = {
+  UC_CODE: `${UuJokesError.ERROR_PREFIX}init`,
+  InvalidDtoIn: class extends UuJokesError {
     constructor() {
       super(...arguments);
-      this.code = `${init.code}/invalidDtoIn`;
+      this.code = `${Init.UC_CODE}/invalidDtoIn`;
       this.message = "DtoIn is not valid.";
     }
   },
-  schemaDaoCreateSchemaFailed: class extends UuJokesError {
+  SchemaDaoCreateSchemaFailed: class extends UuJokesError {
     constructor() {
       super(...arguments);
-      this.code = `${init.code}/schemaDaoCreateSchemaFailed`;
+      this.code = `${Init.UC_CODE}/schemaDaoCreateSchemaFailed`;
       this.message = "Create schema by Dao createSchema failed.";
     }
   },
-  sysSetProfileFailed: class extends UuJokesError {
+  SysSetProfileFailed: class extends UuJokesError {
     constructor() {
       super(...arguments);
-      this.code = `${init.code}/sys/setProfileFailed`;
+      this.code = `${Init.UC_CODE}/sys/setProfileFailed`;
       this.message = "Create uuAppProfile failed.";
     }
   }
 };
 
 module.exports = {
-  init
+  Init
 };

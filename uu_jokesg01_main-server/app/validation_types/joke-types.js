@@ -18,10 +18,6 @@ const listJokesDtoInType = shape({
   })
 });
 
-const listCategoryJokesDtoInType = shape({
-  categoryId: mongoId().isRequired()
-});
-
 const updateJokeDtoInType = shape({
   id: mongoId().isRequired(),
   name: uu5String(255),

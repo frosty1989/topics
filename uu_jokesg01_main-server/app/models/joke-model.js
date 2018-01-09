@@ -75,6 +75,7 @@ class JokeModel {
     //HDS 1.4
     dtoIn.averageRating = 0;
     dtoIn.ratingCount = 0;
+    delete dtoIn.categoryList;
 
     try {
       //HDS2
@@ -96,7 +97,7 @@ class JokeModel {
           const CategoryModel = require("./category-model");
           let category = await CategoryModel.dao.get(awid, categoryId);
 
-          if (!category.hasOwnProperty("data") && !category.data.hasOwnProperty("id")) {
+          if (category && !category.hasOwnProperty("id")) {
             //A5
             ValidationHelper.addWarning(
               uuAppErrorMap,
@@ -107,6 +108,8 @@ class JokeModel {
               }
             );
             continue;
+          } else {
+            validCategories.push(categoryId);
           }
         } catch (err) {
           //A4
@@ -125,10 +128,9 @@ class JokeModel {
           //HDS 3.2
           await JokeCategoryModel.dao.create({
             awid: awid,
-            jokeId: dtoOut.data.id,
+            jokeId: dtoOut.id.toString(),
             categoryId: categoryId
           });
-          validCategories.push(categoryId);
         } catch (e) {
           //A6
           throw new Errors.CreateJoke.JokeCategoryDaoCreateFailed({ uuAppErrorMap }, e);
@@ -159,7 +161,7 @@ class JokeModel {
     try {
       let foundJoke = await this.dao.get(awid, dtoIn.id);
 
-      if (!foundJoke.hasOwnProperty("data") && !foundJoke.data.hasOwnProperty("id")) {
+      if (foundJoke && !foundJoke.hasOwnProperty("id")) {
         //A5
         ValidationHelper.addWarning(
           uuAppErrorMap,
@@ -263,7 +265,7 @@ class JokeModel {
     try {
       const JokeCategoryModel = require("./joke-category-model");
       //HDS 3
-      const categories = JokeCategoryModel.dao.listByJoke(awid, dtoIn.id);
+      const categories = await JokeCategoryModel.dao.listByJoke(awid, dtoIn.id);
 
       dtoOut.categoryList = categories.itemList.map(x => x.id);
     } catch (e) {
