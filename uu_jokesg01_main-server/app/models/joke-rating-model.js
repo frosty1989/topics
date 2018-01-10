@@ -23,7 +23,7 @@ class JokeRatingModel {
       dtoIn,
       validationResult,
       WARNINGS.createRating.code,
-      Errors.AddJokeRating.invalidDtoIn
+      Errors.AddJokeRating.InvalidDtoIn
     );
     let joke;
     let userVote;

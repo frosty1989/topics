@@ -38,16 +38,12 @@ describe("Test addJokeRating command", () => {
   });
 
   test("A1", async () => {
-    let joke = await CreateJoke({
+    const joke = await CreateJoke({
       name: "Joke",
       text: "Text"
     });
-
-    await TestHelper.login("Readers");
-
-    const unsupportedKeysWarnCode =
-      "uu-jokesg01-main/addJokeRating/unsupportedKey";
-    let result = await TestHelper.executePostCommand(CMD, {
+    const unsupportedKeysWarnCode = "uu-jokes-main/addJokeRating/unsupportedKeys";
+    const result = await TestHelper.executePostCommand(CMD, {
       id: joke.data.id,
       rating: 5,
       unsupportedKey: "Unsupported value"
@@ -72,15 +68,15 @@ describe("Test addJokeRating command", () => {
   });
 
   test("A2", async () => {
-    await TestHelper.login("Readers");
     expect.assertions(13);
 
     try {
+      await TestHelper.login("Readers");
       await TestHelper.executePostCommand(CMD, {});
     } catch (error) {
       expect(error.status).toEqual(400);
       expect(error.code).toBeDefined();
-      expect(error.code).toBe("uu-jokesg01-main/addJokeRating/invalidDtoIn");
+      expect(error.code).toBe("uu-jokes-main/addJokeRating/invalidDtoIn");
       expect(error.paramMap).toBeDefined();
       expect(error.paramMap).toBeInstanceOf(Object);
       expect(error.paramMap.invalidValueKeyMap).toBeDefined();
@@ -101,15 +97,13 @@ describe("Test addJokeRating command", () => {
   });
 
   test("A4", async () => {
-    await TestHelper.login("Readers");
     expect.assertions(3);
-    const fakeJokeId = "5a3a5bfe85d5a73f585c2d50";
 
     try {
-      await TestHelper.executePostCommand(CMD, {
-        id: fakeJokeId,
-        rating: 5
-      });
+      const fakeJokeId = "5a3a5bfe85d5a73f585c2d50";
+
+      await TestHelper.login("Readers");
+      await TestHelper.executePostCommand(CMD, { id: fakeJokeId, rating: 5 });
     } catch (error) {
       expect(error.status).toBe(400);
       expect(error.code).toBeDefined();

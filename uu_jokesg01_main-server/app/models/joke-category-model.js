@@ -120,7 +120,7 @@ class JokeCategoryModel {
       dtoIn,
       validationResult,
       WARNINGS.removeJokeCategory.code,
-      Errors.RemoveJokeCategory.InvalidDtoInError
+      Errors.RemoveJokeCategory.InvalidDtoIn
     );
     let dtoOut = {};
 
