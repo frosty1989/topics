@@ -17,7 +17,6 @@ let CreateJoke = {
       super(...arguments);
       this.code = `${CreateJoke.UC_CODE}jokeDaoCreateFailed`;
       this.message = "Create joke by joke Dao create failed.";
-      this.status = 500;
     }
   },
 
@@ -26,7 +25,6 @@ let CreateJoke = {
       super(...arguments);
       this.code = `${CreateJoke.UC_CODE}jokeCategoryDaoCreateFailed`;
       this.message = "Create jokeCategory by jokeCategory Dao create failed.";
-      this.status = 500;
     }
   }
 };
@@ -46,7 +44,6 @@ let GetJoke = {
       super(...arguments);
       this.code = `${GetJoke.UC_CODE}jokeDaoGetFailed`;
       this.message = "Get joke by joke Dao get failed.";
-      this.status = 500;
     }
   },
 
@@ -63,7 +60,6 @@ let GetJoke = {
       super(...arguments);
       this.code = `${GetJoke.UC_CODE}jokeCategoryDaoListByJokeFailed`;
       this.message = "List jokeCategoty by joke Dao listByCategory failed.";
-      this.status = 500;
     }
   }
 };
@@ -83,7 +79,6 @@ let ListJokes = {
       super(...arguments);
       this.code = `${ListJokes.UC_CODE}jokeDaoListFailed`;
       this.message = "List jokes by joke Dao list failed.";
-      this.status = 500;
     }
   }
 };
@@ -103,7 +98,6 @@ let DeleteJoke = {
       super(...arguments);
       this.code = `${DeleteJoke.UC_CODE}jokeRatingDaoDeleteByJokeFailed`;
       this.message = "Delete jokeRating by Dao deleteByJoke failed.";
-      this.status = 500;
     }
   },
 
@@ -112,7 +106,6 @@ let DeleteJoke = {
       super(...arguments);
       this.code = `${DeleteJoke.UC_CODE}jokeCategoryDaoDeleteByJokeFailed`;
       this.message = "Delete jokeCategory by Dao deleteByJoke failed.";
-      this.status = 500;
     }
   },
 
@@ -121,7 +114,6 @@ let DeleteJoke = {
       super(...arguments);
       this.code = `${DeleteJoke.UC_CODE}jokeDaoDeleteFailed`;
       this.message = "Delete joke by Dao delete failed.";
-      this.status = 500;
     }
   }
 };
@@ -141,7 +133,6 @@ let UpdateJoke = {
       super(...arguments);
       this.code = `${UpdateJoke.UC_CODE}jokeDaoUpdateFailed`;
       this.message = "Update joke by joke Dao update failed.";
-      this.status = 500;
     }
   },
 
@@ -150,7 +141,6 @@ let UpdateJoke = {
       super(...arguments);
       this.code = `${UpdateJoke.UC_CODE}jokeDaoGetFailed`;
       this.message = "Get joke by joke Dao get failed.";
-      this.status = 500;
     }
   }
 };

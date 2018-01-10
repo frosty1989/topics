@@ -65,7 +65,6 @@ const RemoveJokeCategory = {
       super(...arguments);
       this.code = `${RemoveJokeCategory.UC_CODE}jokeCategoryDaoDeleteByJokeAndCategoryFailed`;
       this.message = "Delete jokeCategory by Dao deleteByJokeAndCategory failed.";
-      this.status = 500;
     }
   }
 };
@@ -85,7 +84,6 @@ const ListCategoryJokes = {
       super(...arguments);
       this.code = `${ListCategoryJokes.UC_CODE}jokeCategoryDaoListByCategoryFailed`;
       this.message = "List jokeCategory by jokeCategory Dao listByCategory failed.";
-      this.status = 500;
     }
   },
 
@@ -94,7 +92,6 @@ const ListCategoryJokes = {
       super(...arguments);
       this.code = `${ListCategoryJokes.UC_CODE}jokeDaoListByIdsFailed`;
       this.message = "List jokes by joke Dao listByIds failed.";
-      this.status = 500;
     }
   }
 };

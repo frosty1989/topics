@@ -26,7 +26,6 @@ const CreateCategory = {
       super(...arguments);
       this.code = `${CreateCategory.UC_CODE}categoryDaoCreateFailed`;
       this.message = "Create category by category Dao create failed.";
-      this.status = 500;
     }
   }
 };
@@ -46,7 +45,6 @@ const ListCategories = {
       super(...arguments);
       this.code = `${ListCategories.UC_CODE}categoryDaoListFailed`;
       this.message = "List categories by category Dao list failed.";
-      this.status = 500;
     }
   }
 };
@@ -68,7 +66,6 @@ const DeleteCategory = {
         DeleteCategory.UC_CODE
       }jokeCategoryDaoListByCategoryFailed`;
       this.message = "List jokeCategory by Dao listByCategory failed.";
-      this.status = 500;
     }
   },
 
@@ -87,7 +84,6 @@ const DeleteCategory = {
         DeleteCategory.UC_CODE
       }jokeCategoryDaoDeleteByCategoryFailed`;
       this.message = "Delete jokeCategory by Dao deleteByCategory failed.";
-      this.status = 500;
     }
   },
 
@@ -96,7 +92,6 @@ const DeleteCategory = {
       super(...arguments);
       this.code = `${DeleteCategory.UC_CODE}categoryDaoDeleteFailed`;
       this.message = "Delete category by Dao delete failed.";
-      this.status = 500;
     }
   }
 };
@@ -124,7 +119,6 @@ const UpdateCategory = {
       super(...arguments);
       this.code = `${UpdateCategory.UC_CODE}categoryDaoUpdateFailed`;
       this.message = "Update category by category Dao update failed.";
-      this.status = 500;
     }
   }
 };

@@ -2,6 +2,7 @@
 const { Validator } = require("uu_appg01_server").Validation;
 const { DaoFactory } = require("uu_appg01_server").ObjectStore;
 const { ValidationHelper } = require("uu_appg01_server").Workspace;
+const { ObjectStoreError } = require("uu_appg01_server").ObjectStore;
 
 const Path = require("path");
 const Errors = require("../errors/category-error");
@@ -49,7 +50,9 @@ class CategoryModel {
         throw new Errors.CreateCategory.CategoryNameNotUnique({ uuAppErrorMap }, { name: dtoIn.name }, e);
       }
       // A4
-      throw new Errors.CreateCategory.CategoryDaoCreateFailed({ uuAppErrorMap }, e);
+      if (e instanceof ObjectStoreError) {
+        throw new Errors.CreateCategory.CategoryDaoCreateFailed({uuAppErrorMap}, e);
+      }
     }
     // HDS 3
     dtoOut.uuAppErrorMap = uuAppErrorMap;
@@ -81,7 +84,9 @@ class CategoryModel {
         throw new Errors.UpdateCategory.CategoryNameNotUnique({ uuAppErrorMap }, { name: dtoIn.name }, e);
       }
       // A4
-      throw new Errors.UpdateCategory.CategoryDaoUpdateFailed({ uuAppErrorMap }, e);
+      if (e instanceof ObjectStoreError) {
+        throw new Errors.UpdateCategory.CategoryDaoUpdateFailed({uuAppErrorMap}, e);
+      }
     }
 
     dtoOut.uuAppErrorMap = uuAppErrorMap;
@@ -109,7 +114,9 @@ class CategoryModel {
         await JokeCategoryModel.dao.deleteByCategory(awid, dtoIn.id);
       } catch (e) {
         //A5
-        throw new Errors.DeleteCategory.JokeCategoryDaoDeleteByCategoryFailed({ uuAppErrorMap }, e);
+        if (e instanceof ObjectStoreError) {
+          throw new Errors.DeleteCategory.JokeCategoryDaoDeleteByCategoryFailed({uuAppErrorMap}, e);
+        }
       }
     } else {
       //HDS 2
@@ -118,7 +125,9 @@ class CategoryModel {
         foundJokeCategories = await JokeCategoryModel.dao.listByCategory(awid, dtoIn.id);
       } catch (error) {
         //A3
-        throw new Errors.DeleteCategory.JokeCategoryDaoListByCategoryFailed({ uuAppErrorMap }, error);
+        if (error instanceof ObjectStoreError) {
+          throw new Errors.DeleteCategory.JokeCategoryDaoListByCategoryFailed({uuAppErrorMap}, error);
+        }
       }
       // HDS 2.1
       if (foundJokeCategories.itemList.length > 0) {
@@ -135,7 +144,9 @@ class CategoryModel {
       await this.dao.remove(awid, dtoIn.id);
     } catch (e) {
       //A6
-      throw new Errors.DeleteCategory.CategoryDaoDeleteFailed({ uuAppErrorMap }, e);
+      if (e instanceof ObjectStoreError) {
+        throw new Errors.DeleteCategory.CategoryDaoDeleteFailed({uuAppErrorMap}, e);
+      }
     }
 
     dtoOut.uuAppErrorMap = uuAppErrorMap;
@@ -163,7 +174,9 @@ class CategoryModel {
       dtoOut = await this.dao.list(awid, dtoIn.pageInfo);
     } catch (e) {
       // A3
-      throw new Errors.ListCategories.CategoryDaoListFailed({ uuAppErrorMap }, e);
+      if (e instanceof ObjectStoreError) {
+        throw new Errors.ListCategories.CategoryDaoListFailed({uuAppErrorMap}, e);
+      }
     }
 
     // HDS 3

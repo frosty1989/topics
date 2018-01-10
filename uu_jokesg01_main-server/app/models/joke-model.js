@@ -2,6 +2,7 @@
 const { Validator } = require("uu_appg01_server").Validation;
 const { DaoFactory } = require("uu_appg01_server").ObjectStore;
 const { ValidationHelper } = require("uu_appg01_server").Workspace;
+const { ObjectStoreError } = require("uu_appg01_server").ObjectStore;
 const Errors = require("../errors/joke-error");
 const Path = require("path");
 
@@ -82,7 +83,9 @@ class JokeModel {
       dtoOut = await this.dao.create(dtoIn);
     } catch (e) {
       //A3
-      throw new Errors.CreateJoke.JokeDaoCreateFailed({ uuAppErrorMap }, e);
+      if (e instanceof ObjectStoreError) {
+        throw new Errors.CreateJoke.JokeDaoCreateFailed({uuAppErrorMap}, e);
+      }
     }
 
     if (categoryList.length > 0) {
@@ -129,7 +132,9 @@ class JokeModel {
           await JokeCategoryModel.dao.create({ awid: awid, jokeId: dtoOut.id.toString(), categoryId: categoryId });
         } catch (e) {
           //A6
-          throw new Errors.CreateJoke.JokeCategoryDaoCreateFailed({ uuAppErrorMap }, e);
+          if (e instanceof ObjectStoreError) {
+            throw new Errors.CreateJoke.JokeCategoryDaoCreateFailed({uuAppErrorMap}, e);
+          }
         }
       }
     }
@@ -170,7 +175,9 @@ class JokeModel {
       }
     } catch (e) {
       //A4
-      throw new Errors.UpdateJoke.JokeDaoGetFailed({ uuAppErrorMap }, e);
+      if (e instanceof ObjectStoreError) {
+        throw new Errors.UpdateJoke.JokeDaoGetFailed({uuAppErrorMap}, e);
+      }
     }
 
     try {
@@ -179,7 +186,9 @@ class JokeModel {
       dtoOut = await this.dao.update(dtoIn);
     } catch (e) {
       //A3
-      throw new Errors.UpdateJoke.JokeDaoUpdateFailed({ uuAppErrorMap }, e);
+      if (e instanceof ObjectStoreError) {
+        throw new Errors.UpdateJoke.JokeDaoUpdateFailed({uuAppErrorMap}, e);
+      }
     }
 
     dtoOut.uuAppErrorMap = uuAppErrorMap;
@@ -207,7 +216,9 @@ class JokeModel {
       await JokeRatingModel.dao.deleteByJoke(awid, dtoIn.id);
     } catch (e) {
       //A3
-      throw new Errors.DeleteJoke.JokeRatingDaoDeleteByJokeFailed({ uuAppErrorMap }, e);
+      if (e instanceof ObjectStoreError) {
+        throw new Errors.DeleteJoke.JokeRatingDaoDeleteByJokeFailed({uuAppErrorMap}, e);
+      }
     }
 
     try {
@@ -216,7 +227,9 @@ class JokeModel {
       await JokeCategoryModel.dao.deleteByJoke(awid, dtoIn.id);
     } catch (e) {
       //A4
-      throw new Errors.DeleteJoke.JokeCategoryDaoDeleteByJokeFailed({ uuAppErrorMap }, e);
+      if (e instanceof ObjectStoreError) {
+        throw new Errors.DeleteJoke.JokeCategoryDaoDeleteByJokeFailed({uuAppErrorMap}, e);
+      }
     }
 
     try {
@@ -224,7 +237,9 @@ class JokeModel {
       await this.dao.remove(awid, dtoIn.id);
     } catch (e) {
       //A5
-      throw new Errors.DeleteJoke.JokeDaoDeleteFailed({ uuAppErrorMap }, e);
+      if(e instanceof ObjectStoreError) {
+        throw new Errors.DeleteJoke.JokeDaoDeleteFailed({uuAppErrorMap}, e);
+      }
     }
 
     dtoOut.uuAppErrorMap = uuAppErrorMap;
@@ -250,7 +265,9 @@ class JokeModel {
       dtoOut = await this.dao.get(awid, dtoIn.id);
     } catch (e) {
       //A3
-      throw new Errors.GetJoke.JokeDaoGetFailed({ uuAppErrorMap }, e);
+      if (e instanceof ObjectStoreError) {
+        throw new Errors.GetJoke.JokeDaoGetFailed({uuAppErrorMap}, e);
+      }
     }
 
     //A4
@@ -266,7 +283,9 @@ class JokeModel {
       dtoOut.categoryList = categories.itemList.map(x => x.id);
     } catch (e) {
       //A5
-      throw new Errors.GetJoke.JokeCategoryDaoListByJokeFailed({ uuAppErrorMap },e);
+      if (e instanceof ObjectStoreError) {
+        throw new Errors.GetJoke.JokeCategoryDaoListByJokeFailed({uuAppErrorMap}, e);
+      }
     }
 
     dtoOut.uuAppErrorMap = uuAppErrorMap;
@@ -298,7 +317,9 @@ class JokeModel {
       dtoOut = await this.dao.list(awid, dtoIn.pageInfo, { [sort]: order });
     } catch (e) {
       //A3
-      throw new Errors.ListJokes.JokeDaoListFailed({ uuAppErrorMap }, e);
+      if (e instanceof ObjectStoreError) {
+        throw new Errors.ListJokes.JokeDaoListFailed({uuAppErrorMap}, e);
+      }
     }
 
     dtoOut.uuAppErrorMap = uuAppErrorMap;

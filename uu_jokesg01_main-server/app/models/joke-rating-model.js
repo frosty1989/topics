@@ -2,6 +2,7 @@
 const { Validator } = require("uu_appg01_server").Validation;
 const { DaoFactory } = require("uu_appg01_server").ObjectStore;
 const { ValidationHelper } = require("uu_appg01_server").Workspace;
+const { ObjectStoreError } = require("uu_appg01_server").ObjectStore;
 const Path = require("path");
 const Errors = require("../errors/joke-rating-error");
 const WARNINGS = {
@@ -37,7 +38,9 @@ class JokeRatingModel {
       const JokeModel = require("./joke-model");
       joke = await JokeModel.dao.get(awid, dtoIn.id);
     } catch (e) {
-      throw new Errors.AddJokeRating.JokeDaoGetFailed({ uuAppErrorMap }, e);
+      if (e instanceof ObjectStoreError) {
+        throw new Errors.AddJokeRating.JokeDaoGetFailed({uuAppErrorMap}, e);
+      }
     }
 
     if (!joke.hasOwnProperty("id")) {
@@ -47,7 +50,9 @@ class JokeRatingModel {
     try {
       userVote = await this.dao.getByJokeAndIdentity(awid, dtoIn.id, uuIdentity);
     } catch (e) {
-      throw new Errors.AddJokeRating.JokeRatingDaoGetByJokeAndIdentityFailed({ uuAppErrorMap }, e);
+      if (e instanceof ObjectStoreError) {
+        throw new Errors.AddJokeRating.JokeRatingDaoGetByJokeAndIdentityFailed({uuAppErrorMap}, e);
+      }
     }
 
     uuObject.awid = awid;
@@ -58,14 +63,18 @@ class JokeRatingModel {
         averageRating = (userVote.rating * 1 + uuObject.rating) / (userVote.rating + 1);
         dtoOut = await this.dao.create(uuObject);
       } catch (e) {
-        throw new Errors.AddJokeRating.JokeRatingDaoCreateFailed({ uuAppErrorMap }, e);
+        if (e instanceof ObjectStoreError) {
+          throw new Errors.AddJokeRating.JokeRatingDaoCreateFailed({uuAppErrorMap}, e);
+        }
       }
     } else {
       try {
         averageRating = 3;
         dtoOut = await this.dao.update(uuObject);
       } catch (e) {
-        throw new Errors.AddJokeRating.JokeRatingDaoUpdateFailed({ uuAppErrorMap }, e);
+        if (e instanceof ObjectStoreError) {
+          throw new Errors.AddJokeRating.JokeRatingDaoUpdateFailed({uuAppErrorMap}, e);
+        }
       }
     }
 
