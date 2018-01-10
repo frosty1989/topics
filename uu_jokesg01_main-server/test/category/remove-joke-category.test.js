@@ -1,6 +1,7 @@
 const { TestHelper } = require("uu_appg01_workspace-test");
 const { CreateCategory } = require("../general-test-hepler");
 const { CreateJoke } = require("../general-test-hepler");
+const CMD = "removeJokeCategory";
 
 beforeEach(async done => {
   await TestHelper.setup();
@@ -16,23 +17,15 @@ afterEach(async done => {
 
 describe("Test removeJokeCategory command", () => {
   test("HDS", async () => {
-    await TestHelper.login("Readers");
     let category = await CreateCategory();
-    let categoryId = category.id;
-    let joke = await CreateJoke({}, categoryId);
-    let jokeId = joke.data.id;
-    let dtoInForAddJokeCategory = {
-      jokeId: jokeId,
-      categoryList: [categoryId]
-    };
-    let newJokeCategory = await TestHelper.executePostCommand(
-      "addJokeCategory",
-      dtoInForAddJokeCategory
-    );
-    let categories = newJokeCategory.data.categoryList;
-    let response = await TestHelper.executePostCommand("removeJokeCategory", {
-      jokeId: jokeId,
-      categoryList: categories
+    let joke = await CreateJoke({
+      name: "Joke",
+      text: "Text",
+      categoryList: [category.data.id]
+    });
+    let response = await TestHelper.executePostCommand(CMD, {
+      jokeId: joke.data.id,
+      categoryList: [category.data.id]
     });
 
     expect(response.status).toEqual(200);
@@ -43,81 +36,46 @@ describe("Test removeJokeCategory command", () => {
   });
 
   test("A1", async () => {
-    await TestHelper.login("Readers");
-
     let category = await CreateCategory();
-    let categoryId = category.id;
-    let joke = await CreateJoke({}, categoryId);
-    let jokeId = joke.data.id;
-    let dtoInForAddJokeCategory = {
-      jokeId: jokeId,
-      categoryList: [categoryId]
-    };
-    let newJokeCategory = await TestHelper.executePostCommand(
-      "addJokeCategory",
-      dtoInForAddJokeCategory
-    );
-    let categories = newJokeCategory.data.categoryList;
-    let response = await TestHelper.executePostCommand("removeJokeCategory", {
-      jokeId: jokeId,
-      categoryList: categories,
-      unsupportedKey: "unsupportedValue"
+    let joke = await CreateJoke({
+      name: "Joke",
+      text: "Text",
+      categoryList: [category.data.id]
     });
+    let response = await TestHelper.executePostCommand(CMD, {
+      jokeId: joke.data.id,
+      categoryList: [category.data.id],
+      invalid: "invalid"
+    });
+    const code = "uu-jokes-main/removeJokeCategory/unsupportedKeys";
+
     expect(response.status).toEqual(200);
     expect(typeof response.data.uuAppErrorMap).toBe("object");
     expect(response.data.uuAppErrorMap).toBeInstanceOf(Object);
-    expect("warning").toEqual(
-      response.data.uuAppErrorMap[
-        "uu-jokesg01-main/removeJokeCategory/unsupportedKey"
-      ].type
-    );
-    expect("DtoIn contains unsupported keys.").toEqual(
-      response.data.uuAppErrorMap[
-        "uu-jokesg01-main/removeJokeCategory/unsupportedKey"
-      ].message
-    );
-    let invalidData =
-      response.data.uuAppErrorMap[
-        "uu-jokesg01-main/removeJokeCategory/unsupportedKey"
-      ].paramMap["unsupportedKeyList"][0];
-    expect(invalidData).toEqual("$.invalid");
+    expect(response.data.uuAppErrorMap[code].type).toEqual("warning");
+    expect(response.data.uuAppErrorMap[code].message).toEqual("DtoIn contains unsupported keys.");
+    let invalidData = response.data.uuAppErrorMap[code].paramMap["unsupportedKeyList"];
+    expect(invalidData).toContain("$.invalid");
   });
 
-  test("if joke category does not exist", async () => {
-    await TestHelper.login("Readers");
-    expect.assertions(6);
-    let category = await CreateCategory();
-    let categoryId = category.id;
-    let joke = await CreateJoke({}, categoryId);
-    let jokeId = joke.data.id;
-    let dtoInForAddJokeCategory = {
-      jokeId: jokeId,
-      categoryList: [categoryId]
-    };
-    let newJokeCategory = await TestHelper.executePostCommand(
-      "addJokeCategory",
-      dtoInForAddJokeCategory
-    );
-    let categories = newJokeCategory.data.categoryList;
-    await TestHelper.executePostCommand("removeJokeCategory", {
-      jokeId: jokeId,
-      categoryList: categories,
-      invalid: "invalid"
-    });
+  test("A2", async () => {
+    expect.assertions(10);
     try {
-      await TestHelper.executePostCommand("removeJokeCategory", {
-        wrongKey: 123,
-        categoryList: "Wrong value"
-      });
-    } catch (error) {
-      expect(error.status).toEqual(400);
-      expect(error.code).toBeDefined();
-      expect(error.code).toBe(
-        "uu-jokesg01-main/removeJokeCategory/invalidDtoIn"
-      );
-      expect(error.paramMap).toBeDefined();
-      expect(error.paramMap.invalidValueKeyMap).toBeDefined();
-      expect(error.paramMap.missingKeyMap).toBeDefined();
+      await TestHelper.login("Readers");
+      await TestHelper.executePostCommand(CMD, {});
+    } catch (e) {
+      const code = "uu-jokes-main/removeJokeCategory/invalidDtoIn";
+
+      expect(e.status).toEqual(400);
+      expect(e.code).toBeDefined();
+      expect(e.code).toBe(code);
+      expect(e.paramMap).toBeDefined();
+      expect(e.paramMap.invalidValueKeyMap).toBeDefined();
+      expect(e.paramMap.invalidValueKeyMap["$"]).toBeDefined();
+      expect(e.paramMap.invalidValueKeyMap["$"]["shape.e002"]).toBeDefined();
+      expect(e.paramMap.missingKeyMap).toBeDefined();
+      expect(e.paramMap.missingKeyMap["$.jokeId"]).toBeDefined();
+      expect(e.paramMap.missingKeyMap["$.jokeId"]["isRequired.001"]).toBeDefined();
     }
   });
 });
