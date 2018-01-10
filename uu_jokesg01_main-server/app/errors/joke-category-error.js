@@ -4,15 +4,13 @@ const UuJokesError = require("./uu-jokes-error");
 
 const AddJokeCategory = {
   UC_CODE: `${UuJokesError.ERROR_PREFIX}addJokeCategory/`,
-
-  InvalidDtoInError: class extends UuJokesError {
+  InvalidDtoIn: class extends UuJokesError {
     constructor() {
       super(...arguments);
       this.code = `${AddJokeCategory.UC_CODE}invalidDtoIn`;
       this.message = "DtoIn is not valid.";
     }
   },
-
   JokeDaoGetFailed: class extends UuJokesError {
     constructor() {
       super(...arguments);
@@ -21,7 +19,6 @@ const AddJokeCategory = {
       this.status = 500;
     }
   },
-
   JokeDoesNotExist: class extends UuJokesError {
     constructor() {
       super(...arguments);
@@ -29,7 +26,6 @@ const AddJokeCategory = {
       this.message = "Joke does not exist.";
     }
   },
-
   CategoryDaoGetFailed: class extends UuJokesError {
     constructor() {
       super(...arguments);
@@ -38,7 +34,6 @@ const AddJokeCategory = {
       this.status = 500;
     }
   },
-
   JokeCategoryDaoCreateFailed: class extends UuJokesError {
     constructor() {
       super(...arguments);
@@ -51,7 +46,6 @@ const AddJokeCategory = {
 
 const RemoveJokeCategory = {
   UC_CODE: `${UuJokesError.ERROR_PREFIX}removeJokeCategory/`,
-
   InvalidDtoIn: class extends UuJokesError {
     constructor() {
       super(...arguments);
@@ -59,7 +53,6 @@ const RemoveJokeCategory = {
       this.message = "DtoIn is not valid.";
     }
   },
-
   JokeCategoryDaoDeleteByJokeAndCategoryFailed: class extends UuJokesError {
     constructor() {
       super(...arguments);
@@ -78,7 +71,6 @@ const ListCategoryJokes = {
       this.message = "DtoIn is not valid.";
     }
   },
-
   JokeCategoryDaoListByCategoryFailed: class extends UuJokesError {
     constructor() {
       super(...arguments);
@@ -86,7 +78,6 @@ const ListCategoryJokes = {
       this.message = "List jokeCategory by jokeCategory Dao listByCategory failed.";
     }
   },
-
   JokeDaoListByIdsFailed: class extends UuJokesError {
     constructor() {
       super(...arguments);

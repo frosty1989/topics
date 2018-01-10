@@ -1,4 +1,3 @@
-const { Utils } = require("uu_appg01_server");
 const { TestHelper } = require("uu_appg01_workspace-test");
 const { CreateJoke } = require("../general-test-hepler");
 const { CreateCategory } = require("../general-test-hepler");
@@ -27,9 +26,7 @@ describe("Test listJokes command", () => {
     expect(response.data.itemList[0].name).toEqual("test joke");
     expect(response.data.itemList[0].text).toEqual("test joke text");
     expect(response.data.itemList[0].id).toEqual(itemId);
-    expect(response.data.itemList[0].awid).toEqual(
-      Utils.Config.get("sysAppWorkspace")["awid"]
-    );
+    expect(response.data.itemList[0].awid).toEqual(TestHelper.awid);
     expect(response.data.uuAppErrorMap).toEqual({});
   });
 

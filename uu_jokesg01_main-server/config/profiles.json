@@ -8,8 +8,7 @@
       "sys/authorization": ["UuSubAppInstanceSysOwner"],
       "sys/initAppWorkspace": ["UuSubAppInstanceSysOwner"],
       "sys/getAppWorkspace": ["UuSubAppInstanceSysOwner"],
-      "sys/createPermission": ["UuSubAppInstanceSysOwner"],
-      "defaultVuc": []
+      "sys/createPermission": ["UuSubAppInstanceSysOwner"]
     }
   },
   "*": {

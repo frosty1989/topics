@@ -11,7 +11,6 @@ let CreateJoke = {
       this.message = "DtoIn is not valid.";
     }
   },
-
   JokeDaoCreateFailed: class extends UuJokesError {
     constructor() {
       super(...arguments);
@@ -19,7 +18,6 @@ let CreateJoke = {
       this.message = "Create joke by joke Dao create failed.";
     }
   },
-
   JokeCategoryDaoCreateFailed: class extends UuJokesError {
     constructor() {
       super(...arguments);
@@ -38,7 +36,6 @@ let GetJoke = {
       this.message = "DtoIn is not valid.";
     }
   },
-
   JokeDaoGetFailed: class extends UuJokesError {
     constructor() {
       super(...arguments);
@@ -46,7 +43,6 @@ let GetJoke = {
       this.message = "Get joke by joke Dao get failed.";
     }
   },
-
   JokeDoesNotExist: class extends UuJokesError {
     constructor() {
       super(...arguments);
@@ -54,7 +50,6 @@ let GetJoke = {
       this.message = "Joke does not exist.";
     }
   },
-
   JokeCategoryDaoListByJokeFailed: class extends UuJokesError {
     constructor() {
       super(...arguments);
@@ -66,14 +61,13 @@ let GetJoke = {
 
 let ListJokes = {
   UC_CODE: `${UuJokesError.ERROR_PREFIX}listJokes/`,
-  InvalidDtoInError: class extends UuJokesError {
+  InvalidDtoIn: class extends UuJokesError {
     constructor() {
       super(...arguments);
       this.code = `${ListJokes.UC_CODE}invalidDtoIn`;
       this.message = "DtoIn is not valid.";
     }
   },
-
   JokeDaoListFailed: class extends UuJokesError {
     constructor() {
       super(...arguments);
@@ -92,7 +86,6 @@ let DeleteJoke = {
       this.message = "DtoIn is not valid.";
     }
   },
-
   JokeRatingDaoDeleteByJokeFailed: class extends UuJokesError {
     constructor() {
       super(...arguments);
@@ -100,7 +93,6 @@ let DeleteJoke = {
       this.message = "Delete jokeRating by Dao deleteByJoke failed.";
     }
   },
-
   JokeCategoryDaoDeleteByJokeFailed: class extends UuJokesError {
     constructor() {
       super(...arguments);
@@ -108,7 +100,6 @@ let DeleteJoke = {
       this.message = "Delete jokeCategory by Dao deleteByJoke failed.";
     }
   },
-
   JokeDaoDeleteFailed: class extends UuJokesError {
     constructor() {
       super(...arguments);
@@ -127,7 +118,6 @@ let UpdateJoke = {
       this.message = "DtoIn is not valid.";
     }
   },
-
   JokeDaoUpdateFailed: class extends UuJokesError {
     constructor() {
       super(...arguments);
@@ -135,7 +125,6 @@ let UpdateJoke = {
       this.message = "Update joke by joke Dao update failed.";
     }
   },
-
   JokeDaoGetFailed: class extends UuJokesError {
     constructor() {
       super(...arguments);

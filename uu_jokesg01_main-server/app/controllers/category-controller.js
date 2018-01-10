@@ -3,19 +3,19 @@
 const CategoryModel = require("../models/category-model.js");
 
 class CategoryController {
-  create(ucEnv) {
+  createCategory(ucEnv) {
     return CategoryModel.createCategory(ucEnv.uri.awid, ucEnv.parameters);
   }
 
-  list(ucEnv) {
+  listCategories(ucEnv) {
     return CategoryModel.listCategories(ucEnv.uri.awid, ucEnv.parameters);
   }
 
-  update(ucEnv) {
+  updateCategory(ucEnv) {
     return CategoryModel.updateCategory(ucEnv.uri.awid, ucEnv.parameters);
   }
 
-  remove(ucEnv) {
+  deleteCategory(ucEnv) {
     return CategoryModel.deleteCategory(ucEnv.uri.awid, ucEnv.parameters);
   }
 }

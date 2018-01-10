@@ -1,8 +1,8 @@
 "use strict";
+
 const { Validator } = require("uu_appg01_server").Validation;
-const { DaoFactory } = require("uu_appg01_server").ObjectStore;
+const { DaoFactory, ObjectStoreError } = require("uu_appg01_server").ObjectStore;
 const { ValidationHelper } = require("uu_appg01_server").Workspace;
-const { ObjectStoreError } = require("uu_appg01_server").ObjectStore;
 
 const Path = require("path");
 const Errors = require("../errors/category-error");
@@ -35,7 +35,7 @@ class CategoryModel {
       dtoIn,
       validationResult,
       WARNINGS.createCategory.code,
-      Errors.CreateCategory.InvalidDtoInError
+      Errors.CreateCategory.InvalidDtoIn
     );
 
     dtoIn.awid = awid;
@@ -51,7 +51,7 @@ class CategoryModel {
       }
       // A4
       if (e instanceof ObjectStoreError) {
-        throw new Errors.CreateCategory.CategoryDaoCreateFailed({uuAppErrorMap}, e);
+        throw new Errors.CreateCategory.CategoryDaoCreateFailed({ uuAppErrorMap }, e);
       }
     }
     // HDS 3
@@ -68,7 +68,7 @@ class CategoryModel {
       dtoIn,
       validationResult,
       WARNINGS.updateCategory.code,
-      Errors.UpdateCategory.InvalidDtoInError
+      Errors.UpdateCategory.InvalidDtoIn
     );
     let uuObject = Object.assign({}, dtoIn);
     let dtoOut = {};
@@ -85,7 +85,7 @@ class CategoryModel {
       }
       // A4
       if (e instanceof ObjectStoreError) {
-        throw new Errors.UpdateCategory.CategoryDaoUpdateFailed({uuAppErrorMap}, e);
+        throw new Errors.UpdateCategory.CategoryDaoUpdateFailed({ uuAppErrorMap }, e);
       }
     }
 
@@ -102,7 +102,7 @@ class CategoryModel {
       dtoIn,
       validationResult,
       WARNINGS.deleteCategory.code,
-      Errors.DeleteCategory.InvalidDtoInError
+      Errors.DeleteCategory.InvalidDtoIn
     );
     let dtoOut = {};
     let foundJokeCategories;
@@ -115,7 +115,7 @@ class CategoryModel {
       } catch (e) {
         //A5
         if (e instanceof ObjectStoreError) {
-          throw new Errors.DeleteCategory.JokeCategoryDaoDeleteByCategoryFailed({uuAppErrorMap}, e);
+          throw new Errors.DeleteCategory.JokeCategoryDaoDeleteByCategoryFailed({ uuAppErrorMap }, e);
         }
       }
     } else {
@@ -123,10 +123,10 @@ class CategoryModel {
       try {
         // HDS 2.1
         foundJokeCategories = await JokeCategoryModel.dao.listByCategory(awid, dtoIn.id);
-      } catch (error) {
+      } catch (e) {
         //A3
-        if (error instanceof ObjectStoreError) {
-          throw new Errors.DeleteCategory.JokeCategoryDaoListByCategoryFailed({uuAppErrorMap}, error);
+        if (e instanceof ObjectStoreError) {
+          throw new Errors.DeleteCategory.JokeCategoryDaoListByCategoryFailed({ uuAppErrorMap }, e);
         }
       }
       // HDS 2.1
@@ -145,7 +145,7 @@ class CategoryModel {
     } catch (e) {
       //A6
       if (e instanceof ObjectStoreError) {
-        throw new Errors.DeleteCategory.CategoryDaoDeleteFailed({uuAppErrorMap}, e);
+        throw new Errors.DeleteCategory.CategoryDaoDeleteFailed({ uuAppErrorMap }, e);
       }
     }
 
@@ -162,7 +162,7 @@ class CategoryModel {
       dtoIn,
       validationResult,
       WARNINGS.listCategories.code,
-      Errors.ListCategories.InvalidDtoInError
+      Errors.ListCategories.InvalidDtoIn
     );
     let dtoOut;
 
@@ -175,7 +175,7 @@ class CategoryModel {
     } catch (e) {
       // A3
       if (e instanceof ObjectStoreError) {
-        throw new Errors.ListCategories.CategoryDaoListFailed({uuAppErrorMap}, e);
+        throw new Errors.ListCategories.CategoryDaoListFailed({ uuAppErrorMap }, e);
       }
     }
 

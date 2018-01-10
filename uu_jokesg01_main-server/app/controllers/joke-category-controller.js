@@ -3,16 +3,16 @@
 const JokeCategoryModel = require("../models/joke-category-model.js");
 
 class JokeCategoryController {
-  create(ucEnv) {
+  addJokeCategory(ucEnv) {
     return JokeCategoryModel.addJokeCategory(ucEnv.uri.awid, ucEnv.parameters);
   }
 
-  remove(ucEnv) {
+  removeJokeCategory(ucEnv) {
     return JokeCategoryModel.removeJokeCategory(ucEnv.uri.awid, ucEnv.parameters);
   }
 
-  listByCategory(ucEnv) {
-    return JokeCategoryModel.listByCategory(ucEnv.uri.awid, ucEnv.parameters);
+  listCategoryJokes(ucEnv) {
+    return JokeCategoryModel.listCategoryJokes(ucEnv.uri.awid, ucEnv.parameters);
   }
 }
 

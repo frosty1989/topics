@@ -1,8 +1,7 @@
 "use strict";
 const { Validator } = require("uu_appg01_server").Validation;
-const { DaoFactory } = require("uu_appg01_server").ObjectStore;
+const { DaoFactory, ObjectStoreError } = require("uu_appg01_server").ObjectStore;
 const { ValidationHelper } = require("uu_appg01_server").Workspace;
-const { ObjectStoreError } = require("uu_appg01_server").ObjectStore;
 const Errors = require("../errors/joke-error");
 const Path = require("path");
 
@@ -57,7 +56,7 @@ class JokeModel {
     this.dao = DaoFactory.getDao("joke");
   }
 
-  async create(awid, dtoIn) {
+  async createJoke(awid, dtoIn) {
     //HDS 1
     //A1
     let validationResult = this.validator.validate("createJokeDtoInType", dtoIn);
@@ -84,7 +83,7 @@ class JokeModel {
     } catch (e) {
       //A3
       if (e instanceof ObjectStoreError) {
-        throw new Errors.CreateJoke.JokeDaoCreateFailed({uuAppErrorMap}, e);
+        throw new Errors.CreateJoke.JokeDaoCreateFailed({ uuAppErrorMap }, e);
       }
     }
 
@@ -133,7 +132,7 @@ class JokeModel {
         } catch (e) {
           //A6
           if (e instanceof ObjectStoreError) {
-            throw new Errors.CreateJoke.JokeCategoryDaoCreateFailed({uuAppErrorMap}, e);
+            throw new Errors.CreateJoke.JokeCategoryDaoCreateFailed({ uuAppErrorMap }, e);
           }
         }
       }
@@ -146,7 +145,7 @@ class JokeModel {
     return dtoOut;
   }
 
-  async update(awid, dtoIn) {
+  async updateJoke(awid, dtoIn) {
     //HDS 1
     let validationResult = this.validator.validate("updateJokeDtoInType", dtoIn);
     //A1, A2
@@ -176,7 +175,7 @@ class JokeModel {
     } catch (e) {
       //A4
       if (e instanceof ObjectStoreError) {
-        throw new Errors.UpdateJoke.JokeDaoGetFailed({uuAppErrorMap}, e);
+        throw new Errors.UpdateJoke.JokeDaoGetFailed({ uuAppErrorMap }, e);
       }
     }
 
@@ -187,7 +186,7 @@ class JokeModel {
     } catch (e) {
       //A3
       if (e instanceof ObjectStoreError) {
-        throw new Errors.UpdateJoke.JokeDaoUpdateFailed({uuAppErrorMap}, e);
+        throw new Errors.UpdateJoke.JokeDaoUpdateFailed({ uuAppErrorMap }, e);
       }
     }
 
@@ -197,7 +196,7 @@ class JokeModel {
     return dtoOut;
   }
 
-  async remove(awid, dtoIn) {
+  async deleteJoke(awid, dtoIn) {
     //HDS 1
     let validationResult = this.validator.validate("deleteJokeDtoInType", dtoIn);
     //A1, A2
@@ -217,7 +216,7 @@ class JokeModel {
     } catch (e) {
       //A3
       if (e instanceof ObjectStoreError) {
-        throw new Errors.DeleteJoke.JokeRatingDaoDeleteByJokeFailed({uuAppErrorMap}, e);
+        throw new Errors.DeleteJoke.JokeRatingDaoDeleteByJokeFailed({ uuAppErrorMap }, e);
       }
     }
 
@@ -228,7 +227,7 @@ class JokeModel {
     } catch (e) {
       //A4
       if (e instanceof ObjectStoreError) {
-        throw new Errors.DeleteJoke.JokeCategoryDaoDeleteByJokeFailed({uuAppErrorMap}, e);
+        throw new Errors.DeleteJoke.JokeCategoryDaoDeleteByJokeFailed({ uuAppErrorMap }, e);
       }
     }
 
@@ -238,7 +237,7 @@ class JokeModel {
     } catch (e) {
       //A5
       if(e instanceof ObjectStoreError) {
-        throw new Errors.DeleteJoke.JokeDaoDeleteFailed({uuAppErrorMap}, e);
+        throw new Errors.DeleteJoke.JokeDaoDeleteFailed({ uuAppErrorMap }, e);
       }
     }
 
@@ -248,7 +247,7 @@ class JokeModel {
     return dtoOut;
   }
 
-  async get(awid, dtoIn) {
+  async getJoke(awid, dtoIn) {
     //HDS 1
     let validationResult = this.validator.validate("getJokeDtoInType", dtoIn);
     //A1, A2
@@ -266,7 +265,7 @@ class JokeModel {
     } catch (e) {
       //A3
       if (e instanceof ObjectStoreError) {
-        throw new Errors.GetJoke.JokeDaoGetFailed({uuAppErrorMap}, e);
+        throw new Errors.GetJoke.JokeDaoGetFailed({ uuAppErrorMap }, e);
       }
     }
 
@@ -284,7 +283,7 @@ class JokeModel {
     } catch (e) {
       //A5
       if (e instanceof ObjectStoreError) {
-        throw new Errors.GetJoke.JokeCategoryDaoListByJokeFailed({uuAppErrorMap}, e);
+        throw new Errors.GetJoke.JokeCategoryDaoListByJokeFailed({ uuAppErrorMap }, e);
       }
     }
 
@@ -294,7 +293,7 @@ class JokeModel {
     return dtoOut;
   }
 
-  async list(awid, dtoIn) {
+  async listJokes(awid, dtoIn) {
     //HDS 1
     let validationResult = this.validator.validate("listJokesDtoInType", dtoIn);
     //A1, A2
@@ -302,7 +301,7 @@ class JokeModel {
       dtoIn,
       validationResult,
       WARNINGS.listJokes.unsupportedKeys.code,
-      Errors.ListJokes.InvalidDtoInError
+      Errors.ListJokes.InvalidDtoIn
     );
     let sort = dtoIn.sortBy === "name" ? "name" : "rating";
     let order = dtoIn.order === "desc" ? -1 : 1;
@@ -318,7 +317,7 @@ class JokeModel {
     } catch (e) {
       //A3
       if (e instanceof ObjectStoreError) {
-        throw new Errors.ListJokes.JokeDaoListFailed({uuAppErrorMap}, e);
+        throw new Errors.ListJokes.JokeDaoListFailed({ uuAppErrorMap }, e);
       }
     }
 

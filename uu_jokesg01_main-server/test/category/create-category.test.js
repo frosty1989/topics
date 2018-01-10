@@ -1,4 +1,3 @@
-const { Utils } = require("uu_appg01_server");
 const { TestHelper } = require("uu_appg01_workspace-test");
 const { CreateCategory } = require("../general-test-hepler");
 
@@ -31,9 +30,7 @@ describe("Test createCategory command", () => {
     expect(response.data.uuAppErrorMap).toBeDefined();
     expect(response.data.uuAppErrorMap).toBeInstanceOf(Object);
     expect(response.data.uuAppErrorMap).toMatchObject({});
-    expect(response.data.awid).toEqual(
-      Utils.Config.get("sysAppWorkspace")["awid"]
-    );
+    expect(response.data.awid).toEqual(TestHelper.awid);
   });
 
   test("A1", async () => {

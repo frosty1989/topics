@@ -1,8 +1,7 @@
 "use strict";
 const { Validator } = require("uu_appg01_server").Validation;
-const { DaoFactory } = require("uu_appg01_server").ObjectStore;
+const { DaoFactory, ObjectStoreError } = require("uu_appg01_server").ObjectStore;
 const { ValidationHelper } = require("uu_appg01_server").Workspace;
-const { ObjectStoreError } = require("uu_appg01_server").ObjectStore;
 const Path = require("path");
 const Errors = require("../errors/joke-rating-error");
 const WARNINGS = {
@@ -18,7 +17,7 @@ class JokeRatingModel {
     this.dao = DaoFactory.getDao("jokeRating");
   }
 
-  async create(awid, dtoIn, session) {
+  async addJokeRating(awid, dtoIn, session) {
     // HDS 1 // A1
     let validationResult = this.validator.validate("addJokeRatingDtoInType", dtoIn);
     // A2
@@ -43,7 +42,7 @@ class JokeRatingModel {
     } catch (e) {
       // HDS2 //A3
       if (e instanceof ObjectStoreError) {
-        throw new Errors.AddJokeRating.JokeDaoGetFailed({uuAppErrorMap}, e);
+        throw new Errors.AddJokeRating.JokeDaoGetFailed({ uuAppErrorMap }, e);
       }
     }
     // HDS 2 //A4
@@ -57,7 +56,7 @@ class JokeRatingModel {
     } catch (e) {
       // A5
       if (e instanceof ObjectStoreError) {
-        throw new Errors.AddJokeRating.JokeRatingDaoGetByJokeAndIdentityFailed({uuAppErrorMap}, e);
+        throw new Errors.AddJokeRating.JokeRatingDaoGetByJokeAndIdentityFailed({ uuAppErrorMap }, e);
       }
     }
 
@@ -72,7 +71,7 @@ class JokeRatingModel {
       } catch (e) {
         // A7
         if (e instanceof ObjectStoreError) {
-          throw new Errors.AddJokeRating.JokeRatingDaoCreateFailed({uuAppErrorMap}, e);
+          throw new Errors.AddJokeRating.JokeRatingDaoCreateFailed({ uuAppErrorMap }, e);
         }
       }
     } else {
@@ -83,7 +82,7 @@ class JokeRatingModel {
       } catch (e) {
         // A8
         if (e instanceof ObjectStoreError) {
-          throw new Errors.AddJokeRating.JokeRatingDaoUpdateFailed({uuAppErrorMap}, e);
+          throw new Errors.AddJokeRating.JokeRatingDaoUpdateFailed({ uuAppErrorMap }, e);
         }
       }
     }

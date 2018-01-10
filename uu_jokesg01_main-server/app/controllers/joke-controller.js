@@ -3,24 +3,24 @@
 const JokeModel = require("../models/joke-model.js");
 
 class JokeController {
-  create(ucEnv) {
-    return JokeModel.create(ucEnv.uri.awid, ucEnv.parameters);
+  createJoke(ucEnv) {
+    return JokeModel.createJoke(ucEnv.uri.awid, ucEnv.parameters);
   }
 
-  update(ucEnv) {
-    return JokeModel.update(ucEnv.uri.awid, ucEnv.parameters);
+  updateJoke(ucEnv) {
+    return JokeModel.updateJoke(ucEnv.uri.awid, ucEnv.parameters);
   }
 
-  remove(ucEnv) {
-    return JokeModel.remove(ucEnv.uri.awid, ucEnv.parameters);
+  deleteJoke(ucEnv) {
+    return JokeModel.deleteJoke(ucEnv.uri.awid, ucEnv.parameters);
   }
 
-  get(ucEnv) {
-    return JokeModel.get(ucEnv.uri.awid, ucEnv.parameters);
+  getJoke(ucEnv) {
+    return JokeModel.getJoke(ucEnv.uri.awid, ucEnv.parameters);
   }
 
-  list(ucEnv) {
-    return JokeModel.list(ucEnv.uri.awid, ucEnv.parameters);
+  listJokes(ucEnv) {
+    return JokeModel.listJokes(ucEnv.uri.awid, ucEnv.parameters);
   }
 }
 

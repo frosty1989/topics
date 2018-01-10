@@ -1,4 +1,5 @@
 "use strict";
+
 const { UuObjectDao } = require("uu_appg01_server").ObjectStore;
 
 class JokeCategoryMongoDB extends UuObjectDao {
@@ -17,7 +18,7 @@ class JokeCategoryMongoDB extends UuObjectDao {
     return await super.findOne({ awid, jokeId, categoryId });
   }
 
-  async delete(awid, id) {
+  async remove(awid, id) {
     return await super.deleteOne({ awid, id });
   }
 
