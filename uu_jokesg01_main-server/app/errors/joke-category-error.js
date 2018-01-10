@@ -16,7 +16,6 @@ const AddJokeCategory = {
       super(...arguments);
       this.code = `${AddJokeCategory.UC_CODE}jokeDaoGetFailed`;
       this.message = "Get joke by joke Dao get failed.";
-      this.status = 500;
     }
   },
   JokeDoesNotExist: class extends UuJokesError {
@@ -31,7 +30,6 @@ const AddJokeCategory = {
       super(...arguments);
       this.code = `${AddJokeCategory.UC_CODE}categoryDaoGetFailed`;
       this.message = "Get category by category Dao get failed.";
-      this.status = 500;
     }
   },
   JokeCategoryDaoCreateFailed: class extends UuJokesError {
@@ -39,7 +37,6 @@ const AddJokeCategory = {
       super(...arguments);
       this.code = `${AddJokeCategory.UC_CODE}jokeCategoryDaoCreateFailed`;
       this.message = "Create jokeCategory by jokeCategory Dao create failed.";
-      this.status = 500;
     }
   }
 };
