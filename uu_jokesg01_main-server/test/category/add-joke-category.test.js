@@ -84,11 +84,16 @@ describe("Test addJokeCategory command", () => {
 
   test("A2", async () => {
     await TestHelper.login("Readers");
+
+    expect.assertions(9);
+
     await CreateCategory();
-    let dtoInInvalid = {
+
+    const dtoInInvalid = {
       jokeId: 123,
       categoryList: 123
     };
+
     try {
       await TestHelper.executePostCommand("addJokeCategory", dtoInInvalid);
     } catch (error) {
@@ -100,58 +105,6 @@ describe("Test addJokeCategory command", () => {
       ).toBeTruthy();
       expect(
         error.paramMap.invalidTypeKeyMap.hasOwnProperty("$.categoryList")
-      ).toBeTruthy();
-      expect(error.dtoOut).toHaveProperty("uuAppErrorMap");
-      expect(error).toHaveProperty("response");
-      expect(error).toHaveProperty("status");
-      expect(error.status).toEqual(400);
-    }
-  });
-
-  test("A1", async () => {
-    await TestHelper.login("Readers");
-    const unsupportedKeysWarn = "uu-jokes-main/addJokeCategory/unsupportedKeys";
-    let createCategoryResponse = await CreateCategory();
-    let categoryId = createCategoryResponse.data.id;
-    let result = await CreateJoke({}, categoryId);
-    let jokeId = result.data.id;
-
-    let dtoIn = {
-      jokeId: jokeId,
-      categoryList: [categoryId],
-      unsupportedKey: "unsupportedValue"
-    };
-    let response = await TestHelper.executePostCommand(
-      "addJokeCategory",
-      dtoIn
-    );
-    expect(response.status).toEqual(200);
-    expect(response.data).toBeDefined();
-    expect(response.data).toBeInstanceOf(Object);
-    expect(response.data).toHaveProperty("uuAppErrorMap");
-    expect(response.data.uuAppErrorMap).toBeInstanceOf(Object);
-    expect(response.data.uuAppErrorMap[unsupportedKeysWarn]).toBeDefined();
-    expect(response.data.uuAppErrorMap[unsupportedKeysWarn]).toBeInstanceOf(
-      Object
-    );
-  });
-
-  test("A2", async () => {
-    await TestHelper.login("Readers");
-
-    expect.assertions(9);
-
-    try {
-      await TestHelper.executePostCommand("addJokeCategory", {});
-    } catch (error) {
-      expect(error).toHaveProperty("paramMap");
-      expect(error.paramMap).toHaveProperty("invalidValueKeyMap");
-      expect(error.paramMap).toHaveProperty("missingKeyMap");
-      expect(
-        error.paramMap.missingKeyMap.hasOwnProperty("$.jokeId")
-      ).toBeTruthy();
-      expect(
-        error.paramMap.missingKeyMap.hasOwnProperty("$.categoryList")
       ).toBeTruthy();
       expect(error.dtoOut).toHaveProperty("uuAppErrorMap");
       expect(error).toHaveProperty("response");
