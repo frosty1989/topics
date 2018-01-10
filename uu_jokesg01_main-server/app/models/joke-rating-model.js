@@ -19,7 +19,9 @@ class JokeRatingModel {
   }
 
   async create(awid, dtoIn, session) {
+    // HDS 1 // A1
     let validationResult = this.validator.validate("addJokeRatingDtoInType", dtoIn);
+    // A2
     let uuAppErrorMap = ValidationHelper.processValidationResult(
       dtoIn,
       validationResult,
@@ -35,21 +37,25 @@ class JokeRatingModel {
     let uuIdentity = identity.getUUIdentity();
 
     try {
+      //HDS 2
       const JokeModel = require("./joke-model");
       joke = await JokeModel.dao.get(awid, dtoIn.id);
     } catch (e) {
+      // HDS2 //A3
       if (e instanceof ObjectStoreError) {
         throw new Errors.AddJokeRating.JokeDaoGetFailed({uuAppErrorMap}, e);
       }
     }
-
+    // HDS 2 //A4
     if (!joke.hasOwnProperty("id")) {
       throw new Errors.AddJokeRating.JokeDoesNotExist({ uuAppErrorMap }, { jokeId: dtoIn.id });
     }
 
     try {
+      // HDS 3
       userVote = await this.dao.getByJokeAndIdentity(awid, dtoIn.id, uuIdentity);
     } catch (e) {
+      // A5
       if (e instanceof ObjectStoreError) {
         throw new Errors.AddJokeRating.JokeRatingDaoGetByJokeAndIdentityFailed({uuAppErrorMap}, e);
       }
@@ -60,18 +66,22 @@ class JokeRatingModel {
 
     if (userVote) {
       try {
+        // HDS 3.2
         averageRating = (userVote.rating * 1 + uuObject.rating) / (userVote.rating + 1);
         dtoOut = await this.dao.create(uuObject);
       } catch (e) {
+        // A7
         if (e instanceof ObjectStoreError) {
           throw new Errors.AddJokeRating.JokeRatingDaoCreateFailed({uuAppErrorMap}, e);
         }
       }
     } else {
       try {
+        // HDS 6
         averageRating = 3;
         dtoOut = await this.dao.update(uuObject);
       } catch (e) {
+        // A8
         if (e instanceof ObjectStoreError) {
           throw new Errors.AddJokeRating.JokeRatingDaoUpdateFailed({uuAppErrorMap}, e);
         }
