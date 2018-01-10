@@ -110,7 +110,7 @@ describe("Test updateJoke command", () => {
         text: "Very funny text of very funny joke"
       });
     } catch (e) {
-      expect(e.status).toBe(500);
+      expect(e.status).toBe(400);
       expect(e.dtoOut.uuAppErrorMap[jokeDoesNotExistCode]).toBeDefined();
       expect(e.dtoOut.uuAppErrorMap[jokeDoesNotExistCode].type).toBeDefined();
       expect(e.dtoOut.uuAppErrorMap[jokeDoesNotExistCode].type).toEqual("warning");
