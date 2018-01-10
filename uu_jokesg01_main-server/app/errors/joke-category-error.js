@@ -52,7 +52,7 @@ const AddJokeCategory = {
 const RemoveJokeCategory = {
   UC_CODE: `${UuJokesError.ERROR_PREFIX}removeJokeCategory/`,
 
-  InvalidDtoInError: class extends UuJokesError {
+  InvalidDtoIn: class extends UuJokesError {
     constructor() {
       super(...arguments);
       this.code = `${RemoveJokeCategory.UC_CODE}invalidDtoIn`;
