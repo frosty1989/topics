@@ -52,19 +52,14 @@ const WARNINGS = {
 
 class JokeModel {
   constructor() {
-    this.validator = new Validator(
-      Path.join(__dirname, "..", "validation_types", "joke-types.js")
-    );
+    this.validator = new Validator(Path.join(__dirname, "..", "validation_types", "joke-types.js"));
     this.dao = DaoFactory.getDao("joke");
   }
 
   async create(awid, dtoIn) {
     //HDS 1
     //A1
-    let validationResult = this.validator.validate(
-      "createJokeDtoInType",
-      dtoIn
-    );
+    let validationResult = this.validator.validate("createJokeDtoInType", dtoIn);
     //A2
     let uuAppErrorMap = ValidationHelper.processValidationResult(
       dtoIn,
@@ -131,17 +126,10 @@ class JokeModel {
 
         try {
           //HDS 3.2
-          await JokeCategoryModel.dao.create({
-            awid: awid,
-            jokeId: dtoOut.id.toString(),
-            categoryId: categoryId
-          });
+          await JokeCategoryModel.dao.create({ awid: awid, jokeId: dtoOut.id.toString(), categoryId: categoryId });
         } catch (e) {
           //A6
-          throw new Errors.CreateJoke.JokeCategoryDaoCreateFailed(
-            { uuAppErrorMap },
-            e
-          );
+          throw new Errors.CreateJoke.JokeCategoryDaoCreateFailed({ uuAppErrorMap }, e);
         }
       }
     }
@@ -155,10 +143,7 @@ class JokeModel {
 
   async update(awid, dtoIn) {
     //HDS 1
-    let validationResult = this.validator.validate(
-      "updateJokeDtoInType",
-      dtoIn
-    );
+    let validationResult = this.validator.validate("updateJokeDtoInType", dtoIn);
     //A1, A2
     let uuAppErrorMap = ValidationHelper.processValidationResult(
       dtoIn,
@@ -205,10 +190,7 @@ class JokeModel {
 
   async remove(awid, dtoIn) {
     //HDS 1
-    let validationResult = this.validator.validate(
-      "deleteJokeDtoInType",
-      dtoIn
-    );
+    let validationResult = this.validator.validate("deleteJokeDtoInType", dtoIn);
     //A1, A2
     let uuAppErrorMap = ValidationHelper.processValidationResult(
       dtoIn,
@@ -225,10 +207,7 @@ class JokeModel {
       await JokeRatingModel.dao.deleteByJoke(awid, dtoIn.id);
     } catch (e) {
       //A3
-      throw new Errors.DeleteJoke.JokeRatingDaoDeleteByJokeFailed(
-        { uuAppErrorMap },
-        e
-      );
+      throw new Errors.DeleteJoke.JokeRatingDaoDeleteByJokeFailed({ uuAppErrorMap }, e);
     }
 
     try {
@@ -237,10 +216,7 @@ class JokeModel {
       await JokeCategoryModel.dao.deleteByJoke(awid, dtoIn.id);
     } catch (e) {
       //A4
-      throw new Errors.DeleteJoke.JokeCategoryDaoDeleteByJokeFailed(
-        { uuAppErrorMap },
-        e
-      );
+      throw new Errors.DeleteJoke.JokeCategoryDaoDeleteByJokeFailed({ uuAppErrorMap }, e);
     }
 
     try {
@@ -279,10 +255,7 @@ class JokeModel {
 
     //A4
     if (!dtoOut.hasOwnProperty("id")) {
-      throw new Errors.GetJoke.JokeDoesNotExist(
-        { uuAppErrorMap },
-        { jokeId: dtoIn.id }
-      );
+      throw new Errors.GetJoke.JokeDoesNotExist({ uuAppErrorMap }, { jokeId: dtoIn.id });
     }
 
     try {
@@ -293,10 +266,7 @@ class JokeModel {
       dtoOut.categoryList = categories.itemList.map(x => x.id);
     } catch (e) {
       //A5
-      throw new Errors.GetJoke.JokeCategoryDaoListByJokeFailed(
-        { uuAppErrorMap },
-        e
-      );
+      throw new Errors.GetJoke.JokeCategoryDaoListByJokeFailed({ uuAppErrorMap },e);
     }
 
     dtoOut.uuAppErrorMap = uuAppErrorMap;

@@ -22,28 +22,23 @@ const WARNINGS = {
 
 class CategoryModel {
   constructor() {
-    this.validator = new Validator(
-      Path.join(__dirname, "..", "validation_types", "category-types.js")
-    );
+    this.validator = new Validator(Path.join(__dirname, "..", "validation_types", "category-types.js"));
     this.dao = DaoFactory.getDao("category");
   }
 
   async createCategory(awid, dtoIn) {
     // HDS 1 // A1
-    let validationResult = this.validator.validate(
-      "createCategoryDtoInType",
-      dtoIn
-    );
+    let validationResult = this.validator.validate("createCategoryDtoInType",dtoIn);
     // A2
     let uuAppErrorMap = ValidationHelper.processValidationResult(
       dtoIn,
       validationResult,
-      {},
       WARNINGS.createCategory.code,
       Errors.CreateCategory.InvalidDtoInError
     );
 
     dtoIn.awid = awid;
+
     let dtoOut;
     try {
       //HDS 2
@@ -51,34 +46,24 @@ class CategoryModel {
     } catch (e) {
       // A3
       if (e.code === "uu-app-objectstore/duplicateKey") {
-        throw new Errors.CreateCategory.CategoryNameNotUnique(
-          { uuAppErrorMap },
-          { name: dtoIn.name },
-          e
-        );
+        throw new Errors.CreateCategory.CategoryNameNotUnique({ uuAppErrorMap }, { name: dtoIn.name }, e);
       }
       // A4
-      throw new Errors.CreateCategory.CategoryDaoCreateFailed(
-        { uuAppErrorMap },
-        e
-      );
+      throw new Errors.CreateCategory.CategoryDaoCreateFailed({ uuAppErrorMap }, e);
     }
     // HDS 3
     dtoOut.uuAppErrorMap = uuAppErrorMap;
+
     return dtoOut;
   }
 
   async updateCategory(awid, dtoIn) {
     // HDS 1 // A1
-    let validationResult = this.validator.validate(
-      "updateCategoryDtoInType",
-      dtoIn
-    );
+    let validationResult = this.validator.validate("updateCategoryDtoInType",dtoIn);
     //HDS 1.3 //A2
     let uuAppErrorMap = ValidationHelper.processValidationResult(
       dtoIn,
       validationResult,
-      {},
       WARNINGS.updateCategory.code,
       Errors.UpdateCategory.InvalidDtoInError
     );
@@ -93,34 +78,24 @@ class CategoryModel {
     } catch (e) {
       // A3
       if (e.code === "uu-app-objectstore/duplicateKey") {
-        throw new Errors.UpdateCategory.CategoryNameNotUnique(
-          { uuAppErrorMap },
-          { name: dtoIn.name },
-          e
-        );
+        throw new Errors.UpdateCategory.CategoryNameNotUnique({ uuAppErrorMap }, { name: dtoIn.name }, e);
       }
       // A4
-      throw new Errors.UpdateCategory.CategoryDaoUpdateFailed(
-        { uuAppErrorMap },
-        e
-      );
+      throw new Errors.UpdateCategory.CategoryDaoUpdateFailed({ uuAppErrorMap }, e);
     }
 
     dtoOut.uuAppErrorMap = uuAppErrorMap;
+
     return dtoOut;
   }
 
   async deleteCategory(awid, dtoIn) {
     // HDS 1 // A1
-    let validationResult = this.validator.validate(
-      "deleteCategoryDtoInType",
-      dtoIn
-    );
+    let validationResult = this.validator.validate("deleteCategoryDtoInType", dtoIn);
     // A2
     let uuAppErrorMap = ValidationHelper.processValidationResult(
       dtoIn,
       validationResult,
-      {},
       WARNINGS.deleteCategory.code,
       Errors.DeleteCategory.InvalidDtoInError
     );
@@ -134,34 +109,23 @@ class CategoryModel {
         await JokeCategoryModel.dao.deleteByCategory(awid, dtoIn.id);
       } catch (e) {
         //A5
-        throw new Errors.DeleteCategory.JokeCategoryDaoDeleteByCategoryFailed(
-          { uuAppErrorMap },
-          e
-        );
+        throw new Errors.DeleteCategory.JokeCategoryDaoDeleteByCategoryFailed({ uuAppErrorMap }, e);
       }
     } else {
       //HDS 2
       try {
         // HDS 2.1
-        foundJokeCategories = await JokeCategoryModel.dao.listByCategory(
-          awid,
-          dtoIn.id
-        );
+        foundJokeCategories = await JokeCategoryModel.dao.listByCategory(awid, dtoIn.id);
       } catch (error) {
         //A3
-        throw new Errors.DeleteCategory.JokeCategoryDaoListByCategoryFailed(
-          { uuAppErrorMap },
-          error
-        );
+        throw new Errors.DeleteCategory.JokeCategoryDaoListByCategoryFailed({ uuAppErrorMap }, error);
       }
       // HDS 2.1
       if (foundJokeCategories.itemList.length > 0) {
         // A4
         throw new Errors.DeleteCategory.RelatedJokesExist(
           { uuAppErrorMap },
-          {
-            relatedJokes: foundJokeCategories.itemList
-          }
+          { relatedJokes: foundJokeCategories.itemList }
         );
       }
     }
@@ -171,10 +135,7 @@ class CategoryModel {
       await this.dao.remove(awid, dtoIn.id);
     } catch (e) {
       //A6
-      throw new Errors.DeleteCategory.CategoryDaoDeleteFailed(
-        { uuAppErrorMap },
-        e
-      );
+      throw new Errors.DeleteCategory.CategoryDaoDeleteFailed({ uuAppErrorMap }, e);
     }
 
     dtoOut.uuAppErrorMap = uuAppErrorMap;
@@ -184,39 +145,31 @@ class CategoryModel {
 
   async listCategories(awid, dtoIn) {
     // HDS 1 // A1
-    let validationResult = this.validator.validate(
-      "listCategoriesDtoInType",
-      dtoIn
-    );
+    let validationResult = this.validator.validate("listCategoriesDtoInType", dtoIn);
     // HDS 1.3 // A2
     let uuAppErrorMap = ValidationHelper.processValidationResult(
       dtoIn,
       validationResult,
-      {},
       WARNINGS.listCategories.code,
       Errors.ListCategories.InvalidDtoInError
     );
+    let dtoOut;
 
-    dtoIn.pageInfo = dtoIn.pageInfo || {
-      pageIndex: 0,
-      pageSize: 100
-    };
+    dtoIn.pageInfo = dtoIn.pageInfo || { pageIndex: 0, pageSize: 100 };
     dtoIn.pageInfo.pageSize = dtoIn.pageInfo.pageSize || 100;
 
-    let dtoOut;
     try {
       // HDS 2
       dtoOut = await this.dao.list(awid, dtoIn.pageInfo);
     } catch (e) {
       // A3
-      throw new Errors.ListCategories.CategoryDaoListFailed(
-        { uuAppErrorMap },
-        e
-      );
+      throw new Errors.ListCategories.CategoryDaoListFailed({ uuAppErrorMap }, e);
     }
+
     // HDS 3
     dtoOut = dtoOut || {};
     dtoOut.uuAppErrorMap = uuAppErrorMap;
+
     return dtoOut;
   }
 }
