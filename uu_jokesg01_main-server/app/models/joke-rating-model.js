@@ -44,6 +44,7 @@ class JokeRatingModel {
       if (e instanceof ObjectStoreError) {
         throw new Errors.AddJokeRating.JokeDaoGetFailed({ uuAppErrorMap }, e);
       }
+      throw e;
     }
     // HDS 2 //A4
     if (!joke.hasOwnProperty("id")) {
@@ -58,6 +59,7 @@ class JokeRatingModel {
       if (e instanceof ObjectStoreError) {
         throw new Errors.AddJokeRating.JokeRatingDaoGetByJokeAndIdentityFailed({ uuAppErrorMap }, e);
       }
+      throw e;
     }
 
     uuObject.awid = awid;
@@ -73,6 +75,7 @@ class JokeRatingModel {
         if (e instanceof ObjectStoreError) {
           throw new Errors.AddJokeRating.JokeRatingDaoCreateFailed({ uuAppErrorMap }, e);
         }
+        throw e;
       }
     } else {
       try {
@@ -84,6 +87,7 @@ class JokeRatingModel {
         if (e instanceof ObjectStoreError) {
           throw new Errors.AddJokeRating.JokeRatingDaoUpdateFailed({ uuAppErrorMap }, e);
         }
+        throw e;
       }
     }
 

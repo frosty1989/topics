@@ -56,6 +56,7 @@ class JokeCategoryModel {
       if (e instanceof ObjectStoreError) {
         throw new Errors.AddJokeCategory.JokeDaoGetFailed({ uuAppErrorMap }, e);
       }
+      throw e;
     }
 
     if (foundJoke && !foundJoke.hasOwnProperty("id")) {
@@ -73,10 +74,10 @@ class JokeCategoryModel {
       try {
         //HDS 3.1
         foundCategory = await CategoryModel.dao.get(awid, dtoInCategoryId);
-      } catch (err) {
+      } catch (e) {
         //A5
-        if (err instanceof ObjectStoreError) {
-          throw new Errors.AddJokeCategory.CategoryDaoGetFailed({ uuAppErrorMap }, err);
+        if (e instanceof ObjectStoreError) {
+          throw new Errors.AddJokeCategory.CategoryDaoGetFailed({ uuAppErrorMap }, e);
         }
       }
 
@@ -107,6 +108,7 @@ class JokeCategoryModel {
             if (e instanceof ObjectStoreError) {
               throw new Errors.AddJokeCategory.JokeCategoryDaoCreateFailed({ uuAppErrorMap }, e);
             }
+            throw e;
           }
         }
       }
@@ -142,6 +144,7 @@ class JokeCategoryModel {
         if (e instanceof ObjectStoreError) {
           throw new Errors.RemoveJokeCategory.JokeCategoryDaoDeleteByJokeAndCategoryFailed({ uuAppErrorMap }, e);
         }
+        throw e;
       }
     }
 
@@ -173,6 +176,7 @@ class JokeCategoryModel {
       if (e instanceof ObjectStoreError) {
         throw new Errors.ListCategoryJokes.JokeCategoryDaoListByCategoryFailed({ uuAppErrorMap }, e);
       }
+      throw e;
     }
 
     try {
@@ -182,6 +186,7 @@ class JokeCategoryModel {
       if (e instanceof ObjectStoreError) {
         throw new Errors.ListCategoryJokes.JokeDaoListByIdsFailed({ uuAppErrorMap }, e);
       }
+      throw e;
     }
 
     dtoOut.uuAppErrorMap = uuAppErrorMap;

@@ -53,6 +53,7 @@ class CategoryModel {
       if (e instanceof ObjectStoreError) {
         throw new Errors.CreateCategory.CategoryDaoCreateFailed({ uuAppErrorMap }, e);
       }
+      throw e;
     }
     // HDS 3
     dtoOut.uuAppErrorMap = uuAppErrorMap;
@@ -79,14 +80,16 @@ class CategoryModel {
       //HDS 2
       dtoOut = await this.dao.update(uuObject);
     } catch (e) {
-      // A3
-      if (e.code === "uu-app-objectstore/duplicateKey") {
-        throw new Errors.UpdateCategory.CategoryNameNotUnique({ uuAppErrorMap }, { name: dtoIn.name }, e);
-      }
       // A4
       if (e instanceof ObjectStoreError) {
-        throw new Errors.UpdateCategory.CategoryDaoUpdateFailed({ uuAppErrorMap }, e);
+        // A3
+        if (e.code === "uu-app-objectstore/duplicateKey") {
+          throw new Errors.UpdateCategory.CategoryNameNotUnique({ uuAppErrorMap }, { name: dtoIn.name }, e);
+        } else {
+          throw new Errors.UpdateCategory.CategoryDaoUpdateFailed({uuAppErrorMap}, e);
+        }
       }
+      throw e;
     }
 
     dtoOut.uuAppErrorMap = uuAppErrorMap;
@@ -117,6 +120,7 @@ class CategoryModel {
         if (e instanceof ObjectStoreError) {
           throw new Errors.DeleteCategory.JokeCategoryDaoDeleteByCategoryFailed({ uuAppErrorMap }, e);
         }
+        throw e;
       }
     } else {
       //HDS 2
@@ -128,6 +132,7 @@ class CategoryModel {
         if (e instanceof ObjectStoreError) {
           throw new Errors.DeleteCategory.JokeCategoryDaoListByCategoryFailed({ uuAppErrorMap }, e);
         }
+        throw e;
       }
       // HDS 2.1
       if (foundJokeCategories.itemList.length > 0) {
@@ -147,6 +152,7 @@ class CategoryModel {
       if (e instanceof ObjectStoreError) {
         throw new Errors.DeleteCategory.CategoryDaoDeleteFailed({ uuAppErrorMap }, e);
       }
+      throw e;
     }
 
     dtoOut.uuAppErrorMap = uuAppErrorMap;
@@ -177,6 +183,7 @@ class CategoryModel {
       if (e instanceof ObjectStoreError) {
         throw new Errors.ListCategories.CategoryDaoListFailed({ uuAppErrorMap }, e);
       }
+      throw e;
     }
 
     // HDS 3
