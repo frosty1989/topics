@@ -18,8 +18,12 @@ class JokeRatingModel {
   }
 
   async addJokeRating(awid, dtoIn, session) {
-    // HDS 1 // A1
+    // HDS 1
+    // HDS 1.1
+    // A1
     let validationResult = this.validator.validate("addJokeRatingDtoInType", dtoIn);
+    // HDS 1.2
+    // HDS 1.3
     // A2
     let uuAppErrorMap = ValidationHelper.processValidationResult(
       dtoIn,
@@ -27,28 +31,33 @@ class JokeRatingModel {
       WARNINGS.createRating.code,
       Errors.AddJokeRating.InvalidDtoIn
     );
+    const JokeModel = require("./joke-model");
     let joke;
     let userVote;
     let dtoOut;
-    let uuObject = Object.create(dtoIn);
     let averageRating = 0;
     let identity = session.getIdentity();
-    let uuIdentity = identity.getUUIdentity();
+    let uuObject = {};
 
     try {
       //HDS 2
-      const JokeModel = require("./joke-model");
       joke = await JokeModel.dao.get(awid, dtoIn.id);
     } catch (e) {
-      // HDS2 //A3
+      //A3
       if (e instanceof ObjectStoreError) {
         throw new Errors.AddJokeRating.JokeDaoGetFailed({ uuAppErrorMap }, e);
       }
     }
-    // HDS 2 //A4
+
+    //A4
     if (!joke.hasOwnProperty("id")) {
       throw new Errors.AddJokeRating.JokeDoesNotExist({ uuAppErrorMap }, { jokeId: dtoIn.id });
     }
+
+    uuObject.awid = awid;
+    uuObject.jokeId = dtoIn.id;
+    uuObject.rating = dtoIn.rating;
+    uuObject.uuIdentity = identity.getUUIdentity();
 
     try {
       // HDS 3
@@ -60,13 +69,20 @@ class JokeRatingModel {
       }
     }
 
-    uuObject.awid = awid;
-    uuObject.uuIdentity = uuIdentity;
-
-    if (userVote) {
+    if (userVote && userVote.hasOwnProperty("id")) {
+      try {
+        // HDS 3.1
+        userVote.rating = dtoIn.rating;
+        dtoOut = await this.dao.update(userVote);
+      } catch (e) {
+        // A6
+        if (e instanceof ObjectStoreError) {
+          throw new Errors.AddJokeRating.JokeRatingDaoUpdateFailed({ uuAppErrorMap }, e);
+        }
+      }
+    } else {
       try {
         // HDS 3.2
-        averageRating = (userVote.rating * 1 + uuObject.rating) / (userVote.rating + 1);
         dtoOut = await this.dao.create(uuObject);
       } catch (e) {
         // A7
@@ -74,18 +90,9 @@ class JokeRatingModel {
           throw new Errors.AddJokeRating.JokeRatingDaoCreateFailed({ uuAppErrorMap }, e);
         }
       }
-    } else {
-      try {
-        // HDS 6
-        averageRating = 3;
-        dtoOut = await this.dao.update(uuObject);
-      } catch (e) {
-        // A8
-        if (e instanceof ObjectStoreError) {
-          throw new Errors.AddJokeRating.JokeRatingDaoUpdateFailed({ uuAppErrorMap }, e);
-        }
-      }
     }
+
+    // HDS 4
 
     dtoOut.uuAppErrorMap = uuAppErrorMap;
 

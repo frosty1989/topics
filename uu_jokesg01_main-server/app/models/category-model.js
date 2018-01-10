@@ -52,6 +52,8 @@ class CategoryModel {
       // A4
       if (e instanceof ObjectStoreError) {
         throw new Errors.CreateCategory.CategoryDaoCreateFailed({ uuAppErrorMap }, e);
+      } else {
+        throw e;
       }
     }
     // HDS 3
