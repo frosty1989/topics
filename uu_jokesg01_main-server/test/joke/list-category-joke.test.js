@@ -1,6 +1,7 @@
 const { TestHelper } = require("uu_appg01_workspace-test");
 const { CreateCategory } = require("../general-test-hepler");
 const { CreateJoke } = require("../general-test-hepler");
+const CMD = "listCategoryJokes";
 
 beforeEach(async done => {
   await TestHelper.setup();
@@ -21,8 +22,7 @@ describe("Test listCategoryJokes command", () => {
     let categoryId = createCategoryResponse.data.id;
     await CreateJoke({}, categoryId);
     let dtoIn = { categoryId: categoryId };
-    let response = await TestHelper.executeGetCommand(
-      "listCategoryJokes",
+    let response = await TestHelper.executeGetCommand(CMD,
       dtoIn
     );
     expect(response.status).toEqual(200);
@@ -43,24 +43,25 @@ describe("Test listCategoryJokes command", () => {
       unsupportedKey: "unsupportedValue"
     };
     let response = await TestHelper.executeGetCommand(
-      "listCategoryJokes",
+      CMD,
       dtoIn
     );
+    const code = "uu-jokes-main/listCategoryJokes/unsupportedKeys";
 
     expect(response.status).toEqual(200);
     expect("warning").toEqual(
       response.data.uuAppErrorMap[
-        "uu-jokesg01-main/listCategoryJokes/unsupportedKey"
+        code
       ].type
     );
     expect("DtoIn contains unsupported keys.").toEqual(
       response.data.uuAppErrorMap[
-        "uu-jokesg01-main/listCategoryJokes/unsupportedKey"
+        code
       ].message
     );
     let invalidData =
       response.data.uuAppErrorMap[
-        "uu-jokesg01-main/listCategoryJokes/unsupportedKey"
+        code
       ].paramMap["unsupportedKeyList"][0];
     expect(invalidData).toEqual("$.unsupportedKey");
   });
@@ -69,7 +70,7 @@ describe("Test listCategoryJokes command", () => {
     await TestHelper.login("Readers");
     expect.assertions(7);
     try {
-      await TestHelper.executeGetCommand("listCategoryJokes", {});
+      await TestHelper.executeGetCommand(CMD, {});
     } catch (error) {
       expect(error.status).toBe(400);
       expect(error).toHaveProperty("paramMap");
