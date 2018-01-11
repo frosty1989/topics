@@ -29,7 +29,7 @@ class CategoryModel {
 
   async createCategory(awid, dtoIn) {
     // HDS 1 // A1
-    let validationResult = this.validator.validate("createCategoryDtoInType",dtoIn);
+    let validationResult = this.validator.validate("createCategoryDtoInType", dtoIn);
     // A2
     let uuAppErrorMap = ValidationHelper.processValidationResult(
       dtoIn,
@@ -52,8 +52,6 @@ class CategoryModel {
       // A4
       if (e instanceof ObjectStoreError) {
         throw new Errors.CreateCategory.CategoryDaoCreateFailed({ uuAppErrorMap }, e);
-      } else {
-        throw e;
       }
       throw e;
     }
@@ -65,7 +63,7 @@ class CategoryModel {
 
   async updateCategory(awid, dtoIn) {
     // HDS 1 // A1
-    let validationResult = this.validator.validate("updateCategoryDtoInType",dtoIn);
+    let validationResult = this.validator.validate("updateCategoryDtoInType", dtoIn);
     //HDS 1.3 //A2
     let uuAppErrorMap = ValidationHelper.processValidationResult(
       dtoIn,
@@ -88,7 +86,7 @@ class CategoryModel {
         if (e.code === "uu-app-objectstore/duplicateKey") {
           throw new Errors.UpdateCategory.CategoryNameNotUnique({ uuAppErrorMap }, { name: dtoIn.name }, e);
         } else {
-          throw new Errors.UpdateCategory.CategoryDaoUpdateFailed({uuAppErrorMap}, e);
+          throw new Errors.UpdateCategory.CategoryDaoUpdateFailed({ uuAppErrorMap }, e);
         }
       }
       throw e;

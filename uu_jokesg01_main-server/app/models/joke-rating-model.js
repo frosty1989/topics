@@ -33,11 +33,10 @@ class JokeRatingModel {
     );
     const JokeModel = require("./joke-model");
     let joke;
-    let userVote;
+    let oldRating;
     let dtoOut;
-    let averageRating = 0;
+    let averageRating;
     let identity = session.getIdentity();
-    let uuObject = {};
 
     try {
       //HDS 2
@@ -55,14 +54,16 @@ class JokeRatingModel {
       throw new Errors.AddJokeRating.JokeDoesNotExist({ uuAppErrorMap }, { jokeId: dtoIn.id });
     }
 
-    uuObject.awid = awid;
-    uuObject.jokeId = dtoIn.id;
-    uuObject.rating = dtoIn.rating;
-    uuObject.uuIdentity = identity.getUUIdentity();
+    let rating = {
+      awid: awid,
+      jokeId: dtoIn.id,
+      rating: dtoIn.rating,
+      uuIdentity: identity.getUUIdentity()
+    };
 
     try {
       // HDS 3
-      userVote = await this.dao.getByJokeAndIdentity(awid, dtoIn.id, uuIdentity);
+      oldRating = await this.dao.getByJokeAndIdentity(rating.awid, rating.jokeId, rating.uuIdentity);
     } catch (e) {
       // A5
       if (e instanceof ObjectStoreError) {
@@ -71,11 +72,13 @@ class JokeRatingModel {
       throw e;
     }
 
-    if (userVote && userVote.hasOwnProperty("id")) {
+    if (oldRating.hasOwnProperty("id")) {
       try {
         // HDS 3.1
-        userVote.rating = dtoIn.rating;
-        dtoOut = await this.dao.update(userVote);
+        oldRating.rating = rating.rating;
+        dtoOut = await this.dao.update(oldRating);
+        // HDS 4.2
+        averageRating = (joke.averageRating * joke.ratingCount - oldRating.rating + dtoOut.rating) / joke.ratingCount;
       } catch (e) {
         // A6
         if (e instanceof ObjectStoreError) {
@@ -86,7 +89,11 @@ class JokeRatingModel {
     } else {
       try {
         // HDS 3.2
-        dtoOut = await this.dao.create(uuObject);
+        dtoOut = await this.dao.create(rating);
+        // HDS 4.1
+        averageRating = (joke.averageRating * joke.ratingCount + dtoOut.rating) / (joke.ratingCount + 1);
+        // HDS 5
+        joke.ratingCount += 1;
       } catch (e) {
         // A7
         if (e instanceof ObjectStoreError) {
@@ -96,10 +103,21 @@ class JokeRatingModel {
       }
     }
 
-    // HDS 4
+    // HDS 6
+    try {
+      joke.averageRating = averageRating;
+      await JokeModel.dao.update(joke);
+    } catch (e) {
+      if (e instanceof ObjectStoreError) {
+        // A8
+        throw new Errors.AddJokeRating.JokeDaoUpdateFailed.new({ uuAppErrorMap }, e);
+      }
+      throw e;
+    }
 
     dtoOut.uuAppErrorMap = uuAppErrorMap;
 
+    // HDS 7
     return dtoOut;
   }
 }

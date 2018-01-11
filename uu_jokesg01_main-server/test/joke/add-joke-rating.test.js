@@ -1,5 +1,6 @@
 const { TestHelper } = require("uu_appg01_workspace-test");
 const { CreateJoke } = require("../general-test-hepler");
+const CMD = "addJokeRating";
 
 beforeEach(async done => {
   await TestHelper.setup();
@@ -13,36 +14,49 @@ afterEach(async done => {
   done();
 });
 
-const CMD = "addJokeRating";
-
 describe("Test addJokeRating command", () => {
   test("HDS", async () => {
-    let joke = await CreateJoke({ name: "Joke", text: "Text" });
-
-    await TestHelper.login("Readers");
-
+    const joke = await CreateJoke({ name: "Joke", text: "Text" });
     const readerUuIdentity = "14-2710-1";
-    let result = await TestHelper.executePostCommand(CMD, {
-      id: joke.data.id,
-      rating: 5
-    });
+    const goodRating = 5;
+    const badRating = 1;
+    const createdRating = await TestHelper.executePostCommand(CMD, { id: joke.data.id, rating: goodRating });
+    const updatedRating = await TestHelper.executePostCommand(CMD, { id: joke.data.id, rating: badRating });
+    const updatedJoke = await TestHelper.executeGetCommand("getJoke", { id: joke.data.id });
 
-    expect(result.status).toBe(200);
-    expect(result.data).toBeDefined();
-    expect(result.data).toBeInstanceOf(Object);
-    expect(result.data.id).toBeDefined();
-    expect(result.data.uuIdentity).toBeDefined();
-    expect(result.data.uuIdentity).toBe(readerUuIdentity);
-    expect(result.data.uuAppErrorMap).toBeDefined();
-    expect(result.data.uuAppErrorMap).toEqual({});
+    expect(createdRating.status).toBe(200);
+    expect(createdRating.data).toBeDefined();
+    expect(createdRating.data).toBeInstanceOf(Object);
+    expect(createdRating.data.id).toBeDefined();
+    expect(createdRating.data.awid).toBe(TestHelper.awid);
+    expect(createdRating.data.jokeId).toBe(joke.data.id);
+    expect(createdRating.data.rating).toBe(goodRating);
+    expect(createdRating.data.uuIdentity).toBe(readerUuIdentity);
+    expect(createdRating.data.uuAppErrorMap).toBeDefined();
+    expect(createdRating.data.uuAppErrorMap).toEqual({});
+
+    expect(updatedRating.status).toBe(200);
+    expect(updatedRating.data).toBeDefined();
+    expect(updatedRating.data).toBeInstanceOf(Object);
+    expect(updatedRating.data.id).toBeDefined();
+    expect(updatedRating.data.awid).toBe(TestHelper.awid);
+    expect(updatedRating.data.jokeId).toBe(joke.data.id);
+    expect(updatedRating.data.rating).toBe(badRating);
+    expect(updatedRating.data.uuIdentity).toBe(readerUuIdentity);
+    expect(updatedRating.data.uuAppErrorMap).toBeDefined();
+    expect(updatedRating.data.uuAppErrorMap).toEqual({});
+
+    expect(updatedJoke.status).toBe(200);
+    expect(updatedJoke.data).toBeDefined();
+    expect(updatedJoke.data.id).toBe(joke.data.id);
+    expect(updatedJoke.data.awid).toBe(TestHelper.awid);
+    expect(updatedJoke.data.averageRating).toBe(5);
+    expect(updatedJoke.data.ratingCount).toBe(1);
   });
 
   test("A1", async () => {
-    const joke = await CreateJoke({
-      name: "Joke",
-      text: "Text"
-    });
-    const unsupportedKeysWarnCode = "uu-jokes-main/addJokeRating/unsupportedKeys";
+    const joke = await CreateJoke({ name: "Joke", text: "Text" });
+    const code = "uu-jokes-main/addJokeRating/unsupportedKeys";
     const result = await TestHelper.executePostCommand(CMD, {
       id: joke.data.id,
       rating: 5,
@@ -53,18 +67,10 @@ describe("Test addJokeRating command", () => {
     expect(result.data).toBeDefined();
     expect(result.data).toBeInstanceOf(Object);
     expect(result.data.uuAppErrorMap).toBeDefined();
-    expect(result.data.uuAppErrorMap[unsupportedKeysWarnCode]).toBeDefined();
-    expect(
-      result.data.uuAppErrorMap[unsupportedKeysWarnCode].paramMap
-    ).toBeDefined();
-    expect(
-      result.data.uuAppErrorMap[unsupportedKeysWarnCode].paramMap
-        .unsupportedKeyList
-    ).toBeDefined();
-    expect(
-      result.data.uuAppErrorMap[unsupportedKeysWarnCode].paramMap
-        .unsupportedKeyList
-    ).toContain("$.unsupportedKey");
+    expect(result.data.uuAppErrorMap[code]).toBeDefined();
+    expect(result.data.uuAppErrorMap[code].paramMap).toBeDefined();
+    expect(result.data.uuAppErrorMap[code].paramMap.unsupportedKeyList).toBeDefined();
+    expect(result.data.uuAppErrorMap[code].paramMap.unsupportedKeyList).toContain("$.unsupportedKey");
   });
 
   test("A2", async () => {
@@ -81,33 +87,29 @@ describe("Test addJokeRating command", () => {
       expect(error.paramMap).toBeInstanceOf(Object);
       expect(error.paramMap.invalidValueKeyMap).toBeDefined();
       expect(error.paramMap.invalidValueKeyMap["$"]).toBeDefined();
-      expect(
-        error.paramMap.invalidValueKeyMap["$"]["shape.e002"]
-      ).toBeDefined();
+      expect(error.paramMap.invalidValueKeyMap["$"]["shape.e002"]).toBeDefined();
       expect(error.paramMap.missingKeyMap).toBeDefined();
       expect(error.paramMap.missingKeyMap["$.id"]).toBeDefined();
-      expect(
-        error.paramMap.missingKeyMap["$.id"]["isRequired.001"]
-      ).toBeDefined();
+      expect(error.paramMap.missingKeyMap["$.id"]["isRequired.001"]).toBeDefined();
       expect(error.paramMap.missingKeyMap["$.rating"]).toBeDefined();
-      expect(
-        error.paramMap.missingKeyMap["$.rating"]["isRequired.001"]
-      ).toBeDefined();
+      expect(error.paramMap.missingKeyMap["$.rating"]["isRequired.001"]).toBeDefined();
     }
   });
 
   test("A4", async () => {
-    expect.assertions(3);
+    const fakeJokeId = "5a3a5bfe85d5a73f585c2d50";
+
+    expect.assertions(5);
 
     try {
-      const fakeJokeId = "5a3a5bfe85d5a73f585c2d50";
-
       await TestHelper.login("Readers");
       await TestHelper.executePostCommand(CMD, { id: fakeJokeId, rating: 5 });
     } catch (error) {
       expect(error.status).toBe(400);
       expect(error.code).toBeDefined();
       expect(error.code).toBe("uu-jokes-main/addJokeRating/jokeDoesNotExist");
+      expect(error.paramMap).toBeDefined();
+      expect(error.paramMap).toHaveProperty("jokeId", fakeJokeId);
     }
   });
 });

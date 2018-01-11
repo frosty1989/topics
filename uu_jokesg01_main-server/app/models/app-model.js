@@ -51,7 +51,7 @@ class AppModel {
     } catch (e) {
       //A4
       if (e instanceof ObjectStoreError) {
-        throw new Errors.Init.SysSetProfileFailed({uuAppErrorMap}, { role: dtoIn.uuAppProfileAuthorities}, e);
+        throw new Errors.Init.SysSetProfileFailed({ uuAppErrorMap }, { role: dtoIn.uuAppProfileAuthorities }, e);
       }
       throw e;
     }

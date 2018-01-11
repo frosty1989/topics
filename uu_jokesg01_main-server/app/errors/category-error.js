@@ -57,9 +57,7 @@ const DeleteCategory = {
   JokeCategoryDaoListByCategoryFailed: class extends UuJokesError {
     constructor() {
       super(...arguments);
-      this.code = `${
-        DeleteCategory.UC_CODE
-      }jokeCategoryDaoListByCategoryFailed`;
+      this.code = `${DeleteCategory.UC_CODE}jokeCategoryDaoListByCategoryFailed`;
       this.message = "List jokeCategory by Dao listByCategory failed.";
     }
   },
@@ -73,9 +71,7 @@ const DeleteCategory = {
   JokeCategoryDaoDeleteByCategoryFailed: class extends UuJokesError {
     constructor() {
       super(...arguments);
-      this.code = `${
-        DeleteCategory.UC_CODE
-      }jokeCategoryDaoDeleteByCategoryFailed`;
+      this.code = `${DeleteCategory.UC_CODE}jokeCategoryDaoDeleteByCategoryFailed`;
       this.message = "Delete jokeCategory by Dao deleteByCategory failed.";
     }
   },

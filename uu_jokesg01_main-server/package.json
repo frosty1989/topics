@@ -32,5 +32,8 @@
     "app",
     "config",
     "public"
-  ]
+  ],
+  "prettier": {
+    "printWidth": 120
+  }
 }

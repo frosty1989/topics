@@ -31,7 +31,7 @@ class JokeMongoDB extends UuObjectDao {
   }
 
   async listByIds(awid, jokeIds = []) {
-    return await super.find({ awid, _id: { $in: jokeIds.map(x => new ObjectId(x)) }});
+    return await super.find({ awid, _id: { $in: jokeIds.map(x => new ObjectId(x)) } });
   }
 }
 

@@ -28,9 +28,7 @@ let AddJokeRating = {
   JokeRatingDaoGetByJokeAndIdentityFailed: class extends UuJokesError {
     constructor() {
       super(...arguments);
-      this.code = `${
-        AddJokeRating.UC_CODE
-      }jokeRatingDaoGetByJokeAndIdentityFailed`;
+      this.code = `${AddJokeRating.UC_CODE}jokeRatingDaoGetByJokeAndIdentityFailed`;
       this.message = "Get jokeRating by Dao getByJokeAndIdentity failed.";
     }
   },

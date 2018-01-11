@@ -1,6 +1,7 @@
 "use strict";
 
 const { UuObjectDao } = require("uu_appg01_server").ObjectStore;
+const { ObjectId } = require("bson");
 
 class JokeRatingMongoDB extends UuObjectDao {
   async createSchema() {
@@ -10,11 +11,21 @@ class JokeRatingMongoDB extends UuObjectDao {
   }
 
   async create(uuObject) {
+    if (uuObject.hasOwnProperty("jokeId")) {
+      uuObject.jokeId = new ObjectId(uuObject.jokeId);
+    }
+
     return await super.insertOne(uuObject);
   }
 
   async getByJokeAndIdentity(awid, jokeId, uuIdentity) {
-    return await super.findOne({ awid, jokeId, uuIdentity });
+    let filter = {
+      awid,
+      jokeId: new ObjectId(jokeId),
+      uuIdentity
+    };
+
+    return await super.findOne(filter);
   }
 
   async update(uuObject) {
@@ -24,7 +35,7 @@ class JokeRatingMongoDB extends UuObjectDao {
   }
 
   async deleteByJoke(awid, jokeId) {
-    return await super.deleteOne({ awid, jokeId });
+    return await super.deleteOne({ awid, jokeId: new ObjectId(jokeId) });
   }
 }
 

@@ -79,6 +79,7 @@ class JokeCategoryModel {
         if (e instanceof ObjectStoreError) {
           throw new Errors.AddJokeCategory.CategoryDaoGetFailed({ uuAppErrorMap }, e);
         }
+        throw e;
       }
 
       if (Object.keys(foundCategory).length === 0) {
