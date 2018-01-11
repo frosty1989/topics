@@ -85,6 +85,7 @@ class JokeModel {
       if (e instanceof ObjectStoreError) {
         throw new Errors.CreateJoke.JokeDaoCreateFailed({ uuAppErrorMap }, e);
       }
+      throw e;
     }
 
     if (categoryList.length > 0) {
@@ -113,14 +114,14 @@ class JokeModel {
           } else {
             validCategories.push(categoryId);
           }
-        } catch (err) {
+        } catch (e) {
           //A4
           ValidationHelper.addWarning(
             uuAppErrorMap,
             WARNINGS.createJoke.categoryDaoGetFailed.code,
             WARNINGS.createJoke.categoryDaoGetFailed.message,
             {
-              cause: err
+              cause: e
             }
           );
           continue;
@@ -134,6 +135,7 @@ class JokeModel {
           if (e instanceof ObjectStoreError) {
             throw new Errors.CreateJoke.JokeCategoryDaoCreateFailed({ uuAppErrorMap }, e);
           }
+          throw e;
         }
       }
     }
@@ -177,6 +179,7 @@ class JokeModel {
       if (e instanceof ObjectStoreError) {
         throw new Errors.UpdateJoke.JokeDaoGetFailed({ uuAppErrorMap }, e);
       }
+      throw e;
     }
 
     try {
@@ -188,6 +191,7 @@ class JokeModel {
       if (e instanceof ObjectStoreError) {
         throw new Errors.UpdateJoke.JokeDaoUpdateFailed({ uuAppErrorMap }, e);
       }
+      throw e;
     }
 
     dtoOut.uuAppErrorMap = uuAppErrorMap;
@@ -218,6 +222,7 @@ class JokeModel {
       if (e instanceof ObjectStoreError) {
         throw new Errors.DeleteJoke.JokeRatingDaoDeleteByJokeFailed({ uuAppErrorMap }, e);
       }
+      throw e;
     }
 
     try {
@@ -229,6 +234,7 @@ class JokeModel {
       if (e instanceof ObjectStoreError) {
         throw new Errors.DeleteJoke.JokeCategoryDaoDeleteByJokeFailed({ uuAppErrorMap }, e);
       }
+      throw e;
     }
 
     try {
@@ -236,9 +242,10 @@ class JokeModel {
       await this.dao.remove(awid, dtoIn.id);
     } catch (e) {
       //A5
-      if(e instanceof ObjectStoreError) {
+      if (e instanceof ObjectStoreError) {
         throw new Errors.DeleteJoke.JokeDaoDeleteFailed({ uuAppErrorMap }, e);
       }
+      throw e;
     }
 
     dtoOut.uuAppErrorMap = uuAppErrorMap;
@@ -267,6 +274,7 @@ class JokeModel {
       if (e instanceof ObjectStoreError) {
         throw new Errors.GetJoke.JokeDaoGetFailed({ uuAppErrorMap }, e);
       }
+      throw e;
     }
 
     //A4
@@ -285,6 +293,7 @@ class JokeModel {
       if (e instanceof ObjectStoreError) {
         throw new Errors.GetJoke.JokeCategoryDaoListByJokeFailed({ uuAppErrorMap }, e);
       }
+      throw e;
     }
 
     dtoOut.uuAppErrorMap = uuAppErrorMap;
@@ -319,6 +328,7 @@ class JokeModel {
       if (e instanceof ObjectStoreError) {
         throw new Errors.ListJokes.JokeDaoListFailed({ uuAppErrorMap }, e);
       }
+      throw e;
     }
 
     dtoOut.uuAppErrorMap = uuAppErrorMap;

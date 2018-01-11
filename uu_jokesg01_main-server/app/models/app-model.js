@@ -41,6 +41,7 @@ class AppModel {
         if (e instanceof ObjectStoreError) {
           throw new Errors.Init.SchemaDaoCreateSchemaFailed({ uuAppErrorMap }, { schema }, e);
         }
+        throw e;
       }
     }
 
@@ -52,6 +53,7 @@ class AppModel {
       if (e instanceof ObjectStoreError) {
         throw new Errors.Init.SysSetProfileFailed({uuAppErrorMap}, { role: dtoIn.uuAppProfileAuthorities}, e);
       }
+      throw e;
     }
 
     dtoOut.uuAppErrorMap = uuAppErrorMap;
