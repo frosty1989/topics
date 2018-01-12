@@ -1,22 +1,23 @@
 {
-  "uuCloudAppBoxLocationUri": "ues:DEV0105-BT:BETA.UU-JOKESG01-NODEJS/APPBOX",
-  "uuCloudResourcePoolUri": "ues:DEV0105-BT:DEV",
+  "uuCloudAppBoxLocationUri": "ues:UU-BT:PRD.UU-APPG01-SERVER-NODEJS/APPBOX",
+  "uuCloudResourcePoolUri": "ues:DEV0116-BT[84723967990075193]:DEV[590ad6f527928911f9d6078d]",
   "uuCloudDeploymentConfig": {
     "uuSubAppDataStoreMap": {
-      "primary": "mongodb://6nr3piesrfq57v5vwvfz4re1ehqc1z5l__h9bkb34k48q13ksepfg77zf4u3van04v4bm22de:12nKXAP8YXchyoVjbY64l@h-h0dv6qe3.rg-o5ojnm69.mongo-o-s.eu-n-1.cloud.plus4u.net:27017,h-zk893n61.rg-o5ojnm69.mongo-o-s.eu-n-1.cloud.plus4u.net:27017/6nr3piesrfq57v5vwvfz4re1ehqc1z5l?replicaSet=r-da9gbfgy"
+      "primary": "mongodb://492248e64b06438db5a62e81b4e6dc26__4qw2ttcf43r0qwq30z60cuqtm42mqcvh14onku5:ZxSMiMVe9liolQyP0AnVm@h-h0dv6qe3.rg-o5ojnm69.mongo-o-s.eu-n-1.cloud.plus4u.net:27017,h-zk893n61.rg-o5ojnm69.mongo-o-s.eu-n-1.cloud.plus4u.net:27017/492248e64b06438db5a62e81b4e6dc26?replicaSet=r-da9gbfgy",
+      "binary": "mongodb://pdtboyq4pnjopz4l4fooo3puif2gy0qt__kn548cq446kctuhig2nh87h2g5p77v4xaewxt4x:ryTIobgkfhHNQzo00G0tD@h-0u6kpu9s.rg-y6anef3v.mongo-b-s.eu-n-1.cloud.plus4u.net:27017,h-nup6bnl5.rg-y6anef3v.mongo-b-s.eu-n-1.cloud.plus4u.net:27017/pdtboyq4pnjopz4l4fooo3puif2gy0qt?replicaSet=r-5x0p8mh2"
     },
     "privilegedUserMap": {
-      "uuSubAppInstanceSysOwner": "19-3935-1"
+      "uuSubAppInstanceSysOwner": "19-3985-1"
     },
-    "tid": "84723967990066693",
-    "asid": "db6511f532534e28a32ed1ed8a2bb2ca",
-    "log_level": "DEBUG"
+    "tid": "84723967990075193",
+    "asid": "d7ded9eec814478b82e8bde799a2f610"
   },
   "uuCloudShareAppWorkspaces": [
-    "ues:84723967990075193-db6511f532534e28a32ed1ed8a2bb2ca:84723967990075193-db6511f532534e28a32ed1ed8a2bb2ca",
-    "ues:84723967990075193-c2f7d9d7204e43458348e46e0af826b9:84723967990075193-c2f7d9d7204e43458348e46e0af826b9"
+    "ues:84723967990075193-d7ded9eec814478b82e8bde799a2f610:84723967990075193-d7ded9eec814478b82e8bde799a2f610",
+    "ues:84723967990075193-82ba18830db041049f054cf42c8dd73e:84723967990075193-82ba18830db041049f054cf42c8dd73e"
   ],
   "uuLogStoreExport": {
     "from": "2017-10-30T15:00"
-  }
+  },
+  "uuCloudAppDeploymentUri": "ues:DEV0116-BT[84723967990075193]:DEV[590ad6f527928911f9d6078d]:UU.DEMONODEAPPG01.MAIN[59f9e6f719b8d14fc282b42e]"
 }
