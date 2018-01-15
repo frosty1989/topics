@@ -20,10 +20,9 @@ describe("Test init command", () => {
       uuAppProfileAuthorities: "urn:uu:GGALL"
     });
     expect(response.status).toEqual(200);
-    expect(response.data.uuAppErrorMap).toBeInstanceOf(Object);
     expect(response.data).toHaveProperty("uuAppErrorMap");
+    expect(response.data.uuAppErrorMap).toBeInstanceOf(Object);
     expect(response.data.uuAppErrorMap).toMatchObject({});
-    expect(response.data.uuAppErrorMap).toBeDefined();
   });
 
   test("A1", async () => {
@@ -34,29 +33,34 @@ describe("Test init command", () => {
     };
     let response = await TestHelper.executePostCommand("init", invalidDtoIn);
     let unsupportedKey = "uu-jokes-main/initunsupportedKeys";
+
     expect(response.status).toEqual(200);
-    expect(response.data.uuAppErrorMap).toBeInstanceOf(Object);
     expect(response.data).toHaveProperty("uuAppErrorMap");
+    expect(response.data.uuAppErrorMap).toBeInstanceOf(Object);
+    expect(response.data.uuAppErrorMap[unsupportedKey]).toBeInstanceOf(Object);
     expect(response.data.uuAppErrorMap[unsupportedKey].type).toEqual("warning");
     expect(response.data.uuAppErrorMap[unsupportedKey].message).toEqual("DtoIn contains unsupported keys.");
-    expect(response.data.uuAppErrorMap[unsupportedKey]).toBeInstanceOf(Object);
+    expect(response.data.uuAppErrorMap[unsupportedKey].paramMap).toBeDefined();
+    expect(response.data.uuAppErrorMap[unsupportedKey].paramMap).toHaveProperty("unsupportedKeyList");
+    expect(response.data.uuAppErrorMap[unsupportedKey].paramMap.unsupportedKeyList).toContain("$.unsupportedKey");
   });
 
   test("A2", async () => {
-    await TestHelper.login("Readers");
-    expect.assertions(8);
+    expect.assertions(10);
     try {
-      let invalidDtoIn = { uuAppProfileAuthorities: 123 };
-      await TestHelper.executePostCommand("init", invalidDtoIn);
+      await TestHelper.login("Readers");
+      await TestHelper.executePostCommand("init", { uuAppProfileAuthorities: 123 });
     } catch (e) {
+      expect(e.status).toBe(400);
       expect(e).toHaveProperty("paramMap");
       expect(e.paramMap).toHaveProperty("invalidValueKeyMap");
+      expect(e.paramMap.invalidValueKeyMap.hasOwnProperty("$")).toBeTruthy();
+      expect(e.paramMap).toHaveProperty("invalidTypeKeyMap");
       expect(e.paramMap.invalidTypeKeyMap.hasOwnProperty("$.uuAppProfileAuthorities")).toBeTruthy();
       expect(e.code).toEqual("uu-jokes-main/init/invalidDtoIn");
       expect(e.dtoOut).toHaveProperty("uuAppErrorMap");
       expect(e).toHaveProperty("response");
       expect(e).toHaveProperty("status");
-      expect(e.status).toBe(400);
     }
   });
 });
