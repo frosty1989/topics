@@ -1,6 +1,6 @@
 {
   "name": "uu_jokesg01_main-server",
-  "version": "0.9.2",
+  "version": "1.0.0",
   "description": "Server project template for developing UAF application in Node.js",
   "license": "Licence Commercial",
   "engines": {
