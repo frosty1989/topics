@@ -84,12 +84,16 @@ class JokeCategoryModel {
 
       if (Object.keys(foundCategory).length === 0) {
         //A6
-        ValidationHelper.addWarning(
-          uuAppErrorMap,
-          `${WARNINGS.addJokeCategory.categoryDoesNotExist.code}-${dtoInCategoryId}`,
-          WARNINGS.addJokeCategory.categoryDoesNotExist.message,
-          { categoryId: dtoInCategoryId }
-        );
+        if (uuAppErrorMap.hasOwnProperty(WARNINGS.addJokeCategory.categoryDoesNotExist.code)) {
+          uuAppErrorMap[WARNINGS.addJokeCategory.categoryDoesNotExist.code].paramMap.categoryIds.push(dtoInCategoryId);
+        } else {
+          ValidationHelper.addWarning(
+            uuAppErrorMap,
+            WARNINGS.addJokeCategory.categoryDoesNotExist.code,
+            WARNINGS.addJokeCategory.categoryDoesNotExist.message,
+            { categoryIds: [dtoInCategoryId] }
+          );
+        }
       } else {
         try {
           //HDS 3.2
@@ -98,12 +102,19 @@ class JokeCategoryModel {
         } catch (e) {
           if (e.code === "uu-app-objectstore/duplicateKey") {
             //A8
-            ValidationHelper.addWarning(
-              uuAppErrorMap,
-              `${WARNINGS.addJokeCategory.jokeCategoryAlreadyExists.code}-${foundCategory.id}`,
-              WARNINGS.addJokeCategory.jokeCategoryAlreadyExists.message,
-              { jokeId: dtoIn.jokeId, categoryId: foundCategory.id }
-            );
+            if (uuAppErrorMap.hasOwnProperty(WARNINGS.addJokeCategory.jokeCategoryAlreadyExists.code)) {
+              uuAppErrorMap[WARNINGS.addJokeCategory.jokeCategoryAlreadyExists.code].paramMap.push({
+                jokeId: dtoIn.jokeId,
+                categoryId: foundCategory.id
+              });
+            } else {
+              ValidationHelper.addWarning(
+                uuAppErrorMap,
+                WARNINGS.addJokeCategory.jokeCategoryAlreadyExists.code,
+                WARNINGS.addJokeCategory.jokeCategoryAlreadyExists.message,
+                [{ jokeId: dtoIn.jokeId, categoryId: foundCategory.id }]
+              );
+            }
           } else {
             //A7
             if (e instanceof ObjectStoreError) {

@@ -168,7 +168,6 @@ describe("Test addJokeCategory command", () => {
       dtoIn
     );
 
-    console.log(response);
     expect(response.status).toEqual(200);
     expect(response.data).toBeDefined();
     expect(response.data).toBeInstanceOf(Object);
@@ -177,16 +176,14 @@ describe("Test addJokeCategory command", () => {
     expect(response.data.categoryList).toEqual(categoryList);
     expect(response.data.categoryList.length).toBe(categoryList.length);
     expect(response.data.uuAppErrorMap).toBeDefined();
-    expect(response.data.uuAppErrorMap[`${code}-${fakeCategory1}`]).toBeDefined();
-    expect(response.data.uuAppErrorMap[`${code}-${fakeCategory1}`].type).toBe("warning");
-    expect(response.data.uuAppErrorMap[`${code}-${fakeCategory1}`].paramMap).toEqual({
-      categoryId: fakeCategory1
-    });
-    expect(response.data.uuAppErrorMap[`${code}-${fakeCategory2}`]).toBeDefined();
-    expect(response.data.uuAppErrorMap[`${code}-${fakeCategory2}`].type).toBe("warning");
-    expect(response.data.uuAppErrorMap[`${code}-${fakeCategory2}`].paramMap).toEqual({
-      categoryId: fakeCategory2
-    });
+    expect(response.data.uuAppErrorMap[code]).toBeDefined();
+    expect(response.data.uuAppErrorMap[code]).toBeInstanceOf(Object);
+    expect(response.data.uuAppErrorMap[code].type).toEqual("warning");
+    expect(response.data.uuAppErrorMap[code].paramMap).toBeDefined();
+    expect(response.data.uuAppErrorMap[code].paramMap.categoryIds).toEqual([
+      fakeCategory1,
+      fakeCategory2
+    ]);
   });
 
   test("A8", async () => {
@@ -211,8 +208,6 @@ describe("Test addJokeCategory command", () => {
       categoryList: [category1.data.id, category2.data.id]
     });
     const code = "uu-jokes-main/addJokeCategory/jokeCategoryAlreadyExists";
-    const warnCode1 = `${code}-${category1.data.id}`;
-    const warnCode2 = `${code}-${category2.data.id}`;
 
     expect(response.status).toEqual(200);
     expect(response.data).toBeDefined();
@@ -221,17 +216,17 @@ describe("Test addJokeCategory command", () => {
     expect(response.data.categoryList).toEqual([]);
     expect(response.data.categoryList.length).toBe(0);
     expect(response.data.uuAppErrorMap).toBeDefined();
-    expect(response.data.uuAppErrorMap[warnCode1]).toBeDefined();
-    expect(response.data.uuAppErrorMap[warnCode1].type).toBe("warning");
-    expect(response.data.uuAppErrorMap[warnCode1].paramMap).toEqual({
-      jokeId: joke.data.id,
-      categoryId: category1.data.id
-    });
-    expect(response.data.uuAppErrorMap[warnCode2]).toBeDefined();
-    expect(response.data.uuAppErrorMap[warnCode2].type).toBe("warning");
-    expect(response.data.uuAppErrorMap[warnCode2].paramMap).toEqual({
-      jokeId: joke.data.id,
-      categoryId: category2.data.id
-    });
+    expect(response.data.uuAppErrorMap[code]).toBeDefined();
+    expect(response.data.uuAppErrorMap[code].type).toBe("warning");
+    expect(response.data.uuAppErrorMap[code].paramMap).toEqual([
+      {
+        jokeId: joke.data.id,
+        categoryId: category1.data.id
+      },
+      {
+        jokeId: joke.data.id,
+        categoryId: category2.data.id
+      }
+    ]);
   });
 });
