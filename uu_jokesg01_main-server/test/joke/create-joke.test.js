@@ -98,13 +98,16 @@ describe("Test createJoke command", () => {
   });
 
   test("A5", async () => {
-    let fakeCategoryId = "5a3a5bfe85d5a73f585c2d50";
-    let result = await CreateJoke({
+    const fakeCategoryId1 = "5a3a5bfe85d5a73f585c2d50";
+    const fakeCategoryId2 = "6a3a5bfe85d5a73f585c2d50";
+    const result = await CreateJoke({
       name: "Joke",
       text: "Text",
-      categoryList: [fakeCategoryId]
+      categoryList: [fakeCategoryId1, fakeCategoryId2]
     });
-    let categoryDoesNotExist = "uu-jokes-main/createJoke/categoryDoesNotExist";
+    const categoryDoesNotExist = "uu-jokes-main/createJoke/categoryDoesNotExist";
+    const fakeCategoryCode1 = `${categoryDoesNotExist}-${fakeCategoryId1}`;
+    const fakeCategoryCode2 = `${categoryDoesNotExist}-${fakeCategoryId2}`;
 
     expect(result.status).toEqual(200);
     expect(result.data).toBeDefined();
@@ -114,20 +117,15 @@ describe("Test createJoke command", () => {
     expect(result.data).toHaveProperty("id");
     expect(result.data).toHaveProperty("uuAppErrorMap");
     expect(result.data.uuAppErrorMap).toBeInstanceOf(Object);
-    expect(result.data.uuAppErrorMap[categoryDoesNotExist]).toBeDefined();
-    expect(result.data.uuAppErrorMap[categoryDoesNotExist]).toBeInstanceOf(
-      Object
-    );
-    expect(result.data.uuAppErrorMap[categoryDoesNotExist].type).toBeDefined();
-    expect(result.data.uuAppErrorMap[categoryDoesNotExist].type).toEqual("warning");
-    expect(
-      result.data.uuAppErrorMap[categoryDoesNotExist].paramMap
-    ).toBeDefined();
-    expect(
-      result.data.uuAppErrorMap[categoryDoesNotExist].paramMap.categoryId
-    ).toBeDefined();
-    expect(
-      result.data.uuAppErrorMap[categoryDoesNotExist].paramMap.categoryId
-    ).toEqual(fakeCategoryId);
+    expect(result.data.uuAppErrorMap[fakeCategoryCode1]).toBeDefined();
+    expect(result.data.uuAppErrorMap[fakeCategoryCode1]).toBeInstanceOf(Object);
+    expect(result.data.uuAppErrorMap[fakeCategoryCode1].type).toEqual("warning");
+    expect(result.data.uuAppErrorMap[fakeCategoryCode1].paramMap).toBeDefined();
+    expect(result.data.uuAppErrorMap[fakeCategoryCode1].paramMap.categoryId).toEqual(fakeCategoryId1);
+    expect(result.data.uuAppErrorMap[fakeCategoryCode2]).toBeDefined();
+    expect(result.data.uuAppErrorMap[fakeCategoryCode2]).toBeInstanceOf(Object);
+    expect(result.data.uuAppErrorMap[fakeCategoryCode2].type).toEqual("warning");
+    expect(result.data.uuAppErrorMap[fakeCategoryCode2].paramMap).toBeDefined();
+    expect(result.data.uuAppErrorMap[fakeCategoryCode2].paramMap.categoryId).toEqual(fakeCategoryId2);
   });
 });

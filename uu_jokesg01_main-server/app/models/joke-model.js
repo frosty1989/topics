@@ -104,7 +104,7 @@ class JokeModel {
             //A5
             ValidationHelper.addWarning(
               uuAppErrorMap,
-              WARNINGS.createJoke.categoryDoesNotExist.code,
+              `${WARNINGS.createJoke.categoryDoesNotExist.code}-${categoryId}`,
               WARNINGS.createJoke.categoryDoesNotExist.message,
               {
                 categoryId: categoryId
