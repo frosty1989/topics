@@ -34,7 +34,12 @@ class CategoryMongoDB extends UuObjectDao {
   }
 
   async list(awid, pageInfo = {}) {
-    return await super.find({ awid }, pageInfo);
+    let sort = {
+      name: pageInfo.order === "asc" ? 1 : -1
+    };
+    delete pageInfo.order;
+
+    return await super.find({ awid }, pageInfo, sort);
   }
 }
 
