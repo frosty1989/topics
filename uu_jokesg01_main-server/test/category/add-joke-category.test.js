@@ -5,6 +5,10 @@ const { CreateCategory } = require("../general-test-hepler");
 beforeEach(async done => {
   await TestHelper.setup();
   await TestHelper.initAppWorkspace();
+  await TestHelper.login("SysOwner");
+  await TestHelper.executePostCommand("init", {
+    uuAppProfileAuthorities: "urn:uu:GGALL"
+  });
   await TestHelper.createPermission("Readers");
   done();
 });
@@ -133,5 +137,101 @@ describe("Test addJokeCategory command", () => {
       expect(error.code).toBe(jokeDoesNotExistCode);
       expect(error.status).toBe(400);
     }
+  });
+
+  test("A6", async () => {
+    await TestHelper.login("Readers");
+    let category1 = await CreateCategory({
+      name: "Very funny jokes",
+      desc: "Category description"
+    });
+    let category2 = await CreateCategory({
+      name: "Another one category",
+      desc: "Category description"
+    });
+    const code = "uu-jokes-main/addJokeCategory/categoryDoesNotExist";
+    const fakeCategory1 = "5a547c8e003628174cf9e1b9";
+    const fakeCategory2 = "5a547c8e003628174cf9e1b8";
+    let categoryList = [category1.data.id, category2.data.id];
+    let categoryListDtoIn = [].concat(categoryList, [fakeCategory1, fakeCategory2]);
+    let joke = await CreateJoke({
+      name: "Very funny joke",
+      text: "Text"
+    });
+    let jokeId = joke.data.id;
+    let dtoIn = {
+      jokeId: jokeId,
+      categoryList: categoryListDtoIn
+    };
+    let response = await TestHelper.executePostCommand(
+      "addJokeCategory",
+      dtoIn
+    );
+
+    console.log(response);
+    expect(response.status).toEqual(200);
+    expect(response.data).toBeDefined();
+    expect(response.data).toBeInstanceOf(Object);
+    expect(response.data.categoryList).toBeDefined();
+    expect(response.data.categoryList).toBeInstanceOf(Array);
+    expect(response.data.categoryList).toEqual(categoryList);
+    expect(response.data.categoryList.length).toBe(categoryList.length);
+    expect(response.data.uuAppErrorMap).toBeDefined();
+    expect(response.data.uuAppErrorMap[`${code}-${fakeCategory1}`]).toBeDefined();
+    expect(response.data.uuAppErrorMap[`${code}-${fakeCategory1}`].type).toBe("warning");
+    expect(response.data.uuAppErrorMap[`${code}-${fakeCategory1}`].paramMap).toEqual({
+      categoryId: fakeCategory1
+    });
+    expect(response.data.uuAppErrorMap[`${code}-${fakeCategory2}`]).toBeDefined();
+    expect(response.data.uuAppErrorMap[`${code}-${fakeCategory2}`].type).toBe("warning");
+    expect(response.data.uuAppErrorMap[`${code}-${fakeCategory2}`].paramMap).toEqual({
+      categoryId: fakeCategory2
+    });
+  });
+
+  test("A8", async () => {
+    const category1 = await CreateCategory({
+      name: "Very funny jokes",
+      desc: "Category description"
+    });
+    const category2 = await CreateCategory({
+      name: "Another one category",
+      desc: "Category description"
+    });
+    const joke = await CreateJoke({
+      name: "Very funny joke",
+      text: "Text"
+    });
+    await TestHelper.executePostCommand("addJokeCategory", {
+      jokeId: joke.data.id,
+      categoryList: [category1.data.id, category2.data.id]
+    });
+    let response = await TestHelper.executePostCommand("addJokeCategory", {
+      jokeId: joke.data.id,
+      categoryList: [category1.data.id, category2.data.id]
+    });
+    const code = "uu-jokes-main/addJokeCategory/jokeCategoryAlreadyExists";
+    const warnCode1 = `${code}-${category1.data.id}`;
+    const warnCode2 = `${code}-${category2.data.id}`;
+
+    expect(response.status).toEqual(200);
+    expect(response.data).toBeDefined();
+    expect(response.data).toBeInstanceOf(Object);
+    expect(response.data.categoryList).toBeDefined();
+    expect(response.data.categoryList).toEqual([]);
+    expect(response.data.categoryList.length).toBe(0);
+    expect(response.data.uuAppErrorMap).toBeDefined();
+    expect(response.data.uuAppErrorMap[warnCode1]).toBeDefined();
+    expect(response.data.uuAppErrorMap[warnCode1].type).toBe("warning");
+    expect(response.data.uuAppErrorMap[warnCode1].paramMap).toEqual({
+      jokeId: joke.data.id,
+      categoryId: category1.data.id
+    });
+    expect(response.data.uuAppErrorMap[warnCode2]).toBeDefined();
+    expect(response.data.uuAppErrorMap[warnCode2].type).toBe("warning");
+    expect(response.data.uuAppErrorMap[warnCode2].paramMap).toEqual({
+      jokeId: joke.data.id,
+      categoryId: category2.data.id
+    });
   });
 });
