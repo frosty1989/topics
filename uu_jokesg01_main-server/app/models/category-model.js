@@ -174,11 +174,10 @@ class CategoryModel {
 
     dtoIn.pageInfo = dtoIn.pageInfo || { pageIndex: 0, pageSize: 100 };
     dtoIn.pageInfo.pageSize = dtoIn.pageInfo.pageSize || 100;
-    dtoIn.pageInfo.order = dtoIn.order || "asc";
 
     try {
       // HDS 2
-      dtoOut = await this.dao.list(awid, dtoIn.pageInfo);
+      dtoOut = await this.dao.list(awid, dtoIn.pageInfo, dtoIn.order);
     } catch (e) {
       // A3
       if (e instanceof ObjectStoreError) {

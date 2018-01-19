@@ -34,23 +34,32 @@ describe("Test listCategories command", () => {
   test("HDS_OrderByDefault", async () => {
     const category1Name = "Category 1";
     const category2Name = "Category 2";
+    const category3Name = "Category 3";
+
     await CreateCategory({ name: category1Name, desc: "Desc" });
     await CreateCategory({ name: category2Name, desc: "Desc" });
+    await CreateCategory({ name: category3Name, desc: "Desc" });
+
     const response = await TestHelper.executeGetCommand(CMD);
 
     expect(response.status).toEqual(200);
     expect(response.data.itemList).toBeDefined();
     expect(Array.isArray(response.data.itemList)).toBe(true);
-    expect(response.data.itemList.length).toBe(2);
+    expect(response.data.itemList.length).toBe(3);
     expect(response.data.itemList[0].name).toEqual(category1Name);
     expect(response.data.itemList[1].name).toEqual(category2Name);
+    expect(response.data.itemList[2].name).toEqual(category3Name);
   });
 
   test("HDS_OrderByDesc", async () => {
     const category1Name = "Category 1";
     const category2Name = "Category 2";
+    const category3Name = "Category 3";
+
     await CreateCategory({ name: category1Name, desc: "Desc" });
     await CreateCategory({ name: category2Name, desc: "Desc" });
+    await CreateCategory({ name: category3Name, desc: "Desc" });
+
     const response = await TestHelper.executeGetCommand(CMD, {
       order: "desc"
     });
@@ -58,9 +67,10 @@ describe("Test listCategories command", () => {
     expect(response.status).toEqual(200);
     expect(response.data.itemList).toBeDefined();
     expect(Array.isArray(response.data.itemList)).toBe(true);
-    expect(response.data.itemList.length).toBe(2);
-    expect(response.data.itemList[0].name).toEqual(category2Name);
-    expect(response.data.itemList[1].name).toEqual(category1Name);
+    expect(response.data.itemList.length).toBe(3);
+    expect(response.data.itemList[0].name).toEqual(category3Name);
+    expect(response.data.itemList[1].name).toEqual(category2Name);
+    expect(response.data.itemList[2].name).toEqual(category1Name);
   });
 
   test("A1", async () => {
