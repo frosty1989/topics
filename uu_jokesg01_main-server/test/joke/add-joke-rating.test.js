@@ -19,39 +19,68 @@ describe("Test addJokeRating command", () => {
     const joke = await CreateJoke({ name: "Joke", text: "Text" });
     const readerUuIdentity = "14-2710-1";
     const goodRating = 5;
+    const moderateRating = 3;
     const badRating = 1;
-    const createdRating = await TestHelper.executePostCommand(CMD, { id: joke.data.id, rating: goodRating });
-    const updatedRating = await TestHelper.executePostCommand(CMD, { id: joke.data.id, rating: badRating });
-    const updatedJoke = await TestHelper.executeGetCommand("getJoke", { id: joke.data.id });
+    const goodJokeRating = await TestHelper.executePostCommand(CMD, { id: joke.data.id, rating: goodRating });
+    const goodJoke = await TestHelper.executeGetCommand("getJoke", { id: joke.data.id });
+    const badJokeRating = await TestHelper.executePostCommand(CMD, { id: joke.data.id, rating: badRating });
+    const badJoke = await TestHelper.executeGetCommand("getJoke", { id: joke.data.id });
+    const moderateJokeRating = await TestHelper.executePostCommand(CMD, {
+      id: joke.data.id,
+      rating: moderateRating
+    });
+    const moderateJoke = await TestHelper.executeGetCommand("getJoke", { id: joke.data.id });
 
-    expect(createdRating.status).toBe(200);
-    expect(createdRating.data).toBeDefined();
-    expect(createdRating.data).toBeInstanceOf(Object);
-    expect(createdRating.data.id).toBeDefined();
-    expect(createdRating.data.awid).toBe(TestHelper.awid);
-    expect(createdRating.data.jokeId).toBe(joke.data.id);
-    expect(createdRating.data.rating).toBe(goodRating);
-    expect(createdRating.data.uuIdentity).toBe(readerUuIdentity);
-    expect(createdRating.data.uuAppErrorMap).toBeDefined();
-    expect(createdRating.data.uuAppErrorMap).toEqual({});
+    expect(goodJokeRating.status).toBe(200);
+    expect(goodJokeRating.data).toBeDefined();
+    expect(goodJokeRating.data).toBeInstanceOf(Object);
+    expect(goodJokeRating.data.id).toBeDefined();
+    expect(goodJokeRating.data.awid).toBe(TestHelper.awid);
+    expect(goodJokeRating.data.jokeId).toBe(joke.data.id);
+    expect(goodJokeRating.data.rating).toBe(goodRating);
+    expect(goodJokeRating.data.uuIdentity).toBe(readerUuIdentity);
+    expect(goodJokeRating.data.uuAppErrorMap).toBeDefined();
+    expect(goodJokeRating.data.uuAppErrorMap).toEqual({});
+    expect(goodJoke.status).toBe(200);
+    expect(goodJoke.data).toBeDefined();
+    expect(goodJoke.data.id).toBe(joke.data.id);
+    expect(goodJoke.data.awid).toBe(TestHelper.awid);
+    expect(goodJoke.data.averageRating).toBe(goodRating);
+    expect(goodJoke.data.ratingCount).toBe(1);
 
-    expect(updatedRating.status).toBe(200);
-    expect(updatedRating.data).toBeDefined();
-    expect(updatedRating.data).toBeInstanceOf(Object);
-    expect(updatedRating.data.id).toBeDefined();
-    expect(updatedRating.data.awid).toBe(TestHelper.awid);
-    expect(updatedRating.data.jokeId).toBe(joke.data.id);
-    expect(updatedRating.data.rating).toBe(badRating);
-    expect(updatedRating.data.uuIdentity).toBe(readerUuIdentity);
-    expect(updatedRating.data.uuAppErrorMap).toBeDefined();
-    expect(updatedRating.data.uuAppErrorMap).toEqual({});
+    expect(badJokeRating.status).toBe(200);
+    expect(badJokeRating.data).toBeDefined();
+    expect(badJokeRating.data).toBeInstanceOf(Object);
+    expect(badJokeRating.data.id).toBeDefined();
+    expect(badJokeRating.data.awid).toBe(TestHelper.awid);
+    expect(badJokeRating.data.jokeId).toBe(joke.data.id);
+    expect(badJokeRating.data.rating).toBe(badRating);
+    expect(badJokeRating.data.uuIdentity).toBe(readerUuIdentity);
+    expect(badJokeRating.data.uuAppErrorMap).toBeDefined();
+    expect(badJokeRating.data.uuAppErrorMap).toEqual({});
+    expect(badJoke.status).toBe(200);
+    expect(badJoke.data).toBeDefined();
+    expect(badJoke.data.id).toBe(joke.data.id);
+    expect(badJoke.data.awid).toBe(TestHelper.awid);
+    expect(badJoke.data.averageRating).toBe(badRating);
+    expect(badJoke.data.ratingCount).toBe(1);
 
-    expect(updatedJoke.status).toBe(200);
-    expect(updatedJoke.data).toBeDefined();
-    expect(updatedJoke.data.id).toBe(joke.data.id);
-    expect(updatedJoke.data.awid).toBe(TestHelper.awid);
-    expect(updatedJoke.data.averageRating).toBe(5);
-    expect(updatedJoke.data.ratingCount).toBe(1);
+    expect(moderateJokeRating.status).toBe(200);
+    expect(moderateJokeRating.data).toBeDefined();
+    expect(moderateJokeRating.data).toBeInstanceOf(Object);
+    expect(moderateJokeRating.data.id).toBeDefined();
+    expect(moderateJokeRating.data.awid).toBe(TestHelper.awid);
+    expect(moderateJokeRating.data.jokeId).toBe(joke.data.id);
+    expect(moderateJokeRating.data.rating).toBe(moderateRating);
+    expect(moderateJokeRating.data.uuIdentity).toBe(readerUuIdentity);
+    expect(moderateJokeRating.data.uuAppErrorMap).toBeDefined();
+    expect(moderateJokeRating.data.uuAppErrorMap).toEqual({});
+    expect(moderateJoke.status).toBe(200);
+    expect(moderateJoke.data).toBeDefined();
+    expect(moderateJoke.data.id).toBe(joke.data.id);
+    expect(moderateJoke.data.awid).toBe(TestHelper.awid);
+    expect(moderateJoke.data.averageRating).toBe(moderateRating);
+    expect(moderateJoke.data.ratingCount).toBe(1);
   });
 
   test("A1", async () => {

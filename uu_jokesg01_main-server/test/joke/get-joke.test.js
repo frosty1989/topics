@@ -17,19 +17,21 @@ afterEach(async done => {
 
 describe("Test getJoke command", () => {
   test("HDS", async () => {
-    await TestHelper.login("Readers");
+    const category1 = await CreateCategory({ name: "Category 1", desc: "Desc" });
+    const category2 = await CreateCategory({ name: "Category 2", desc: "Desc" });
+    const categoryList = [category1.data.id, category2.data.id];
+    const joke = await CreateJoke({
+      name: "Joke",
+      text: "Text",
+      categoryList: categoryList
+    });
+    const response = await TestHelper.executeGetCommand(CMD, { id: joke.data.id });
 
-    const joke = await CreateJoke();
-    let itemId = joke.data.id;
-    let dtoIn = { id: itemId };
-    let response = await TestHelper.executeGetCommand(CMD, dtoIn);
-
-    expect(response.data.name).toEqual("test joke");
-    expect(response.data.text).toEqual("test joke text");
-    expect(response.data.id).toEqual(itemId);
-    expect(Array.isArray(response.data.categoryList)).toBeTruthy();
-    expect(response.data.awid).toEqual(TestHelper.awid);
     expect(response.status).toEqual(200);
+    expect(response.data).toBeDefined();
+    expect(response.data.id).toEqual(joke.data.id);
+    expect(response.data.categoryList).toMatchObject(categoryList);
+    expect(response.data.awid).toEqual(TestHelper.awid);
     expect(response.data.uuAppErrorMap).toBeDefined();
     expect(response.data.uuAppErrorMap).toEqual({});
   });

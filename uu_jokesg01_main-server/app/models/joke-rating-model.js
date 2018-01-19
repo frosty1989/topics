@@ -74,11 +74,12 @@ class JokeRatingModel {
 
     if (oldRating.hasOwnProperty("id")) {
       try {
+        // HDS 4.2
+        averageRating = (joke.averageRating * joke.ratingCount - oldRating.rating + rating.rating) / joke.ratingCount;
+
         // HDS 3.1
         oldRating.rating = rating.rating;
         dtoOut = await this.dao.update(oldRating);
-        // HDS 4.2
-        averageRating = (joke.averageRating * joke.ratingCount - oldRating.rating + dtoOut.rating) / joke.ratingCount;
       } catch (e) {
         // A6
         if (e instanceof ObjectStoreError) {
@@ -91,7 +92,7 @@ class JokeRatingModel {
         // HDS 3.2
         dtoOut = await this.dao.create(rating);
         // HDS 4.1
-        averageRating = (joke.averageRating * joke.ratingCount + dtoOut.rating) / (joke.ratingCount + 1);
+        averageRating = (joke.averageRating * joke.ratingCount + rating.rating) / (joke.ratingCount + 1);
         // HDS 5
         joke.ratingCount += 1;
       } catch (e) {

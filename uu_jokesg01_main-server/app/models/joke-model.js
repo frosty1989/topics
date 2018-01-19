@@ -104,7 +104,7 @@ class JokeModel {
             //A5
             ValidationHelper.addWarning(
               uuAppErrorMap,
-              WARNINGS.createJoke.categoryDoesNotExist.code,
+              `${WARNINGS.createJoke.categoryDoesNotExist.code}-${categoryId}`,
               WARNINGS.createJoke.categoryDoesNotExist.message,
               {
                 categoryId: categoryId
@@ -287,7 +287,7 @@ class JokeModel {
       //HDS 3
       const categories = await JokeCategoryModel.dao.listByJoke(awid, dtoIn.id);
 
-      dtoOut.categoryList = categories.itemList.map(x => x.id);
+      dtoOut.categoryList = categories.itemList.map(x => x.categoryId);
     } catch (e) {
       //A5
       if (e instanceof ObjectStoreError) {
