@@ -106,8 +106,6 @@ describe("Test createJoke command", () => {
       categoryList: [fakeCategoryId1, fakeCategoryId2]
     });
     const categoryDoesNotExist = "uu-jokes-main/createJoke/categoryDoesNotExist";
-    const fakeCategoryCode1 = `${categoryDoesNotExist}-${fakeCategoryId1}`;
-    const fakeCategoryCode2 = `${categoryDoesNotExist}-${fakeCategoryId2}`;
 
     expect(result.status).toEqual(200);
     expect(result.data).toBeDefined();
@@ -117,15 +115,13 @@ describe("Test createJoke command", () => {
     expect(result.data).toHaveProperty("id");
     expect(result.data).toHaveProperty("uuAppErrorMap");
     expect(result.data.uuAppErrorMap).toBeInstanceOf(Object);
-    expect(result.data.uuAppErrorMap[fakeCategoryCode1]).toBeDefined();
-    expect(result.data.uuAppErrorMap[fakeCategoryCode1]).toBeInstanceOf(Object);
-    expect(result.data.uuAppErrorMap[fakeCategoryCode1].type).toEqual("warning");
-    expect(result.data.uuAppErrorMap[fakeCategoryCode1].paramMap).toBeDefined();
-    expect(result.data.uuAppErrorMap[fakeCategoryCode1].paramMap.categoryId).toEqual(fakeCategoryId1);
-    expect(result.data.uuAppErrorMap[fakeCategoryCode2]).toBeDefined();
-    expect(result.data.uuAppErrorMap[fakeCategoryCode2]).toBeInstanceOf(Object);
-    expect(result.data.uuAppErrorMap[fakeCategoryCode2].type).toEqual("warning");
-    expect(result.data.uuAppErrorMap[fakeCategoryCode2].paramMap).toBeDefined();
-    expect(result.data.uuAppErrorMap[fakeCategoryCode2].paramMap.categoryId).toEqual(fakeCategoryId2);
+    expect(result.data.uuAppErrorMap[categoryDoesNotExist]).toBeDefined();
+    expect(result.data.uuAppErrorMap[categoryDoesNotExist]).toBeInstanceOf(Object);
+    expect(result.data.uuAppErrorMap[categoryDoesNotExist].type).toEqual("warning");
+    expect(result.data.uuAppErrorMap[categoryDoesNotExist].paramMap).toBeDefined();
+    expect(result.data.uuAppErrorMap[categoryDoesNotExist].paramMap.categoryIds).toEqual([
+      fakeCategoryId1,
+      fakeCategoryId2
+    ]);
   });
 });

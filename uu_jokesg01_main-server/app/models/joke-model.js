@@ -102,14 +102,18 @@ class JokeModel {
 
           if (category && !category.hasOwnProperty("id")) {
             //A5
-            ValidationHelper.addWarning(
-              uuAppErrorMap,
-              `${WARNINGS.createJoke.categoryDoesNotExist.code}-${categoryId}`,
-              WARNINGS.createJoke.categoryDoesNotExist.message,
-              {
-                categoryId: categoryId
-              }
-            );
+            if (uuAppErrorMap.hasOwnProperty(WARNINGS.createJoke.categoryDoesNotExist.code)) {
+              uuAppErrorMap[WARNINGS.createJoke.categoryDoesNotExist.code].paramMap.categoryIds.push(categoryId);
+            } else {
+              ValidationHelper.addWarning(
+                uuAppErrorMap,
+                WARNINGS.createJoke.categoryDoesNotExist.code,
+                WARNINGS.createJoke.categoryDoesNotExist.message,
+                {
+                  categoryIds: [categoryId]
+                }
+              );
+            }
             continue;
           } else {
             validCategories.push(categoryId);
