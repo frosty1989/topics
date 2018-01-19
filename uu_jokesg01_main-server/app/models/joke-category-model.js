@@ -86,7 +86,7 @@ class JokeCategoryModel {
         //A6
         ValidationHelper.addWarning(
           uuAppErrorMap,
-          WARNINGS.addJokeCategory.categoryDoesNotExist.code,
+          `${WARNINGS.addJokeCategory.categoryDoesNotExist.code}-${dtoInCategoryId}`,
           WARNINGS.addJokeCategory.categoryDoesNotExist.message,
           { categoryId: dtoInCategoryId }
         );
@@ -100,7 +100,7 @@ class JokeCategoryModel {
             //A8
             ValidationHelper.addWarning(
               uuAppErrorMap,
-              WARNINGS.addJokeCategory.jokeCategoryAlreadyExists.code,
+              `${WARNINGS.addJokeCategory.jokeCategoryAlreadyExists.code}-${foundCategory.id}`,
               WARNINGS.addJokeCategory.jokeCategoryAlreadyExists.message,
               { jokeId: dtoIn.jokeId, categoryId: foundCategory.id }
             );
