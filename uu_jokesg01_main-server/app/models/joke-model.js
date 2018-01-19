@@ -287,7 +287,7 @@ class JokeModel {
       //HDS 3
       const categories = await JokeCategoryModel.dao.listByJoke(awid, dtoIn.id);
 
-      dtoOut.categoryList = categories.itemList.map(x => x.id);
+      dtoOut.categoryList = categories.itemList.map(x => x.categoryId);
     } catch (e) {
       //A5
       if (e instanceof ObjectStoreError) {
