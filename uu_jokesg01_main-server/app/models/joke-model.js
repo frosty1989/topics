@@ -283,9 +283,9 @@ class JokeModel {
     }
 
     try {
-      const CategoryModel = require("./category-model");
+      const JokeCategoryModel = require("./joke-category-model");
       //HDS 3
-      const categories = await CategoryModel.dao.list(awid);
+      const categories = await JokeCategoryModel.dao.listByJoke(awid, dtoIn.id);
 
       dtoOut.categoryList = categories.itemList.map(x => x.categoryId);
     } catch (e) {
