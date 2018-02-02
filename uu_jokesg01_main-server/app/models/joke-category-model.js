@@ -59,7 +59,7 @@ class JokeCategoryModel {
       throw e;
     }
 
-    if (foundJoke && !foundJoke.hasOwnProperty("id")) {
+    if (!foundJoke) {
       //A4
       throw new Errors.AddJokeCategory.JokeDoesNotExist({ uuAppErrorMap }, { jokeId: dtoIn.jokeId });
     }
@@ -82,7 +82,7 @@ class JokeCategoryModel {
         throw e;
       }
 
-      if (Object.keys(foundCategory).length === 0) {
+      if (!foundCategory) {
         //A6
         if (uuAppErrorMap.hasOwnProperty(WARNINGS.addJokeCategory.categoryDoesNotExist.code)) {
           uuAppErrorMap[WARNINGS.addJokeCategory.categoryDoesNotExist.code].paramMap.categoryIds.push(dtoInCategoryId);

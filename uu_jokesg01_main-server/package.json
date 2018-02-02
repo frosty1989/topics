@@ -7,11 +7,11 @@
     "node": ">=8.9.0"
   },
   "dependencies": {
-    "uu_appg01_server": "^0.9.5"
+    "uu_appg01_server": "^0.9.6"
   },
   "devDependencies": {
-    "uu_appg01_core-npm": "^0.9.5",
-    "uu_appg01_workspace-test": "^0.9.5"
+    "uu_appg01_core-npm": "^0.9.6",
+    "uu_appg01_workspace-test": "^0.9.6"
   },
   "scripts": {
     "clean": "uu-appg01-core-npm clean",

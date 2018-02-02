@@ -3,7 +3,7 @@
     "primary": "mongodb://127.0.0.1:27017/JokesNodejsMainOS"
   },
   "privilegedUserMap": {
-    "uuSubAppInstanceSysOwner": "12-4741-1"
+    "uuSubAppInstanceSysOwner": "12-470-1"
   },
   "tid": "00000000000000000000000000000000",
   "asid": "00000000000000000000000000000001",

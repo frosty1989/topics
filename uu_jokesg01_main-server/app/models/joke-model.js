@@ -100,7 +100,7 @@ class JokeModel {
           const CategoryModel = require("./category-model");
           let category = await CategoryModel.dao.get(awid, categoryId);
 
-          if (category && !category.hasOwnProperty("id")) {
+          if (!category) {
             //A5
             if (uuAppErrorMap.hasOwnProperty(WARNINGS.createJoke.categoryDoesNotExist.code)) {
               uuAppErrorMap[WARNINGS.createJoke.categoryDoesNotExist.code].paramMap.categoryIds.push(categoryId);
@@ -167,7 +167,7 @@ class JokeModel {
     try {
       let foundJoke = await this.dao.get(awid, dtoIn.id);
 
-      if (foundJoke && !foundJoke.hasOwnProperty("id")) {
+      if (!foundJoke) {
         //A5
         ValidationHelper.addWarning(
           uuAppErrorMap,
@@ -282,7 +282,7 @@ class JokeModel {
     }
 
     //A4
-    if (!dtoOut.hasOwnProperty("id")) {
+    if (!dtoOut) {
       throw new Errors.GetJoke.JokeDoesNotExist({ uuAppErrorMap }, { jokeId: dtoIn.id });
     }
 
