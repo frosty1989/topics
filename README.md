@@ -74,7 +74,7 @@ Also go to Settings - Languages & Frameworks - Node.js and NPM and enable Node.j
 
 ## 2. Configure profiles and permissions
 
-    Use any rest client and call following call
+Use any rest client and call following call
 
     POST: http://localhost:6221/uu-jokesg01-main/00000000000000000000000000000000-11111111111111111111111111111111/sys/setProfile
     Request body:
@@ -82,11 +82,23 @@ Also go to Settings - Languages & Frameworks - Node.js and NPM and enable Node.j
         "code": "Readers",
         "roleUri": "urn:uu:GGALL"
     }
-    Request sets all users as Readers for public rights.
+Request sets all users as Readers for public rights.
 
-## 3. Test functionality
+After that, it's necessary to initialize the application. To do so, execute _init_ uuCMD:
+Replace _<uuGroup>_ by desired Plus4U location, e.g. ues:UNI-BT:USYUAB/COWORKERS
 
-   Open Index in browser - [Home](http://localhost:6221/uu-jokesg01-main/00000000000000000000000000000000-11111111111111111111111111111111/home).
-   
-   You can also execute any command from the template application (e.g. /createBook).
-   
+    POST: http://localhost:6221/uu-jokesg01-main/00000000000000000000000000000000-11111111111111111111111111111111/init
+    Request body:
+    {
+    	"uuAppProfileAuthorities": "<uuGroup>"
+    }
+
+#Test functionality
+
+The application does not provide any UI. 
+All the requests has to be executed by your favorite REST client.
+The endpoint of API is:
+    
+    http://localhost:6221/uu-jokesg01-main/00000000000000000000000000000000-11111111111111111111111111111111/
+
+

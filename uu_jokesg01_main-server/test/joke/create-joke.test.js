@@ -1,23 +1,30 @@
 const { TestHelper } = require("uu_appg01_workspace-test");
-const { CreateJoke } = require("../general-test-hepler");
-const { CreateCategory } = require("../general-test-hepler");
+const { CreateJoke, CreateCategory } = require("../general-test-hepler");
 
-beforeEach(async done => {
-  await TestHelper.setup();
-  await TestHelper.initAppWorkspace();
-  await TestHelper.createPermission("Readers");
-  done();
+beforeAll(() => {
+  return TestHelper.setup()
+    .then(() => {
+      return TestHelper.initAppWorkspace();
+    })
+    .then(() => {
+      return TestHelper.login("SysOwner").then(() => {
+        return TestHelper.executePostCommand("init", {
+          uuAppProfileAuthorities: "urn:uu:GGALL"
+        });
+      });
+    }).then(() => {
+      return TestHelper.login("Executive");
+    });
 });
 
-afterEach(async done => {
-  await TestHelper.teardown();
-  done();
+afterAll(() => {
+  TestHelper.teardown();
 });
 
 describe("Test createJoke command", () => {
   test("HDS", async () => {
-    const category1 = await CreateCategory({ name: "Category 1", desc: "Desc" });
-    const category2 = await CreateCategory({ name: "Category 2", desc: "Desc" });
+    const category1 = await CreateCategory();
+    const category2 = await CreateCategory();
     const result = await CreateJoke({
       name: "Joke",
       text: "Text",
@@ -67,7 +74,6 @@ describe("Test createJoke command", () => {
     const invalidDtoIn = "uu-jokes-main/createJoke/invalidDtoIn";
 
     try {
-      await TestHelper.login("Readers");
       await TestHelper.executePostCommand("createJoke", {});
     } catch (e) {
       expect(e.status).toEqual(400);
@@ -101,7 +107,7 @@ describe("Test createJoke command", () => {
     const fakeCategoryId1 = "5a3a5bfe85d5a73f585c2d50";
     const fakeCategoryId2 = "6a3a5bfe85d5a73f585c2d50";
     const result = await CreateJoke({
-      name: "Joke",
+      name: "Joke A5",
       text: "Text",
       categoryList: [fakeCategoryId1, fakeCategoryId2]
     });

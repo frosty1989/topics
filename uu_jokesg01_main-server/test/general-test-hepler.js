@@ -1,10 +1,8 @@
 const { TestHelper } = require("uu_appg01_workspace-test");
 
 const createJoke = async (dtoIn = {}, categoryId = null) => {
-  await TestHelper.login("Authorities");
-
   if (!dtoIn.hasOwnProperty("name")) {
-    dtoIn.name = "test joke";
+    dtoIn.name = `The joke ${Math.random().toString(36).substr(2, 5)}`;
   }
   if (!dtoIn.hasOwnProperty("text")) {
     dtoIn.text = "test joke text";
@@ -13,21 +11,24 @@ const createJoke = async (dtoIn = {}, categoryId = null) => {
     dtoIn.categoryList = [categoryId];
   }
 
-  return await TestHelper.executePostCommand("createJoke", dtoIn);
+  return await TestHelper.executePostCommand("createJoke", dtoIn, {
+    authorization: `Bearer ${await TestHelper.login("Authority", false, false)}`
+  });
 };
 
 const createCategory = async dtoIn => {
-  await TestHelper.login("Authorities");
+  await TestHelper.login("Authority", false, false);
 
   if (!dtoIn) {
     dtoIn = {
-      name: "test name",
-      desc: "test desc",
-      glyphicon: "http://test.jpg"
+      name: `Category ${Math.random().toString(36).substr(2, 5)}`,
+      desc: "Test description of category",
     };
   }
 
-  return await TestHelper.executePostCommand("createCategory", dtoIn);
+  return await TestHelper.executePostCommand("createCategory", dtoIn, {
+    authorization: `Bearer ${await TestHelper.login("Authority", false, false)}`
+  });
 };
 
 module.exports = {

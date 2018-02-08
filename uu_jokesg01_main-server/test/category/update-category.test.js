@@ -1,59 +1,55 @@
 const { TestHelper } = require("uu_appg01_workspace-test");
 const { CreateCategory } = require("../general-test-hepler");
 
-beforeEach(async done => {
-  await TestHelper.setup();
-  await TestHelper.initAppWorkspace();
-  await TestHelper.login("SysOwner");
-  await TestHelper.executePostCommand("init", {
-    uuAppProfileAuthorities: "urn:uu:GGALL"
-  });
-  await TestHelper.createPermission("Readers");
-  done();
+beforeAll(() => {
+  return TestHelper.setup()
+    .then(() => {
+      return TestHelper.initAppWorkspace();
+    })
+    .then(() => {
+      return TestHelper.login("SysOwner").then(() => {
+        return TestHelper.executePostCommand("init", {
+          uuAppProfileAuthorities: "urn:uu:GGALL"
+        });
+      });
+    }).then(() => {
+      return TestHelper.login("Executive");
+    });
 });
 
-afterEach(async done => {
-  await TestHelper.teardown();
-  done();
+afterAll(() => {
+  TestHelper.teardown();
 });
 
 describe("Test updateCategory command", () => {
   test("HDS", async () => {
-    await TestHelper.login("Authorities");
-    await CreateCategory();
-    let listResponce = await TestHelper.executeGetCommand("listCategories");
-    let itemId = listResponce.data.itemList[0].id;
+    const category = await CreateCategory();
+    const newName = "Update name HDS";
+    const newDesc = "Update text";
     let dtoIn = {
-      id: itemId,
-      name: "Update name",
-      desc: "Update text",
-      glyphicon: "http://update_test.jpg"
+      id: category.data.id,
+      name: newName,
+      desc: newDesc
     };
     let response = await TestHelper.executePostCommand("updateCategory", dtoIn);
 
-    expect(response.data.name).toEqual("Update name");
-    expect(response.data.desc).toEqual("Update text");
-    expect(response.data.glyphicon).toEqual("http://update_test.jpg");
+    expect(response.status).toEqual(200);
+    expect(response.data.name).toEqual(newName);
+    expect(response.data.desc).toEqual(newDesc);
     expect(typeof response.data.id === "string").toBeTruthy();
     expect(typeof response.data.name === "string").toBeTruthy();
     expect(typeof response.data.desc === "string").toBeTruthy();
-    expect(typeof response.data.glyphicon === "string").toBeTruthy();
-    expect(response.status).toEqual(200);
     expect(response.data).toBeDefined();
     expect(response.data).toBeInstanceOf(Object);
     expect(response.data.id).toBeDefined();
   });
 
   test("A1", async () => {
-    await TestHelper.login("Authorities");
-    await CreateCategory();
-    let listResponce = await TestHelper.executeGetCommand("listCategories");
-    let itemId = listResponce.data.itemList[0].id;
+    const category = await CreateCategory();
     let dtoInInvalid = {
-      id: itemId,
-      name: "Update name",
+      id: category.data.id,
+      name: "Update name A1",
       desc: "Update text",
-      glyphicon: "http://update_test.jpg",
       invalidKey: "invalid data value"
     };
     let unsupportedKey = "uu-jokes-main/updateCategory/unsupportedKeys";
@@ -76,17 +72,14 @@ describe("Test updateCategory command", () => {
   });
 
   test("A2", async () => {
-    await TestHelper.login("Authorities");
     expect.assertions(8);
-    await CreateCategory();
-    let invalidDtoIn = {
-      id: 123,
-      name: "test name",
-      desc: "test desc",
-      glyphicon: "http://test.jpg"
-    };
     try {
-      await TestHelper.executePostCommand("updateCategory", invalidDtoIn);
+      await TestHelper.executePostCommand("updateCategory", {
+        id: 123,
+        name: "test name",
+        desc: "test desc",
+        glyphicon: "http://test.jpg"
+      });
     } catch (error) {
       expect(error).toHaveProperty("paramMap");
       expect(error.paramMap).toHaveProperty("invalidValueKeyMap");
@@ -102,8 +95,6 @@ describe("Test updateCategory command", () => {
   });
 
   test("A3", async () => {
-    await TestHelper.login("Authorities");
-
     expect.assertions(7);
 
     const categoryName = "Category 2";

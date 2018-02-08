@@ -37,10 +37,10 @@ class CategoryModel {
       WARNINGS.createCategory.code,
       Errors.CreateCategory.InvalidDtoIn
     );
+    let dtoOut;
 
     dtoIn.awid = awid;
 
-    let dtoOut;
     try {
       //HDS 2
       dtoOut = await this.dao.create(dtoIn);
@@ -55,6 +55,7 @@ class CategoryModel {
       }
       throw e;
     }
+
     // HDS 3
     dtoOut.uuAppErrorMap = uuAppErrorMap;
 
@@ -71,21 +72,19 @@ class CategoryModel {
       WARNINGS.updateCategory.code,
       Errors.UpdateCategory.InvalidDtoIn
     );
-    let uuObject = Object.assign({}, dtoIn);
+    let uuObject = Object.assign({ awid }, dtoIn);
     let dtoOut = {};
-
-    uuObject.awid = awid;
 
     try {
       //HDS 2
       dtoOut = await this.dao.update(uuObject);
     } catch (e) {
-      // A4
       if (e instanceof ObjectStoreError) {
-        // A3
         if (e.code === "uu-app-objectstore/duplicateKey") {
+          // A3
           throw new Errors.UpdateCategory.CategoryNameNotUnique({ uuAppErrorMap }, { name: dtoIn.name }, e);
         } else {
+          // A4
           throw new Errors.UpdateCategory.CategoryDaoUpdateFailed({ uuAppErrorMap }, e);
         }
       }
@@ -108,8 +107,8 @@ class CategoryModel {
       Errors.DeleteCategory.InvalidDtoIn
     );
     let dtoOut = {};
-    let foundJokeCategories;
     const JokeCategoryModel = require("./joke-category-model");
+
     // HDS 3
     if (dtoIn.forceDelete) {
       try {
@@ -124,6 +123,8 @@ class CategoryModel {
       }
     } else {
       //HDS 2
+      let foundJokeCategories;
+
       try {
         // HDS 2.1
         foundJokeCategories = await JokeCategoryModel.dao.listByCategory(awid, dtoIn.id);
@@ -134,7 +135,7 @@ class CategoryModel {
         }
         throw e;
       }
-      // HDS 2.1
+
       if (foundJokeCategories.itemList.length > 0) {
         // A4
         throw new Errors.DeleteCategory.RelatedJokesExist(

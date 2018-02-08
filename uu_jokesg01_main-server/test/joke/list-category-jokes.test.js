@@ -3,28 +3,34 @@ const { CreateCategory } = require("../general-test-hepler");
 const { CreateJoke } = require("../general-test-hepler");
 const CMD = "listCategoryJokes";
 
-beforeEach(async done => {
-  await TestHelper.setup();
-  await TestHelper.initAppWorkspace();
-  await TestHelper.createPermission("Readers");
-  done();
+beforeAll(() => {
+  return TestHelper.setup()
+    .then(() => {
+      return TestHelper.initAppWorkspace();
+    })
+    .then(() => {
+      return TestHelper.login("SysOwner").then(() => {
+        return TestHelper.executePostCommand("init", {
+          uuAppProfileAuthorities: "urn:uu:GGALL"
+        });
+      });
+    })
+    .then(() => {
+      return TestHelper.login("Reader");
+    });
 });
 
-afterEach(async done => {
-  await TestHelper.teardown();
-  done();
+afterAll(() => {
+  TestHelper.teardown();
 });
 
 describe("Test listCategoryJokes command", () => {
   test("HDS", async () => {
-    await TestHelper.login("Readers");
-    let createCategoryResponse = await CreateCategory();
-    let categoryId = createCategoryResponse.data.id;
+    let category = await CreateCategory();
+    let categoryId = category.data.id;
     await CreateJoke({}, categoryId);
     let dtoIn = { categoryId: categoryId };
-    let response = await TestHelper.executeGetCommand(CMD,
-      dtoIn
-    );
+    let response = await TestHelper.executeGetCommand(CMD, dtoIn);
     expect(response.status).toEqual(200);
     expect(response.data.uuAppErrorMap).toBeDefined();
     expect(response.data.uuAppErrorMap).toBeInstanceOf(Object);
@@ -33,8 +39,6 @@ describe("Test listCategoryJokes command", () => {
   });
 
   test("A1", async () => {
-    await TestHelper.login("Readers");
-
     let createCategoryResponse = await CreateCategory();
     let categoryId = createCategoryResponse.data.id;
     await CreateJoke({}, categoryId);
@@ -42,32 +46,17 @@ describe("Test listCategoryJokes command", () => {
       categoryId: categoryId,
       unsupportedKey: "unsupportedValue"
     };
-    let response = await TestHelper.executeGetCommand(
-      CMD,
-      dtoIn
-    );
+    let response = await TestHelper.executeGetCommand(CMD, dtoIn);
     const code = "uu-jokes-main/listCategoryJokes/unsupportedKeys";
 
     expect(response.status).toEqual(200);
-    expect("warning").toEqual(
-      response.data.uuAppErrorMap[
-        code
-      ].type
-    );
-    expect("DtoIn contains unsupported keys.").toEqual(
-      response.data.uuAppErrorMap[
-        code
-      ].message
-    );
-    let invalidData =
-      response.data.uuAppErrorMap[
-        code
-      ].paramMap["unsupportedKeyList"][0];
+    expect("warning").toEqual(response.data.uuAppErrorMap[code].type);
+    expect("DtoIn contains unsupported keys.").toEqual(response.data.uuAppErrorMap[code].message);
+    let invalidData = response.data.uuAppErrorMap[code].paramMap["unsupportedKeyList"][0];
     expect(invalidData).toEqual("$.unsupportedKey");
   });
 
   test("A2", async () => {
-    await TestHelper.login("Readers");
     expect.assertions(7);
     try {
       await TestHelper.executeGetCommand(CMD, {});

@@ -1,32 +1,33 @@
 const { TestHelper } = require("uu_appg01_workspace-test");
 const { CreateCategory } = require("../general-test-hepler");
 
-beforeEach(async done => {
-  await TestHelper.setup();
-  await TestHelper.initAppWorkspace();
-  await TestHelper.login("SysOwner");
-  await TestHelper.executePostCommand("init", {
-    uuAppProfileAuthorities: "urn:uu:GGALL"
-  });
-  await TestHelper.createPermission("Readers");
-  done();
+beforeAll(() => {
+  return TestHelper.setup()
+    .then(() => {
+      return TestHelper.initAppWorkspace();
+    })
+    .then(() => {
+      return TestHelper.login("SysOwner").then(() => {
+        return TestHelper.executePostCommand("init", {
+          uuAppProfileAuthorities: "urn:uu:GGALL"
+        });
+      });
+    }).then(() => {
+      return TestHelper.login("Executive");
+    });
 });
 
-afterEach(async done => {
-  await TestHelper.teardown();
-  done();
+afterAll(() => {
+  TestHelper.teardown();
 });
 
 describe("Test createCategory command", () => {
   test("HDS", async () => {
-    await TestHelper.login("Readers");
     let response = await CreateCategory();
     expect(response.data.name).toBeDefined();
     expect(response.data.desc).toBeDefined();
-    expect(response.data.glyphicon).toBeDefined();
     expect(typeof response.data.name).toBe("string");
     expect(typeof response.data.desc).toBe("string");
-    expect(typeof response.data.glyphicon).toBe("string");
     expect(response.data.uuAppErrorMap).toBeDefined();
     expect(response.data.uuAppErrorMap).toBeInstanceOf(Object);
     expect(response.data.uuAppErrorMap).toMatchObject({});
@@ -34,7 +35,6 @@ describe("Test createCategory command", () => {
   });
 
   test("A1", async () => {
-    await TestHelper.login("Readers");
     let invalidDtoIn = {
       name: "test name",
       desc: "test desc",
@@ -62,7 +62,6 @@ describe("Test createCategory command", () => {
   });
 
   test("A2", async () => {
-    await TestHelper.login("Readers");
     expect.assertions(9);
     try {
       let invalidDtoIn = { name: 123, desc: 123, glyphicon: 123 };
@@ -87,7 +86,6 @@ describe("Test createCategory command", () => {
   });
 
   test("A3 - uuObject Category with the specified name already exists", async () => {
-    await TestHelper.login("Authorities");
     let errorCode = "uu-jokes-main/createCategory/categoryNameNotUnique";
     expect.assertions(4);
     try {

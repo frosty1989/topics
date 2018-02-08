@@ -1,38 +1,102 @@
 const { TestHelper } = require("uu_appg01_workspace-test");
+const authErrorCode = "authorization/userIsNotAuthorized";
 
-beforeEach(async done => {
-  await TestHelper.setup();
-  await TestHelper.initAppWorkspace();
-  await TestHelper.login("SysOwner");
-  await TestHelper.createPermission("Readers");
-  done();
+beforeAll(() => {
+  return TestHelper.setup()
+    .then(() => {
+      return TestHelper.initAppWorkspace();
+    })
+    .then(() => {
+      return TestHelper.login("SysOwner");
+    })
+    .then(() => {
+      return TestHelper.login("Authority");
+    })
+    .then(() => {
+      return TestHelper.login("Executive");
+    })
+    .then(() => {
+      return TestHelper.login("Reader");
+    });
 });
 
-afterEach(async done => {
-  await TestHelper.teardown();
-  done();
+afterAll(() => {
+  TestHelper.teardown();
 });
 
 describe("Test init command", () => {
   test("HDS", async () => {
-    await TestHelper.login("Readers");
-    let response = await TestHelper.executePostCommand("init", {
-      uuAppProfileAuthorities: "urn:uu:GGALL"
-    });
+    TestHelper.authHeader = `Bearer ${TestHelper.authTokens.SysOwner}`;
+    const response = await TestHelper.executePostCommand("init", { uuAppProfileAuthorities: "urn:uu:GGALL" });
+
     expect(response.status).toEqual(200);
     expect(response.data).toHaveProperty("uuAppErrorMap");
     expect(response.data.uuAppErrorMap).toBeInstanceOf(Object);
     expect(response.data.uuAppErrorMap).toMatchObject({});
   });
 
+  test("HDS as a Authority", async () => {
+    expect.assertions(9);
+
+    try {
+      TestHelper.authHeader = `Bearer ${TestHelper.authTokens.Authority}`;
+      await TestHelper.executePostCommand("init", { uuAppProfileAuthorities: "urn:uu:GGALL" });
+    } catch (e) {
+      expect(e.status).toBe(403);
+      expect(e).toHaveProperty("name");
+      expect(e.name).toEqual("ApplicationError");
+      expect(e).toHaveProperty("code");
+      expect(e.code).toEqual(authErrorCode);
+      expect(e).toHaveProperty("dtoOut");
+      expect(e.dtoOut).toHaveProperty("uuAppErrorMap");
+      expect(e.dtoOut.uuAppErrorMap[authErrorCode]).toBeDefined();
+      expect(e.dtoOut.uuAppErrorMap[authErrorCode].type).toEqual("error");
+    }
+  });
+
+  test("HDS as a Executive", async () => {
+    expect.assertions(9);
+
+    try {
+      TestHelper.authHeader = `Bearer ${TestHelper.authTokens.Executive}`;
+      await TestHelper.executePostCommand("init", { uuAppProfileAuthorities: "urn:uu:GGALL" });
+    } catch (e) {
+      expect(e.status).toBe(403);
+      expect(e).toHaveProperty("name");
+      expect(e.name).toEqual("ApplicationError");
+      expect(e).toHaveProperty("code");
+      expect(e.code).toEqual(authErrorCode);
+      expect(e).toHaveProperty("dtoOut");
+      expect(e.dtoOut).toHaveProperty("uuAppErrorMap");
+      expect(e.dtoOut.uuAppErrorMap[authErrorCode]).toBeDefined();
+      expect(e.dtoOut.uuAppErrorMap[authErrorCode].type).toEqual("error");
+    }
+  });
+
+  test("HDS as a Reader", async () => {
+    expect.assertions(9);
+
+    try {
+      TestHelper.authHeader = `Bearer ${TestHelper.authTokens.Reader}`;
+      await TestHelper.executePostCommand("init", { uuAppProfileAuthorities: "urn:uu:GGALL" });
+    } catch (e) {
+      expect(e.status).toBe(403);
+      expect(e).toHaveProperty("name");
+      expect(e.name).toEqual("ApplicationError");
+      expect(e).toHaveProperty("code");
+      expect(e.code).toEqual(authErrorCode);
+      expect(e).toHaveProperty("dtoOut");
+      expect(e.dtoOut).toHaveProperty("uuAppErrorMap");
+      expect(e.dtoOut.uuAppErrorMap[authErrorCode]).toBeDefined();
+      expect(e.dtoOut.uuAppErrorMap[authErrorCode].type).toEqual("error");
+    }
+  });
+
   test("A1", async () => {
-    await TestHelper.login("Readers");
-    let invalidDtoIn = {
-      uuAppProfileAuthorities: "urn:uu:GGALL",
-      unsupportedKey: "unsupported value"
-    };
-    let response = await TestHelper.executePostCommand("init", invalidDtoIn);
-    let unsupportedKey = "uu-jokes-main/initunsupportedKeys";
+    TestHelper.authHeader = `Bearer ${TestHelper.authTokens.SysOwner}`;
+    const invalidDtoIn = { uuAppProfileAuthorities: "urn:uu:GGALL", unsupportedKey: "unsupported value" };
+    const response = await TestHelper.executePostCommand("init", invalidDtoIn);
+    const unsupportedKey = "uu-jokes-main/initunsupportedKeys";
 
     expect(response.status).toEqual(200);
     expect(response.data).toHaveProperty("uuAppErrorMap");
@@ -47,8 +111,9 @@ describe("Test init command", () => {
 
   test("A2", async () => {
     expect.assertions(10);
+
     try {
-      await TestHelper.login("Readers");
+      TestHelper.authHeader = `Bearer ${TestHelper.authTokens.SysOwner}`;
       await TestHelper.executePostCommand("init", { uuAppProfileAuthorities: 123 });
     } catch (e) {
       expect(e.status).toBe(400);

@@ -2,22 +2,28 @@ const { TestHelper } = require("uu_appg01_workspace-test");
 const { CreateJoke } = require("../general-test-hepler");
 const CMD = "updateJoke";
 
-beforeEach(async done => {
-  await TestHelper.setup();
-  await TestHelper.initAppWorkspace();
-  await TestHelper.createPermission("Readers");
-  done();
+beforeAll(() => {
+  return TestHelper.setup()
+    .then(() => {
+      return TestHelper.initAppWorkspace();
+    })
+    .then(() => {
+      return TestHelper.login("SysOwner").then(() => {
+        return TestHelper.executePostCommand("init", {
+          uuAppProfileAuthorities: "urn:uu:GGALL"
+        });
+      });
+    }).then(() => {
+      return TestHelper.login("Executive");
+    });
 });
 
-afterEach(async done => {
-  await TestHelper.teardown();
-  done();
+afterAll(() => {
+  TestHelper.teardown();
 });
 
 describe("Test updateJoke command", () => {
   test("HDS", async () => {
-    await TestHelper.login("Readers");
-
     let joke = await CreateJoke();
     let newJokeName = "Absolutely brand new joke!";
     let newJokeText = "Absolutely fantastically funny text of joke!";
@@ -71,8 +77,6 @@ describe("Test updateJoke command", () => {
   });
 
   test("A2", async () => {
-    await TestHelper.login("Readers");
-
     expect.assertions(10);
     try {
       await TestHelper.executePostCommand(CMD, { name: "Non updatable joke?" });
@@ -91,8 +95,6 @@ describe("Test updateJoke command", () => {
   });
 
   test("A3 and A4 tests are working just fine, because mongoDB is immortal", async () => {
-    await TestHelper.login("Readers");
-
     expect(typeof null).toBe("object");
   });
 
@@ -103,7 +105,6 @@ describe("Test updateJoke command", () => {
     expect.assertions(8);
 
     try {
-      await TestHelper.login("Readers");
       await TestHelper.executePostCommand(CMD, {
         id: fakeJokeId,
         name: "Very funny joke",

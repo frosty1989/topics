@@ -3,57 +3,58 @@ const { CreateCategory } = require("../general-test-hepler");
 const { CreateJoke } = require("../general-test-hepler");
 const CMD = "deleteCategory";
 
-beforeEach(async done => {
-  await TestHelper.setup();
-  await TestHelper.initAppWorkspace();
-  await TestHelper.createPermission("Readers");
-  done();
+beforeAll(() => {
+  return TestHelper.setup()
+    .then(() => {
+      return TestHelper.initAppWorkspace();
+    })
+    .then(() => {
+      return TestHelper.login("SysOwner").then(() => {
+        return TestHelper.executePostCommand("init", {
+          uuAppProfileAuthorities: "urn:uu:GGALL"
+        });
+      });
+    })
+    .then(() => {
+      return TestHelper.login("Executive");
+    });
 });
 
-afterEach(async done => {
-  await TestHelper.teardown();
-  done();
+afterAll(() => {
+  TestHelper.teardown();
 });
 
 describe("Test deleteCategory command", () => {
   test("HDS - forceDelete equals true", async () => {
-    await TestHelper.login("Readers");
-
     let category = await CreateCategory({
-      name: "Category 1",
+      name: "Category 1 HDS",
       desc: "Category 1 desc"
     });
     let joke1 = await CreateJoke({
-      name: "Joke 1",
+      name: "Joke 1 HDS",
       text: "Text 1",
       categoryList: [category.data.id]
     });
     let joke2 = await CreateJoke({
-      name: "Joke 2",
+      name: "Joke 2 HDS",
       text: "Text 2",
       categoryList: [category.data.id]
     });
     let joke3 = await CreateJoke({
-      name: "Joke 3",
+      name: "Joke 3 HDS",
       text: "Text 3",
       categoryList: [category.data.id]
     });
-    let categoryJokes = await TestHelper.executeGetCommand(
-      "listCategoryJokes",
-      {
-        categoryId: category.data.id
-      }
-    );
+    let categoryJokes = await TestHelper.executeGetCommand("listCategoryJokes", {
+      categoryId: category.data.id
+    });
     let result = await TestHelper.executePostCommand(CMD, {
       id: category.data.id,
       forceDelete: true
     });
-    let noCategoryJokes = await TestHelper.executeGetCommand(
-      "listCategoryJokes",
-      {
-        categoryId: category.data.id
-      }
-    );
+    let noCategoryJokes = await TestHelper.executeGetCommand("listCategoryJokes", {
+      categoryId: category.data.id
+    });
     let noCategories = await TestHelper.executeGetCommand("listCategories");
 
     expect(result.status).toBe(200);
@@ -72,26 +73,23 @@ describe("Test deleteCategory command", () => {
   });
 
   test("HDS - forceDelete equals false", async () => {
-    await TestHelper.login("Readers");
-
-    const relatedJokesExist =
-      "uu-jokes-main/deleteCategory/relatedJokesExist";
+    const relatedJokesExist = "uu-jokes-main/deleteCategory/relatedJokesExist";
     let category = await CreateCategory({
-      name: "Category 1",
+      name: "Category 1 HDS forceDelete",
       desc: "Category 1 desc"
     });
     let joke1 = await CreateJoke({
-      name: "Joke 1",
+      name: "Joke 1 HDS forceDelete",
       text: "Text 1",
       categoryList: [category.data.id]
     });
     let joke2 = await CreateJoke({
-      name: "Joke 2",
+      name: "Joke 2 HDS forceDelete",
       text: "Text 2",
       categoryList: [category.data.id]
     });
     let joke3 = await CreateJoke({
-      name: "Joke 3",
+      name: "Joke 3 HDS forceDelete",
       text: "Text 3",
       categoryList: [category.data.id]
     });
@@ -109,8 +107,6 @@ describe("Test deleteCategory command", () => {
   });
 
   test("A1", async () => {
-    await TestHelper.login("Readers");
-
     await CreateCategory();
     let listResponce = await TestHelper.executeGetCommand("listCategories");
     let itemId = listResponce.data.itemList[0].id;
@@ -123,19 +119,12 @@ describe("Test deleteCategory command", () => {
     let response = await TestHelper.executePostCommand("deleteCategory", dtoIn);
     expect(response.status).toEqual(200);
     expect("warning").toEqual(response.data.uuAppErrorMap[unsupportedKey].type);
-    expect("DtoIn contains unsupported keys.").toEqual(
-      response.data.uuAppErrorMap[unsupportedKey].message
-    );
-    let invalidData =
-      response.data.uuAppErrorMap[unsupportedKey].paramMap[
-        "unsupportedKeyList"
-      ][0];
+    expect("DtoIn contains unsupported keys.").toEqual(response.data.uuAppErrorMap[unsupportedKey].message);
+    let invalidData = response.data.uuAppErrorMap[unsupportedKey].paramMap["unsupportedKeyList"][0];
     expect(invalidData).toEqual("$.unsupportedKey");
   });
 
   test("A2", async () => {
-    await TestHelper.login("Readers", true);
-
     expect.assertions(7);
     try {
       await TestHelper.executePostCommand("deleteCategory", {});
@@ -151,7 +140,6 @@ describe("Test deleteCategory command", () => {
   });
 
   test("A4 related jokes exists", async () => {
-    await TestHelper.login("Readers", true);
     let createCategoryResponse = await CreateCategory();
     let categoryId = createCategoryResponse.data.id;
     await CreateJoke({}, categoryId);
@@ -164,9 +152,7 @@ describe("Test deleteCategory command", () => {
       expect(error).toHaveProperty("id");
       expect(error).toHaveProperty("status");
       expect(error.status).toEqual(400);
-      expect(error.code).toEqual(
-        "uu-jokes-main/deleteCategory/relatedJokesExist"
-      );
+      expect(error.code).toEqual("uu-jokes-main/deleteCategory/relatedJokesExist");
       expect(error).toBeInstanceOf(Object);
       expect(error).toHaveProperty("response");
     }

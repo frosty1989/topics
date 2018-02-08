@@ -2,16 +2,25 @@ const { TestHelper } = require("uu_appg01_workspace-test");
 const { CreateJoke, CreateCategory } = require("../general-test-hepler");
 const CMD = "deleteJoke";
 
-beforeEach(async done => {
-  await TestHelper.setup();
-  await TestHelper.initAppWorkspace();
-  await TestHelper.createPermission("Readers");
-  done();
+beforeAll(() => {
+  return TestHelper.setup()
+    .then(() => {
+      return TestHelper.initAppWorkspace();
+    })
+    .then(() => {
+      return TestHelper.login("SysOwner").then(() => {
+        return TestHelper.executePostCommand("init", {
+          uuAppProfileAuthorities: "urn:uu:GGALL"
+        });
+      });
+    })
+    .then(() => {
+      return TestHelper.login("Executive");
+    });
 });
 
-afterEach(async done => {
-  await TestHelper.teardown();
-  done();
+afterAll(() => {
+  TestHelper.teardown();
 });
 
 describe("Test deleteJoke command", () => {
@@ -48,12 +57,7 @@ describe("Test deleteJoke command", () => {
   });
 
   test("A1", async () => {
-    await TestHelper.login("Readers");
-
-    let joke = await CreateJoke({
-      name: "Funny joke",
-      text: "Funny text"
-    });
+    let joke = await CreateJoke();
     let response = await TestHelper.executePostCommand(CMD, {
       id: joke.data.id,
       unsupportedKey: "Unsupported value"
@@ -65,21 +69,12 @@ describe("Test deleteJoke command", () => {
     expect(response.data).toBeDefined();
     expect(response.data.uuAppErrorMap).toBeDefined();
     expect(response.data.uuAppErrorMap[unsupportedKeyCode]).toBeDefined();
-    expect(
-      response.data.uuAppErrorMap[unsupportedKeyCode].paramMap
-    ).toBeDefined();
-    expect(
-      response.data.uuAppErrorMap[unsupportedKeyCode].paramMap
-        .unsupportedKeyList
-    ).toBeDefined();
-    expect(
-      response.data.uuAppErrorMap[unsupportedKeyCode].paramMap
-        .unsupportedKeyList
-    ).toContain("$.unsupportedKey");
+    expect(response.data.uuAppErrorMap[unsupportedKeyCode].paramMap).toBeDefined();
+    expect(response.data.uuAppErrorMap[unsupportedKeyCode].paramMap.unsupportedKeyList).toBeDefined();
+    expect(response.data.uuAppErrorMap[unsupportedKeyCode].paramMap.unsupportedKeyList).toContain("$.unsupportedKey");
   });
 
   test("A2", async () => {
-    await TestHelper.login("Readers");
     expect.assertions(8);
     try {
       await TestHelper.executePostCommand(CMD, {

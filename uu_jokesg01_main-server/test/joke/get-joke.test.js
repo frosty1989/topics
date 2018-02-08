@@ -3,25 +3,33 @@ const { CreateJoke } = require("../general-test-hepler");
 const { CreateCategory } = require("../general-test-hepler");
 const CMD = "getJoke";
 
-beforeEach(async done => {
-  await TestHelper.setup();
-  await TestHelper.initAppWorkspace();
-  await TestHelper.createPermission("Readers");
-  done();
+beforeAll(() => {
+  return TestHelper.setup()
+    .then(() => {
+      return TestHelper.initAppWorkspace();
+    })
+    .then(() => {
+      return TestHelper.login("SysOwner").then(() => {
+        return TestHelper.executePostCommand("init", {
+          uuAppProfileAuthorities: "urn:uu:GGALL"
+        });
+      });
+    }).then(() => {
+      return TestHelper.login("Reader");
+    });
 });
 
-afterEach(async done => {
-  await TestHelper.teardown();
-  done();
+afterAll(() => {
+  TestHelper.teardown();
 });
 
 describe("Test getJoke command", () => {
   test("HDS", async () => {
-    const category1 = await CreateCategory({ name: "Category 1", desc: "Desc" });
-    const category2 = await CreateCategory({ name: "Category 2", desc: "Desc" });
+    const category1 = await CreateCategory();
+    const category2 = await CreateCategory();
     const categoryList = [category1.data.id, category2.data.id];
     const joke = await CreateJoke({
-      name: "Joke",
+      name: "Joke HDS",
       text: "Text",
       categoryList: categoryList
     });
@@ -37,7 +45,6 @@ describe("Test getJoke command", () => {
   });
 
   test("A1", async () => {
-    await TestHelper.login("Readers");
     const joke = await CreateJoke();
     const itemId = joke.data.id;
     const invalidDtoIn = {
@@ -60,7 +67,6 @@ describe("Test getJoke command", () => {
   });
 
   test("A2", async () => {
-    await TestHelper.login("Readers");
     expect.assertions(7);
     let invalidDtoIn = { id: "invalid string id" };
     try {
@@ -77,7 +83,6 @@ describe("Test getJoke command", () => {
   });
 
   test("A4", async () => {
-    await TestHelper.login("Readers");
     let nonexistintId = "5a33ba462eb85507bcf0c444";
     let createCategoryResponse = await CreateCategory();
     let categoryId = createCategoryResponse.data.id;
@@ -96,18 +101,10 @@ describe("Test getJoke command", () => {
   });
 
   test("A5", async () => {
-    await TestHelper.login("Readers");
-
-    let category1 = await CreateCategory({
-      name: "Category 1",
-      desc: "Category 1 description"
-    });
-    let category2 = await CreateCategory({
-      name: "Category 2",
-      desc: "Category 2 description"
-    });
+    let category1 = await CreateCategory();
+    let category2 = await CreateCategory();
     let joke = await CreateJoke({
-      name: "Joke",
+      name: "Joke A5",
       text: "Text of funny joke",
       categoryList: [category1.data.id, category2.data.id]
     });

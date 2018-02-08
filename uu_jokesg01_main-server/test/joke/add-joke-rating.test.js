@@ -2,22 +2,31 @@ const { TestHelper } = require("uu_appg01_workspace-test");
 const { CreateJoke } = require("../general-test-hepler");
 const CMD = "addJokeRating";
 
-beforeEach(async done => {
-  await TestHelper.setup();
-  await TestHelper.initAppWorkspace();
-  await TestHelper.createPermission("Readers");
-  done();
+beforeAll(() => {
+  return TestHelper.setup()
+    .then(() => {
+      return TestHelper.initAppWorkspace();
+    })
+    .then(() => {
+      return TestHelper.login("SysOwner").then(() => {
+        return TestHelper.executePostCommand("init", {
+          uuAppProfileAuthorities: "urn:uu:GGALL"
+        });
+      });
+    })
+    .then(() => {
+      return TestHelper.login("Reader");
+    });
 });
 
-afterEach(async done => {
-  await TestHelper.teardown();
-  done();
+afterAll(() => {
+  TestHelper.teardown();
 });
 
 describe("Test addJokeRating command", () => {
   test("HDS", async () => {
-    const joke = await CreateJoke({ name: "Joke", text: "Text" });
-    const readerUuIdentity = "14-2710-1";
+    const joke = await CreateJoke();
+    const readerUuIdentity = "19-7019-1";
     const goodRating = 5;
     const moderateRating = 3;
     const badRating = 1;
@@ -84,7 +93,7 @@ describe("Test addJokeRating command", () => {
   });
 
   test("A1", async () => {
-    const joke = await CreateJoke({ name: "Joke", text: "Text" });
+    const joke = await CreateJoke();
     const code = "uu-jokes-main/addJokeRating/unsupportedKeys";
     const result = await TestHelper.executePostCommand(CMD, {
       id: joke.data.id,
@@ -106,9 +115,9 @@ describe("Test addJokeRating command", () => {
     expect.assertions(13);
 
     try {
-      await TestHelper.login("Readers");
       await TestHelper.executePostCommand(CMD, {});
     } catch (error) {
+      console.log(error);
       expect(error.status).toEqual(400);
       expect(error.code).toBeDefined();
       expect(error.code).toBe("uu-jokes-main/addJokeRating/invalidDtoIn");
@@ -131,7 +140,6 @@ describe("Test addJokeRating command", () => {
     expect.assertions(5);
 
     try {
-      await TestHelper.login("Readers");
       await TestHelper.executePostCommand(CMD, { id: fakeJokeId, rating: 5 });
     } catch (error) {
       expect(error.status).toBe(400);
