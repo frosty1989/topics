@@ -89,7 +89,7 @@ describe("Test createCategory command", () => {
   test("A3 - uuObject Category with the specified name already exists", async () => {
     await TestHelper.login("Authorities");
     let errorCode = "uu-jokes-main/createCategory/categoryNameNotUnique";
-    expect.assertions(4);
+    expect.assertions(3);
     try {
       const categoryName = "Category 1";
       let category1 = await CreateCategory({
@@ -103,7 +103,6 @@ describe("Test createCategory command", () => {
       });
     } catch (error) {
       expect(error.code).toBeDefined();
-      expect(error).toHaveProperty("id");
       expect(error.status).toEqual(400);
       expect(error.code).toBe(errorCode);
     }

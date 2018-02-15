@@ -2,7 +2,8 @@
 
 const { Validator } = require("uu_appg01_server").Validation;
 const { DaoFactory, ObjectStoreError } = require("uu_appg01_server").ObjectStore;
-const { ValidationHelper, SysProfile } = require("uu_appg01_server").Workspace;
+const { ValidationHelper } = require("uu_appg01_server").AppServer;
+const { SysProfileModel } = require("uu_appg01_server").Workspace;
 const Path = require("path");
 const Errors = require("../errors/app-error");
 
@@ -47,7 +48,7 @@ class AppModel {
 
     try {
       //HDS 3
-      await SysProfile.setProfile(awid, { code: "Authorities", roleUri: dtoIn.uuAppProfileAuthorities });
+      await SysProfileModel.setProfile(awid, { code: "Authorities", roleUri: dtoIn.uuAppProfileAuthorities });
     } catch (e) {
       //A4
       if (e instanceof ObjectStoreError) {

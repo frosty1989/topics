@@ -1,7 +1,7 @@
 "use strict";
 const { Validator } = require("uu_appg01_server").Validation;
 const { DaoFactory, ObjectStoreError } = require("uu_appg01_server").ObjectStore;
-const { ValidationHelper } = require("uu_appg01_server").Workspace;
+const { ValidationHelper } = require("uu_appg01_server").AppServer;
 const Errors = require("../errors/joke-error");
 const Path = require("path");
 
