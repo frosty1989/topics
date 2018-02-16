@@ -1,20 +1,22 @@
-const { TestHelper } = require("uu_appg01_workspace-test");
-const { CreateCategory } = require("../general-test-hepler");
+const {TestHelper} = require("uu_appg01_workspace-test");
+const {CreateCategory} = require("../general-test-hepler");
 
-beforeEach(async done => {
+beforeAll(async () => {
   await TestHelper.setup();
+});
+
+beforeEach(async () => {
+  await TestHelper.dropDatabase();
   await TestHelper.initAppWorkspace();
   await TestHelper.login("SysOwner");
   await TestHelper.executePostCommand("init", {
     uuAppProfileAuthorities: "urn:uu:GGALL"
   });
   await TestHelper.createPermission("Readers");
-  done();
 });
 
-afterEach(async done => {
-  await TestHelper.teardown();
-  done();
+afterAll(() => {
+  TestHelper.teardown();
 });
 
 describe("Test createCategory command", () => {
@@ -57,7 +59,7 @@ describe("Test createCategory command", () => {
     expect(
       response.data.uuAppErrorMap[
         "uu-jokes-main/createCategory/unsupportedKeys"
-      ]
+        ]
     ).toBeInstanceOf(Object);
   });
 
@@ -65,7 +67,7 @@ describe("Test createCategory command", () => {
     await TestHelper.login("Readers");
     expect.assertions(9);
     try {
-      let invalidDtoIn = { name: 123, desc: 123, glyphicon: 123 };
+      let invalidDtoIn = {name: 123, desc: 123, glyphicon: 123};
       await CreateCategory(invalidDtoIn);
     } catch (e) {
       expect(e).toHaveProperty("paramMap");

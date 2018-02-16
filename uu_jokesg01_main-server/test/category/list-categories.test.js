@@ -2,16 +2,19 @@ const { TestHelper } = require("uu_appg01_workspace-test");
 const { CreateCategory } = require("../general-test-hepler");
 const CMD = "listCategories";
 
-beforeEach(async done => {
+beforeAll(async () => {
   await TestHelper.setup();
+});
+
+beforeEach(async done => {
+  await TestHelper.dropDatabase();
   await TestHelper.initAppWorkspace();
   await TestHelper.createPermission("Readers");
   done();
 });
 
-afterEach(async done => {
-  await TestHelper.teardown();
-  done();
+afterAll(() => {
+  TestHelper.teardown();
 });
 
 describe("Test listCategories command", () => {
