@@ -316,8 +316,8 @@ class JokeModel {
       WARNINGS.listJokes.unsupportedKeys.code,
       Errors.ListJokes.InvalidDtoIn
     );
-    let sort = dtoIn.sortBy === "name" ? "name" : "rating";
-    let order = dtoIn.order === "desc" ? -1 : 1;
+    let sort = dtoIn.hasOwnProperty("sortBy") ? (dtoIn.sortBy === "name" ? "name" : "rating") : "name";
+    let order = dtoIn.hasOwnProperty("order") ? (dtoIn.order === "asc" ? 1 : -1) : 1;
     let dtoOut = {};
 
     //HDS 1.4
@@ -326,7 +326,7 @@ class JokeModel {
 
     try {
       //HDS 2
-      dtoOut = await this.dao.list(awid, dtoIn.pageInfo, { [sort]: order });
+      dtoOut = await this.dao.list(awid, dtoIn.pageInfo, sort, order);
     } catch (e) {
       //A3
       if (e instanceof ObjectStoreError) {

@@ -1,6 +1,6 @@
 const { TestHelper } = require("uu_appg01_workspace-test");
 
-const createJoke = async (dtoIn = {}, categoryId = null) => {
+const CreateJoke = async (dtoIn = {}, categoryId = null) => {
   if (!dtoIn.hasOwnProperty("name")) {
     dtoIn.name = `The joke ${Math.random().toString(36).substr(2, 5)}`;
   }
@@ -16,7 +16,7 @@ const createJoke = async (dtoIn = {}, categoryId = null) => {
   });
 };
 
-const createCategory = async dtoIn => {
+const CreateCategory = async dtoIn => {
   await TestHelper.login("Authority", false, false);
 
   if (!dtoIn) {
@@ -31,7 +31,19 @@ const createCategory = async dtoIn => {
   });
 };
 
+const DefaultInitDtoIn = { uuAppProfileAuthorities: "urn:uu:GGALL" };
+
+const InitApp = async () => {
+  await TestHelper.setup();
+  await TestHelper.initAppWorkspace();
+  await TestHelper.login("SysOwner");
+  await TestHelper.executePostCommand("init", DefaultInitDtoIn);
+};
+
+
 module.exports = {
-  CreateJoke: createJoke,
-  CreateCategory: createCategory
+  CreateJoke,
+  CreateCategory,
+  DefaultInitDtoIn,
+  InitApp
 };

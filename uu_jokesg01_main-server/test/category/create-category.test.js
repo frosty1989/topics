@@ -1,24 +1,13 @@
 const { TestHelper } = require("uu_appg01_workspace-test");
-const { CreateCategory } = require("../general-test-hepler");
+const { CreateCategory, InitApp } = require("../general-test-hepler");
 
-beforeAll(() => {
-  return TestHelper.setup()
-    .then(() => {
-      return TestHelper.initAppWorkspace();
-    })
-    .then(() => {
-      return TestHelper.login("SysOwner").then(() => {
-        return TestHelper.executePostCommand("init", {
-          uuAppProfileAuthorities: "urn:uu:GGALL"
-        });
-      });
-    }).then(() => {
-      return TestHelper.login("Executive");
-    });
+beforeAll(async () => {
+  await InitApp();
+  await TestHelper.login("Executive");
 });
 
-afterAll(() => {
-  TestHelper.teardown();
+afterAll(async () => {
+  await TestHelper.teardown();
 });
 
 describe("Test createCategory command", () => {
@@ -51,14 +40,8 @@ describe("Test createCategory command", () => {
     expect(response.data).toHaveProperty("glyphicon");
     expect(response.data).toHaveProperty("uuAppErrorMap");
     expect("warning").toEqual(response.data.uuAppErrorMap[unsupportedKey].type);
-    expect("DtoIn contains unsupported keys.").toEqual(
-      response.data.uuAppErrorMap[unsupportedKey].message
-    );
-    expect(
-      response.data.uuAppErrorMap[
-        "uu-jokes-main/createCategory/unsupportedKeys"
-      ]
-    ).toBeInstanceOf(Object);
+    expect("DtoIn contains unsupported keys.").toEqual(response.data.uuAppErrorMap[unsupportedKey].message);
+    expect(response.data.uuAppErrorMap["uu-jokes-main/createCategory/unsupportedKeys"]).toBeInstanceOf(Object);
   });
 
   test("A2", async () => {
@@ -69,15 +52,9 @@ describe("Test createCategory command", () => {
     } catch (e) {
       expect(e).toHaveProperty("paramMap");
       expect(e.paramMap).toHaveProperty("invalidValueKeyMap");
-      expect(
-        e.paramMap.invalidTypeKeyMap.hasOwnProperty("$.name")
-      ).toBeTruthy();
-      expect(
-        e.paramMap.invalidTypeKeyMap.hasOwnProperty("$.desc")
-      ).toBeTruthy();
-      expect(
-        e.paramMap.invalidTypeKeyMap.hasOwnProperty("$.glyphicon")
-      ).toBeTruthy();
+      expect(e.paramMap.invalidTypeKeyMap.hasOwnProperty("$.name")).toBeTruthy();
+      expect(e.paramMap.invalidTypeKeyMap.hasOwnProperty("$.desc")).toBeTruthy();
+      expect(e.paramMap.invalidTypeKeyMap.hasOwnProperty("$.glyphicon")).toBeTruthy();
       expect(e.dtoOut).toHaveProperty("uuAppErrorMap");
       expect(e).toHaveProperty("response");
       expect(e).toHaveProperty("status");

@@ -1,37 +1,42 @@
 const { TestHelper } = require("uu_appg01_workspace-test");
-const { CreateCategory } = require("../general-test-hepler");
+const { CreateCategory, InitApp } = require("../general-test-hepler");
 const CMD = "listCategories";
 
-beforeAll(() => {
-  return TestHelper.setup()
-    .then(() => {
-      return TestHelper.initAppWorkspace();
-    })
-    .then(() => {
-      return TestHelper.login("SysOwner").then(() => {
-        return TestHelper.executePostCommand("init", {
-          uuAppProfileAuthorities: "urn:uu:GGALL"
-        });
-      });
-    })
-    .then(() => {
-      return TestHelper.login("Reader");
-    });
-});
-
-afterAll(() => {
-  TestHelper.teardown();
-});
+let categoryList = [];
 
 describe("Test listCategories command", () => {
+  beforeAll(async () => {
+    await InitApp();
+
+    for (let i = 1; i < 11; i++) {
+      let category = await CreateCategory({
+        name: `Name of category ${i}`,
+        desc: "Just a description..."
+      });
+
+      categoryList.push(category.data);
+    }
+
+    await TestHelper.login("Reader");
+  });
+
+  afterAll(async () => {
+    await TestHelper.teardown();
+  });
+
   test("HDS", async () => {
-    let category = await CreateCategory();
     let response = await TestHelper.executeGetCommand(CMD);
     expect(response.status).toEqual(200);
-    expect(Array.isArray(response.data.itemList)).toBe(true);
-    expect(response.data.itemList[0].name).toEqual(category.data.name);
-    expect(response.data.itemList[0].desc).toEqual(category.data.desc);
-    expect(response.data.itemList[0].id).toEqual(category.data.id);
+    expect(response).toHaveProperty("data");
+    expect(response.data).toHaveProperty("itemList");
+    expect(response.data.itemList.length).toEqual(categoryList.length);
+    expect(response.data).toHaveProperty("pageInfo");
+    expect(response.data.pageInfo).toEqual({
+      pageIndex: 0,
+      pageSize: 100,
+      total: categoryList.length
+    });
+    expect(response.data).toHaveProperty("uuAppErrorMap");
     expect(response.data.uuAppErrorMap).toEqual({});
     expect(response.data.uuAppErrorMap).toBeDefined();
     expect(response.data.uuAppErrorMap).toBeInstanceOf(Object);
@@ -39,75 +44,68 @@ describe("Test listCategories command", () => {
   });
 
   test("HDS_OrderByDefault", async () => {
-    const category1Name = "Category 2";
-    const category2Name = "Category 3";
-    const category3Name = "Category 4";
-
-    await CreateCategory({ name: category1Name, desc: "Desc" });
-    await CreateCategory({ name: category2Name, desc: "Desc" });
-    await CreateCategory({ name: category3Name, desc: "Desc" });
-
     const response = await TestHelper.executeGetCommand(CMD);
+    const categoriesSortedByAsc = categoryList.map(m => m.name).sort((a, b) => a.localeCompare(b));
+    const itemListCategories = response.data.itemList.map(m => m.name);
 
     expect(response.status).toEqual(200);
-    expect(response.data.itemList).toBeDefined();
-    expect(Array.isArray(response.data.itemList)).toBe(true);
-    expect(
-      response.data.itemList.map(v => v.name).some(q => [category1Name, category2Name, category3Name].indexOf(q) >= 0)
-    ).toBeTruthy();
+    expect(itemListCategories).toEqual(categoriesSortedByAsc);
   });
 
   test("HDS_OrderByDesc", async () => {
-    const category1Name = "Category 5";
-    const category2Name = "Category 6";
-    const category3Name = "Category 7";
-
-    await CreateCategory({ name: category1Name, desc: "Desc" });
-    await CreateCategory({ name: category2Name, desc: "Desc" });
-    await CreateCategory({ name: category3Name, desc: "Desc" });
-
     const response = await TestHelper.executeGetCommand(CMD, {
       order: "desc"
     });
+    const categoriesSortedByDesc = categoryList.map(m => m.name).sort((a, b) => b.localeCompare(a));
+    const itemListCategories = response.data.itemList.map(m => m.name);
 
     expect(response.status).toEqual(200);
-    expect(response.data.itemList).toBeDefined();
-    expect(Array.isArray(response.data.itemList)).toBe(true);
-    expect(
-      response.data.itemList.map(v => v.name).some(q => [category1Name, category2Name, category3Name].indexOf(q) >= 0)
-    ).toBeTruthy();
+    expect(itemListCategories).toEqual(categoriesSortedByDesc);
+  });
+
+  test.skip("HDS_Paging", async () => {
+    // skip it for now, remove "skip" once the new version of uuAppServer is released
+    const pageSize = 5;
+    const response = await TestHelper.executeGetCommand(CMD, {
+      pageInfo: {
+        pageSize: pageSize
+      }
+    });
+    expect(response.status).toEqual(200);
+    expect(response.data.itemList.length).toEqual(pageSize);
+    expect(response.data.pageInfo).toEqual({
+      pageIndex: 0,
+      pageSize: pageSize,
+      total: categoryList.length
+    });
   });
 
   test("A1", async () => {
-    await CreateCategory();
-    let invalidDtoIn = {
-      pageIndex: 0,
-      pageSize: 100,
+    let code = `uu-jokes-main/${CMD}/unsupportedKeys`;
+    let response = await TestHelper.executeGetCommand(CMD, {
       unsupportedKey: "unsupportedValue"
-    };
-    let code = "uu-jokes-main/listCategories/unsupportedKeys";
-    let unsupportedKey = "unsupportedKeyList";
-    let response = await TestHelper.executeGetCommand(CMD, invalidDtoIn);
-    expect(typeof response.data.uuAppErrorMap).toBe("object");
-    expect("warning").toEqual(response.data.uuAppErrorMap[code].type);
-    expect("DtoIn contains unsupported keys.").toEqual(response.data.uuAppErrorMap[code].message);
-    expect(response.data.uuAppErrorMap[code].paramMap[unsupportedKey][0]).toEqual("$.pageIndex");
-    expect(response.data.uuAppErrorMap[code].paramMap[unsupportedKey][1]).toEqual("$.pageSize");
-    expect(response.data.uuAppErrorMap[code].paramMap[unsupportedKey][2]).toEqual("$.unsupportedKey");
+    });
+    expect(response.status).toEqual(200);
+    expect(response.data.itemList.length).toEqual(categoryList.length);
+    expect(response.data.uuAppErrorMap[code].type).toEqual("warning");
+    expect(response.data.uuAppErrorMap[code].message).toEqual("DtoIn contains unsupported keys.");
+    expect(response.data.uuAppErrorMap[code].paramMap.unsupportedKeyList).toContain("$.unsupportedKey");
   });
 
-  test("A2", async () => {
-    expect.assertions(7);
+  test("A2 - missing required key", async () => {
+    const code = `uu-jokes-main/${CMD}/invalidDtoIn`;
+    expect.assertions(6);
     try {
-      await TestHelper.executeGetCommand("listCategoryJokes", {});
-    } catch (error) {
-      expect(error.status).toBe(400);
-      expect(error).toHaveProperty("paramMap");
-      expect(error.paramMap).toHaveProperty("invalidValueKeyMap");
-      expect(error.paramMap).toHaveProperty("missingKeyMap");
-      expect(error.dtoOut).toHaveProperty("uuAppErrorMap");
-      expect(error).toHaveProperty("response");
-      expect(error).toHaveProperty("status");
+      await TestHelper.executeGetCommand(CMD, {
+        order: false
+      });
+    } catch (e) {
+      expect(e.status).toEqual(400);
+      expect(e.code).toEqual(code);
+      expect(e).toHaveProperty("paramMap");
+      expect(e.paramMap).toHaveProperty("invalidValueKeyMap");
+      expect(e.paramMap.invalidValueKeyMap["$"]).toBeDefined();
+      expect(e.paramMap.invalidValueKeyMap["$.order"]).toBeDefined();
     }
   });
 });

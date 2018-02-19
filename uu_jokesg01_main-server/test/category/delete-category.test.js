@@ -1,27 +1,14 @@
 const { TestHelper } = require("uu_appg01_workspace-test");
-const { CreateCategory } = require("../general-test-hepler");
-const { CreateJoke } = require("../general-test-hepler");
+const { CreateCategory, CreateJoke, InitApp } = require("../general-test-hepler");
 const CMD = "deleteCategory";
 
-beforeAll(() => {
-  return TestHelper.setup()
-    .then(() => {
-      return TestHelper.initAppWorkspace();
-    })
-    .then(() => {
-      return TestHelper.login("SysOwner").then(() => {
-        return TestHelper.executePostCommand("init", {
-          uuAppProfileAuthorities: "urn:uu:GGALL"
-        });
-      });
-    })
-    .then(() => {
-      return TestHelper.login("Executive");
-    });
+beforeAll(async () => {
+  await InitApp();
+  await TestHelper.login("Executive");
 });
 
-afterAll(() => {
-  TestHelper.teardown();
+afterAll(async () => {
+  await TestHelper.teardown();
 });
 
 describe("Test deleteCategory command", () => {
@@ -73,7 +60,7 @@ describe("Test deleteCategory command", () => {
   });
 
   test("HDS - forceDelete equals false", async () => {
-    const relatedJokesExist = "uu-jokes-main/deleteCategory/relatedJokesExist";
+    const relatedJokesExist = `uu-jokes-main/${CMD}/relatedJokesExist`;
     let category = await CreateCategory({
       name: "Category 1 HDS forceDelete",
       desc: "Category 1 desc"
@@ -115,8 +102,8 @@ describe("Test deleteCategory command", () => {
       forceDelete: true,
       unsupportedKey: "unsupportedValue"
     };
-    let unsupportedKey = "uu-jokes-main/deleteCategory/unsupportedKeys";
-    let response = await TestHelper.executePostCommand("deleteCategory", dtoIn);
+    let unsupportedKey = `uu-jokes-main/${CMD}/unsupportedKeys`;
+    let response = await TestHelper.executePostCommand(CMD, dtoIn);
     expect(response.status).toEqual(200);
     expect("warning").toEqual(response.data.uuAppErrorMap[unsupportedKey].type);
     expect("DtoIn contains unsupported keys.").toEqual(response.data.uuAppErrorMap[unsupportedKey].message);
@@ -127,7 +114,7 @@ describe("Test deleteCategory command", () => {
   test("A2", async () => {
     expect.assertions(7);
     try {
-      await TestHelper.executePostCommand("deleteCategory", {});
+      await TestHelper.executePostCommand(CMD, {});
     } catch (error) {
       expect(error).toHaveProperty("paramMap");
       expect(error.paramMap).toHaveProperty("invalidValueKeyMap");
@@ -145,14 +132,14 @@ describe("Test deleteCategory command", () => {
     await CreateJoke({}, categoryId);
     expect.assertions(6);
     try {
-      await TestHelper.executePostCommand("deleteCategory", {
+      await TestHelper.executePostCommand(CMD, {
         id: createCategoryResponse.data.id
       });
     } catch (error) {
       expect(error).toHaveProperty("id");
       expect(error).toHaveProperty("status");
       expect(error.status).toEqual(400);
-      expect(error.code).toEqual("uu-jokes-main/deleteCategory/relatedJokesExist");
+      expect(error.code).toEqual(`uu-jokes-main/${CMD}/relatedJokesExist`);
       expect(error).toBeInstanceOf(Object);
       expect(error).toHaveProperty("response");
     }

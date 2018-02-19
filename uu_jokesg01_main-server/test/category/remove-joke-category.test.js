@@ -1,25 +1,14 @@
 const { TestHelper } = require("uu_appg01_workspace-test");
-const { CreateCategory, CreateJoke } = require("../general-test-hepler");
+const { CreateCategory, CreateJoke, InitApp } = require("../general-test-hepler");
 const CMD = "removeJokeCategory";
 
-beforeAll(() => {
-  return TestHelper.setup()
-    .then(() => {
-      return TestHelper.initAppWorkspace();
-    })
-    .then(() => {
-      return TestHelper.login("SysOwner").then(() => {
-        return TestHelper.executePostCommand("init", {
-          uuAppProfileAuthorities: "urn:uu:GGALL"
-        });
-      });
-    }).then(() => {
-      return TestHelper.login("Executive");
-    });
+beforeAll(async () => {
+  await InitApp();
+  await TestHelper.login("Executive");
 });
 
-afterAll(() => {
-  TestHelper.teardown();
+afterAll(async () => {
+  await TestHelper.teardown();
 });
 
 describe("Test removeJokeCategory command", () => {
@@ -54,7 +43,7 @@ describe("Test removeJokeCategory command", () => {
       categoryList: [category.data.id],
       invalid: "invalid"
     });
-    const code = "uu-jokes-main/removeJokeCategory/unsupportedKeys";
+    const code = `uu-jokes-main/${CMD}/unsupportedKeys`;
 
     expect(response.status).toEqual(200);
     expect(typeof response.data.uuAppErrorMap).toBe("object");
@@ -70,7 +59,7 @@ describe("Test removeJokeCategory command", () => {
     try {
       await TestHelper.executePostCommand(CMD, {});
     } catch (e) {
-      const code = "uu-jokes-main/removeJokeCategory/invalidDtoIn";
+      const code = `uu-jokes-main/${CMD}/invalidDtoIn`;
 
       expect(e.status).toEqual(400);
       expect(e.code).toBeDefined();

@@ -1,26 +1,14 @@
 const { TestHelper } = require("uu_appg01_workspace-test");
-const { CreateJoke } = require("../general-test-hepler");
-const { CreateCategory } = require("../general-test-hepler");
+const { CreateJoke, CreateCategory, InitApp } = require("../general-test-hepler");
 const CMD = "getJoke";
 
-beforeAll(() => {
-  return TestHelper.setup()
-    .then(() => {
-      return TestHelper.initAppWorkspace();
-    })
-    .then(() => {
-      return TestHelper.login("SysOwner").then(() => {
-        return TestHelper.executePostCommand("init", {
-          uuAppProfileAuthorities: "urn:uu:GGALL"
-        });
-      });
-    }).then(() => {
-      return TestHelper.login("Reader");
-    });
+beforeAll(async () => {
+  await InitApp();
+  await TestHelper.login("Reader");
 });
 
-afterAll(() => {
-  TestHelper.teardown();
+afterAll(async () => {
+  await TestHelper.teardown();
 });
 
 describe("Test getJoke command", () => {
@@ -52,7 +40,7 @@ describe("Test getJoke command", () => {
       notvalid: "not valid key"
     };
     const response = await TestHelper.executeGetCommand(CMD, invalidDtoIn);
-    const unsupportedKeys = "uu-jokes-main/getJoke/unsupportedKeys";
+    const unsupportedKeys = `uu-jokes-main/${CMD}/unsupportedKeys`;
 
     expect(response.status).toEqual(200);
     expect(response.data.uuAppErrorMap).toBeDefined();
@@ -87,7 +75,7 @@ describe("Test getJoke command", () => {
     let createCategoryResponse = await CreateCategory();
     let categoryId = createCategoryResponse.data.id;
     await CreateJoke({}, categoryId);
-    let jokeDoesNotExistCode = "uu-jokes-main/getJoke/jokeDoesNotExist";
+    let jokeDoesNotExistCode = `uu-jokes-main/${CMD}/jokeDoesNotExist`;
 
     expect.assertions(2);
     try {

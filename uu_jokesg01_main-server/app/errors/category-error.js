@@ -32,7 +32,7 @@ const ListCategories = {
   InvalidDtoIn: class extends UuJokesError {
     constructor() {
       super(...arguments);
-      this.code = `${ListCategories.code}invalidDtoIn`;
+      this.code = `${ListCategories.UC_CODE}invalidDtoIn`;
       this.message = "DtoIn is not valid.";
     }
   },

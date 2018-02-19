@@ -27,15 +27,28 @@ class AppModel {
       WARNINGS.initUnsupportedKeys.code,
       Errors.Init.InvalidDtoIn
     );
-    let dtoOut = {};
-    function schemaDaoCreateErr(schema, e) {
-      //A3
-      if (e instanceof ObjectStoreError) {
-        throw new Errors.Init.SchemaDaoCreateSchemaFailed({ uuAppErrorMap }, { schema }, e);
+
+    //HDS 2
+    const schemas = ["joke", "jokeRating", "category", "jokeCategory"];
+    let schemaCreateResults = schemas.map(async schema => {
+      try {
+        //HDS 2.1
+        return await DaoFactory.getDao(schema).createSchema();
+      } catch (e) {
+        //A3
+        if (e instanceof ObjectStoreError) {
+          throw new Errors.Init.SchemaDaoCreateSchemaFailed({ uuAppErrorMap }, { schema }, e);
+        }
+        throw e;
       }
-      throw e;
-    }
-    function sysSetProfileErr(e) {
+    });
+
+    await Promise.all(schemaCreateResults);
+
+    try {
+      //HDS 3
+      await SysProfile.setProfile(awid, { code: "Authorities", roleUri: dtoIn.uuAppProfileAuthorities });
+    } catch (e) {
       //A4
       if (e instanceof ObjectStoreError) {
         throw new Errors.Init.SysSetProfileFailed({ uuAppErrorMap }, { role: dtoIn.uuAppProfileAuthorities }, e);
@@ -43,20 +56,10 @@ class AppModel {
       throw e;
     }
 
-    //HDS 2
-    let makeInitPromises = ["joke", "jokeRating", "category", "jokeCategory"].map(schema => {
-      return DaoFactory.getDao(schema).createSchema().then(undefined, e => schemaDaoCreateErr(schema, e));
-    });
-
-    //HDS 3
-    const setProfileDtoIn = { code: "Authorities", roleUri: dtoIn.uuAppProfileAuthorities };
-    makeInitPromises.push(SysProfile.setProfile(awid, setProfileDtoIn).then(undefined, e => sysSetProfileErr(e)))
-
-    await Promise.all(makeInitPromises);
-
     //HDS 4
-    dtoOut.uuAppErrorMap = uuAppErrorMap;
-    return dtoOut;
+    return {
+      uuAppErrorMap: uuAppErrorMap
+    };
   }
 }
 

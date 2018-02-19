@@ -1,25 +1,14 @@
 const { TestHelper } = require("uu_appg01_workspace-test");
-const { CreateJoke } = require("../general-test-hepler");
+const { CreateJoke, InitApp } = require("../general-test-hepler");
 const CMD = "updateJoke";
 
-beforeAll(() => {
-  return TestHelper.setup()
-    .then(() => {
-      return TestHelper.initAppWorkspace();
-    })
-    .then(() => {
-      return TestHelper.login("SysOwner").then(() => {
-        return TestHelper.executePostCommand("init", {
-          uuAppProfileAuthorities: "urn:uu:GGALL"
-        });
-      });
-    }).then(() => {
-      return TestHelper.login("Executive");
-    });
+beforeAll(async () => {
+  await InitApp();
+  await TestHelper.login("Executive");
 });
 
-afterAll(() => {
-  TestHelper.teardown();
+afterAll(async () => {
+  await TestHelper.teardown();
 });
 
 describe("Test updateJoke command", () => {
@@ -55,7 +44,7 @@ describe("Test updateJoke command", () => {
       name: newJokeName,
       unrealKey: "Unreal value"
     });
-    let unsupportedKeysCode = "uu-jokes-main/updateJoke/unsupportedKeys";
+    let unsupportedKeysCode = `uu-jokes-main/${CMD}/unsupportedKeys`;
 
     expect(response.status).toBe(200);
     expect(response.data).toBeDefined();
@@ -84,7 +73,7 @@ describe("Test updateJoke command", () => {
       expect(error).toHaveProperty("status");
       expect(error.status).toBe(400);
       expect(error).toHaveProperty("code");
-      expect(error.code).toBe("uu-jokes-main/updateJoke/invalidDtoIn");
+      expect(error.code).toBe(`uu-jokes-main/${CMD}/invalidDtoIn`);
       expect(error).toHaveProperty("paramMap");
       expect(error.paramMap).toBeDefined();
       expect(error.paramMap).toHaveProperty("invalidValueKeyMap");
@@ -100,7 +89,7 @@ describe("Test updateJoke command", () => {
 
   test("A5", async () => {
     const fakeJokeId = "5a3a5c1b85d5a73f585c2d52";
-    const jokeDoesNotExistCode = "uu-jokes-main/updateJoke/jokeDoesNotExist";
+    const jokeDoesNotExistCode = `uu-jokes-main/${CMD}/jokeDoesNotExist`;
 
     expect.assertions(8);
 

@@ -1,24 +1,13 @@
 const { TestHelper } = require("uu_appg01_workspace-test");
-const { CreateJoke, CreateCategory } = require("../general-test-hepler");
+const { CreateJoke, CreateCategory, InitApp } = require("../general-test-hepler");
 
-beforeAll(() => {
-  return TestHelper.setup()
-    .then(() => {
-      return TestHelper.initAppWorkspace();
-    })
-    .then(() => {
-      return TestHelper.login("SysOwner").then(() => {
-        return TestHelper.executePostCommand("init", {
-          uuAppProfileAuthorities: "urn:uu:GGALL"
-        });
-      });
-    }).then(() => {
-      return TestHelper.login("Executive");
-    });
+beforeAll(async () => {
+  await InitApp();
+  await TestHelper.login("Executive");
 });
 
-afterAll(() => {
-  TestHelper.teardown();
+afterAll(async () => {
+  await TestHelper.teardown();
 });
 
 describe("Test createJoke command", () => {
