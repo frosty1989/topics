@@ -2,13 +2,10 @@ const { TestHelper } = require("uu_appg01_workspace-test");
 const DtoIn = require("../general-test-hepler").DefaultInitDtoIn;
 const CMD = "init";
 const NotAuthorizedCheck = e => {
-  let authErrorCode = "authorization/userIsNotAuthorized";
+  let authErrorCode = "uu-appg01/authorization/accessDenied";
   expect(e.status).toBe(403);
-  expect(e).toHaveProperty("name");
   expect(e.name).toEqual("ApplicationError");
-  expect(e).toHaveProperty("code");
   expect(e.code).toEqual(authErrorCode);
-  expect(e).toHaveProperty("dtoOut");
   expect(e.dtoOut).toHaveProperty("uuAppErrorMap");
   expect(e.dtoOut.uuAppErrorMap[authErrorCode]).toBeDefined();
   expect(e.dtoOut.uuAppErrorMap[authErrorCode].type).toEqual("error");
@@ -100,7 +97,7 @@ describe("Test init command", () => {
 
   describe("As not SysOwner", () => {
     test("Not so happy Authority", async () => {
-      expect.assertions(9);
+      expect.assertions(6);
       try {
         await TestHelper.login("Authority");
         await TestHelper.executePostCommand(CMD, DtoIn);
@@ -110,7 +107,7 @@ describe("Test init command", () => {
     });
 
     test("Not so happy Executive", async () => {
-      expect.assertions(9);
+      expect.assertions(6);
       try {
         await TestHelper.login("Executive");
         await TestHelper.executePostCommand(CMD, DtoIn);
@@ -120,7 +117,7 @@ describe("Test init command", () => {
     });
 
     test("Not so happy Reader", async () => {
-      expect.assertions(9);
+      expect.assertions(6);
       try {
         await TestHelper.login("Reader");
         await TestHelper.executePostCommand(CMD, DtoIn);

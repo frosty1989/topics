@@ -130,14 +130,13 @@ describe("Test deleteCategory command", () => {
     let createCategoryResponse = await CreateCategory();
     let categoryId = createCategoryResponse.data.id;
     await CreateJoke({}, categoryId);
-    expect.assertions(6);
+    expect.assertions(5);
     try {
       await TestHelper.executePostCommand(CMD, {
         id: createCategoryResponse.data.id
       });
     } catch (error) {
-      expect(error).toHaveProperty("id");
-      expect(error).toHaveProperty("status");
+      expect(error.id).toBeDefined();
       expect(error.status).toEqual(400);
       expect(error.code).toEqual(`uu-jokes-main/${CMD}/relatedJokesExist`);
       expect(error).toBeInstanceOf(Object);

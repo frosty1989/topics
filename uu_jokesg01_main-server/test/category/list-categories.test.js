@@ -63,7 +63,7 @@ describe("Test listCategories command", () => {
     expect(itemListCategories).toEqual(categoriesSortedByDesc);
   });
 
-  test.skip("HDS_Paging", async () => {
+  test("HDS_Paging", async () => {
     // skip it for now, remove "skip" once the new version of uuAppServer is released
     const pageSize = 5;
     const response = await TestHelper.executeGetCommand(CMD, {

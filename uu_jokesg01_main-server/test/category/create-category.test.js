@@ -78,7 +78,7 @@ describe("Test createCategory command", () => {
       });
     } catch (error) {
       expect(error.code).toBeDefined();
-      expect(error).toHaveProperty("id");
+      expect(error.id).toBeDefined();
       expect(error.status).toEqual(400);
       expect(error.code).toBe(errorCode);
     }

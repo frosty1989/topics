@@ -11,9 +11,7 @@ const CreateJoke = async (dtoIn = {}, categoryId = null) => {
     dtoIn.categoryList = [categoryId];
   }
 
-  return await TestHelper.executePostCommand("createJoke", dtoIn, {
-    authorization: `Bearer ${await TestHelper.login("Authority", false, false)}`
-  });
+  return await TestHelper.executePostCommand("createJoke", dtoIn, await TestHelper.login("Authority", false, false));
 };
 
 const CreateCategory = async dtoIn => {
@@ -26,9 +24,7 @@ const CreateCategory = async dtoIn => {
     };
   }
 
-  return await TestHelper.executePostCommand("createCategory", dtoIn, {
-    authorization: `Bearer ${await TestHelper.login("Authority", false, false)}`
-  });
+  return await TestHelper.executePostCommand("createCategory", dtoIn, await TestHelper.login("Authority", false, false));
 };
 
 const DefaultInitDtoIn = { uuAppProfileAuthorities: "urn:uu:GGALL" };
