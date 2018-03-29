@@ -78,7 +78,7 @@ describe("Test removeJokeCategory command", () => {
       expect(e.paramMap.invalidValueKeyMap["$"]["shape.e002"]).toBeDefined();
       expect(e.paramMap.missingKeyMap).toBeDefined();
       expect(e.paramMap.missingKeyMap["$.jokeId"]).toBeDefined();
-      expect(e.paramMap.missingKeyMap["$.jokeId"]["isRequired.001"]).toBeDefined();
+      expect(e.paramMap.missingKeyMap["$.jokeId"]["isRequired.e001"]).toBeDefined();
     }
   });
 });
