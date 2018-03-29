@@ -2,7 +2,7 @@
   "{tid}-{asid}": {
     "profileList": ["UuSubAppInstanceSysOwner"],
     "permissionMap": {
-      "uuSubAppInstanceSysOwner": ["UuSubAppInstanceSysOwner", "SysOwner", "Readers"]
+      "{uuSubAppInstanceSysOwner}": ["UuSubAppInstanceSysOwner", "SysOwner", "Readers"]
     },
     "useCaseMap": {
       "sys/authorization": ["UuSubAppInstanceSysOwner"],

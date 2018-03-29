@@ -2,7 +2,7 @@
 
 const { Validator } = require("uu_appg01_server").Validation;
 const { DaoFactory, ObjectStoreError } = require("uu_appg01_server").ObjectStore;
-const { ValidationHelper } = require("uu_appg01_server").Workspace;
+const { ValidationHelper } = require("uu_appg01_server").AppServer;
 
 const Path = require("path");
 const Errors = require("../errors/category-error");

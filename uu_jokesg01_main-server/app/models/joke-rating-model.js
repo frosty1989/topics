@@ -1,7 +1,7 @@
 "use strict";
 const { Validator } = require("uu_appg01_server").Validation;
 const { DaoFactory, ObjectStoreError } = require("uu_appg01_server").ObjectStore;
-const { ValidationHelper } = require("uu_appg01_server").Workspace;
+const { ValidationHelper } = require("uu_appg01_server").AppServer;
 const Path = require("path");
 const Errors = require("../errors/joke-rating-error");
 const WARNINGS = {
@@ -50,7 +50,7 @@ class JokeRatingModel {
     }
 
     //A4
-    if (!joke.hasOwnProperty("id")) {
+    if (!joke) {
       throw new Errors.AddJokeRating.JokeDoesNotExist({ uuAppErrorMap }, { jokeId: dtoIn.id });
     }
 
@@ -72,7 +72,7 @@ class JokeRatingModel {
       throw e;
     }
 
-    if (oldRating.hasOwnProperty("id")) {
+    if (oldRating) {
       try {
         // HDS 4.2
         averageRating = (joke.averageRating * joke.ratingCount - oldRating.rating + rating.rating) / joke.ratingCount;

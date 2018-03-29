@@ -4,15 +4,15 @@ const JokeCategoryModel = require("../models/joke-category-model.js");
 
 class JokeCategoryController {
   addJokeCategory(ucEnv) {
-    return JokeCategoryModel.addJokeCategory(ucEnv.uri.awid, ucEnv.parameters);
+    return JokeCategoryModel.addJokeCategory(ucEnv.uri.getAwid(), ucEnv.parameters);
   }
 
   removeJokeCategory(ucEnv) {
-    return JokeCategoryModel.removeJokeCategory(ucEnv.uri.awid, ucEnv.parameters);
+    return JokeCategoryModel.removeJokeCategory(ucEnv.uri.getAwid(), ucEnv.parameters);
   }
 
   listCategoryJokes(ucEnv) {
-    return JokeCategoryModel.listCategoryJokes(ucEnv.uri.awid, ucEnv.parameters);
+    return JokeCategoryModel.listCategoryJokes(ucEnv.uri.getAwid(), ucEnv.parameters);
   }
 }
 

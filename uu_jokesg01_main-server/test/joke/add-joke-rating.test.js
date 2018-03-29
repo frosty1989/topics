@@ -115,9 +115,10 @@ describe("Test addJokeRating command", () => {
       expect(error.paramMap.invalidValueKeyMap["$"]["shape.e002"]).toBeDefined();
       expect(error.paramMap.missingKeyMap).toBeDefined();
       expect(error.paramMap.missingKeyMap["$.id"]).toBeDefined();
-      expect(error.paramMap.missingKeyMap["$.id"]["isRequired.001"]).toBeDefined();
+      console.log(JSON.stringify(error.paramMap));
+      expect(error.paramMap.missingKeyMap["$.id"]["isRequired.e001"]).toBeDefined();
       expect(error.paramMap.missingKeyMap["$.rating"]).toBeDefined();
-      expect(error.paramMap.missingKeyMap["$.rating"]["isRequired.001"]).toBeDefined();
+      expect(error.paramMap.missingKeyMap["$.rating"]["isRequired.e001"]).toBeDefined();
     }
   });
 
