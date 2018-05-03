@@ -2,7 +2,7 @@
 
 const { UuObjectDao } = require("uu_appg01_server").ObjectStore;
 
-class JokeCategoryMongoDB extends UuObjectDao {
+class JokeCategoryMongo extends UuObjectDao {
   async createSchema() {
     await super.createIndex({ awid: 1, _id: 1 }, { unique: true });
     await super.createIndex({ awid: 1, categoryId: 1 });
@@ -43,4 +43,4 @@ class JokeCategoryMongoDB extends UuObjectDao {
   }
 }
 
-module.exports = JokeCategoryMongoDB;
+module.exports = JokeCategoryMongo;

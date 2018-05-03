@@ -1,11 +1,11 @@
 "use strict";
 
 const { UuObjectDao } = require("uu_appg01_server").ObjectStore;
+const { ObjectId } = require("bson");
 
-class CategoryMongoDB extends UuObjectDao {
+class JokeMongo extends UuObjectDao {
   async createSchema() {
     await super.createIndex({ awid: 1, _id: 1 }, { unique: true });
-    await super.createIndex({ awid: 1, name: 1 }, { unique: true });
   }
 
   async create(uuObject) {
@@ -13,18 +13,11 @@ class CategoryMongoDB extends UuObjectDao {
   }
 
   async get(awid, id) {
-    return await super.findOne({ awid, id });
-  }
-
-  async getByName(awid, name) {
-    return await super.findOne({ awid, name });
+    return await super.findOne({ _id: id, awid: awid });
   }
 
   async update(uuObject) {
-    let filter = {
-      id: uuObject.id,
-      awid: uuObject.awid
-    };
+    let filter = { id: uuObject.id, awid: uuObject.awid };
 
     return await super.findOneAndUpdate(filter, uuObject, "NONE");
   }
@@ -33,13 +26,16 @@ class CategoryMongoDB extends UuObjectDao {
     return await super.deleteOne({ awid, id });
   }
 
-  async list(awid, pageInfo = {}, order = "asc") {
-    let sort = {
-      name: order === "asc" ? 1 : -1
-    };
+  async list(awid, pageInfo, sortBy, order) {
+    let sort = {};
+    sort[sortBy] = order;
 
     return await super.find({ awid }, pageInfo, sort);
   }
+
+  async listByIds(awid, jokeIds = []) {
+    return await super.find({ awid, _id: { $in: jokeIds.map(x => new ObjectId(x)) } });
+  }
 }
 
-module.exports = CategoryMongoDB;
+module.exports = JokeMongo;
