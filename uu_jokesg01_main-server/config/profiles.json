@@ -1,27 +1,27 @@
 {
   "{tid}-{asid}": {
-    "profileList": ["UuSubAppInstanceSysOwner"],
+    "profileList": ["AsidOwner"],
     "permissionMap": {
-      "{uuSubAppInstanceSysOwner}": ["UuSubAppInstanceSysOwner", "SysOwner", "Readers"]
+      "{AsidOwner}": ["AsidOwner"]
     },
     "useCaseMap": {
-      "sys/authorization": ["UuSubAppInstanceSysOwner"],
-      "sys/initAppWorkspace": ["UuSubAppInstanceSysOwner"],
-      "sys/getAppWorkspace": ["UuSubAppInstanceSysOwner"],
-      "sys/createPermission": ["UuSubAppInstanceSysOwner"]
+      "sys/authorization": ["AsidOwner"],
+      "sys/initAppWorkspace": ["AsidOwner"],
+      "sys/getAppWorkspace": ["AsidOwner"],
+      "sys/createPermission": ["AsidOwner"]
     }
   },
   "*": {
-    "profileList": ["SysOwner", "Authorities", "Executives", "Readers"],
+    "profileList": ["AwidOwner", "Authorities", "Executives", "Readers"],
     "useCaseMap": {
-      "sys/getAppWorkspace": ["Authorities", "SysOwner"],
-      "sys/setProfile": ["Authorities", "SysOwner"],
-      "sys/getProfile": ["Authorities", "SysOwner"],
-      "sys/listProfiles": ["Authorities", "SysOwner"],
-      "sys/createPermission": ["Authorities", "SysOwner", "Readers"],
-      "sys/listPermissions": ["Authorities", "SysOwner"],
-      "sys/deletePermission": ["Authorities", "SysOwner"],
-      "init": ["SysOwner"],
+      "sys/getAppWorkspace": ["Authorities", "AwidOwner"],
+      "sys/setProfile": ["Authorities", "AwidOwner"],
+      "sys/getProfile": ["Authorities", "AwidOwner"],
+      "sys/listProfiles": ["Authorities", "AwidOwner"],
+      "sys/createPermission": ["Authorities", "AwidOwner", "Readers"],
+      "sys/listPermissions": ["Authorities", "AwidOwner"],
+      "sys/deletePermission": ["Authorities", "AwidOwner"],
+      "init": ["AwidOwner"],
       "createJoke": ["Authorities", "Executives"],
       "updateJoke": ["Authorities", "Executives"],
       "deleteJoke": ["Authorities", "Executives"],

@@ -31,8 +31,9 @@ const DefaultInitDtoIn = { uuAppProfileAuthorities: "urn:uu:GGALL" };
 
 const InitApp = async () => {
   await TestHelper.setup();
+  await TestHelper.initApp();
   await TestHelper.initAppWorkspace();
-  await TestHelper.login("SysOwner");
+  await TestHelper.login("AwidOwner");
   await TestHelper.executePostCommand("init", DefaultInitDtoIn);
 };
 

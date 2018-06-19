@@ -224,7 +224,7 @@
 			"method": "POST",
 			"body": {
 				"mimeType": "application/json",
-				"text": "{\n\t\"awid\": \"11111111111111111111111111111111\",\n\t\"sysOwner\": \"ADD YOUR PLUS4U ID HERE\",\n\t\"licenseOwner\" : {\n\t\t\"organization\" : {\n\t\t\t\"name\" : \"Farma Strachovice\",\n\t\t\t\"oId\" : \"154156465465162\",\n\t\t\t\"web\" : \"http://www.strachovice.cz/\"\n\t\t},\n\t\t\"userList\" : [\n\t\t\t{\n\t\t\t\t\"uuIdentity\" : \"1-1\",\n\t\t\t\t\"name\" : \"Vladimír Kovář\"\n\t\t\t}\n\t\t]\n\t}\n}"
+				"text": "{\n\t\"awid\": \"11111111111111111111111111111111\",\n\t\"awidOwner\": \"ADD YOUR PLUS4U ID HERE\",\n\t\"licenseOwner\" : {\n\t\t\"organization\" : {\n\t\t\t\"name\" : \"Farma Strachovice\",\n\t\t\t\"oId\" : \"154156465465162\",\n\t\t\t\"web\" : \"http://www.strachovice.cz/\"\n\t\t},\n\t\t\"userList\" : [\n\t\t\t{\n\t\t\t\t\"uuIdentity\" : \"1-1\",\n\t\t\t\t\"name\" : \"Vladimír Kovář\"\n\t\t\t}\n\t\t]\n\t}\n}"
 			},
 			"parameters": [],
 			"headers": [

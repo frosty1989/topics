@@ -14,6 +14,7 @@ const NotAuthorizedCheck = e => {
 describe("Test init command", () => {
   beforeAll(async () => {
     await TestHelper.setup();
+    await TestHelper.initApp();
     await TestHelper.initAppWorkspace();
   });
 
@@ -21,9 +22,9 @@ describe("Test init command", () => {
     await TestHelper.teardown();
   });
 
-  describe("As SysOwner", () => {
+  describe("As AwidOwner", () => {
     beforeAll(async () => {
-      await TestHelper.login("SysOwner");
+      await TestHelper.login("AwidOwner");
     });
 
     test("HDS", async () => {
@@ -95,7 +96,7 @@ describe("Test init command", () => {
     });
   });
 
-  describe("As not SysOwner", () => {
+  describe("As not AwidOwner", () => {
     test("Not so happy Authority", async () => {
       expect.assertions(6);
       try {

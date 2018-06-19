@@ -1,17 +1,17 @@
 {
   "name": "uu_jokesg01_main-server",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "description": "Server project template for developing UAF application in Node.js",
   "license": "Licence Commercial",
   "engines": {
     "node": ">=8.9.0"
   },
   "dependencies": {
-    "uu_appg01_server": "^3.3.0"
+    "uu_appg01_server": "^4.0.0"
   },
   "devDependencies": {
-    "uu_appg01_core-npm": "^3.3.0",
-    "uu_appg01_workspace-test": "^1.0.0"
+    "uu_appg01_core-npm": "^4.0.0",
+    "uu_appg01_workspace-test": "^2.0.0"
   },
   "scripts": {
     "clean": "uu-appg01-core-npm clean",
