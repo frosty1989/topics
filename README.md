@@ -4,8 +4,8 @@
 
 ## uuApp Deployment Requirements
 - 1x TID
-- 1x ASID + sysOwner uuIdentity
-- 1x AWID + sysOwner uuIdentity
+- 1x ASID + awidOwner uuIdentity
+- 1x AWID + awidOwner uuIdentity
 - 1x OSID (or a MongoDB connection string for local development)
       
 ## IntelliJ settings
@@ -24,7 +24,7 @@ Also go to Settings - Languages & Frameworks - Node.js and NPM and enable Node.j
     - Recommended client is [Robo 3T](https://robomongo.org) for database administration.
     - Documentation with detailed information is available on [Documentation](https://plus4u.net/ues/sesm?SessFree=ues%253AVPH-BT%253AUAFTEMPLATE)
 2. Configure server
-    - Edit configuration uu_jokesg01_main-server/development.json and replace <uuSubAppInstanceSysOwner> with your uuIdentity.
+    - Edit configuration uu_jokesg01_main-server/development.json and replace <asidOwner> with your uuIdentity.
 3. Installation
     Open server folder and execute install in command line:
 
@@ -41,11 +41,29 @@ Also go to Settings - Languages & Frameworks - Node.js and NPM and enable Node.j
 ! Obtain authentication token from [showToken VUC](https://oidc.plus4u.net/uu-oidcg01-main/0-0/showToken). 
   After login it shows token. This key must be used as Authorization header with value "Bearer <token>" in all following calls.
 
-1. Initialize uuAppWorkspace
-2. Configure profiles and permissions
-3. Test functionality
+1. Initialize uuApp
+2. Initialize uuAppWorkspace
+3. Configure profiles and permissions
+4. Test functionality
 
-## 1. Initialize uuAppWorkspace
+## 1. Initialize uuApp
+Initialize uuApp and change runtime mode to STANDARD to allow calls of unprivileged commands.
+
+    Use any rest client and call following calls
+
+    POST http://localhost:6221/uu-demoappg01-main/00000000000000000000000000000000-00000000000000000000000000000001/sys/initApp
+    Request body:
+    {
+        "runtimeMode": {
+            "mode": "STANDARD"
+        }     
+    }
+        
+
+
+
+
+## 2. Initialize uuAppWorkspace
 
 
     Use any rest client and call following calls
@@ -54,7 +72,7 @@ Also go to Settings - Languages & Frameworks - Node.js and NPM and enable Node.j
     Request body:
     {
         "awid": "11111111111111111111111111111111",
-        "sysOwner": "<uuIdentity>",
+        "awidOwner": "<uuIdentity>",
         "licenseOwner" : {
             "organization" : {
                 "name" : "Unicorn a.s.",
@@ -72,7 +90,7 @@ Also go to Settings - Languages & Frameworks - Node.js and NPM and enable Node.j
     ! Replace <uuIdentity> with your uuIdentity id.
     Request initialize workspace for local application.
 
-## 2. Configure profiles and permissions
+## 3. Configure profiles and permissions
 
 Use any rest client and call following call
 
