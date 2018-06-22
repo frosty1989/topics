@@ -34,9 +34,8 @@ Also go to Settings - Languages & Frameworks - Node.js and NPM and enable Node.j
 
     > npm start
     
-    Application starts locally on default port 6221 and can be accessed e.g. with browser (http://localhost:6221/uu-jokesg01-main/0-0/home).
-
-    _Note that you should be able to access home page. But error will raise after you run any command. It is due uuAppWorkspace isn't initialized yet. Follow next chapter to do so._
+    Application starts locally on default port 6221.
+	
 # uuApp Initialization
 ! Obtain authentication token from [showToken VUC](https://oidc.plus4u.net/uu-oidcg01-main/0-0/showToken). 
   After login it shows token. This key must be used as Authorization header with value "Bearer <token>" in all following calls.
