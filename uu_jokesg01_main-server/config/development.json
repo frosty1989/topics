@@ -1,0 +1,11 @@
+{
+  "uuSubAppDataStoreMap": {
+    "primary": "mongodb://127.0.0.1:27017/JokesNodejsMainOS"
+  },
+  "privilegedUserMap": {
+    "AsidOwner": "<uuIdentity>"
+  },
+  "tid": "00000000000000000000000000000000",
+  "asid": "00000000000000000000000000000001",
+  "log_level": "WARN"
+}

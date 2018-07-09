@@ -1,0 +1,23 @@
+{
+  "uuCloudAppBoxLocationUri": "ues:DEV0105-BT:UU.JOKESG01.NODEJS",
+  "uuCloudResourcePoolUri": "ues:DEV0105-BT:DEV",
+  "uuCloudDeploymentConfig": {
+    "uuSubAppDataStoreMap": {
+      "primary": "mongodb://6nr3piesrfq57v5vwvfz4re1ehqc1z5l__h9bkb34k48q13ksepfg77zf4u3van04v4bm22de:12nKXAP8YXchyoVjbY64l@h-h0dv6qe3.rg-o5ojnm69.mongo-o-s.eu-n-1.cloud.plus4u.net:27017,h-zk893n61.rg-o5ojnm69.mongo-o-s.eu-n-1.cloud.plus4u.net:27017/6nr3piesrfq57v5vwvfz4re1ehqc1z5l?replicaSet=r-da9gbfgy"
+    },
+    "privilegedUserMap": {
+      "AwidOwner": "12-4741-1"
+    },
+    "tid": "84723967990066693",
+    "asid": "db6511f532534e28a32ed1ed8a2bb2ca",
+    "log_level": "DEBUG"
+  },
+  "uuCloudShareAppWorkspaces": [
+    "ues:84723967990066693-db6511f532534e28a32ed1ed8a2bb2ca:84723967990066693-db6511f532534e28a32ed1ed8a2bb2ca",
+    "ues:84723967990066693-c2f7d9d7204e43458348e46e0af826b9:84723967990066693-c2f7d9d7204e43458348e46e0af826b9"
+  ],
+  "uuLogStoreExport": {
+    "from": "2017-10-30T15:00"
+  },
+  "uuCloudAppDeploymentUri": "ues:DEV0105-BT[84723967990066693]:DEV[571fb9d52792891f35e2289f]:UU.JOKESG01.MAIN[5954dc52118cbd6e27655afb]"
+}

@@ -1,0 +1,40 @@
+{
+  "{tid}-{asid}": {
+    "profileList": ["AsidOwner"],
+    "permissionMap": {
+      "{AsidOwner}": ["AsidOwner"]
+    },
+    "useCaseMap": {
+      "sys/authorization": ["AsidOwner"],
+      "sys/initAppWorkspace": ["AsidOwner"],
+      "sys/getAppWorkspace": ["AsidOwner"],
+      "sys/createPermission": ["AsidOwner"]
+    }
+  },
+  "*": {
+    "profileList": ["AwidOwner", "Authorities", "Executives", "Readers"],
+    "useCaseMap": {
+      "sys/getAppWorkspace": ["Authorities", "AwidOwner"],
+      "sys/setProfile": ["Authorities", "AwidOwner"],
+      "sys/getProfile": ["Authorities", "AwidOwner"],
+      "sys/listProfiles": ["Authorities", "AwidOwner"],
+      "sys/createPermission": ["Authorities", "AwidOwner", "Readers"],
+      "sys/listPermissions": ["Authorities", "AwidOwner"],
+      "sys/deletePermission": ["Authorities", "AwidOwner"],
+      "init": ["AwidOwner"],
+      "createJoke": ["Authorities", "Executives"],
+      "updateJoke": ["Authorities", "Executives"],
+      "deleteJoke": ["Authorities", "Executives"],
+      "addJokeCategory": ["Authorities", "Executives"],
+      "removeJokeCategory": ["Authorities", "Executives"],
+      "createCategory": ["Authorities", "Executives"],
+      "updateCategory": ["Authorities", "Executives"],
+      "deleteCategory": ["Authorities", "Executives"],
+      "getJoke": ["Authorities", "Executives", "Readers"],
+      "listJokes": ["Authorities", "Executives", "Readers"],
+      "listCategoryJokes": ["Authorities", "Executives", "Readers"],
+      "listCategories": ["Authorities", "Executives", "Readers"],
+      "addJokeRating": ["Authorities", "Executives", "Readers"]
+    }
+  }
+}

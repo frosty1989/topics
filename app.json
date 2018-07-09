@@ -1,0 +1,10 @@
+{
+  "name": "uu_jokesg01",
+  "code": "UU.JOKESG01",
+  "namespace": "UU.Jokes",
+  "version": "1.0.3",
+  "description": "Referenční aplikace uuJokesg01 v technologii NodeJs nad uuAppg01ServerKit-NodeJs-0.9.x",
+  "vendor": "Unicorn Universe a.s.",
+  "license": "Licence Commercial",
+  "template": "uu5-javascript-0.1.0"
+}
