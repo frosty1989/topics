@@ -136,7 +136,7 @@
       },
       "body": {
         "mimeType": "application/json",
-        "text": "{\n\t\"runtimeMode\": {\n\t\t\"mode\": \"STANDARD\"\n\t}\n}"
+        "text": "{\n\t\"runtimeMode\": {\n\t\t\"mode\": \"standard\"\n\t}\n}"
       },
       "created": 1529483917682,
       "description": "",
