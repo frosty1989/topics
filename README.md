@@ -54,7 +54,7 @@ Initialize uuApp and change runtime mode to STANDARD to allow calls of unprivile
     Request body:
     {
         "runtimeMode": {
-            "mode": "STANDARD"
+            "mode": "standard"
         }     
     }
         
