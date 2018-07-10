@@ -2,7 +2,7 @@
   "{tid}-{asid}": {
     "profileList": ["AsidOwner"],
     "permissionMap": {
-      "{AsidOwner}": ["AsidOwner"]
+      "{asidOwner}": ["AsidOwner"]
     },
     "useCaseMap": {
       "sys/authorization": ["AsidOwner"],
