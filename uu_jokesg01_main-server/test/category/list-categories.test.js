@@ -27,7 +27,7 @@ describe("Test listCategories command", () => {
   test("HDS", async () => {
     let response = await TestHelper.executeGetCommand(CMD);
     expect(response.status).toEqual(200);
-    expect(response).toHaveProperty("data");
+    expect(response.data).toBeDefined();
     expect(response.data).toHaveProperty("itemList");
     expect(response.data.itemList.length).toEqual(categoryList.length);
     expect(response.data).toHaveProperty("pageInfo");
