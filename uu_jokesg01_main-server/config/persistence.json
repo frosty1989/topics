@@ -5,6 +5,15 @@
       "type": "uuAppObjectStore",
       "realization": "MongoDB",
       "schemaMap": {
+        "jokesInstance": {
+          "realization": "dao/JokesInstanceMongo",
+          "maxNoi": 1
+        },
+
+
+
+
+
         "joke": {
           "realization": "dao/JokeMongo",
           "maxNoi": 1024
@@ -21,6 +30,12 @@
           "realization": "dao/JokeCategoryMongo",
           "maxNoi": 5000
         }
+      }
+    },
+    "binary": {
+      "type": "uuAppBinaryStore",
+      "realization": "MongoDB",
+      "schemaMap": {
       }
     }
   }

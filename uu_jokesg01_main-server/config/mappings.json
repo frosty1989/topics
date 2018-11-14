@@ -1,11 +1,13 @@
 {
   "{vendor}-{uuApp}-{uuSubApp}": {
     "useCaseMap": {
-      "init": {
-        "realization": "controllers/AppController.init",
+      "jokesInstance/init": {
+        "realization": "controllers/JokesInstanceController.init",
         "httpMethod": "POST",
         "type": "CMD"
       },
+
+
       "createJoke": {
         "realization": "controllers/JokeController.createJoke",
         "httpMethod": "POST",

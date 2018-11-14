@@ -11,7 +11,8 @@
   },
   "devDependencies": {
     "uu_appg01_core-npm": "^4.0.0",
-    "uu_appg01_workspace-test": "^2.0.0"
+    "uu_appg01_workspace-test": "^2.0.0",
+    "uu_appg01_binarystore-cmd": "^2.0.0"
   },
   "scripts": {
     "clean": "uu-appg01-core-npm clean",

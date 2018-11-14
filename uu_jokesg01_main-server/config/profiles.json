@@ -1,40 +1,55 @@
 {
-  "{tid}-{asid}": {
+  "{asid}": {
     "profileList": ["AsidOwner"],
     "permissionMap": {
       "{asidOwner}": ["AsidOwner"]
     },
     "useCaseMap": {
-      "sys/authorization": ["AsidOwner"],
-      "sys/initAppWorkspace": ["AsidOwner"],
-      "sys/getAppWorkspace": ["AsidOwner"],
-      "sys/createPermission": ["AsidOwner"]
+      "sys/getHealth": ["AsidOwner"],
+      "sys/getStatistics": ["AsidOwner"],
+      "sys/getConfiguration": ["AsidOwner"],
+      "sys/getEnvironment": ["AsidOwner"],
+      "sys/resetStatistics": ["AsidOwner"]
     }
   },
   "*": {
     "profileList": ["AwidOwner", "Authorities", "Executives", "Readers"],
     "useCaseMap": {
+      "jokesInstance/init": ["AwidOwner"],
+      "jokesInstance/load": ["Authorities", "Executives", "Readers"],
+      "jokesInstance/update": ["Authorities"],
+      "joke/create": ["Authorities", "Executives"],
+      "joke/get": ["Authorities", "Executives", "Readers"],
+      "joke/update": ["Authorities", "Executives"],
+      "joke/updateVisibility": ["Authorities"],
+      "joke/delete": ["Authorities", "Executives"],
+      "joke/list": ["Authorities", "Executives", "Readers"],
+      "joke/addRating": ["Authorities", "Executives", "Readers"],
+      "category/create": ["Authorities", "Executives"],
+      "category/get": ["Authorities", "Executives", "Readers"],
+      "category/update": ["Authorities", "Executives"],
+      "category/delete": ["Authorities", "Executives"],
+      "category/list": ["Authorities", "Executives", "Readers"],
+
       "sys/getAppWorkspace": ["Authorities", "AwidOwner"],
-      "sys/setProfile": ["Authorities", "AwidOwner"],
       "sys/getProfile": ["Authorities", "AwidOwner"],
-      "sys/listProfiles": ["Authorities", "AwidOwner"],
-      "sys/createPermission": ["Authorities", "AwidOwner", "Readers"],
-      "sys/listPermissions": ["Authorities", "AwidOwner"],
+      "sys/setProfile": ["Authorities", "AwidOwner"],
+      "sys/createPermission": ["Authorities", "AwidOwner"],
       "sys/deletePermission": ["Authorities", "AwidOwner"],
-      "init": ["AwidOwner"],
-      "createJoke": ["Authorities", "Executives"],
-      "updateJoke": ["Authorities", "Executives"],
-      "deleteJoke": ["Authorities", "Executives"],
-      "addJokeCategory": ["Authorities", "Executives"],
-      "removeJokeCategory": ["Authorities", "Executives"],
-      "createCategory": ["Authorities", "Executives"],
-      "updateCategory": ["Authorities", "Executives"],
-      "deleteCategory": ["Authorities", "Executives"],
-      "getJoke": ["Authorities", "Executives", "Readers"],
-      "listJokes": ["Authorities", "Executives", "Readers"],
-      "listCategoryJokes": ["Authorities", "Executives", "Readers"],
-      "listCategories": ["Authorities", "Executives", "Readers"],
-      "addJokeRating": ["Authorities", "Executives", "Readers"]
+      "sys/listPermissions": ["Authorities", "AwidOwner"],
+      "sys/getLicenseOwner": ["Authorities", "AwidOwner", "Executives", "Readers"],
+      "sys/getAppWorkspaceConfig": ["Authorities", "AwidOwner", "Executives", "Readers"],
+      "sys/setAppWorkspaceConfig": ["Authorities", "AwidOwner"],
+      "sys/clearAppWorkspaceConfig": ["Authorities", "AwidOwner"],
+
+      "uu-app-binarystore/createBinary": ["Authorities", "Executives"],
+      "uu-app-binarystore/getBinaryData": ["Authorities", "Executives", "Readers"],
+      "uu-app-binarystore/updateBinaryData": ["Authorities", "Executives"],
+      "uu-app-binarystore/deleteBinary": ["Authorities", "Executives"],
+      "uu-app-binarystore/listBinaries": ["Authorities", "Executives"],
+
+      "sys/listAuditLogRecordsByTimeAndSpp": ["Authorities", "AwidOwner"],
+      "sys/listMyAuditLogRecordsByTime": ["Authorities", "AwidOwner", "Executives", "Readers"]
     }
   }
 }
