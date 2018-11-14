@@ -42,6 +42,32 @@ const Init = {
   }
 };
 
+const Load = {
+  UC_CODE: `${JOKES_INSTANCE_ERROR_PREFIX}load/`,
+  JokesInstanceDoesNotExist: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${Load.UC_CODE}jokesInstanceDoesNotExist`;
+      this.message = "JokesInstance does not exist.";
+    }
+  },
+  JokesInstanceNotInProperState: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${Load.UC_CODE}jokesInstanceNotInProperState`;
+      this.message = "JokesInstance is not in proper state [active|underConstruction].";
+    }
+  },
+  JokesInstanceIsUnderConstruction: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${Load.UC_CODE}jokesInstanceIsUnderConstruction`;
+      this.message = "JokesInstance is in state underConstruction.";
+    }
+  }
+};
+
 module.exports = {
-  Init
+  Init,
+  Load,
 };

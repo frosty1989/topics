@@ -1,10 +1,14 @@
 "use strict";
 
-const AppModel = require("../models/jokes-instance-model.js");
+const JokesInstanceModel = require("../models/jokes-instance-model.js");
 
 class JokesInstanceController {
   init(ucEnv) {
-    return AppModel.init(ucEnv.uri.getAwid(), ucEnv.parameters);
+    return JokesInstanceModel.init(ucEnv.uri.getAwid(), ucEnv.parameters);
+  }
+
+  load(ucEnv){
+    return JokesInstanceModel.load(ucEnv.uri.getAwid(), ucEnv.getAuthorizationResult());
   }
 }
 

@@ -14,13 +14,19 @@ const WARNINGS = {
     code: `${Errors.Init.UC_CODE}unsupportedKeys`
   }
 };
+const DEFAULT_STATE = "underConstruction";
+const DEFAULT_NAME = "uuJokes";
+const AUTHORITIES = "Authorities";
+const EXECUTIVES = "Executives";
+const STATE_ACTIVE = "active";
+const STATE_UNDER_CONSTRUCTION = "underConstruction";
+const STATE_CLOSED = "closed";
 
 class JokesInstanceModel {
   constructor() {
     this.validator = new Validator(Path.join(__dirname, "..", "validation_types", "jokes-instance-types.js"));
     this.dao = DaoFactory.getDao("jokesInstance");
-    this.DEFAULT_STATE = "underConstruction";
-    this.DEFAULT_NAME = "uuJokes";
+    this.categoryDao = DaoFactory.getDao("category");
   }
 
   async init(awid, dtoIn) {
@@ -40,8 +46,8 @@ class JokesInstanceModel {
       WARNINGS.initUnsupportedKeys.code,
       Errors.Init.InvalidDtoIn
     );
-    dtoIn.state = dtoIn.state || this.DEFAULT_STATE;
-    dtoIn.name = dtoIn.name || this.DEFAULT_NAME;
+    dtoIn.state = dtoIn.state || DEFAULT_STATE;
+    dtoIn.name = dtoIn.name || DEFAULT_NAME;
     dtoIn.awid = awid;
 
     //HDS 3
@@ -52,10 +58,9 @@ class JokesInstanceModel {
       DaoFactory.getDao("category").createSchema()
     ]);
 
-    let stuff;
     try {
       //HDS 4
-      stuff = await SysProfileModel.setProfile(awid, { code: "Authorities", roleUri: dtoIn.uuAppProfileAuthorities });
+      await SysProfileModel.setProfile(awid, { code: AUTHORITIES, roleUri: dtoIn.uuAppProfileAuthorities });
     } catch (e) {
       //A4
       if (e instanceof UseCaseError) {
@@ -93,6 +98,43 @@ class JokesInstanceModel {
 
     //HDS 8
     jokeInstance.uuAppErrorMap = uuAppErrorMap;
+    return jokeInstance;
+  }
+
+  async load(awid, authorizationResult) {
+    //HDS 1
+    let jokeInstance = await this.dao.getByAwid(awid);
+    //A1
+    if (!jokeInstance) {
+      throw new Errors.Load.JokesInstanceDoesNotExist({});
+    }
+    //A2
+    if (jokeInstance.state === STATE_CLOSED) {
+      throw new Errors.Load.JokesInstanceNotInProperState(
+        {},
+        {
+          state: jokeInstance.state,
+          expectedStateList: [STATE_ACTIVE, STATE_UNDER_CONSTRUCTION]
+        }
+      );
+    }
+    //A3
+    let authorizedProfiles = authorizationResult.getIdentityProfiles();
+    if (
+      jokeInstance.state === STATE_UNDER_CONSTRUCTION &&
+      !authorizedProfiles.includes(AUTHORITIES) &&
+      !authorizedProfiles.includes(EXECUTIVES)
+    ) {
+      throw new Errors.Load.JokesInstanceIsUnderConstruction({}, { state: jokeInstance.state });
+    }
+
+    //HDS 2
+    jokeInstance.categoryList = (await this.categoryDao.list(awid)).itemList;
+
+    //HDS 3
+    jokeInstance.authorizedProfileList = authorizedProfiles;
+
+    // HDS 4
     return jokeInstance;
   }
 }

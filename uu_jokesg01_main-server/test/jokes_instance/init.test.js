@@ -1,7 +1,7 @@
 const { TestHelper } = require("uu_appg01_workspace-test");
-const USE_CASE = "jokesInstance/init";
 const path = require("path");
 const fs = require("fs");
+const USE_CASE = "jokesInstance/init";
 
 beforeAll(async () => {
   await TestHelper.setup();

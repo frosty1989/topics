@@ -7,16 +7,16 @@ class JokesInstanceMongo extends UuObjectDao {
     await super.createIndex({ awid: 1 }, { unique: true });
   }
 
-  create(jokeInstance) {
-    return super.insertOne(jokeInstance);
+  async create(jokeInstance) {
+    return await super.insertOne(jokeInstance);
   }
 
-  getByAwid(awid) {
-    return super.findOne({ awid });
+  async getByAwid(awid) {
+    return await super.findOne({ awid });
   }
 
-  updateByAwid(awid, jokeInstance) {
-    return super.findOneAndUpdate({ awid }, jokeInstance, "NONE");
+  async updateByAwid(awid, jokeInstance) {
+    return await super.findOneAndUpdate({ awid }, jokeInstance, "NONE");
   }
 }
 
