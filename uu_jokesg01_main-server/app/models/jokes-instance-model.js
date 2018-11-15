@@ -5,7 +5,6 @@ const { DaoFactory, ObjectStoreError } = require("uu_appg01_server").ObjectStore
 const { ValidationHelper } = require("uu_appg01_server").AppServer;
 const { SysProfileModel } = require("uu_appg01_server").Workspace;
 const { UuBinaryModel } = require("uu_appg01_binarystore-cmd");
-const { UseCaseError } = require("uu_appg01_core-appserver");
 const Path = require("path");
 const Errors = require("../errors/jokes-instance-error");
 
@@ -63,10 +62,7 @@ class JokesInstanceModel {
       await SysProfileModel.setProfile(awid, { code: AUTHORITIES, roleUri: dtoIn.uuAppProfileAuthorities });
     } catch (e) {
       //A4
-      if (e instanceof UseCaseError) {
-        throw new Errors.Init.SysSetProfileFailed({ uuAppErrorMap }, { role: dtoIn.uuAppProfileAuthorities }, e);
-      }
-      throw e;
+      throw new Errors.Init.SysSetProfileFailed({ uuAppErrorMap }, { role: dtoIn.uuAppProfileAuthorities }, e);
     }
 
     //HDS 5
@@ -76,10 +72,7 @@ class JokesInstanceModel {
         binary = await UuBinaryModel.createBinary(awid, { data: dtoIn.logo, code: "logo" });
       } catch (e) {
         //A5
-        if (e instanceof UseCaseError) {
-          throw new Errors.Init.CreateBinaryFailed({ uuAppErrorMap }, {}, e);
-        }
-        throw e;
+        throw new Errors.Init.CreateBinaryFailed({ uuAppErrorMap }, {}, e);
       }
       //HDS 6
       dtoIn.logo = binary.code;

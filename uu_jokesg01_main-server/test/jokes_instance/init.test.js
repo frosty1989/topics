@@ -1,6 +1,9 @@
 const { TestHelper } = require("uu_appg01_workspace-test");
 const path = require("path");
 const fs = require("fs");
+const { DaoFactory, ObjectStoreError } = require("uu_appg01_server").ObjectStore;
+const JokesInstanceDao = require("../../app/dao/jokes-instance-mongo");
+
 const USE_CASE = "jokesInstance/init";
 
 beforeAll(async () => {
@@ -16,6 +19,10 @@ beforeEach(async () => {
   await TestHelper.initApp();
   await TestHelper.initAppWorkspace();
   await TestHelper.login("AwidOwner");
+});
+
+afterEach(() => {
+  jest.restoreAllMocks();
 });
 
 test("HDS with minimal dtoIn and without logo", async () => {
@@ -98,4 +105,106 @@ test("A3 - invalid dtoIn", async () => {
   }
 });
 
-// A4, A5, A6 can't be reasonably tested
+test("A4 - setProfile fails", async () => {
+  expect.assertions(2);
+
+  // this mock ensures that all of the models can be required
+  jest.spyOn(DaoFactory, "getDao").mockImplementation(schema => {
+    let dao = {};
+    dao.createSchema = () => {};
+    return dao;
+  });
+
+  const JokesInstanceModel = require("../../app/models/jokes-instance-model");
+  const { SysProfileModel } = require("uu_appg01_server").Workspace;
+  jest.spyOn(SysProfileModel, "setProfile").mockImplementation((a, b) => {
+    throw new Error("kolobezka");
+  });
+
+  let daoMock = {};
+  daoMock.createSchema = () => {};
+  daoMock.getByAwid = param => null;
+  JokesInstanceModel.dao = daoMock;
+
+  let dtoIn = {
+    uuAppProfileAuthorities: "bicykl"
+  };
+  try {
+    await JokesInstanceModel.init("awid", dtoIn);
+  } catch (e) {
+    expect(e.message).toEqual("Create uuAppProfile failed.");
+    expect(e.code).toEqual("uu-jokes-main/jokesInstance/init/sys/setProfileFailed");
+  }
+});
+
+test("A5 - creating uuBinary fails", async () => {
+  expect.assertions(2);
+
+  // this mock ensures that all of the models can be required
+  jest.spyOn(DaoFactory, "getDao").mockImplementation(schema => {
+    let dao = {};
+    dao.createSchema = () => {};
+    return dao;
+  });
+
+  const JokesInstanceModel = require("../../app/models/jokes-instance-model");
+  const { SysProfileModel } = require("uu_appg01_server").Workspace;
+  const { UuBinaryModel } = require("uu_appg01_binarystore-cmd");
+
+  let daoMock = {};
+  daoMock.createSchema = () => {};
+  daoMock.getByAwid = param => null;
+  JokesInstanceModel.dao = daoMock;
+
+  jest.spyOn(SysProfileModel, "setProfile").mockImplementation((a, b) => {});
+  jest.spyOn(UuBinaryModel, "createBinary").mockImplementation((a, b) => {
+    throw new Error("kotrmelec");
+  });
+
+  let dtoIn = {
+    uuAppProfileAuthorities: "holomajzna",
+    logo: fs.createReadStream(path.resolve(__dirname, "logo.png"))
+  };
+  try {
+    await JokesInstanceModel.init("awid", dtoIn);
+  } catch (e) {
+    expect(e.message).toEqual("Create uuBinary logo failed.");
+    expect(e.code).toEqual("uu-jokes-main/jokesInstance/init/uu-app-binarystore/createBinaryFailed");
+  }
+});
+
+test("A6 - storing jokes instance fails", async () => {
+  expect.assertions(2);
+
+  // this mock ensures that all of the models can be required
+  jest.spyOn(DaoFactory, "getDao").mockImplementation(schema => {
+    let dao = {};
+    dao.createSchema = () => {};
+    return dao;
+  });
+
+  const JokesInstanceModel = require("../../app/models/jokes-instance-model");
+  const { SysProfileModel } = require("uu_appg01_server").Workspace;
+  const { UuBinaryModel } = require("uu_appg01_binarystore-cmd");
+
+  let daoMock = {};
+  daoMock.create = param => {
+    throw new ObjectStoreError("it failed");
+  };
+  daoMock.createSchema = () => {};
+  daoMock.getByAwid = param => null;
+  JokesInstanceModel.dao = daoMock;
+
+  jest.spyOn(SysProfileModel, "setProfile").mockImplementation((a, b) => {});
+  jest.spyOn(UuBinaryModel, "createBinary").mockImplementation((a, b) => {});
+
+  let dtoIn = {
+    uuAppProfileAuthorities: "someUri"
+  };
+  try {
+    await JokesInstanceModel.init("awid", dtoIn);
+  } catch (e) {
+    expect(e.message).toEqual("Create jokesInstance by jokesInstance DAO create failed.");
+    expect(e.code).toEqual("uu-jokes-main/jokesInstance/init/jokesInstanceDaoCreateFailed");
+  }
+});
