@@ -11,6 +11,9 @@ const Errors = require("../errors/jokes-instance-error");
 const WARNINGS = {
   initUnsupportedKeys: {
     code: `${Errors.Init.UC_CODE}unsupportedKeys`
+  },
+  updateUnsupportedKeys: {
+    code: `${Errors.Update.UC_CODE}unsupportedKeys`
   }
 };
 const DEFAULT_STATE = "underConstruction";
@@ -72,7 +75,7 @@ class JokesInstanceModel {
         binary = await UuBinaryModel.createBinary(awid, { data: dtoIn.logo, code: "logo" });
       } catch (e) {
         //A5
-        throw new Errors.Init.CreateBinaryFailed({ uuAppErrorMap }, {}, e);
+        throw new Errors.Init.CreateBinaryFailed({ uuAppErrorMap }, e);
       }
       //HDS 6
       dtoIn.logo = binary.code;
@@ -84,7 +87,7 @@ class JokesInstanceModel {
     } catch (e) {
       //A6
       if (e instanceof ObjectStoreError) {
-        throw new Errors.Init.JokesInstanceDaoCreateFailed({ uuAppErrorMap }, {}, e);
+        throw new Errors.Init.JokesInstanceDaoCreateFailed({ uuAppErrorMap }, e);
       }
       throw e;
     }
@@ -128,6 +131,61 @@ class JokesInstanceModel {
     jokeInstance.authorizedProfileList = authorizedProfiles;
 
     // HDS 4
+    return jokeInstance;
+  }
+
+  async update(awid, dtoIn) {
+    //HDS 1
+    let validationResult = this.validator.validate("jokesInstanceUpdateDtoInType", dtoIn);
+    //A1, A2
+    let uuAppErrorMap = ValidationHelper.processValidationResult(
+      dtoIn,
+      validationResult,
+      WARNINGS.updateUnsupportedKeys.code,
+      Errors.Update.InvalidDtoIn
+    );
+
+    //HDS 2
+    let jokeInstance;
+    if (dtoIn.logo) {
+      jokeInstance = await this.dao.getByAwid(awid);
+      //A3
+      if (!jokeInstance) {
+        throw new Errors.Update.JokesInstanceDoesNotExist(uuAppErrorMap);
+      }
+      let binary;
+      //HDS 2.1
+      if (!jokeInstance.logo) {
+        try {
+          binary = await UuBinaryModel.createBinary(awid, { data: dtoIn.logo, code: "logo" });
+        } catch (e) {
+          //A4
+          throw new Errors.Update.UuBinaryCreateFailed(uuAppErrorMap, e);
+        }
+      } else {
+        //HDS 2.2
+        try {
+          binary = await UuBinaryModel.updateBinary(awid, { data: dtoIn.logo, code: "logo", revisionStrategy: "NONE" });
+        } catch (e) {
+          //A5
+          throw new Errors.Update.UuBinaryUpdateBinaryDataFailed(uuAppErrorMap, e);
+        }
+      }
+      dtoIn.logo = binary.code;
+    }
+
+    //HDS 3
+    try {
+      jokeInstance = await this.dao.updateByAwid(awid, dtoIn);
+    } catch (e) {
+      if (e instanceof ObjectStoreError) {
+        throw new Errors.Update.JokesInstanceDaoUpdateByAwidFailed({ uuAppErrorMap }, e);
+      }
+      throw e;
+    }
+
+    //HDS 4
+    jokeInstance.uuAppErrorMap = uuAppErrorMap;
     return jokeInstance;
   }
 }

@@ -2,12 +2,11 @@ const { TestHelper } = require("uu_appg01_workspace-test");
 const path = require("path");
 const fs = require("fs");
 const { DaoFactory, ObjectStoreError } = require("uu_appg01_server").ObjectStore;
-const JokesInstanceDao = require("../../app/dao/jokes-instance-mongo");
 
 const USE_CASE = "jokesInstance/init";
 
 beforeAll(async () => {
-  await TestHelper.setup();
+  await TestHelper.setup(null, { authEnabled: false });
 });
 
 afterAll(() => {
@@ -18,7 +17,6 @@ beforeEach(async () => {
   await TestHelper.dropDatabase();
   await TestHelper.initApp();
   await TestHelper.initAppWorkspace();
-  await TestHelper.login("AwidOwner");
 });
 
 afterEach(() => {
@@ -50,6 +48,10 @@ test("HDS with minimal dtoIn and logo", async () => {
   expect(dtoOut.state).toEqual("underConstruction");
   expect(dtoOut.name).toEqual("uuJokes");
   expect(dtoOut.logo).toEqual("logo");
+
+  //check if binary really exists
+  result = await TestHelper.executeGetCommand("uu-app-binarystore/getBinary", { code: dtoOut.logo });
+  expect(result.status).toBe(200);
 });
 
 test("HDS with more complete dtoIn", async () => {
@@ -109,7 +111,7 @@ test("A4 - setProfile fails", async () => {
   expect.assertions(2);
 
   let { JokesInstanceModel, SysProfileModel } = mockModels();
-  jest.spyOn(SysProfileModel, "setProfile").mockImplementation((a, b) => {
+  jest.spyOn(SysProfileModel, "setProfile").mockImplementation(() => {
     throw new Error("kolobezka");
   });
 
@@ -128,8 +130,8 @@ test("A5 - creating uuBinary fails", async () => {
   expect.assertions(2);
 
   let { JokesInstanceModel, SysProfileModel, UuBinaryModel } = mockModels();
-  jest.spyOn(SysProfileModel, "setProfile").mockImplementation((a, b) => {});
-  jest.spyOn(UuBinaryModel, "createBinary").mockImplementation((a, b) => {
+  jest.spyOn(SysProfileModel, "setProfile").mockImplementation(() => {});
+  jest.spyOn(UuBinaryModel, "createBinary").mockImplementation(() => {
     throw new Error("kotrmelec");
   });
 
@@ -149,11 +151,11 @@ test("A6 - storing jokes instance fails", async () => {
   expect.assertions(2);
 
   let { JokesInstanceModel, SysProfileModel, UuBinaryModel } = mockModels();
-  JokesInstanceModel.dao.create = param => {
+  JokesInstanceModel.dao.create = () => {
     throw new ObjectStoreError("it failed");
   };
-  jest.spyOn(SysProfileModel, "setProfile").mockImplementation((a, b) => {});
-  jest.spyOn(UuBinaryModel, "createBinary").mockImplementation((a, b) => {});
+  jest.spyOn(SysProfileModel, "setProfile").mockImplementation(() => {});
+  jest.spyOn(UuBinaryModel, "createBinary").mockImplementation(() => {});
 
   let dtoIn = {
     uuAppProfileAuthorities: "someUri"
@@ -168,7 +170,7 @@ test("A6 - storing jokes instance fails", async () => {
 
 function mockModels() {
   // this mock ensures that all of the models can be required
-  jest.spyOn(DaoFactory, "getDao").mockImplementation(schema => {
+  jest.spyOn(DaoFactory, "getDao").mockImplementation(() => {
     let dao = {};
     dao.createSchema = () => {};
     return dao;
@@ -178,7 +180,7 @@ function mockModels() {
   const { SysProfileModel } = require("uu_appg01_server").Workspace;
   const { UuBinaryModel } = require("uu_appg01_binarystore-cmd");
 
-  JokesInstanceModel.dao.getByAwid = param => null;
+  JokesInstanceModel.dao.getByAwid = () => null;
 
   return { JokesInstanceModel, SysProfileModel, UuBinaryModel };
 }

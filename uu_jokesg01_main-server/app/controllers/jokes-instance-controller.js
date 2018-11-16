@@ -7,8 +7,12 @@ class JokesInstanceController {
     return JokesInstanceModel.init(ucEnv.uri.getAwid(), ucEnv.parameters);
   }
 
-  load(ucEnv){
+  load(ucEnv) {
     return JokesInstanceModel.load(ucEnv.uri.getAwid(), ucEnv.getAuthorizationResult());
+  }
+
+  update(ucEnv) {
+    return JokesInstanceModel.update(ucEnv.uri.getAwid(), ucEnv.parameters);
   }
 }
 

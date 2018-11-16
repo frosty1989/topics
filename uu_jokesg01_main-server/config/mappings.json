@@ -11,6 +11,11 @@
         "httpMethod": "POST",
         "type": "CMD"
       },
+      "jokesInstance/update": {
+        "realization": "controllers/JokesInstanceController.update",
+        "httpMethod": "POST",
+        "type": "CMD"
+      },
 
 
       "createJoke": {

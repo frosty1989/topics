@@ -67,7 +67,47 @@ const Load = {
   }
 };
 
+const Update = {
+  UC_CODE: `${JOKES_INSTANCE_ERROR_PREFIX}update/`,
+  InvalidDtoIn: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${Update.UC_CODE}invalidDtoIn`;
+      this.message = "DtoIn is not valid.";
+    }
+  },
+  JokesInstanceDoesNotExist: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${Update.UC_CODE}jokesInstanceDoesNotExist`;
+      this.message = "JokesInstance does not exist.";
+    }
+  },
+  UuBinaryCreateFailed: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${Update.UC_CODE}uuBinaryCreateFailed`;
+      this.message = "Creating uuBinary failed.";
+    }
+  },
+  UuBinaryUpdateBinaryDataFailed: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${Update.UC_CODE}uuBinaryUpdateBinaryDataFailed`;
+      this.message = "Updating uuBinary data failed.";
+    }
+  },
+  JokesInstanceDaoUpdateByAwidFailed: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${Update.UC_CODE}jokesInstanceDaoUpdateByAwidFailed`;
+      this.message = "Update jokesInstance by jokesInstance Dao updateByAwid failed.";
+    }
+  }
+};
+
 module.exports = {
   Init,
   Load,
+  Update,
 };
