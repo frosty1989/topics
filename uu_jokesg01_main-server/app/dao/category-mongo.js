@@ -21,24 +21,20 @@ class CategoryMongo extends UuObjectDao {
   }
 
   async update(uuObject) {
-    let filter = {
-      id: uuObject.id,
-      awid: uuObject.awid
-    };
-
+    let filter = { id: uuObject.id, awid: uuObject.awid };
     return await super.findOneAndUpdate(filter, uuObject, "NONE");
   }
 
-  async remove(awid, id) {
-    return await super.deleteOne({ awid, id });
+  async delete(awid, id) {
+    await super.deleteOne({ awid, id });
   }
 
-  async list(awid, pageInfo = {}, order = "asc") {
-    let sort = {
-      name: order === "asc" ? 1 : -1
-    };
+  async list(awid, pageInfo) {
+    return await super.find({ awid }, pageInfo);
+  }
 
-    return await super.find({ awid }, pageInfo, sort);
+  async listBycategoryIdList(awid, categoryIdList, pageInfo) {
+    return await super.find({ awid, id: { $in: categoryIdList } }, pageInfo);
   }
 }
 
