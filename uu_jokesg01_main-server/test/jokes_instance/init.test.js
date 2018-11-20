@@ -40,7 +40,7 @@ test("HDS with minimal dtoIn and without logo", async () => {
 test("HDS with minimal dtoIn and logo", async () => {
   let dtoIn = {
     uuAppProfileAuthorities: "kombajn",
-    logo: fs.createReadStream(path.resolve(__dirname, "logo.png"))
+    logo: fs.createReadStream(path.resolve(__dirname, "..", "logo.png"))
   };
   let result = await TestHelper.executePostCommand(USE_CASE, dtoIn);
   expect(result.status).toBe(200);
@@ -137,7 +137,7 @@ test("A5 - creating uuBinary fails", async () => {
 
   let dtoIn = {
     uuAppProfileAuthorities: "holomajzna",
-    logo: fs.createReadStream(path.resolve(__dirname, "logo.png"))
+    logo: fs.createReadStream(path.resolve(__dirname, "..", "logo.png"))
   };
   try {
     await JokesInstanceModel.init("awid", dtoIn);

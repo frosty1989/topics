@@ -1,28 +1,43 @@
 "use strict";
 
 const UuJokesError = require("./uu-jokes-error");
+const JOKE_ERROR_PREFIX = `${UuJokesError.ERROR_PREFIX}joke/`;
 
-let CreateJoke = {
-  UC_CODE: `${UuJokesError.ERROR_PREFIX}createJoke/`,
+const Create = {
+  UC_CODE: `${JOKE_ERROR_PREFIX}create/`,
+  JokesInstanceDoesNotExist: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${Create.UC_CODE}jokesInstanceDoesNotExist`;
+      this.message = "JokesInstance does not exist.";
+    }
+  },
+  JokesInstanceNotInProperState: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${Create.UC_CODE}jokesInstanceNotInProperState`;
+      this.message = "JokesInstance is not in proper state [active|underConstruction].";
+    }
+  },
   InvalidDtoIn: class extends UuJokesError {
     constructor() {
       super(...arguments);
-      this.code = `${CreateJoke.UC_CODE}invalidDtoIn`;
+      this.code = `${Create.UC_CODE}invalidDtoIn`;
       this.message = "DtoIn is not valid.";
+    }
+  },
+  UuBinaryCreateFailed: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${Create.UC_CODE}uuBinaryCreateFailed`;
+      this.message = "Creating uuBinary failed.";
     }
   },
   JokeDaoCreateFailed: class extends UuJokesError {
     constructor() {
       super(...arguments);
-      this.code = `${CreateJoke.UC_CODE}jokeDaoCreateFailed`;
-      this.message = "Create joke by joke Dao create failed.";
-    }
-  },
-  JokeCategoryDaoCreateFailed: class extends UuJokesError {
-    constructor() {
-      super(...arguments);
-      this.code = `${CreateJoke.UC_CODE}jokeCategoryDaoCreateFailed`;
-      this.message = "Create jokeCategory by jokeCategory Dao create failed.";
+      this.code = `${Create.UC_CODE}jokeDaoCreateFailed`;
+      this.message = "Create joke by joke DAO create failed.";
     }
   }
 };
@@ -135,7 +150,7 @@ let UpdateJoke = {
 };
 
 module.exports = {
-  CreateJoke,
+  Create,
   GetJoke,
   ListJokes,
   DeleteJoke,

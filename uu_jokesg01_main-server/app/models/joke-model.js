@@ -1,23 +1,22 @@
+/*eslint-disable no-constant-condition*/
+
 "use strict";
 const { Validator } = require("uu_appg01_server").Validation;
 const { DaoFactory, ObjectStoreError } = require("uu_appg01_server").ObjectStore;
 const { ValidationHelper } = require("uu_appg01_server").AppServer;
+const { UuBinaryModel } = require("uu_appg01_binarystore-cmd");
 const Errors = require("../errors/joke-error");
 const Path = require("path");
 
 const WARNINGS = {
-  createJoke: {
+  Create: {
     unsupportedKeys: {
-      code: `${Errors.CreateJoke.UC_CODE}unsupportedKeys`,
+      code: `${Errors.Create.UC_CODE}unsupportedKeys`,
       message: "DtoIn contains unsupported keys."
     },
-    categoryDaoGetFailed: {
-      code: `${Errors.CreateJoke.UC_CODE}categoryDaoGetFailed`,
-      message: "Get category by category Dao get failed,"
-    },
     categoryDoesNotExist: {
-      code: `${Errors.CreateJoke.UC_CODE}categoryDoesNotExist`,
-      message: "Category with given categoryId does not exist."
+      code: `${Errors.Create.UC_CODE}categoryDoesNotExist`,
+      message: "One or more categories with given categoryId do not exist."
     }
   },
   updateJoke: {
@@ -54,101 +53,101 @@ class JokeModel {
   constructor() {
     this.validator = new Validator(Path.join(__dirname, "..", "validation_types", "joke-types.js"));
     this.dao = DaoFactory.getDao("joke");
+    this.jokesInstanceDao = DaoFactory.getDao("jokesInstance");
+    this.categoryDao = DaoFactory.getDao("category");
   }
 
-  async createJoke(awid, dtoIn) {
-    //HDS 1
-    //A1
-    let validationResult = this.validator.validate("createJokeDtoInType", dtoIn);
-    //A2
+  async create(awid, dtoIn, session, authorizationResult) {
+    // hds 1
+    let jokesInstance = await this.jokesInstanceDao.getByAwid(awid);
+    if (!jokesInstance) {
+      // A1
+      throw new Errors.Create.JokesInstanceDoesNotExist({});
+    }
+    if (jokesInstance.state === "closed") {
+      // A2
+      throw new Errors.Create.JokesInstanceNotInProperState(
+        {},
+        {
+          state: jokesInstance.state,
+          expectedStateList: ["active", "underConstruction"]
+        }
+      );
+    }
+
+    // hds 2, 2.1
+    let validationResult = this.validator.validate("jokeCreateDtoInType", dtoIn);
+    // hds 2.2, 2.3, A3, A4
     let uuAppErrorMap = ValidationHelper.processValidationResult(
       dtoIn,
       validationResult,
-      WARNINGS.createJoke.unsupportedKeys.code,
-      Errors.CreateJoke.InvalidDtoIn
+      WARNINGS.Create.unsupportedKeys.code,
+      Errors.Create.InvalidDtoIn
     );
-    let dtoOut;
-    let validCategories = [];
-    let categoryList = dtoIn.categoryList || [];
-
-    dtoIn.awid = awid;
-    //HDS 1.4
+    // hds 2.4
     dtoIn.averageRating = 0;
     dtoIn.ratingCount = 0;
-    delete dtoIn.categoryList;
+    dtoIn.visibility = authorizationResult.getAuthorizedProfiles().includes("Authorities");
+    dtoIn.uuIdentity = session.getIdentity().getUuIdentity();
+    dtoIn.uuIdentityName = session.getIdentity().getName();
 
+    // hds 3
+    if (dtoIn.image) {
+      try {
+        let binary = await UuBinaryModel.createBinary(awid, { data: dtoIn.image });
+        dtoIn.image = binary.code;
+      } catch (e) {
+        // A5
+        throw new Errors.Create.UuBinaryCreateFailed({ uuAppErrorMap }, e);
+      }
+    }
+
+    // hds 4
+    if (dtoIn.categoryList) {
+      let categories,
+        pageInfo = { pageIndex: 0 },
+        presentCategories = [],
+        categoryIndex;
+      while (true) {
+        categories = await this.categoryDao.listByCategoryIdList(awid, dtoIn.categoryList, pageInfo);
+        categories.itemList.forEach(category => {
+          categoryIndex = dtoIn.categoryList.indexOf(category.id.toString());
+          if (categoryIndex !== -1) {
+            presentCategories.push(category.id.toString());
+            dtoIn.categoryList.splice(categoryIndex, 1);
+          }
+        });
+        if (categories.itemList < categories.pageInfo.pageSize || dtoIn.categoryList.length === 0) {
+          break;
+        }
+        pageInfo.pageIndex += 1;
+      }
+      if (dtoIn.categoryList.length > 0) {
+        ValidationHelper.addWarning(
+          uuAppErrorMap,
+          WARNINGS.Create.categoryDoesNotExist.code,
+          WARNINGS.Create.categoryDoesNotExist.message,
+          { categoryList: [...new Set(dtoIn.categoryList)] }
+        );
+      }
+      dtoIn.categoryList = [...new Set(presentCategories)];
+    }
+
+    // hds 5
+    let joke;
     try {
-      //HDS2
-      dtoOut = await this.dao.create(dtoIn);
+      joke = await this.dao.create(dtoIn);
     } catch (e) {
-      //A3
+      // A7
       if (e instanceof ObjectStoreError) {
-        throw new Errors.CreateJoke.JokeDaoCreateFailed({ uuAppErrorMap }, e);
+        throw new Errors.Create.JokeDaoCreateFailed({ uuAppErrorMap }, e);
       }
       throw e;
     }
 
-    if (categoryList.length > 0) {
-      const JokeCategoryModel = require("./joke-category-model");
-
-      //HDS 3
-      for (let index = 0; index < categoryList.length; index++) {
-        const categoryId = categoryList[index];
-
-        try {
-          //HDS 3.1
-          const CategoryModel = require("./category-model");
-          let category = await CategoryModel.dao.get(awid, categoryId);
-
-          if (!category) {
-            //A5
-            if (uuAppErrorMap.hasOwnProperty(WARNINGS.createJoke.categoryDoesNotExist.code)) {
-              uuAppErrorMap[WARNINGS.createJoke.categoryDoesNotExist.code].paramMap.categoryIds.push(categoryId);
-            } else {
-              ValidationHelper.addWarning(
-                uuAppErrorMap,
-                WARNINGS.createJoke.categoryDoesNotExist.code,
-                WARNINGS.createJoke.categoryDoesNotExist.message,
-                {
-                  categoryIds: [categoryId]
-                }
-              );
-            }
-            continue;
-          } else {
-            validCategories.push(categoryId);
-          }
-        } catch (e) {
-          //A4
-          ValidationHelper.addWarning(
-            uuAppErrorMap,
-            WARNINGS.createJoke.categoryDaoGetFailed.code,
-            WARNINGS.createJoke.categoryDaoGetFailed.message,
-            {
-              cause: e
-            }
-          );
-          continue;
-        }
-
-        try {
-          //HDS 3.2
-          await JokeCategoryModel.dao.create({ awid: awid, jokeId: dtoOut.id.toString(), categoryId: categoryId });
-        } catch (e) {
-          //A6
-          if (e instanceof ObjectStoreError) {
-            throw new Errors.CreateJoke.JokeCategoryDaoCreateFailed({ uuAppErrorMap }, e);
-          }
-          throw e;
-        }
-      }
-    }
-
-    dtoOut.categoryList = validCategories;
-    dtoOut.uuAppErrorMap = uuAppErrorMap;
-
-    //HDS 4
-    return dtoOut;
+    // hds 6
+    joke.uuAppErrorMap = uuAppErrorMap;
+    return joke;
   }
 
   async updateJoke(awid, dtoIn) {

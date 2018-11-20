@@ -1,6 +1,7 @@
 "use strict";
 
 const { UuObjectDao } = require("uu_appg01_server").ObjectStore;
+const { ObjectId } = require("bson");
 
 class CategoryMongo extends UuObjectDao {
   async createSchema() {
@@ -33,8 +34,9 @@ class CategoryMongo extends UuObjectDao {
     return await super.find({ awid }, pageInfo);
   }
 
-  async listBycategoryIdList(awid, categoryIdList, pageInfo) {
-    return await super.find({ awid, id: { $in: categoryIdList } }, pageInfo);
+  async listByCategoryIdList(awid, categoryIdList, pageInfo) {
+    let query = { awid, _id: { $in: categoryIdList.map(id => new ObjectId(id)) } };
+    return await super.find(query, pageInfo);
   }
 }
 

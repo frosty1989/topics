@@ -1,7 +1,7 @@
 const { TestHelper } = require("uu_appg01_workspace-test");
 const path = require("path");
 const fs = require("fs");
-const { DaoFactory, ObjectStoreError } = require("uu_appg01_server").ObjectStore;
+const { DaoFactory } = require("uu_appg01_server").ObjectStore;
 
 const INIT = "jokesInstance/init";
 const UPDATE = "jokesInstance/update";
@@ -19,7 +19,6 @@ beforeEach(async () => {
   await TestHelper.dropDatabase();
   await TestHelper.initApp();
   await TestHelper.initAppWorkspace();
-  await TestHelper.login("AwidOwner");
 });
 
 afterEach(() => {
@@ -44,7 +43,7 @@ test("HDS - create logo", async () => {
   expect(result.pageInfo.total).toEqual(0);
 
   let dtoIn = {
-    logo: fs.createReadStream(path.resolve(__dirname, "logo.png"))
+    logo: getLogoStream()
   };
   result = await TestHelper.executePostCommand(UPDATE, dtoIn);
   expect(result.status).toEqual(200);
@@ -58,7 +57,7 @@ test("HDS - create logo", async () => {
 test("HDS - update logo", async () => {
   let dtoIn = {
     uuAppProfileAuthorities: ROLE_URI,
-    logo: fs.createReadStream(path.resolve(__dirname, "logo.png"))
+    logo: getLogoStream()
   };
   let result = await TestHelper.executePostCommand(INIT, dtoIn);
   expect(result.data.logo).toEqual("logo");
@@ -69,7 +68,7 @@ test("HDS - update logo", async () => {
   expect(result.data.sys.rev).toEqual(0);
 
   dtoIn = {
-    logo: fs.createReadStream(path.resolve(__dirname, "logo.png"))
+    logo: getLogoStream()
   };
   result = await TestHelper.executePostCommand(UPDATE, dtoIn);
   expect(result.status).toEqual(200);
@@ -107,7 +106,7 @@ test("A2 - invalid dtoIn", async () => {
 test("A3 - updating logo, but jokes instance does not exist", async () => {
   expect.assertions(2);
   let dtoIn = {
-    logo: fs.createReadStream(path.resolve(__dirname, "logo.png"))
+    logo: getLogoStream()
   };
   try {
     await TestHelper.executePostCommand(UPDATE, dtoIn);
@@ -122,14 +121,14 @@ test("A4 - creating logo fails", async () => {
 
   let { JokesInstanceModel, UuBinaryModel } = mockModels();
   jest.spyOn(UuBinaryModel, "createBinary").mockImplementation(() => {
-    throw new ObjectStoreError("it failed");
+    throw new Error("it failed");
   });
   JokesInstanceModel.dao.getByAwid = () => {
     return {};
   };
 
   let dtoIn = {
-    logo: fs.createReadStream(path.resolve(__dirname, "logo.png"))
+    logo: getLogoStream()
   };
   try {
     await JokesInstanceModel.update("awid", dtoIn);
@@ -144,14 +143,14 @@ test("A5 - updating logo fails", async () => {
 
   let { JokesInstanceModel, UuBinaryModel } = mockModels();
   jest.spyOn(UuBinaryModel, "updateBinary").mockImplementation(() => {
-    throw new ObjectStoreError("it failed");
+    throw new Error("it failed");
   });
   JokesInstanceModel.dao.getByAwid = () => {
     return { logo: "code" };
   };
 
   let dtoIn = {
-    logo: fs.createReadStream(path.resolve(__dirname, "logo.png"))
+    logo: getLogoStream()
   };
   try {
     await JokesInstanceModel.update("awid", dtoIn);
@@ -173,4 +172,8 @@ function mockModels() {
   const { UuBinaryModel } = require("uu_appg01_binarystore-cmd");
 
   return { JokesInstanceModel, UuBinaryModel };
+}
+
+function getLogoStream() {
+  return fs.createReadStream(path.resolve(__dirname, "..", "logo.png"));
 }

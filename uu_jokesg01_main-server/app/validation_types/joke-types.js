@@ -1,8 +1,9 @@
 /* eslint-disable */
-const createJokeDtoInType = shape({
-  name: string(255).isRequired(),
-  text: string(4000).isRequired(),
-  categoryList: array(mongoId(), 10)
+const jokeCreateDtoInType = shape({
+  name: uu5String(255).isRequired(),
+  text: uu5String(4000),
+  categoryList: array(id(), 10),
+  image: binary()
 });
 
 const getJokeDtoInType = shape({

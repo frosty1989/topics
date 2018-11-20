@@ -3,8 +3,8 @@
 const JokeModel = require("../models/joke-model.js");
 
 class JokeController {
-  createJoke(ucEnv) {
-    return JokeModel.createJoke(ucEnv.uri.getAwid(), ucEnv.parameters);
+  create(ucEnv) {
+    return JokeModel.create(ucEnv.uri.getAwid(), ucEnv.parameters, ucEnv.session, ucEnv.getAuthorizationResult());
   }
 
   updateJoke(ucEnv) {

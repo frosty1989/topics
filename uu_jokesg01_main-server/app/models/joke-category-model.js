@@ -32,7 +32,7 @@ const WARNINGS = {
 class JokeCategoryModel {
   constructor() {
     this.validator = new Validator(Path.join(__dirname, "..", "validation_types", "joke-category-types.js"));
-    this.dao = DaoFactory.getDao("jokeCategory");
+    this.dao = DaoFactory.getDao("category");
   }
 
   async addJokeCategory(awid, dtoIn) {

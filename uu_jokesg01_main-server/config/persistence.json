@@ -9,11 +9,6 @@
           "realization": "dao/JokesInstanceMongo",
           "maxNoi": 1
         },
-
-
-
-
-
         "joke": {
           "realization": "dao/JokeMongo",
           "maxNoi": 1024
@@ -25,17 +20,7 @@
         "category": {
           "realization": "dao/CategoryMongo",
           "maxNoi": 128
-        },
-        "jokeCategory": {
-          "realization": "dao/JokeCategoryMongo",
-          "maxNoi": 5000
         }
-      }
-    },
-    "binary": {
-      "type": "uuAppBinaryStore",
-      "realization": "MongoDB",
-      "schemaMap": {
       }
     }
   }

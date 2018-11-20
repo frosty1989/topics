@@ -115,7 +115,7 @@ class JokesInstanceModel {
       );
     }
     //A3
-    let authorizedProfiles = authorizationResult.getIdentityProfiles();
+    let authorizedProfiles = authorizationResult.getAuthorizedProfiles();
     if (
       jokeInstance.state === STATE_UNDER_CONSTRUCTION &&
       !authorizedProfiles.includes(AUTHORITIES) &&

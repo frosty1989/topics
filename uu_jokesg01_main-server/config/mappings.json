@@ -16,13 +16,13 @@
         "httpMethod": "POST",
         "type": "CMD"
       },
-
-
-      "createJoke": {
-        "realization": "controllers/JokeController.createJoke",
+      "joke/create": {
+        "realization": "controllers/JokeController.create",
         "httpMethod": "POST",
         "type": "CMD"
       },
+
+
       "updateJoke": {
         "realization": "controllers/JokeController.updateJoke",
         "httpMethod": "POST",
