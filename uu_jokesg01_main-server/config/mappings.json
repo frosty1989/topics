@@ -21,6 +21,11 @@
         "httpMethod": "POST",
         "type": "CMD"
       },
+      "joke/get": {
+        "realization": "controllers/JokeController.get",
+        "httpMethod": "GET",
+        "type": "CMD"
+      },
 
 
       "updateJoke": {
@@ -56,11 +61,6 @@
       "deleteCategory": {
         "realization": "controllers/CategoryController.deleteCategory",
         "httpMethod": "POST",
-        "type": "CMD"
-      },
-      "getJoke": {
-        "realization": "controllers/JokeController.getJoke",
-        "httpMethod": "GET",
         "type": "CMD"
       },
       "listJokes": {

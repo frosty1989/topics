@@ -42,34 +42,41 @@ const Create = {
   }
 };
 
-let GetJoke = {
-  UC_CODE: `${UuJokesError.ERROR_PREFIX}getJoke/`,
+const Get = {
+  UC_CODE: `${JOKE_ERROR_PREFIX}get/`,
+  JokesInstanceDoesNotExist: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${Get.UC_CODE}jokesInstanceDoesNotExist`;
+      this.message = "JokesInstance does not exist.";
+    }
+  },
+  JokesInstanceNotInProperState: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${Get.UC_CODE}jokesInstanceNotInProperState`;
+      this.message = "JokesInstance is not in proper state [active|underConstruction].";
+    }
+  },
+  JokesInstanceIsUnderConstruction: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${Get.UC_CODE}jokesInstanceIsUnderConstruction`;
+      this.message = "JokesInstance is in underConstruction state.";
+    }
+  },
   InvalidDtoIn: class extends UuJokesError {
     constructor() {
       super(...arguments);
-      this.code = `${GetJoke.UC_CODE}invalidDtoIn`;
+      this.code = `${Get.UC_CODE}invalidDtoIn`;
       this.message = "DtoIn is not valid.";
-    }
-  },
-  JokeDaoGetFailed: class extends UuJokesError {
-    constructor() {
-      super(...arguments);
-      this.code = `${GetJoke.UC_CODE}jokeDaoGetFailed`;
-      this.message = "Get joke by joke Dao get failed.";
     }
   },
   JokeDoesNotExist: class extends UuJokesError {
     constructor() {
       super(...arguments);
-      this.code = `${GetJoke.UC_CODE}jokeDoesNotExist`;
+      this.code = `${Get.UC_CODE}jokeDoesNotExist`;
       this.message = "Joke does not exist.";
-    }
-  },
-  JokeCategoryDaoListByJokeFailed: class extends UuJokesError {
-    constructor() {
-      super(...arguments);
-      this.code = `${GetJoke.UC_CODE}jokeCategoryDaoListByJokeFailed`;
-      this.message = "List jokeCategoty by joke Dao listByCategory failed.";
     }
   }
 };
@@ -151,7 +158,7 @@ let UpdateJoke = {
 
 module.exports = {
   Create,
-  GetJoke,
+  Get,
   ListJokes,
   DeleteJoke,
   UpdateJoke

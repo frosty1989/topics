@@ -16,7 +16,7 @@ const WARNINGS = {
     code: `${Errors.Update.UC_CODE}unsupportedKeys`
   }
 };
-const DEFAULT_STATE = "underConstruction";
+
 const DEFAULT_NAME = "uuJokes";
 const AUTHORITIES = "Authorities";
 const EXECUTIVES = "Executives";
@@ -29,6 +29,10 @@ class JokesInstanceModel {
     this.validator = new Validator(Path.join(__dirname, "..", "validation_types", "jokes-instance-types.js"));
     this.dao = DaoFactory.getDao("jokesInstance");
     this.categoryDao = DaoFactory.getDao("category");
+    // redeclare some constants, so they can be used from other models
+    this.STATE_ACTIVE = STATE_ACTIVE;
+    this.STATE_UNDER_CONSTRUCTION = STATE_UNDER_CONSTRUCTION;
+    this.STATE_CLOSED = STATE_CLOSED;
   }
 
   async init(awid, dtoIn) {
@@ -48,7 +52,7 @@ class JokesInstanceModel {
       WARNINGS.initUnsupportedKeys.code,
       Errors.Init.InvalidDtoIn
     );
-    dtoIn.state = dtoIn.state || DEFAULT_STATE;
+    dtoIn.state = dtoIn.state || STATE_UNDER_CONSTRUCTION;
     dtoIn.name = dtoIn.name || DEFAULT_NAME;
     dtoIn.awid = awid;
 

@@ -7,16 +7,16 @@ class JokeController {
     return JokeModel.create(ucEnv.uri.getAwid(), ucEnv.parameters, ucEnv.session, ucEnv.getAuthorizationResult());
   }
 
+  get(ucEnv) {
+    return JokeModel.get(ucEnv.uri.getAwid(), ucEnv.parameters);
+  }
+
   updateJoke(ucEnv) {
     return JokeModel.updateJoke(ucEnv.uri.getAwid(), ucEnv.parameters);
   }
 
   deleteJoke(ucEnv) {
     return JokeModel.deleteJoke(ucEnv.uri.getAwid(), ucEnv.parameters);
-  }
-
-  getJoke(ucEnv) {
-    return JokeModel.getJoke(ucEnv.uri.getAwid(), ucEnv.parameters);
   }
 
   listJokes(ucEnv) {

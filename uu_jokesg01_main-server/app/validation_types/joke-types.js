@@ -6,8 +6,8 @@ const jokeCreateDtoInType = shape({
   image: binary()
 });
 
-const getJokeDtoInType = shape({
-  id: mongoId().isRequired()
+const jokeGetDtoInType = shape({
+  id: id().isRequired()
 });
 
 const listJokesDtoInType = shape({

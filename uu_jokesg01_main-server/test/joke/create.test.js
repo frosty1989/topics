@@ -48,6 +48,7 @@ test("HDS - no image, Authorities call", async () => {
   expect(dtoOut.image).toBeUndefined();
   expect(dtoOut.categoryList).toBeUndefined();
   expect(dtoOut.uuAppErrorMap).toEqual({});
+  expect(dtoOut.awid).toEqual(TestHelper.getAwid());
 });
 
 test("HDS - no image, Executives call", async () => {
