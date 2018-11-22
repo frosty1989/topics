@@ -17,3 +17,8 @@ const jokeUpdateDtoInType = shape({
   categoryList: array(id(), 10),
   image: binary()
 });
+
+const jokeUpdateVisibilityDtoInType = shape({
+  id: id().isRequired(),
+  visibility: boolean().isRequired()
+});

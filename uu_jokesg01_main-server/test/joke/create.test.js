@@ -233,6 +233,6 @@ function getAuthzResultMock() {
   };
 }
 
-function initJokesInstance(state = "active") {
-  TestHelper.executePostCommand(INIT, { uuAppProfileAuthorities: "spektakularniJavascript", state });
+async function initJokesInstance(state = "active") {
+  await TestHelper.executePostCommand(INIT, { uuAppProfileAuthorities: "spektakularniJavascript", state });
 }

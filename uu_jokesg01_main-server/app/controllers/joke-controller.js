@@ -15,12 +15,8 @@ class JokeController {
     return JokeModel.update(ucEnv.uri.getAwid(), ucEnv.parameters, ucEnv.session, ucEnv.getAuthorizationResult());
   }
 
-  deleteJoke(ucEnv) {
-    return JokeModel.deleteJoke(ucEnv.uri.getAwid(), ucEnv.parameters);
-  }
-
-  listJokes(ucEnv) {
-    return JokeModel.listJokes(ucEnv.uri.getAwid(), ucEnv.parameters);
+  updateVisibility(ucEnv) {
+    return JokeModel.updateVisibility(ucEnv.uri.getAwid(), ucEnv.parameters);
   }
 }
 

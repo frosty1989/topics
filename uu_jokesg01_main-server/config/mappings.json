@@ -31,55 +31,8 @@
         "httpMethod": "POST",
         "type": "CMD"
       },
-
-
-      "deleteJoke": {
-        "realization": "controllers/JokeController.deleteJoke",
-        "httpMethod": "POST",
-        "type": "CMD"
-      },
-      "addJokeCategory": {
-        "realization": "controllers/JokeCategoryController.addJokeCategory",
-        "httpMethod": "POST",
-        "type": "CMD"
-      },
-      "removeJokeCategory": {
-        "realization": "controllers/JokeCategoryController.removeJokeCategory",
-        "httpMethod": "POST",
-        "type": "CMD"
-      },
-      "createCategory": {
-        "realization": "controllers/CategoryController.createCategory",
-        "httpMethod": "POST",
-        "type": "CMD"
-      },
-      "updateCategory": {
-        "realization": "controllers/CategoryController.updateCategory",
-        "httpMethod": "POST",
-        "type": "CMD"
-      },
-      "deleteCategory": {
-        "realization": "controllers/CategoryController.deleteCategory",
-        "httpMethod": "POST",
-        "type": "CMD"
-      },
-      "listJokes": {
-        "realization": "controllers/JokeController.listJokes",
-        "httpMethod": "GET",
-        "type": "CMD"
-      },
-      "listCategoryJokes": {
-        "realization": "controllers/JokeCategoryController.listCategoryJokes",
-        "httpMethod": "GET",
-        "type": "CMD"
-      },
-      "listCategories": {
-        "realization": "controllers/CategoryController.listCategories",
-        "httpMethod": "GET",
-        "type": "CMD"
-      },
-      "addJokeRating": {
-        "realization": "controllers/JokeRatingController.addJokeRating",
+      "joke/updateVisibility": {
+        "realization": "controllers/JokeController.updateVisibility",
         "httpMethod": "POST",
         "type": "CMD"
       }

@@ -32,6 +32,11 @@ const WARNINGS = {
       code: `${Errors.Update.UC_CODE}categoryDoesNotExist`,
       message: "One or more categories with given categoryId do not exist."
     }
+  },
+  UpdateVisibility: {
+    unsupportedKeys: {
+      code: `${Errors.UpdateVisibility.UC_CODE}unsupportedKeys`
+    }
   }
 };
 
@@ -241,6 +246,41 @@ class JokeModel {
     }
 
     // hds 8
+    joke.uuAppErrorMap = uuAppErrorMap;
+    return joke;
+  }
+
+  async updateVisibility(awid, dtoIn) {
+    // hds 1, A1, hds 1.1, A2
+    await this._checkInstance(
+      awid,
+      Errors.UpdateVisibility.JokesInstanceDoesNotExist,
+      Errors.UpdateVisibility.JokesInstanceNotInProperState
+    );
+
+    // hds 2, 2.1
+    let validationResult = this.validator.validate("jokeUpdateVisibilityDtoInType", dtoIn);
+    // hds 2.2, 2.3, A3, A4
+    let uuAppErrorMap = ValidationHelper.processValidationResult(
+      dtoIn,
+      validationResult,
+      WARNINGS.UpdateVisibility.unsupportedKeys.code,
+      Errors.UpdateVisibility.InvalidDtoIn
+    );
+
+    // hds 3
+    let joke;
+    try {
+      joke = await this.dao.updateVisibility(awid, dtoIn.id, dtoIn.visibility);
+    } catch (e) {
+      if (e instanceof ObjectStoreError) {
+        // A5
+        throw new Errors.UpdateVisibility.JokeDaoUpdateVisibilityFailed({ uuAppErrorMap }, e);
+      }
+      throw e;
+    }
+
+    // hds 4
     joke.uuAppErrorMap = uuAppErrorMap;
     return joke;
   }

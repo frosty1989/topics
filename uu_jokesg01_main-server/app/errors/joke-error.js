@@ -141,8 +141,41 @@ const Update = {
   }
 };
 
+const UpdateVisibility = {
+  UC_CODE: `${JOKE_ERROR_PREFIX}updateVisibility/`,
+  JokeDaoUpdateVisibilityFailed: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${UpdateVisibility.UC_CODE}jokeDaoUpdateVisibilityFailed`;
+      this.message = "Update joke by joke Dao updateVisibility failed";
+    }
+  },
+  JokesInstanceDoesNotExist: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${UpdateVisibility.UC_CODE}jokesInstanceDoesNotExist`;
+      this.message = "JokesInstance does not exist.";
+    }
+  },
+  JokesInstanceNotInProperState: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${UpdateVisibility.UC_CODE}jokesInstanceNotInProperState`;
+      this.message = "JokesInstance is not in proper state [active|underConstruction].";
+    }
+  },
+  InvalidDtoIn: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${UpdateVisibility.UC_CODE}invalidDtoIn`;
+      this.message = "DtoIn is not valid.";
+    }
+  }
+};
+
 module.exports = {
   Create,
   Get,
   Update,
+  UpdateVisibility,
 };
