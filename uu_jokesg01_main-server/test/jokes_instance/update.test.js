@@ -38,7 +38,7 @@ test("HDS - without logo machinations", async () => {
 test("HDS - create logo", async () => {
   let result = await TestHelper.executePostCommand(INIT, { uuAppProfileAuthorities: ROLE_URI });
   expect(result.data.logo).toBeUndefined();
-  //there are no binaries yet
+  // there are no binaries yet
   result = await TestHelper.executeGetCommand("uu-app-binarystore/listBinaries");
   expect(result.pageInfo.total).toEqual(0);
 
@@ -49,9 +49,9 @@ test("HDS - create logo", async () => {
   expect(result.status).toEqual(200);
   expect(result.data.logo).toEqual("logo");
 
-  //check if binary was really created
-  result = await TestHelper.executeGetCommand("uu-app-binarystore/getBinary", { code: result.data.logo });
-  expect(result.status).toBe(200);
+  // check if binary was really created
+  result = await TestHelper.executeGetCommand("uu-app-binarystore/listBinaries");
+  expect(result.pageInfo.total).toEqual(1);
 });
 
 test("HDS - update logo", async () => {
@@ -64,7 +64,6 @@ test("HDS - update logo", async () => {
 
   // the binary has been just created, its revision is 0
   result = await TestHelper.executeGetCommand("uu-app-binarystore/getBinary", { code: result.data.logo });
-  expect(result.status).toBe(200);
   expect(result.data.sys.rev).toEqual(0);
 
   dtoIn = {
@@ -74,9 +73,8 @@ test("HDS - update logo", async () => {
   expect(result.status).toEqual(200);
   expect(result.data.logo).toEqual("logo");
 
-  //the binary was updated, i.e. revision increased
+  // the binary was updated, i.e. revision increased
   result = await TestHelper.executeGetCommand("uu-app-binarystore/getBinary", { code: result.data.logo });
-  expect(result.status).toBe(200);
   expect(result.data.sys.rev).toEqual(1);
 });
 

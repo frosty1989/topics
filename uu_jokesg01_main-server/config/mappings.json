@@ -26,13 +26,13 @@
         "httpMethod": "GET",
         "type": "CMD"
       },
-
-
-      "updateJoke": {
-        "realization": "controllers/JokeController.updateJoke",
+      "joke/update": {
+        "realization": "controllers/JokeController.update",
         "httpMethod": "POST",
         "type": "CMD"
       },
+
+
       "deleteJoke": {
         "realization": "controllers/JokeController.deleteJoke",
         "httpMethod": "POST",

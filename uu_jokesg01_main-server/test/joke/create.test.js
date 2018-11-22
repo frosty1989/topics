@@ -154,7 +154,7 @@ test("A5 - creating image fails", async () => {
   }
 });
 
-test("A6 - categories doesn't exist", async () => {
+test("A6 - categories don't exist", async () => {
   await initJokesInstance();
   await TestHelper.login("Authority");
 

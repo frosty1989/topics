@@ -33,6 +33,7 @@ class JokesInstanceModel {
     this.STATE_ACTIVE = STATE_ACTIVE;
     this.STATE_UNDER_CONSTRUCTION = STATE_UNDER_CONSTRUCTION;
     this.STATE_CLOSED = STATE_CLOSED;
+    this.AUTHORITIES = AUTHORITIES;
   }
 
   async init(awid, dtoIn) {

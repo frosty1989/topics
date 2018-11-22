@@ -81,77 +81,62 @@ const Get = {
   }
 };
 
-let ListJokes = {
-  UC_CODE: `${UuJokesError.ERROR_PREFIX}listJokes/`,
+const Update = {
+  UC_CODE: `${JOKE_ERROR_PREFIX}update/`,
+  JokesInstanceDoesNotExist: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${Update.UC_CODE}jokesInstanceDoesNotExist`;
+      this.message = "JokesInstance does not exist.";
+    }
+  },
+  JokesInstanceNotInProperState: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${Update.UC_CODE}jokesInstanceNotInProperState`;
+      this.message = "JokesInstance is not in proper state [active|underConstruction].";
+    }
+  },
   InvalidDtoIn: class extends UuJokesError {
     constructor() {
       super(...arguments);
-      this.code = `${ListJokes.UC_CODE}invalidDtoIn`;
+      this.code = `${Update.UC_CODE}invalidDtoIn`;
       this.message = "DtoIn is not valid.";
     }
   },
-  JokeDaoListFailed: class extends UuJokesError {
+  UserNotAuthorized: class extends UuJokesError {
     constructor() {
       super(...arguments);
-      this.code = `${ListJokes.UC_CODE}jokeDaoListFailed`;
-      this.message = "List jokes by joke Dao list failed.";
-    }
-  }
-};
-
-let DeleteJoke = {
-  UC_CODE: `${UuJokesError.ERROR_PREFIX}deleteJoke/`,
-  InvalidDtoIn: class extends UuJokesError {
-    constructor() {
-      super(...arguments);
-      this.code = `${DeleteJoke.UC_CODE}invalidDtoIn`;
-      this.message = "DtoIn is not valid.";
+      this.code = `${Update.UC_CODE}userNotAuthorized`;
+      this.message = "User not authorized.";
     }
   },
-  JokeRatingDaoDeleteByJokeFailed: class extends UuJokesError {
+  JokeDoesNotExist: class extends UuJokesError {
     constructor() {
       super(...arguments);
-      this.code = `${DeleteJoke.UC_CODE}jokeRatingDaoDeleteByJokeFailed`;
-      this.message = "Delete jokeRating by Dao deleteByJoke failed.";
+      this.code = `${Update.UC_CODE}jokeDoesNotExist`;
+      this.message = "Joke does not exist.";
     }
   },
-  JokeCategoryDaoDeleteByJokeFailed: class extends UuJokesError {
+  UuBinaryCreateFailed: class extends UuJokesError {
     constructor() {
       super(...arguments);
-      this.code = `${DeleteJoke.UC_CODE}jokeCategoryDaoDeleteByJokeFailed`;
-      this.message = "Delete jokeCategory by Dao deleteByJoke failed.";
+      this.code = `${Update.UC_CODE}uuBinaryCreateFailed`;
+      this.message = "Creating uuBinary failed.";
     }
   },
-  JokeDaoDeleteFailed: class extends UuJokesError {
+  UuBinaryUpdateBinaryDataFailed: class extends UuJokesError {
     constructor() {
       super(...arguments);
-      this.code = `${DeleteJoke.UC_CODE}jokeDaoDeleteFailed`;
-      this.message = "Delete joke by Dao delete failed.";
-    }
-  }
-};
-
-let UpdateJoke = {
-  UC_CODE: `${UuJokesError.ERROR_PREFIX}updateJoke/`,
-  InvalidDtoIn: class extends UuJokesError {
-    constructor() {
-      super(...arguments);
-      this.code = `${UpdateJoke.UC_CODE}invalidDtoIn`;
-      this.message = "DtoIn is not valid.";
+      this.code = `${Update.UC_CODE}uuBinaryUpdateBinaryDataFailed`;
+      this.message = "Updating uuBinary data failed.";
     }
   },
   JokeDaoUpdateFailed: class extends UuJokesError {
     constructor() {
       super(...arguments);
-      this.code = `${UpdateJoke.UC_CODE}jokeDaoUpdateFailed`;
+      this.code = `${Update.UC_CODE}jokeDaoUpdateFailed`;
       this.message = "Update joke by joke Dao update failed.";
-    }
-  },
-  JokeDaoGetFailed: class extends UuJokesError {
-    constructor() {
-      super(...arguments);
-      this.code = `${UpdateJoke.UC_CODE}jokeDaoGetFailed`;
-      this.message = "Get joke by joke Dao get failed.";
     }
   }
 };
@@ -159,7 +144,5 @@ let UpdateJoke = {
 module.exports = {
   Create,
   Get,
-  ListJokes,
-  DeleteJoke,
-  UpdateJoke
+  Update,
 };

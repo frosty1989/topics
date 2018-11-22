@@ -10,21 +10,10 @@ const jokeGetDtoInType = shape({
   id: id().isRequired()
 });
 
-const listJokesDtoInType = shape({
-  sortBy: oneOf(["name", "rating"]),
-  order: oneOf(["asc", "desc"]),
-  pageInfo: shape({
-    pageIndex: integer(),
-    pageSize: integer()
-  })
-});
-
-const updateJokeDtoInType = shape({
-  id: mongoId().isRequired(),
+const jokeUpdateDtoInType = shape({
+  id: id().isRequired(),
   name: uu5String(255),
-  text: uu5String(4000)
-});
-
-const deleteJokeDtoInType = shape({
-  id: mongoId().isRequired()
+  text: uu5String(4000),
+  categoryList: array(id(), 10),
+  image: binary()
 });
