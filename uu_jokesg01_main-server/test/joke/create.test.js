@@ -1,3 +1,5 @@
+/*eslint-disable no-useless-escape*/
+
 const { TestHelper } = require("uu_appg01_workspace-test");
 const path = require("path");
 const fs = require("fs");
@@ -30,7 +32,25 @@ test("HDS - no image, Authorities call", async () => {
   await TestHelper.login("Authority");
 
   let name = "nejvtipnejsi vtip";
-  let text = "jeho text";
+  let text = `
+        /((((((\\\\
+=======((((((((((\\\\\\
+      ((           \\\\\\\\
+      ( (*    _/      \\\\\\\\
+       \    /  \      \\\\\\________________
+        |  |   |       </                  ((\\\\
+        o_|   /        /                      \ \\\\    \\\\\\\\
+             |  ._    (                        \ \\\\\\\\\\\\\\\\
+             | /                       /       /    \\\\\\\     \\
+    .______/\/     /                 /       /         \\\\
+    / __.____/    _/         ________(       /\\
+   / / / ________/'---------'         \     /  \_
+  / /  \ \                             \   \ \_  \\
+ ( <    \ \                             >  /    \ \\
+  \/     \\_                           / /       > )
+          \_|                         / /       / /
+                                    _//       _//
+                                   /_|       /_|`;
   let dtoIn = {
     name,
     text
