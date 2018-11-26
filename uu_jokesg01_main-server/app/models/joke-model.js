@@ -37,6 +37,11 @@ const WARNINGS = {
     unsupportedKeys: {
       code: `${Errors.UpdateVisibility.UC_CODE}unsupportedKeys`
     }
+  },
+  Delete: {
+    unsupportedKeys: {
+      code: `${Errors.Delete.UC_CODE}unsupportedKeys`
+    }
   }
 };
 
@@ -46,6 +51,7 @@ class JokeModel {
     this.dao = DaoFactory.getDao("joke");
     this.jokesInstanceDao = DaoFactory.getDao("jokesInstance");
     this.categoryDao = DaoFactory.getDao("category");
+    this.jokeRatingDao = DaoFactory.getDao("jokeRating");
   }
 
   async create(awid, dtoIn, session, authorizationResult) {
@@ -283,6 +289,69 @@ class JokeModel {
     // hds 4
     joke.uuAppErrorMap = uuAppErrorMap;
     return joke;
+  }
+
+  async delete(awid, dtoIn, session, authorizationResult) {
+    // hds 1, A1, hds 1.1, A2
+    await this._checkInstance(
+      awid,
+      Errors.Delete.JokesInstanceDoesNotExist,
+      Errors.Delete.JokesInstanceNotInProperState
+    );
+
+    // hds 2, 2.1
+    let validationResult = this.validator.validate("jokeDeleteDtoInType", dtoIn);
+    // hds 2.2, 2.3, A3, A4
+    let uuAppErrorMap = ValidationHelper.processValidationResult(
+      dtoIn,
+      validationResult,
+      WARNINGS.Delete.unsupportedKeys.code,
+      Errors.Delete.InvalidDtoIn
+    );
+
+    // hds 3
+    let joke = await this.dao.get(awid, dtoIn.id);
+    // A5
+    if (!joke) {
+      throw new Errors.Delete.JokeDoesNotExist({ uuAppErrorMap }, { jokeId: dtoIn.id });
+    }
+
+    // hds 4
+    let uuId = session.getIdentity().getUuIdentity();
+    // A6
+    if (
+      uuId !== joke.uuIdentity &&
+      !authorizationResult.getAuthorizedProfiles().includes(JokesInstanceModel.AUTHORITIES)
+    ) {
+      throw new Errors.Delete.UserNotAuthorized({ uuAppErrorMap });
+    }
+
+    // hds 5
+    try {
+      await this.jokeRatingDao.deleteByJokeId(awid, joke.id);
+    } catch (e) {
+      if (e instanceof ObjectStoreError) {
+        // A7
+        throw new Errors.Delete.JokeRatingDaoDeleteByJokeIdFailed({ uuAppErrorMap }, e);
+      }
+      throw e;
+    }
+
+    // hds 6
+    if (joke.image) {
+      try {
+        await UuBinaryModel.deleteBinary(awid, { code: joke.image });
+      } catch (e) {
+        // A8
+        throw new Errors.Delete.UuBinaryDeleteFailed({ uuAppErrorMap }, e);
+      }
+    }
+
+    // hds 7
+    await this.dao.delete(awid, dtoIn.id);
+
+    // hds 8
+    return { uuAppErrorMap };
   }
 
   /**

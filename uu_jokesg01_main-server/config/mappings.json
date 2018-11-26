@@ -35,6 +35,11 @@
         "realization": "controllers/JokeController.updateVisibility",
         "httpMethod": "POST",
         "type": "CMD"
+      },
+      "joke/delete": {
+        "realization": "controllers/JokeController.delete",
+        "httpMethod": "POST",
+        "type": "CMD"
       }
     }
   }

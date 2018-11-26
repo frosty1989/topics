@@ -22,3 +22,7 @@ const jokeUpdateVisibilityDtoInType = shape({
   id: id().isRequired(),
   visibility: boolean().isRequired()
 });
+
+const jokeDeleteDtoInType = shape({
+  id: id().isRequired()
+});

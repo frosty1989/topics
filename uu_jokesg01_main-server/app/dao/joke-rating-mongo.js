@@ -22,7 +22,7 @@ class JokeRatingMongo extends UuObjectDao {
   }
 
   async deleteByJokeId(awid, jokeId) {
-    await super.deleteOne({ awid, jokeId });
+    await super.deleteMany({ awid, jokeId });
   }
 }
 

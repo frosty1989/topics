@@ -18,6 +18,10 @@ class JokeController {
   updateVisibility(ucEnv) {
     return JokeModel.updateVisibility(ucEnv.uri.getAwid(), ucEnv.parameters);
   }
+
+  delete(ucEnv) {
+    return JokeModel.delete(ucEnv.uri.getAwid(), ucEnv.parameters, ucEnv.session, ucEnv.getAuthorizationResult());
+  }
 }
 
 module.exports = new JokeController();

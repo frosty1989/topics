@@ -181,7 +181,8 @@ class JokesInstanceModel {
 
     //HDS 3
     try {
-      jokeInstance = await this.dao.updateByAwid(awid, dtoIn);
+      dtoIn.awid = awid;
+      jokeInstance = await this.dao.update(dtoIn);
     } catch (e) {
       if (e instanceof ObjectStoreError) {
         throw new Errors.Update.JokesInstanceDaoUpdateByAwidFailed({ uuAppErrorMap }, e);

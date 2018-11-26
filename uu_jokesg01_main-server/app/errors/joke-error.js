@@ -173,9 +173,63 @@ const UpdateVisibility = {
   }
 };
 
+const Delete = {
+  UC_CODE: `${JOKE_ERROR_PREFIX}delete/`,
+  JokesInstanceDoesNotExist: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${Delete.UC_CODE}jokesInstanceDoesNotExist`;
+      this.message = "JokesInstance does not exist.";
+    }
+  },
+  JokesInstanceNotInProperState: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${Delete.UC_CODE}jokesInstanceNotInProperState`;
+      this.message = "JokesInstance is not in proper state [active|underConstruction].";
+    }
+  },
+  InvalidDtoIn: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${Delete.UC_CODE}invalidDtoIn`;
+      this.message = "DtoIn is not valid.";
+    }
+  },
+  JokeDoesNotExist: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${Delete.UC_CODE}jokeDoesNotExist`;
+      this.message = "Joke does not exist.";
+    }
+  },
+  UserNotAuthorized: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${Delete.UC_CODE}userNotAuthorized`;
+      this.message = "User not authorized.";
+    }
+  },
+  UuBinaryDeleteFailed: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${Delete.UC_CODE}uuBinaryDeleteFailed`;
+      this.message = "Deleting uuBinary failed.";
+    }
+  },
+  JokeRatingDaoDeleteByJokeIdFailed: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${Delete.UC_CODE}jokeRatingDaoDeleteByJokeIdFailed`;
+      this.message = "Delete jokeRating by jokeRating Dao deleteByJokeId failed.";
+    }
+  }
+};
+
 module.exports = {
   Create,
   Get,
   Update,
   UpdateVisibility,
+  Delete,
 };

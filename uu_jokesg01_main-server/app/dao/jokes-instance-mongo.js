@@ -15,8 +15,8 @@ class JokesInstanceMongo extends UuObjectDao {
     return await super.findOne({ awid });
   }
 
-  async updateByAwid(awid, jokeInstance) {
-    return await super.findOneAndUpdate({ awid }, jokeInstance, "NONE");
+  async update(jokeInstance) {
+    return await super.findOneAndUpdate({ awid: jokeInstance.awid }, jokeInstance, "NONE");
   }
 }
 
