@@ -39,13 +39,19 @@ class JokeMongo extends UuObjectDao {
   }
 
   async list(awid, sortBy, order, pageInfo) {
-    return await super.find({ awid }, pageInfo, { sortBy: order });
+    let sort = {};
+    sort[sortBy] = order === "asc" ? 1 : -1;
+    return await super.find({ awid }, pageInfo, sort);
   }
 
   async listByCategoryIdList(awid, categoryIdList, sortBy, order, pageInfo) {
-    return await super.find({ awid, categoryList: { $in: categoryIdList.map(id => new ObjectId(id)) } }, pageInfo, {
-      sortBy: order
-    });
+    let sort = {};
+    sort[sortBy] = order === "asc" ? 1 : -1;
+    return await super.find(
+      { awid, categoryList: { $in: categoryIdList.map(id => new ObjectId(id)) } },
+      pageInfo,
+      sort
+    );
   }
 }
 

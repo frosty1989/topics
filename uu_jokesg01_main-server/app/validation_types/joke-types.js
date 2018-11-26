@@ -26,3 +26,13 @@ const jokeUpdateVisibilityDtoInType = shape({
 const jokeDeleteDtoInType = shape({
   id: id().isRequired()
 });
+
+const jokeListDtoInType = shape({
+  sortBy: oneOf(["name", "rating"]),
+  order: oneOf(["asc", "desc"]),
+  categoryList: array(id(), 10),
+  pageInfo: shape({
+    pageIndex: integer(),
+    pageSize: integer()
+  })
+});

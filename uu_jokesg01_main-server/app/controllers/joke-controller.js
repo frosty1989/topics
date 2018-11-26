@@ -22,6 +22,10 @@ class JokeController {
   delete(ucEnv) {
     return JokeModel.delete(ucEnv.uri.getAwid(), ucEnv.parameters, ucEnv.session, ucEnv.getAuthorizationResult());
   }
+
+  list(ucEnv) {
+    return JokeModel.list(ucEnv.uri.getAwid(), ucEnv.parameters);
+  }
 }
 
 module.exports = new JokeController();

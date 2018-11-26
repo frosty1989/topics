@@ -226,10 +226,43 @@ const Delete = {
   }
 };
 
+const List = {
+  UC_CODE: `${JOKE_ERROR_PREFIX}list/`,
+  JokesInstanceDoesNotExist: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${List.UC_CODE}jokesInstanceDoesNotExist`;
+      this.message = "JokesInstance does not exist.";
+    }
+  },
+  JokesInstanceNotInProperState: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${List.UC_CODE}jokesInstanceNotInProperState`;
+      this.message = "JokesInstance is not in proper state [active|underConstruction].";
+    }
+  },
+  JokesInstanceIsUnderConstruction: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${List.UC_CODE}jokesInstanceIsUnderConstruction`;
+      this.message = "JokesInstance is in state underConstruction.";
+    }
+  },
+  InvalidDtoIn: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${List.UC_CODE}invalidDtoIn`;
+      this.message = "DtoIn is not valid.";
+    }
+  }
+};
+
 module.exports = {
   Create,
   Get,
   Update,
   UpdateVisibility,
   Delete,
+  List,
 };

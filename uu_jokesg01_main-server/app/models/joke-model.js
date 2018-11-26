@@ -42,7 +42,18 @@ const WARNINGS = {
     unsupportedKeys: {
       code: `${Errors.Delete.UC_CODE}unsupportedKeys`
     }
+  },
+  List: {
+    unsupportedKeys: {
+      code: `${Errors.List.UC_CODE}unsupportedKeys`
+    }
   }
+};
+const DEFAULTS = {
+  sortBy: "name",
+  order: "asc",
+  pageIndex: 0,
+  pageSize: 100
 };
 
 class JokeModel {
@@ -131,13 +142,7 @@ class JokeModel {
     );
     // A3
     if (jokesInstance.state === JokesInstanceModel.STATE_UNDER_CONSTRUCTION) {
-      throw new Errors.Get.JokesInstanceIsUnderConstruction(
-        {},
-        {
-          state: jokesInstance.state,
-          expectedStateList: [JokesInstanceModel.STATE_ACTIVE, JokesInstanceModel.STATE_UNDER_CONSTRUCTION]
-        }
-      );
+      throw new Errors.Get.JokesInstanceIsUnderConstruction({}, { state: jokesInstance.state });
     }
 
     // hds 2, 2.1
@@ -352,6 +357,53 @@ class JokeModel {
 
     // hds 8
     return { uuAppErrorMap };
+  }
+
+  async list(awid, dtoIn) {
+    // hds 1, A1, hds 1.1, A2
+    let jokesInstance = await this._checkInstance(
+      awid,
+      Errors.List.JokesInstanceDoesNotExist,
+      Errors.List.JokesInstanceNotInProperState
+    );
+    // A3
+    if (jokesInstance.state === JokesInstanceModel.STATE_UNDER_CONSTRUCTION) {
+      throw new Errors.List.JokesInstanceIsUnderConstruction({}, { state: jokesInstance.state });
+    }
+
+    // hds 2, 2.1
+    let validationResult = this.validator.validate("jokeListDtoInType", dtoIn);
+    // hds 2.2, 2.3, A4, A5
+    let uuAppErrorMap = ValidationHelper.processValidationResult(
+      dtoIn,
+      validationResult,
+      WARNINGS.List.unsupportedKeys.code,
+      Errors.List.InvalidDtoIn
+    );
+    // hds 2.4
+    if (!dtoIn.sortBy) dtoIn.sortBy = DEFAULTS.sortBy;
+    if (!dtoIn.order) dtoIn.order = DEFAULTS.order;
+    if (!dtoIn.pageInfo) {
+      dtoIn.pageInfo = {
+        pageSize: DEFAULTS.pageSize,
+        pageIndex: DEFAULTS.pageIndex
+      };
+    } else {
+      if (!dtoIn.pageInfo.pageSize) dtoIn.pageInfo.pageSize = DEFAULTS.pageSize;
+      if (!dtoIn.pageInfo.pageIndex) dtoIn.pageInfo.pageIndex = DEFAULTS.pageIndex;
+    }
+
+    // hds 3
+    let list;
+    if (dtoIn.categoryList) {
+      list = await this.dao.listByCategoryIdList(awid, dtoIn.categoryList, dtoIn.sortBy, dtoIn.order, dtoIn.pageInfo);
+    } else {
+      list = await this.dao.list(awid, dtoIn.sortBy, dtoIn.order, dtoIn.pageInfo);
+    }
+
+    // hds 4
+    list.uuAppErrorMap = uuAppErrorMap;
+    return list;
   }
 
   /**

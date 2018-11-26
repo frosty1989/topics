@@ -40,6 +40,11 @@
         "realization": "controllers/JokeController.delete",
         "httpMethod": "POST",
         "type": "CMD"
+      },
+      "joke/list": {
+        "realization": "controllers/JokeController.list",
+        "httpMethod": "GET",
+        "type": "CMD"
       }
     }
   }
