@@ -45,6 +45,11 @@
         "realization": "controllers/JokeController.list",
         "httpMethod": "GET",
         "type": "CMD"
+      },
+      "joke/addRating": {
+        "realization": "controllers/JokeController.addRating",
+        "httpMethod": "POST",
+        "type": "CMD"
       }
     }
   }

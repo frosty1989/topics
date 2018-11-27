@@ -1,6 +1,7 @@
 "use strict";
 
 const { UuObjectDao } = require("uu_appg01_server").ObjectStore;
+const { ObjectId } = require("bson");
 
 class JokeRatingMongo extends UuObjectDao {
   async createSchema() {
@@ -9,6 +10,7 @@ class JokeRatingMongo extends UuObjectDao {
   }
 
   async create(uuObject) {
+    uuObject.jokeId = new ObjectId(uuObject.jokeId);
     return await super.insertOne(uuObject);
   }
 

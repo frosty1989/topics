@@ -36,3 +36,8 @@ const jokeListDtoInType = shape({
     pageSize: integer()
   })
 });
+
+const jokeAddRatingDtoInType = shape({
+  id: id().isRequired(),
+  rating: integer(5).isRequired()
+});

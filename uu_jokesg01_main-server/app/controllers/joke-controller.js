@@ -26,6 +26,10 @@ class JokeController {
   list(ucEnv) {
     return JokeModel.list(ucEnv.uri.getAwid(), ucEnv.parameters);
   }
+
+  addRating(ucEnv) {
+    return JokeModel.addRating(ucEnv.uri.getAwid(), ucEnv.parameters, ucEnv.session);
+  }
 }
 
 module.exports = new JokeController();
