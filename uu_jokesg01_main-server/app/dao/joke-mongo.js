@@ -48,7 +48,15 @@ class JokeMongo extends UuObjectDao {
     let sort = {};
     sort[sortBy] = order === "asc" ? 1 : -1;
     return await super.find(
-      { awid, categoryList: { $in: categoryIdList.map(id => new ObjectId(id)) } },
+      {
+        awid,
+        categoryList: {
+          $in: categoryIdList.map(id => {
+            if (!ObjectId.isValid(id)) return id;
+            return new ObjectId(id);
+          })
+        }
+      },
       pageInfo,
       sort
     );

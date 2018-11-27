@@ -171,7 +171,10 @@ test("HDS - filter by category", async () => {
     ])`
   );
 
-  let response = await TestHelper.executeGetCommand(LIST, { categoryList: [MONGO_ID] });
+  // The second categoryId is a valid id - it will pass through the validation - but there is no category
+  // (obviously) with such id, so it won't influence the result. It will check the correct conversion
+  // from string to mongodb's objectID in some dao.
+  let response = await TestHelper.executeGetCommand(LIST, { categoryList: [MONGO_ID, `${MONGO_ID}12345678`] });
   expect(response.status).toEqual(200);
   let dtoOut = response.data;
   expect(dtoOut.pageInfo.total).toEqual(2);

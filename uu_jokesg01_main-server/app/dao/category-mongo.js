@@ -35,7 +35,15 @@ class CategoryMongo extends UuObjectDao {
   }
 
   async listByCategoryIdList(awid, categoryIdList, pageInfo) {
-    let query = { awid, _id: { $in: categoryIdList.map(id => new ObjectId(id)) } };
+    let query = {
+      awid,
+      _id: {
+        $in: categoryIdList.map(id => {
+          if (!ObjectId.isValid(id)) return id;
+          return new ObjectId(id);
+        })
+      }
+    };
     return await super.find(query, pageInfo);
   }
 }
