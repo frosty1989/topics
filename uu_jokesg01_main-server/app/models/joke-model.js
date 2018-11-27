@@ -10,48 +10,34 @@ const Errors = require("../errors/joke-error");
 const Path = require("path");
 
 const WARNINGS = {
-  Create: {
-    unsupportedKeys: {
-      code: `${Errors.Create.UC_CODE}unsupportedKeys`
-    },
-    categoryDoesNotExist: {
-      code: `${Errors.Create.UC_CODE}categoryDoesNotExist`,
-      message: "One or more categories with given categoryId do not exist."
-    }
+  createUnsupportedKeys: {
+    code: `${Errors.Create.UC_CODE}unsupportedKeys`
   },
-  Get: {
-    unsupportedKeys: {
-      code: `${Errors.Get.UC_CODE}unsupportedKeys`
-    }
+  createCategoryDoesNotExist: {
+    code: `${Errors.Create.UC_CODE}categoryDoesNotExist`,
+    message: "One or more categories with given categoryId do not exist."
   },
-  Update: {
-    unsupportedKeys: {
-      code: `${Errors.Update.UC_CODE}unsupportedKeys`
-    },
-    categoryDoesNotExist: {
-      code: `${Errors.Update.UC_CODE}categoryDoesNotExist`,
-      message: "One or more categories with given categoryId do not exist."
-    }
+  getUnsupportedKeys: {
+    code: `${Errors.Get.UC_CODE}unsupportedKeys`
   },
-  UpdateVisibility: {
-    unsupportedKeys: {
-      code: `${Errors.UpdateVisibility.UC_CODE}unsupportedKeys`
-    }
+  updateUnsupportedKeys: {
+    code: `${Errors.Update.UC_CODE}unsupportedKeys`
   },
-  Delete: {
-    unsupportedKeys: {
-      code: `${Errors.Delete.UC_CODE}unsupportedKeys`
-    }
+  updateCategoryDoesNotExist: {
+    code: `${Errors.Update.UC_CODE}categoryDoesNotExist`,
+    message: "One or more categories with given categoryId do not exist."
   },
-  List: {
-    unsupportedKeys: {
-      code: `${Errors.List.UC_CODE}unsupportedKeys`
-    }
+  updateVisibilityUnsupportedKeys: {
+    code: `${Errors.UpdateVisibility.UC_CODE}unsupportedKeys`
   },
-  AddRating: {
-    unsupportedKeys: {
-      code: `${Errors.AddRating.UC_CODE}unsupportedKeys`
-    }
+  deleteUnsupportedKeys: {
+    code: `${Errors.Delete.UC_CODE}unsupportedKeys`
+  },
+  listUnsupportedKeys: {
+    code: `${Errors.List.UC_CODE}unsupportedKeys`
+  },
+  addRatingUnsupportedKeys: {
+    code: `${Errors.AddRating.UC_CODE}unsupportedKeys`
   }
 };
 const DEFAULTS = {
@@ -84,7 +70,7 @@ class JokeModel {
     let uuAppErrorMap = ValidationHelper.processValidationResult(
       dtoIn,
       validationResult,
-      WARNINGS.Create.unsupportedKeys.code,
+      WARNINGS.createUnsupportedKeys.code,
       Errors.Create.InvalidDtoIn
     );
     // hds 2.4
@@ -113,8 +99,8 @@ class JokeModel {
       if (dtoIn.categoryList.length > 0) {
         ValidationHelper.addWarning(
           uuAppErrorMap,
-          WARNINGS.Create.categoryDoesNotExist.code,
-          WARNINGS.Create.categoryDoesNotExist.message,
+          WARNINGS.createCategoryDoesNotExist.code,
+          WARNINGS.createCategoryDoesNotExist.message,
           { categoryList: [...new Set(dtoIn.categoryList)] }
         );
       }
@@ -156,7 +142,7 @@ class JokeModel {
     let uuAppErrorMap = ValidationHelper.processValidationResult(
       dtoIn,
       validationResult,
-      WARNINGS.Get.unsupportedKeys.code,
+      WARNINGS.getUnsupportedKeys.code,
       Errors.Get.InvalidDtoIn
     );
 
@@ -186,7 +172,7 @@ class JokeModel {
     let uuAppErrorMap = ValidationHelper.processValidationResult(
       dtoIn,
       validationResult,
-      WARNINGS.Update.unsupportedKeys.code,
+      WARNINGS.updateUnsupportedKeys.code,
       Errors.Update.InvalidDtoIn
     );
 
@@ -214,8 +200,8 @@ class JokeModel {
       if (dtoIn.categoryList.length > 0) {
         ValidationHelper.addWarning(
           uuAppErrorMap,
-          WARNINGS.Update.categoryDoesNotExist.code,
-          WARNINGS.Update.categoryDoesNotExist.message,
+          WARNINGS.updateCategoryDoesNotExist.code,
+          WARNINGS.updateCategoryDoesNotExist.message,
           { categoryList: [...new Set(dtoIn.categoryList)] }
         );
       }
@@ -280,7 +266,7 @@ class JokeModel {
     let uuAppErrorMap = ValidationHelper.processValidationResult(
       dtoIn,
       validationResult,
-      WARNINGS.UpdateVisibility.unsupportedKeys.code,
+      WARNINGS.updateVisibilityUnsupportedKeys.code,
       Errors.UpdateVisibility.InvalidDtoIn
     );
 
@@ -315,7 +301,7 @@ class JokeModel {
     let uuAppErrorMap = ValidationHelper.processValidationResult(
       dtoIn,
       validationResult,
-      WARNINGS.Delete.unsupportedKeys.code,
+      WARNINGS.deleteUnsupportedKeys.code,
       Errors.Delete.InvalidDtoIn
     );
 
@@ -380,7 +366,7 @@ class JokeModel {
     let uuAppErrorMap = ValidationHelper.processValidationResult(
       dtoIn,
       validationResult,
-      WARNINGS.List.unsupportedKeys.code,
+      WARNINGS.listUnsupportedKeys.code,
       Errors.List.InvalidDtoIn
     );
     // hds 2.4
@@ -423,7 +409,7 @@ class JokeModel {
     let uuAppErrorMap = ValidationHelper.processValidationResult(
       dtoIn,
       validationResult,
-      WARNINGS.AddRating.unsupportedKeys.code,
+      WARNINGS.addRatingUnsupportedKeys.code,
       Errors.AddRating.InvalidDtoIn
     );
 
