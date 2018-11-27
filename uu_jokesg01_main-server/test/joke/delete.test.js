@@ -215,12 +215,9 @@ function mockModels() {
 
   const JokeModel = require("../../app/models/joke-model");
   const { UuBinaryModel } = require("uu_appg01_binarystore-cmd");
+  const JokesInstanceModel = require("../../app/models/jokes-instance-model");
 
-  JokeModel.jokesInstanceDao = {
-    getByAwid: () => {
-      return {};
-    }
-  };
+  JokesInstanceModel.checkInstance = () => null;
 
   return { JokeModel, UuBinaryModel };
 }

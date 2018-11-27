@@ -94,11 +94,9 @@ test("A5 - the update in db fails", async () => {
   });
 
   const JokeModel = require("../../app/models/joke-model");
-  JokeModel.jokesInstanceDao = {
-    getByAwid: () => {
-      return {};
-    }
-  };
+  const JokesInstanceModel = require("../../app/models/jokes-instance-model");
+
+  JokesInstanceModel.checkInstance = () => null;
   JokeModel.dao = {
     updateVisibility: () => {
       throw new ObjectStoreError("it failed");

@@ -220,12 +220,9 @@ function mockModels() {
   });
 
   const JokeModel = require("../../app/models/joke-model");
+  const JokesInstanceModel = require("../../app/models/jokes-instance-model");
 
-  JokeModel.jokesInstanceDao = {
-    getByAwid: () => {
-      return {};
-    }
-  };
+  JokesInstanceModel.checkInstance = () => null;
   JokeModel.dao.get = () => {
     return { id: 1, uuIdentity: 2 };
   };

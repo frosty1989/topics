@@ -194,6 +194,30 @@ class JokesInstanceModel {
     jokeInstance.uuAppErrorMap = uuAppErrorMap;
     return jokeInstance;
   }
+
+  /**
+   * Checks whether jokes instance exists and that it is not in closed state.
+   * @param {String} awid Used awid
+   * @param {Error} notExistError Error thrown when jokes instance does not exist
+   * @param {Error} closedStateError Error thrown when jokes instance is in closed state
+   * @returns {Promise<{}>} jokes instance
+   */
+  async checkInstance(awid, notExistError, closedStateError) {
+    let jokesInstance = await this.dao.getByAwid(awid);
+    if (!jokesInstance) {
+      throw new notExistError({});
+    }
+    if (jokesInstance.state === STATE_CLOSED) {
+      throw new closedStateError(
+        {},
+        {
+          state: jokesInstance.state,
+          expectedStateList: [STATE_ACTIVE, STATE_UNDER_CONSTRUCTION]
+        }
+      );
+    }
+    return jokesInstance;
+  }
 }
 
 module.exports = new JokesInstanceModel();

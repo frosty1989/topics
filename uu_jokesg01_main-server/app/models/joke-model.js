@@ -58,7 +58,7 @@ class JokeModel {
 
   async create(awid, dtoIn, session, authorizationResult) {
     // hds 1, A1, hds 1.1, A2
-    await this._checkInstance(
+    await JokesInstanceModel.checkInstance(
       awid,
       Errors.Create.JokesInstanceDoesNotExist,
       Errors.Create.JokesInstanceNotInProperState
@@ -126,7 +126,7 @@ class JokeModel {
 
   async get(awid, dtoIn) {
     // hds 1, A1, hds 1.1, A2
-    let jokesInstance = await this._checkInstance(
+    let jokesInstance = await JokesInstanceModel.checkInstance(
       awid,
       Errors.Get.JokesInstanceDoesNotExist,
       Errors.Get.JokesInstanceNotInProperState
@@ -160,7 +160,7 @@ class JokeModel {
 
   async update(awid, dtoIn, session, authorizationResult) {
     // hds 1, A1, hds 1.1, A2
-    await this._checkInstance(
+    await JokesInstanceModel.checkInstance(
       awid,
       Errors.Update.JokesInstanceDoesNotExist,
       Errors.Update.JokesInstanceNotInProperState
@@ -254,7 +254,7 @@ class JokeModel {
 
   async updateVisibility(awid, dtoIn) {
     // hds 1, A1, hds 1.1, A2
-    await this._checkInstance(
+    await JokesInstanceModel.checkInstance(
       awid,
       Errors.UpdateVisibility.JokesInstanceDoesNotExist,
       Errors.UpdateVisibility.JokesInstanceNotInProperState
@@ -289,7 +289,7 @@ class JokeModel {
 
   async delete(awid, dtoIn, session, authorizationResult) {
     // hds 1, A1, hds 1.1, A2
-    await this._checkInstance(
+    await JokesInstanceModel.checkInstance(
       awid,
       Errors.Delete.JokesInstanceDoesNotExist,
       Errors.Delete.JokesInstanceNotInProperState
@@ -350,7 +350,7 @@ class JokeModel {
 
   async list(awid, dtoIn) {
     // hds 1, A1, hds 1.1, A2
-    let jokesInstance = await this._checkInstance(
+    let jokesInstance = await JokesInstanceModel.checkInstance(
       awid,
       Errors.List.JokesInstanceDoesNotExist,
       Errors.List.JokesInstanceNotInProperState
@@ -397,7 +397,7 @@ class JokeModel {
 
   async addRating(awid, dtoIn, session) {
     // hds 1, A1, hds 1.1, A2
-    await this._checkInstance(
+    await JokesInstanceModel.checkInstance(
       awid,
       Errors.AddRating.JokesInstanceDoesNotExist,
       Errors.AddRating.JokesInstanceNotInProperState
@@ -481,30 +481,6 @@ class JokeModel {
     // hds 9
     joke.uuAppErrorMap = uuAppErrorMap;
     return joke;
-  }
-
-  /**
-   * Checks whether jokes instance exists and that it is not in closed state.
-   * @param {String} awid Used awid
-   * @param {Error} notExistError Error thrown when jokes instance does not exist
-   * @param {Error} closedStateError Error thrown when jokes instance is in closed state
-   * @returns {Promise<{}>} jokes instance
-   */
-  async _checkInstance(awid, notExistError, closedStateError) {
-    let jokesInstance = await this.jokesInstanceDao.getByAwid(awid);
-    if (!jokesInstance) {
-      throw new notExistError({});
-    }
-    if (jokesInstance.state === JokesInstanceModel.STATE_CLOSED) {
-      throw new closedStateError(
-        {},
-        {
-          state: jokesInstance.state,
-          expectedStateList: [JokesInstanceModel.STATE_ACTIVE, JokesInstanceModel.STATE_UNDER_CONSTRUCTION]
-        }
-      );
-    }
-    return jokesInstance;
   }
 
   /**
