@@ -2,6 +2,7 @@
 
 const { UuObjectDao } = require("uu_appg01_server").ObjectStore;
 const { ObjectId } = require("bson");
+const { DbConnection } = require("uu_appg01_datastore");
 
 class JokeMongo extends UuObjectDao {
   async createSchema() {
@@ -18,7 +19,10 @@ class JokeMongo extends UuObjectDao {
   }
 
   async getCountByCategoryId(awid, categoryId) {
-    return await super.count({ awid, categoryList: categoryId });
+    return await super.count({
+      awid,
+      categoryList: ObjectId.isValid(categoryId) ? new ObjectId(categoryId) : categoryId
+    });
   }
 
   async update(uuObject) {
@@ -31,7 +35,13 @@ class JokeMongo extends UuObjectDao {
   }
 
   async removeCategory(awid, categoryId) {
-    await this.db.collection(this.collectionName).updateMany({ awid }, { $pull: { categoryList: categoryId } });
+    let db = await DbConnection.get(this.customUri);
+    await db
+      .collection(this.collectionName)
+      .updateMany(
+        { awid },
+        { $pull: { categoryList: ObjectId.isValid(categoryId) ? new ObjectId(categoryId) : categoryId } }
+      );
   }
 
   async delete(awid, id) {

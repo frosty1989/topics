@@ -14,6 +14,10 @@ class CategoryController {
   static update(ucEnv) {
     return CategoryModel.update(ucEnv.uri.getAwid(), ucEnv.parameters);
   }
+
+  static delete(ucEnv) {
+    return CategoryModel.delete(ucEnv.uri.getAwid(), ucEnv.parameters);
+  }
 }
 
 module.exports = CategoryController;

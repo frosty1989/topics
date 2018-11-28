@@ -1,5 +1,4 @@
 const { TestHelper } = require("uu_appg01_workspace-test");
-const { DaoFactory, ObjectStoreError } = require("uu_appg01_server").ObjectStore;
 
 const INIT = "jokesInstance/init";
 const CREATE = "category/create";

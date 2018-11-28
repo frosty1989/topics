@@ -120,8 +120,55 @@ const Update = {
   }
 };
 
+const Delete = {
+  UC_CODE: `${CATEGORY_ERROR_PREFIX}delete/`,
+  JokesInstanceDoesNotExist: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${Delete.UC_CODE}jokesInstanceDoesNotExist`;
+      this.message = "JokesInstance does not exist.";
+    }
+  },
+  JokesInstanceNotInProperState: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${Delete.UC_CODE}jokesInstanceNotInProperState`;
+      this.message = "JokesInstance is not in proper state [active|underConstruction].";
+    }
+  },
+  InvalidDtoIn: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${Delete.UC_CODE}invalidDtoIn`;
+      this.message = "DtoIn is not valid.";
+    }
+  },
+  JokeDaoGetCountByCategoryFailed: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${Delete.UC_CODE}jokeDaoGetCountByCategoryFailed`;
+      this.message = "Get count by joke Dao getCountByCategory failed.";
+    }
+  },
+  RelatedJokesExist: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${Delete.UC_CODE}relatedJokesExist`;
+      this.message = "Category contains jokes.";
+    }
+  },
+  JokeDaoRemoveCategoryFailed: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${Delete.UC_CODE}jokeDaoRemoveCategoryFailed`;
+      this.message = "Removing category by joke Dao removeCategory failed.";
+    }
+  }
+};
+
 module.exports = {
   Create,
   Get,
   Update,
+  Delete,
 };

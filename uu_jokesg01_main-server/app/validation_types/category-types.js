@@ -14,3 +14,8 @@ const categoryUpdateDtoInType = shape({
   name: uu5String(255),
   icon: string(40)
 });
+
+const categoryDeleteDtoInType = shape({
+  id: id().isRequired(),
+  forceDelete: boolean()
+});

@@ -61,8 +61,13 @@
         "httpMethod": "GET",
         "type": "CMD"
       },
-      "category/update" : {
+      "category/update": {
         "realization": "controllers/CategoryController.update",
+        "httpMethod": "POST",
+        "type": "CMD"
+      },
+      "category/delete": {
+        "realization": "controllers/CategoryController.delete",
         "httpMethod": "POST",
         "type": "CMD"
       }
