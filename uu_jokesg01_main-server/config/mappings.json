@@ -55,6 +55,11 @@
         "realization": "controllers/CategoryController.create",
         "httpMethod": "POST",
         "type": "CMD"
+      },
+      "category/get": {
+        "realization": "controllers/CategoryController.get",
+        "httpMethod": "GET",
+        "type": "CMD"
       }
     }
   }

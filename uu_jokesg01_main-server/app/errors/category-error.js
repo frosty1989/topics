@@ -42,6 +42,46 @@ const Create = {
   }
 };
 
+const Get = {
+  UC_CODE: `${CATEGORY_ERROR_PREFIX}get/`,
+  JokesInstanceDoesNotExist: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${Get.UC_CODE}jokesInstanceDoesNotExist`;
+      this.message = "JokesInstance does not exist.";
+    }
+  },
+  JokesInstanceNotInProperState: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${Get.UC_CODE}jokesInstanceNotInProperState`;
+      this.message = "JokesInstance is not in proper state [active|underConstruction].";
+    }
+  },
+  JokesInstanceIsUnderConstruction: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${Get.UC_CODE}jokesInstanceIsUnderConstruction`;
+      this.message = "JokesInstance is in state underConstruction.";
+    }
+  },
+  InvalidDtoIn: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${Get.UC_CODE}invalidDtoIn`;
+      this.message = "DtoIn is not valid.";
+    }
+  },
+  CategoryDoesNotExist: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${Get.UC_CODE}categoryDoesNotExist`;
+      this.message = "Category does not exist.";
+    }
+  }
+};
+
 module.exports = {
   Create,
+  Get,
 };

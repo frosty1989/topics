@@ -10,6 +10,9 @@ const Path = require("path");
 const WARNINGS = {
   createUnsupportedKeys: {
     code: `${Errors.Create.UC_CODE}unsupportedKeys`
+  },
+  getUnsupportedKeys: {
+    code: `${Errors.Get.UC_CODE}unsupportedKeys`
   }
 };
 const DEFAULT_ICON = "mdi-label";
@@ -55,6 +58,48 @@ class CategoryModel {
         throw new Errors.Create.CategoryDaoCreateFailed({ uuAppErrorMap }, e);
       }
       throw e;
+    }
+
+    // hds 4
+    category.uuAppErrorMap = uuAppErrorMap;
+    return category;
+  }
+
+  async get(awid, dtoIn) {
+    // hds 1, A1, hds 1.1, A2
+    let jokesInstance = await JokesInstanceModel.checkInstance(
+      awid,
+      Errors.Get.JokesInstanceDoesNotExist,
+      Errors.Get.JokesInstanceNotInProperState
+    );
+    // A3
+    if (jokesInstance.state === JokesInstanceModel.STATE_UNDER_CONSTRUCTION) {
+      throw new Errors.Get.JokesInstanceIsUnderConstruction({}, { state: jokesInstance.state });
+    }
+
+    // hds 2, 2.1
+    let validationResult = this.validator.validate("categoryGetDtoInType", dtoIn);
+    // hds 2.2, 2.3, A4, A5
+    let uuAppErrorMap = ValidationHelper.processValidationResult(
+      dtoIn,
+      validationResult,
+      WARNINGS.getUnsupportedKeys.code,
+      Errors.Get.InvalidDtoIn
+    );
+
+    // hds 3
+    let category;
+    if (dtoIn.id) {
+      category = await this.dao.get(awid, dtoIn.id);
+    } else {
+      category = await this.dao.getByName(awid, dtoIn.name);
+    }
+    // A6
+    if (!category) {
+      let paramMap = {};
+      if (dtoIn.id) paramMap.categoryId = dtoIn.id;
+      if (dtoIn.name) paramMap.categoryName = dtoIn.name;
+      throw new Errors.Get.CategoryDoesNotExist({ uuAppErrorMap }, paramMap);
     }
 
     // hds 4
