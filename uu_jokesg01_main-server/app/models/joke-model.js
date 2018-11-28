@@ -51,7 +51,6 @@ class JokeModel {
   constructor() {
     this.validator = new Validator(Path.join(__dirname, "..", "validation_types", "joke-types.js"));
     this.dao = DaoFactory.getDao("joke");
-    this.jokesInstanceDao = DaoFactory.getDao("jokesInstance");
     this.categoryDao = DaoFactory.getDao("category");
     this.jokeRatingDao = DaoFactory.getDao("jokeRating");
   }

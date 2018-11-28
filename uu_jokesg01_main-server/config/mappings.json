@@ -50,6 +50,11 @@
         "realization": "controllers/JokeController.addRating",
         "httpMethod": "POST",
         "type": "CMD"
+      },
+      "category/create": {
+        "realization": "controllers/CategoryController.create",
+        "httpMethod": "POST",
+        "type": "CMD"
       }
     }
   }
