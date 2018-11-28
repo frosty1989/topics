@@ -81,7 +81,47 @@ const Get = {
   }
 };
 
+const Update = {
+  UC_CODE: `${CATEGORY_ERROR_PREFIX}update/`,
+  JokesInstanceDoesNotExist: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${Update.UC_CODE}jokesInstanceDoesNotExist`;
+      this.message = "JokesInstance does not exist.";
+    }
+  },
+  JokesInstanceNotInProperState: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${Update.UC_CODE}jokesInstanceNotInProperState`;
+      this.message = "JokesInstance is not in proper state [active|underConstruction].";
+    }
+  },
+  InvalidDtoIn: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${Update.UC_CODE}invalidDtoIn`;
+      this.message = "DtoIn is not valid.";
+    }
+  },
+  CategoryNameNotUnique: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${Update.UC_CODE}categoryNameNotUnique`;
+      this.message = "Category name is not unique in awid.";
+    }
+  },
+  CategoryDaoUpdateFailed: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${Update.UC_CODE}categoryDaoUpateFailed`;
+      this.message = "Update category by category Dao update failed.";
+    }
+  }
+};
+
 module.exports = {
   Create,
   Get,
+  Update,
 };

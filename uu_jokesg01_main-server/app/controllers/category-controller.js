@@ -3,13 +3,17 @@
 const CategoryModel = require("../models/category-model.js");
 
 class CategoryController {
-  create(ucEnv) {
+  static create(ucEnv) {
     return CategoryModel.create(ucEnv.uri.getAwid(), ucEnv.parameters);
   }
 
-  get(ucEnv) {
+  static get(ucEnv) {
     return CategoryModel.get(ucEnv.uri.getAwid(), ucEnv.parameters);
+  }
+
+  static update(ucEnv) {
+    return CategoryModel.update(ucEnv.uri.getAwid(), ucEnv.parameters);
   }
 }
 
-module.exports = new CategoryController();
+module.exports = CategoryController;

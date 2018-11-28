@@ -13,6 +13,9 @@ const WARNINGS = {
   },
   getUnsupportedKeys: {
     code: `${Errors.Get.UC_CODE}unsupportedKeys`
+  },
+  updateUnsupportedKeys: {
+    code: `${Errors.Update.UC_CODE}unsupportedKeys`
   }
 };
 const DEFAULT_ICON = "mdi-label";
@@ -100,6 +103,46 @@ class CategoryModel {
       if (dtoIn.id) paramMap.categoryId = dtoIn.id;
       if (dtoIn.name) paramMap.categoryName = dtoIn.name;
       throw new Errors.Get.CategoryDoesNotExist({ uuAppErrorMap }, paramMap);
+    }
+
+    // hds 4
+    category.uuAppErrorMap = uuAppErrorMap;
+    return category;
+  }
+
+  async update(awid, dtoIn) {
+    // hds 1, A1, hds 1.1, A2
+    await JokesInstanceModel.checkInstance(
+      awid,
+      Errors.Update.JokesInstanceDoesNotExist,
+      Errors.Update.JokesInstanceNotInProperState
+    );
+
+    // hds 2, 2.1
+    let validationResult = this.validator.validate("categoryUpdateDtoInType", dtoIn);
+    // hds 2.2, 2.3, A3, A4
+    let uuAppErrorMap = ValidationHelper.processValidationResult(
+      dtoIn,
+      validationResult,
+      WARNINGS.updateUnsupportedKeys.code,
+      Errors.Update.InvalidDtoIn
+    );
+
+    // hds 3
+    let category;
+    dtoIn.awid = awid;
+    try {
+      category = await this.dao.update(dtoIn);
+    } catch (e) {
+      if (e instanceof DuplicateKey) {
+        // A5
+        throw new Errors.Update.CategoryNameNotUnique({ uuAppErrorMap }, { categoryName: dtoIn.name });
+      }
+      if (e instanceof ObjectStoreError) {
+        // A6
+        throw new Errors.Update.CategoryDaoUpdateFailed({ uuAppErrorMap }, e);
+      }
+      throw e;
     }
 
     // hds 4

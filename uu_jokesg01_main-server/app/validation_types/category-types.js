@@ -8,3 +8,9 @@ const categoryGetDtoInType = shape({
   id: id().isRequired("name"),
   name: uu5String(255).isRequired("id")
 });
+
+const categoryUpdateDtoInType = shape({
+  id: id().isRequired(),
+  name: uu5String(255),
+  icon: string(40)
+});

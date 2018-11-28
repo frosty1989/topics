@@ -60,6 +60,11 @@
         "realization": "controllers/CategoryController.get",
         "httpMethod": "GET",
         "type": "CMD"
+      },
+      "category/update" : {
+        "realization": "controllers/CategoryController.update",
+        "httpMethod": "POST",
+        "type": "CMD"
       }
     }
   }
