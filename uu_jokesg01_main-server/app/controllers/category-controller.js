@@ -18,6 +18,10 @@ class CategoryController {
   static delete(ucEnv) {
     return CategoryModel.delete(ucEnv.uri.getAwid(), ucEnv.parameters);
   }
+
+  static list(ucEnv) {
+    return CategoryModel.list(ucEnv.uri.getAwid(), ucEnv.parameters);
+  }
 }
 
 module.exports = CategoryController;

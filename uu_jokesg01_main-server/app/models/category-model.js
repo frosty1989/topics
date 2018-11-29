@@ -19,9 +19,16 @@ const WARNINGS = {
   },
   deleteUnsupportedKeys: {
     code: `${Errors.Delete.UC_CODE}unsupportedKeys`
+  },
+  listUnsupportedKeys: {
+    code: `${Errors.List.UC_CODE}unsupportedKeys`
   }
 };
 const DEFAULT_ICON = "mdi-label";
+const DEFAULTS = {
+  pageIndex: 0,
+  pageSize: 100
+};
 
 class CategoryModel {
   constructor() {
@@ -207,6 +214,47 @@ class CategoryModel {
 
     // hds 5
     return { uuAppErrorMap };
+  }
+
+  async list(awid, dtoIn) {
+    // hds 1, A1, hds 1.1, A2
+    let jokesInstance = await JokesInstanceModel.checkInstance(
+      awid,
+      Errors.List.JokesInstanceDoesNotExist,
+      Errors.List.JokesInstanceNotInProperState
+    );
+    // A3
+    if (jokesInstance.state === JokesInstanceModel.STATE_UNDER_CONSTRUCTION) {
+      throw new Errors.List.JokesInstanceIsUnderConstruction({}, { state: jokesInstance.state });
+    }
+
+    // hds 2, 2.1
+    let validationResult = this.validator.validate("categoryListDtoInType", dtoIn);
+    // hds 2.2, 2.3, A4, A5
+    let uuAppErrorMap = ValidationHelper.processValidationResult(
+      dtoIn,
+      validationResult,
+      WARNINGS.listUnsupportedKeys.code,
+      Errors.List.InvalidDtoIn
+    );
+
+    // defaults (potentially hds 2.4 in the future)
+    if (!dtoIn.pageInfo) {
+      dtoIn.pageInfo = {
+        pageSize: DEFAULTS.pageSize,
+        pageIndex: DEFAULTS.pageIndex
+      };
+    } else {
+      if (!dtoIn.pageInfo.pageSize) dtoIn.pageInfo.pageSize = DEFAULTS.pageSize;
+      if (!dtoIn.pageInfo.pageIndex) dtoIn.pageInfo.pageIndex = DEFAULTS.pageIndex;
+    }
+
+    // hds 3
+    let list = await this.dao.list(awid, dtoIn.pageInfo);
+
+    // hds 4
+    list.uuAppErrorMap = uuAppErrorMap;
+    return list;
   }
 }
 

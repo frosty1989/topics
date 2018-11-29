@@ -19,3 +19,11 @@ const categoryDeleteDtoInType = shape({
   id: id().isRequired(),
   forceDelete: boolean()
 });
+
+const categoryListDtoInType = shape({
+  order: oneOf(["asc", "desc"]),
+  pageInfo: shape({
+    pageIndex: integer(),
+    pageSize: integer()
+  })
+});
