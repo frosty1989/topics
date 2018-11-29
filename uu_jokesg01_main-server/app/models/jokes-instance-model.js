@@ -184,6 +184,7 @@ class JokesInstanceModel {
       jokeInstance = await this.dao.update(dtoIn);
     } catch (e) {
       if (e instanceof ObjectStoreError) {
+        // A6
         throw new Errors.Update.JokesInstanceDaoUpdateByAwidFailed({ uuAppErrorMap }, e);
       }
       throw e;

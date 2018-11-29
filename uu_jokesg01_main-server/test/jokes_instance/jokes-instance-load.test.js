@@ -1,6 +1,5 @@
 const { TestHelper } = require("uu_appg01_workspace-test");
-const LOAD = "jokesInstance/load";
-const INIT = "jokesInstance/init";
+const { JOKES_INSTANCE_INIT, JOKES_INSTANCE_LOAD } = require("../general-test-hepler");
 
 beforeAll(async () => {
   await TestHelper.setup();
@@ -18,9 +17,9 @@ beforeEach(async () => {
 });
 
 test("HDS", async () => {
-  await TestHelper.executePostCommand(INIT, { uuAppProfileAuthorities: "paprika" });
+  await TestHelper.executePostCommand(JOKES_INSTANCE_INIT, { uuAppProfileAuthorities: "." });
   await TestHelper.login("Authority");
-  let result = await TestHelper.executePostCommand(LOAD);
+  let result = await TestHelper.executePostCommand(JOKES_INSTANCE_LOAD);
   expect(result.status).toBe(200);
   let dtoOut = result;
   expect(dtoOut.state).toEqual("underConstruction");
@@ -30,11 +29,11 @@ test("HDS", async () => {
   expect(dtoOut.authorizedProfileList).toEqual(["Authorities"]);
 });
 
-test("A1 - loading non existent jokes instance", async () => {
+test("A1 - JOKES_INSTANCE_LOADing non existent jokes instance", async () => {
   expect.assertions(2);
   await TestHelper.login("Authority");
   try {
-    await TestHelper.executePostCommand(LOAD);
+    await TestHelper.executePostCommand(JOKES_INSTANCE_LOAD);
   } catch (e) {
     expect(e.code).toEqual("uu-jokes-main/jokesInstance/load/jokesInstanceDoesNotExist");
     expect(e.message).toEqual("JokesInstance does not exist.");
@@ -43,10 +42,10 @@ test("A1 - loading non existent jokes instance", async () => {
 
 test("A2 - closed jokes instance", async () => {
   expect.assertions(4);
-  await TestHelper.executePostCommand(INIT, { uuAppProfileAuthorities: "paprika", state: "closed" });
+  await TestHelper.executePostCommand(JOKES_INSTANCE_INIT, { uuAppProfileAuthorities: ".", state: "closed" });
   await TestHelper.login("Authority");
   try {
-    await TestHelper.executePostCommand(LOAD);
+    await TestHelper.executePostCommand(JOKES_INSTANCE_LOAD);
   } catch (e) {
     expect(e.code).toEqual("uu-jokes-main/jokesInstance/load/jokesInstanceNotInProperState");
     expect(e.message).toEqual("JokesInstance is not in proper state [active|underConstruction].");
@@ -57,10 +56,13 @@ test("A2 - closed jokes instance", async () => {
 
 test("A3 - jokes instance is under construction and caller is a Reader", async () => {
   expect.assertions(3);
-  await TestHelper.executePostCommand(INIT, { uuAppProfileAuthorities: "paprika", state: "underConstruction" });
+  await TestHelper.executePostCommand(JOKES_INSTANCE_INIT, {
+    uuAppProfileAuthorities: ".",
+    state: "underConstruction"
+  });
   await TestHelper.login("Reader");
   try {
-    await TestHelper.executePostCommand(LOAD);
+    await TestHelper.executePostCommand(JOKES_INSTANCE_LOAD);
   } catch (e) {
     expect(e.code).toEqual("uu-jokes-main/jokesInstance/load/jokesInstanceIsUnderConstruction");
     expect(e.message).toEqual("JokesInstance is in state underConstruction.");

@@ -1,9 +1,6 @@
 const { TestHelper } = require("uu_appg01_workspace-test");
-const path = require("path");
-const fs = require("fs");
-const { DaoFactory, ObjectStoreError } = require("uu_appg01_server").ObjectStore;
-
-const USE_CASE = "jokesInstance/init";
+const { ObjectStoreError } = require("uu_appg01_server").ObjectStore;
+const { JOKES_INSTANCE_INIT, getImageStream, mockDaoFactory } = require("../general-test-hepler");
 
 beforeAll(async () => {
   await TestHelper.setup(null, { authEnabled: false });
@@ -25,7 +22,7 @@ afterEach(() => {
 
 test("HDS with minimal dtoIn and without logo", async () => {
   let roleUri = "kedluben"; //almost any string can pass as uri
-  let result = await TestHelper.executePostCommand(USE_CASE, { uuAppProfileAuthorities: roleUri });
+  let result = await TestHelper.executePostCommand(JOKES_INSTANCE_INIT, { uuAppProfileAuthorities: roleUri });
   expect(result.status).toBe(200);
   let dtoOut = result;
   expect(dtoOut.state).toEqual("underConstruction");
@@ -40,9 +37,9 @@ test("HDS with minimal dtoIn and without logo", async () => {
 test("HDS with minimal dtoIn and logo", async () => {
   let dtoIn = {
     uuAppProfileAuthorities: "kombajn",
-    logo: fs.createReadStream(path.resolve(__dirname, "..", "logo.png"))
+    logo: getImageStream()
   };
-  let result = await TestHelper.executePostCommand(USE_CASE, dtoIn);
+  let result = await TestHelper.executePostCommand(JOKES_INSTANCE_INIT, dtoIn);
   expect(result.status).toBe(200);
   let dtoOut = result;
   expect(dtoOut.state).toEqual("underConstruction");
@@ -62,7 +59,7 @@ test("HDS with more complete dtoIn", async () => {
     name,
     state
   };
-  let result = await TestHelper.executePostCommand(USE_CASE, dtoIn);
+  let result = await TestHelper.executePostCommand(JOKES_INSTANCE_INIT, dtoIn);
   expect(result.status).toBe(200);
   let dtoOut = result;
   expect(dtoOut.state).toEqual(state);
@@ -73,11 +70,11 @@ test("HDS with more complete dtoIn", async () => {
 test("A1 - jokesInstance already exists", async () => {
   expect.assertions(3);
   let dtoIn = { uuAppProfileAuthorities: "mrkev" };
-  let result = await TestHelper.executePostCommand(USE_CASE, dtoIn);
+  let result = await TestHelper.executePostCommand(JOKES_INSTANCE_INIT, dtoIn);
   expect(result.status).toBe(200);
 
   try {
-    await TestHelper.executePostCommand(USE_CASE, dtoIn);
+    await TestHelper.executePostCommand(JOKES_INSTANCE_INIT, dtoIn);
   } catch (e) {
     expect(e.code).toEqual("uu-jokes-main/jokesInstance/init/jokesInstanceAlreadyInitialized");
     expect(e.message).toEqual("JokesInstance is already initialized.");
@@ -86,7 +83,7 @@ test("A1 - jokesInstance already exists", async () => {
 
 test("A2 - unsupported keys", async () => {
   let dtoIn = { uuAppProfileAuthorities: "mrkev", something: "something more" };
-  let result = await TestHelper.executePostCommand(USE_CASE, dtoIn);
+  let result = await TestHelper.executePostCommand(JOKES_INSTANCE_INIT, dtoIn);
   expect(result.status).toBe(200);
 
   let errorMap = result.uuAppErrorMap;
@@ -100,7 +97,7 @@ test("A2 - unsupported keys", async () => {
 test("A3 - invalid dtoIn", async () => {
   expect.assertions(2);
   try {
-    await TestHelper.executePostCommand(USE_CASE, {});
+    await TestHelper.executePostCommand(JOKES_INSTANCE_INIT, {});
   } catch (e) {
     expect(e.code).toEqual("uu-jokes-main/jokesInstance/init/invalidDtoIn");
     expect(e.message).toEqual("DtoIn is not valid.");
@@ -137,7 +134,7 @@ test("A5 - creating uuBinary fails", async () => {
 
   let dtoIn = {
     uuAppProfileAuthorities: "holomajzna",
-    logo: fs.createReadStream(path.resolve(__dirname, "..", "logo.png"))
+    logo: getImageStream()
   };
   try {
     await JokesInstanceModel.init("awid", dtoIn);
@@ -169,18 +166,10 @@ test("A6 - storing jokes instance fails", async () => {
 });
 
 function mockModels() {
-  // this mock ensures that all of the models can be required
-  jest.spyOn(DaoFactory, "getDao").mockImplementation(() => {
-    let dao = {};
-    dao.createSchema = () => {};
-    return dao;
-  });
-
+  mockDaoFactory();
   const JokesInstanceModel = require("../../app/models/jokes-instance-model");
   const { SysProfileModel } = require("uu_appg01_server").Workspace;
   const { UuBinaryModel } = require("uu_appg01_binarystore-cmd");
-
   JokesInstanceModel.dao.getByAwid = () => null;
-
   return { JokesInstanceModel, SysProfileModel, UuBinaryModel };
 }

@@ -1,9 +1,5 @@
 const { TestHelper } = require("uu_appg01_workspace-test");
-
-const INIT = "jokesInstance/init";
-const CREATE = "joke/create";
-const LIST = "joke/list";
-const MONGO_ID = "012345678910111213141516";
+const { JOKES_INSTANCE_INIT, JOKE_CREATE, JOKE_LIST, MONGO_ID } = require("../general-test-hepler");
 
 beforeAll(async () => {
   await TestHelper.setup();
@@ -21,15 +17,15 @@ beforeEach(async () => {
 });
 
 test("HDS", async () => {
-  await TestHelper.executePostCommand(INIT, { uuAppProfileAuthorities: ".", state: "active" });
+  await TestHelper.executePostCommand(JOKES_INSTANCE_INIT, { uuAppProfileAuthorities: ".", state: "active" });
   await TestHelper.login("Authority");
 
   // create some jokes
-  await TestHelper.executePostCommand(CREATE, { name: "A" });
-  await TestHelper.executePostCommand(CREATE, { name: "C" });
-  await TestHelper.executePostCommand(CREATE, { name: "B" });
+  await TestHelper.executePostCommand(JOKE_CREATE, { name: "A" });
+  await TestHelper.executePostCommand(JOKE_CREATE, { name: "C" });
+  await TestHelper.executePostCommand(JOKE_CREATE, { name: "B" });
 
-  let response = await TestHelper.executeGetCommand(LIST);
+  let response = await TestHelper.executeGetCommand(JOKE_LIST);
   expect(response.status).toEqual(200);
   let dtoOut = response;
   expect(dtoOut.pageInfo.total).toEqual(3);
@@ -42,15 +38,15 @@ test("HDS", async () => {
 });
 
 test("HDS - default sort by (name), default order (ascending)", async () => {
-  await TestHelper.executePostCommand(INIT, { uuAppProfileAuthorities: ".", state: "active" });
+  await TestHelper.executePostCommand(JOKES_INSTANCE_INIT, { uuAppProfileAuthorities: ".", state: "active" });
   await TestHelper.login("Authority");
 
   // create some jokes
-  await TestHelper.executePostCommand(CREATE, { name: "A" });
-  await TestHelper.executePostCommand(CREATE, { name: "C" });
-  await TestHelper.executePostCommand(CREATE, { name: "B" });
+  await TestHelper.executePostCommand(JOKE_CREATE, { name: "A" });
+  await TestHelper.executePostCommand(JOKE_CREATE, { name: "C" });
+  await TestHelper.executePostCommand(JOKE_CREATE, { name: "B" });
 
-  let response = await TestHelper.executeGetCommand(LIST);
+  let response = await TestHelper.executeGetCommand(JOKE_LIST);
   expect(response.status).toEqual(200);
   let dtoOut = response;
   expect(dtoOut.pageInfo.total).toEqual(3);
@@ -60,15 +56,15 @@ test("HDS - default sort by (name), default order (ascending)", async () => {
 });
 
 test("HDS - default sort by (name), custom order", async () => {
-  await TestHelper.executePostCommand(INIT, { uuAppProfileAuthorities: ".", state: "active" });
+  await TestHelper.executePostCommand(JOKES_INSTANCE_INIT, { uuAppProfileAuthorities: ".", state: "active" });
   await TestHelper.login("Authority");
 
   // create some jokes
-  await TestHelper.executePostCommand(CREATE, { name: "A" });
-  await TestHelper.executePostCommand(CREATE, { name: "C" });
-  await TestHelper.executePostCommand(CREATE, { name: "B" });
+  await TestHelper.executePostCommand(JOKE_CREATE, { name: "A" });
+  await TestHelper.executePostCommand(JOKE_CREATE, { name: "C" });
+  await TestHelper.executePostCommand(JOKE_CREATE, { name: "B" });
 
-  let response = await TestHelper.executeGetCommand(LIST, { order: "desc" });
+  let response = await TestHelper.executeGetCommand(JOKE_LIST, { order: "desc" });
   expect(response.status).toEqual(200);
   let dtoOut = response;
   expect(dtoOut.pageInfo.total).toEqual(3);
@@ -78,7 +74,7 @@ test("HDS - default sort by (name), custom order", async () => {
 });
 
 test("HDS - custom sort by, default order (ascending)", async () => {
-  await TestHelper.executePostCommand(INIT, { uuAppProfileAuthorities: ".", state: "active" });
+  await TestHelper.executePostCommand(JOKES_INSTANCE_INIT, { uuAppProfileAuthorities: ".", state: "active" });
   await TestHelper.login("Authority");
 
   // rating the jokes is yet to be implemented => crate some jokes with rating in db
@@ -90,7 +86,7 @@ test("HDS - custom sort by, default order (ascending)", async () => {
     ])`
   );
 
-  let response = await TestHelper.executeGetCommand(LIST, { sortBy: "rating" });
+  let response = await TestHelper.executeGetCommand(JOKE_LIST, { sortBy: "rating" });
   expect(response.status).toEqual(200);
   let dtoOut = response;
   expect(dtoOut.pageInfo.total).toEqual(3);
@@ -100,17 +96,17 @@ test("HDS - custom sort by, default order (ascending)", async () => {
 });
 
 test("HDS - pageInfo", async () => {
-  await TestHelper.executePostCommand(INIT, { uuAppProfileAuthorities: ".", state: "active" });
+  await TestHelper.executePostCommand(JOKES_INSTANCE_INIT, { uuAppProfileAuthorities: ".", state: "active" });
   await TestHelper.login("Authority");
 
   // create some jokes
-  await TestHelper.executePostCommand(CREATE, { name: "A" });
-  await TestHelper.executePostCommand(CREATE, { name: "B" });
-  await TestHelper.executePostCommand(CREATE, { name: "C" });
+  await TestHelper.executePostCommand(JOKE_CREATE, { name: "A" });
+  await TestHelper.executePostCommand(JOKE_CREATE, { name: "B" });
+  await TestHelper.executePostCommand(JOKE_CREATE, { name: "C" });
 
   let pIndex = 2;
   let pSize = 1;
-  let response = await TestHelper.executeGetCommand(LIST, { pageInfo: { pageSize: pSize, pageIndex: pIndex } });
+  let response = await TestHelper.executeGetCommand(JOKE_LIST, { pageInfo: { pageSize: pSize, pageIndex: pIndex } });
   expect(response.status).toEqual(200);
   let dtoOut = response;
   expect(dtoOut.pageInfo.total).toEqual(3);
@@ -120,16 +116,16 @@ test("HDS - pageInfo", async () => {
 });
 
 test("HDS - only pageSize in pageInfo", async () => {
-  await TestHelper.executePostCommand(INIT, { uuAppProfileAuthorities: ".", state: "active" });
+  await TestHelper.executePostCommand(JOKES_INSTANCE_INIT, { uuAppProfileAuthorities: ".", state: "active" });
   await TestHelper.login("Authority");
 
   // create some jokes
-  await TestHelper.executePostCommand(CREATE, { name: "A" });
-  await TestHelper.executePostCommand(CREATE, { name: "B" });
-  await TestHelper.executePostCommand(CREATE, { name: "C" });
+  await TestHelper.executePostCommand(JOKE_CREATE, { name: "A" });
+  await TestHelper.executePostCommand(JOKE_CREATE, { name: "B" });
+  await TestHelper.executePostCommand(JOKE_CREATE, { name: "C" });
 
   let pSize = 1;
-  let response = await TestHelper.executeGetCommand(LIST, { pageInfo: { pageSize: pSize } });
+  let response = await TestHelper.executeGetCommand(JOKE_LIST, { pageInfo: { pageSize: pSize } });
   expect(response.status).toEqual(200);
   let dtoOut = response;
   expect(dtoOut.pageInfo.total).toEqual(3);
@@ -139,16 +135,16 @@ test("HDS - only pageSize in pageInfo", async () => {
 });
 
 test("HDS - only pageIndex in pageInfo", async () => {
-  await TestHelper.executePostCommand(INIT, { uuAppProfileAuthorities: ".", state: "active" });
+  await TestHelper.executePostCommand(JOKES_INSTANCE_INIT, { uuAppProfileAuthorities: ".", state: "active" });
   await TestHelper.login("Authority");
 
   // create some jokes
-  await TestHelper.executePostCommand(CREATE, { name: "A" });
-  await TestHelper.executePostCommand(CREATE, { name: "B" });
-  await TestHelper.executePostCommand(CREATE, { name: "C" });
+  await TestHelper.executePostCommand(JOKE_CREATE, { name: "A" });
+  await TestHelper.executePostCommand(JOKE_CREATE, { name: "B" });
+  await TestHelper.executePostCommand(JOKE_CREATE, { name: "C" });
 
   let pIndex = 2;
-  let response = await TestHelper.executeGetCommand(LIST, { pageInfo: { pageIndex: pIndex } });
+  let response = await TestHelper.executeGetCommand(JOKE_LIST, { pageInfo: { pageIndex: pIndex } });
   expect(response.status).toEqual(200);
   let dtoOut = response;
   expect(dtoOut.pageInfo.total).toEqual(3);
@@ -158,7 +154,7 @@ test("HDS - only pageIndex in pageInfo", async () => {
 });
 
 test("HDS - filter by category", async () => {
-  await TestHelper.executePostCommand(INIT, { uuAppProfileAuthorities: ".", state: "active" });
+  await TestHelper.executePostCommand(JOKES_INSTANCE_INIT, { uuAppProfileAuthorities: ".", state: "active" });
   await TestHelper.login("Authority");
 
   // category management commands are not yet implemented => creating something straight in the database
@@ -173,7 +169,7 @@ test("HDS - filter by category", async () => {
   // The second categoryId is a valid id - it will pass through the validation - but there is no category
   // (obviously) with such id, so it won't influence the result. It will check the correct conversion
   // from string to mongodb's objectID in some dao.
-  let response = await TestHelper.executeGetCommand(LIST, { categoryList: [MONGO_ID, `${MONGO_ID}12345678`] });
+  let response = await TestHelper.executeGetCommand(JOKE_LIST, { categoryList: [MONGO_ID, `${MONGO_ID}12345678`] });
   expect(response.status).toEqual(200);
   let dtoOut = response;
   expect(dtoOut.pageInfo.total).toEqual(2);
@@ -185,7 +181,7 @@ test("A1 - jokes instance does not exist", async () => {
   expect.assertions(2);
   await TestHelper.login("Authority");
   try {
-    await TestHelper.executeGetCommand(LIST);
+    await TestHelper.executeGetCommand(JOKE_LIST);
   } catch (e) {
     expect(e.code).toEqual("uu-jokes-main/joke/list/jokesInstanceDoesNotExist");
     expect(e.message).toEqual("JokesInstance does not exist.");
@@ -194,13 +190,13 @@ test("A1 - jokes instance does not exist", async () => {
 
 test("A2 - jokes instance is closed", async () => {
   expect.assertions(4);
-  await TestHelper.executePostCommand(INIT, {
+  await TestHelper.executePostCommand(JOKES_INSTANCE_INIT, {
     uuAppProfileAuthorities: ".",
     state: "closed"
   });
   await TestHelper.login("Authority");
   try {
-    await TestHelper.executeGetCommand(LIST);
+    await TestHelper.executeGetCommand(JOKE_LIST);
   } catch (e) {
     expect(e.code).toEqual("uu-jokes-main/joke/list/jokesInstanceNotInProperState");
     expect(e.message).toEqual("JokesInstance is not in proper state [active|underConstruction].");
@@ -211,13 +207,13 @@ test("A2 - jokes instance is closed", async () => {
 
 test("A3 - jokes instance is under construction", async () => {
   expect.assertions(3);
-  await TestHelper.executePostCommand(INIT, {
+  await TestHelper.executePostCommand(JOKES_INSTANCE_INIT, {
     uuAppProfileAuthorities: ".",
     state: "underConstruction"
   });
   await TestHelper.login("Authority");
   try {
-    await TestHelper.executeGetCommand(LIST);
+    await TestHelper.executeGetCommand(JOKE_LIST);
   } catch (e) {
     expect(e.code).toEqual("uu-jokes-main/joke/list/jokesInstanceIsUnderConstruction");
     expect(e.message).toEqual("JokesInstance is in state underConstruction.");
@@ -226,9 +222,9 @@ test("A3 - jokes instance is under construction", async () => {
 });
 
 test("A4 - unsupported keys in dtoIn", async () => {
-  await TestHelper.executePostCommand(INIT, { uuAppProfileAuthorities: ".", state: "active" });
+  await TestHelper.executePostCommand(JOKES_INSTANCE_INIT, { uuAppProfileAuthorities: ".", state: "active" });
   await TestHelper.login("Authority");
-  let response = await TestHelper.executeGetCommand(LIST, { kedluben: true });
+  let response = await TestHelper.executeGetCommand(JOKE_LIST, { kedluben: true });
   expect(response.status).toEqual(200);
   let warning = response.uuAppErrorMap["uu-jokes-main/joke/list/unsupportedKeys"];
   expect(warning).toBeTruthy();
@@ -239,10 +235,10 @@ test("A4 - unsupported keys in dtoIn", async () => {
 
 test("A5 - invalid dtoIn", async () => {
   expect.assertions(2);
-  await TestHelper.executePostCommand(INIT, { uuAppProfileAuthorities: ".", state: "active" });
+  await TestHelper.executePostCommand(JOKES_INSTANCE_INIT, { uuAppProfileAuthorities: ".", state: "active" });
   await TestHelper.login("Authority");
   try {
-    await TestHelper.executeGetCommand(LIST, { order: true });
+    await TestHelper.executeGetCommand(JOKE_LIST, { order: true });
   } catch (e) {
     expect(e.code).toEqual("uu-jokes-main/joke/list/invalidDtoIn");
     expect(e.message).toEqual("DtoIn is not valid.");

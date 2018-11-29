@@ -1,12 +1,15 @@
 /*eslint-disable no-useless-escape*/
 
 const { TestHelper } = require("uu_appg01_workspace-test");
-const path = require("path");
-const fs = require("fs");
-const { DaoFactory, ObjectStoreError } = require("uu_appg01_server").ObjectStore;
-
-const INIT = "jokesInstance/init";
-const CREATE = "joke/create";
+const { ObjectStoreError } = require("uu_appg01_server").ObjectStore;
+const {
+  JOKES_INSTANCE_INIT,
+  JOKE_CREATE,
+  getImageStream,
+  mockDaoFactory,
+  getSessionMock,
+  getAuthzResultMock
+} = require("../general-test-hepler");
 
 beforeAll(async () => {
   await TestHelper.setup();
@@ -28,7 +31,7 @@ afterEach(() => {
 });
 
 test("HDS - no image, Authorities call", async () => {
-  await initJokesInstance();
+  await TestHelper.executePostCommand(JOKES_INSTANCE_INIT, { uuAppProfileAuthorities: "." });
   await TestHelper.login("Authority");
 
   let name = "nejvtipnejsi vtip";
@@ -55,7 +58,7 @@ test("HDS - no image, Authorities call", async () => {
     name,
     text
   };
-  let joke = await TestHelper.executePostCommand(CREATE, dtoIn);
+  let joke = await TestHelper.executePostCommand(JOKE_CREATE, dtoIn);
   expect(joke.status).toEqual(200);
   let dtoOut = joke;
   expect(dtoOut.text).toEqual(text);
@@ -72,14 +75,14 @@ test("HDS - no image, Authorities call", async () => {
 });
 
 test("HDS - no image, Executives call", async () => {
-  await initJokesInstance();
+  await TestHelper.executePostCommand(JOKES_INSTANCE_INIT, { uuAppProfileAuthorities: "." });
   await TestHelper.login("Executive");
 
   let dtoIn = {
     name: "hmm",
     text: "joo"
   };
-  let joke = await TestHelper.executePostCommand(CREATE, dtoIn);
+  let joke = await TestHelper.executePostCommand(JOKE_CREATE, dtoIn);
   expect(joke.status).toEqual(200);
   let dtoOut = joke;
   expect(dtoOut.uuIdentity).toEqual("14-2710-1");
@@ -88,14 +91,14 @@ test("HDS - no image, Executives call", async () => {
 });
 
 test("HDS - image", async () => {
-  await initJokesInstance();
+  await TestHelper.executePostCommand(JOKES_INSTANCE_INIT, { uuAppProfileAuthorities: "." });
   await TestHelper.login("Authority");
 
   let dtoIn = {
     name: "nejm",
-    image: fs.createReadStream(path.resolve(__dirname, "..", "logo.png"))
+    image: getImageStream()
   };
-  let joke = await TestHelper.executePostCommand(CREATE, dtoIn);
+  let joke = await TestHelper.executePostCommand(JOKE_CREATE, dtoIn);
   expect(joke.status).toEqual(200);
   let dtoOut = joke;
   expect(dtoOut.image).toBeTruthy();
@@ -106,7 +109,7 @@ test("A1 - jokesInstance does nto exist", async () => {
   expect.assertions(2);
   await TestHelper.login("Authority");
   try {
-    await TestHelper.executePostCommand(CREATE, { name: "Smutny programator" });
+    await TestHelper.executePostCommand(JOKE_CREATE, { name: "Smutny programator" });
   } catch (e) {
     expect(e.code).toEqual("uu-jokes-main/joke/create/jokesInstanceDoesNotExist");
     expect(e.message).toEqual("JokesInstance does not exist.");
@@ -115,10 +118,10 @@ test("A1 - jokesInstance does nto exist", async () => {
 
 test("A2 - jokes instance is closed", async () => {
   expect.assertions(4);
-  await initJokesInstance("closed");
+  await TestHelper.executePostCommand(JOKES_INSTANCE_INIT, { uuAppProfileAuthorities: ".", state: "closed" });
   await TestHelper.login("Authority");
   try {
-    await TestHelper.executePostCommand(CREATE, { name: "Vesely partyzan" });
+    await TestHelper.executePostCommand(JOKE_CREATE, { name: "Vesely partyzan" });
   } catch (e) {
     expect(e.code).toEqual("uu-jokes-main/joke/create/jokesInstanceNotInProperState");
     expect(e.message).toEqual("JokesInstance is not in proper state [active|underConstruction].");
@@ -128,10 +131,10 @@ test("A2 - jokes instance is closed", async () => {
 });
 
 test("A3 - unsupported keys in dtoIn", async () => {
-  await initJokesInstance();
+  await TestHelper.executePostCommand(JOKES_INSTANCE_INIT, { uuAppProfileAuthorities: "." });
   await TestHelper.login("Authority");
 
-  let joke = await TestHelper.executePostCommand(CREATE, { name: "Hrebik v zasuvce", navic: "ja jsem navic" });
+  let joke = await TestHelper.executePostCommand(JOKE_CREATE, { name: "Hrebik v zasuvce", navic: "ja jsem navic" });
   expect(joke.status).toEqual(200);
   let warning = joke.uuAppErrorMap["uu-jokes-main/joke/create/unsupportedKeys"];
   expect(warning).toBeTruthy();
@@ -142,11 +145,11 @@ test("A3 - unsupported keys in dtoIn", async () => {
 
 test("A4 - dtoIn is not valid", async () => {
   expect.assertions(2);
-  await initJokesInstance();
+  await TestHelper.executePostCommand(JOKES_INSTANCE_INIT, { uuAppProfileAuthorities: "." });
   await TestHelper.login("Authority");
 
   try {
-    await TestHelper.executePostCommand(CREATE, { name: "Nehorlavy petrolej", image: 4 });
+    await TestHelper.executePostCommand(JOKE_CREATE, { name: "Nehorlavy petrolej", image: 4 });
   } catch (e) {
     expect(e.code).toEqual("uu-jokes-main/joke/create/invalidDtoIn");
     expect(e.message).toEqual("DtoIn is not valid.");
@@ -164,7 +167,7 @@ test("A5 - creating image fails", async () => {
   try {
     await JokeModel.create(
       "awid",
-      { name: "astronaut s pletenou cepici", image: fs.createReadStream(path.resolve(__dirname, "..", "logo.png")) },
+      { name: "astronaut s pletenou cepici", image: getImageStream() },
       getSessionMock(),
       getAuthzResultMock()
     );
@@ -175,7 +178,7 @@ test("A5 - creating image fails", async () => {
 });
 
 test("A6 - categories don't exist", async () => {
-  await initJokesInstance();
+  await TestHelper.executePostCommand(JOKES_INSTANCE_INIT, { uuAppProfileAuthorities: "." });
   await TestHelper.login("Authority");
 
   let existingCategoryId = "012345678910111213141516";
@@ -189,7 +192,7 @@ test("A6 - categories don't exist", async () => {
     `db.getCollection('category').insert({_id:ObjectId("${existingCategoryId}"),awid:"${TestHelper.getAwid()}"})`
   );
 
-  let result = await TestHelper.executePostCommand(CREATE, dtoIn);
+  let result = await TestHelper.executePostCommand(JOKE_CREATE, dtoIn);
   expect(result.status).toBe(200);
   let dtoOut = result;
   expect(dtoOut.categoryList).toEqual([existingCategoryId]);
@@ -218,38 +221,10 @@ test("A7 - storing the joke fails", async () => {
 });
 
 function mockModels() {
-  // this mock ensures that all of the models can be required
-  jest.spyOn(DaoFactory, "getDao").mockImplementation(() => {
-    let dao = {};
-    dao.createSchema = () => {};
-    return dao;
-  });
-
+  mockDaoFactory();
   const JokeModel = require("../../app/models/joke-model");
   const { UuBinaryModel } = require("uu_appg01_binarystore-cmd");
   const JokesInstanceModel = require("../../app/models/jokes-instance-model");
-
   JokesInstanceModel.checkInstance = () => null;
-
   return { JokeModel, UuBinaryModel };
-}
-
-function getSessionMock() {
-  let identity = {
-    getUuIdentity: () => {},
-    getName: () => {}
-  };
-  return {
-    getIdentity: () => identity
-  };
-}
-
-function getAuthzResultMock() {
-  return {
-    getAuthorizedProfiles: () => []
-  };
-}
-
-async function initJokesInstance(state = "active") {
-  await TestHelper.executePostCommand(INIT, { uuAppProfileAuthorities: "spektakularniJavascript", state });
 }

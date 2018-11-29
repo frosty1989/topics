@@ -1,9 +1,5 @@
 const { TestHelper } = require("uu_appg01_workspace-test");
-
-const INIT = "jokesInstance/init";
-const CREATE = "category/create";
-const UPDATE = "category/update";
-const MONGO_ID = "012345678910111213141516";
+const { JOKES_INSTANCE_INIT, CATEGORY_CREATE, CATEGORY_UPDATE, MONGO_ID } = require("../general-test-hepler");
 
 beforeAll(async () => {
   await TestHelper.setup(null, { authEnabled: false });
@@ -24,11 +20,11 @@ afterEach(() => {
 });
 
 test("HDS", async () => {
-  await TestHelper.executePostCommand(INIT, { uuAppProfileAuthorities: "." });
-  let response = await TestHelper.executePostCommand(CREATE, { name: "..." });
+  await TestHelper.executePostCommand(JOKES_INSTANCE_INIT, { uuAppProfileAuthorities: "." });
+  let response = await TestHelper.executePostCommand(CATEGORY_CREATE, { name: "..." });
   let name = "Bangladesh",
     icon = "Bhutan";
-  response = await TestHelper.executePostCommand(UPDATE, { id: response.id, name, icon });
+  response = await TestHelper.executePostCommand(CATEGORY_UPDATE, { id: response.id, name, icon });
   expect(response.status).toEqual(200);
   expect(response.name).toEqual(name);
   expect(response.icon).toEqual(icon);
@@ -37,7 +33,7 @@ test("HDS", async () => {
 test("A1 - jokes instance does not exist", async () => {
   expect.assertions(2);
   try {
-    await TestHelper.executePostCommand(UPDATE, {});
+    await TestHelper.executePostCommand(CATEGORY_UPDATE, {});
   } catch (e) {
     expect(e.code).toEqual("uu-jokes-main/category/update/jokesInstanceDoesNotExist");
     expect(e.message).toEqual("JokesInstance does not exist.");
@@ -46,9 +42,9 @@ test("A1 - jokes instance does not exist", async () => {
 
 test("A2 - jokes instance is closed", async () => {
   expect.assertions(4);
-  await TestHelper.executePostCommand(INIT, { uuAppProfileAuthorities: ".", state: "closed" });
+  await TestHelper.executePostCommand(JOKES_INSTANCE_INIT, { uuAppProfileAuthorities: ".", state: "closed" });
   try {
-    await TestHelper.executePostCommand(UPDATE, {});
+    await TestHelper.executePostCommand(CATEGORY_UPDATE, {});
   } catch (e) {
     expect(e.code).toEqual("uu-jokes-main/category/update/jokesInstanceNotInProperState");
     expect(e.message).toEqual("JokesInstance is not in proper state [active|underConstruction].");
@@ -58,9 +54,9 @@ test("A2 - jokes instance is closed", async () => {
 });
 
 test("A3 - unsupported keys in dtoIn", async () => {
-  await TestHelper.executePostCommand(INIT, { uuAppProfileAuthorities: "." });
-  let response = await TestHelper.executePostCommand(CREATE, { name: "Thimphu" });
-  response = await TestHelper.executePostCommand(UPDATE, { id: response.id, city: "Dhaka" });
+  await TestHelper.executePostCommand(JOKES_INSTANCE_INIT, { uuAppProfileAuthorities: "." });
+  let response = await TestHelper.executePostCommand(CATEGORY_CREATE, { name: "Thimphu" });
+  response = await TestHelper.executePostCommand(CATEGORY_UPDATE, { id: response.id, city: "Dhaka" });
   expect(response.status).toEqual(200);
   let warning = response.uuAppErrorMap["uu-jokes-main/category/update/unsupportedKeys"];
   expect(warning).toBeTruthy();
@@ -68,9 +64,9 @@ test("A3 - unsupported keys in dtoIn", async () => {
 
 test("A4 - invalid dtoIn", async () => {
   expect.assertions(2);
-  await TestHelper.executePostCommand(INIT, { uuAppProfileAuthorities: "." });
+  await TestHelper.executePostCommand(JOKES_INSTANCE_INIT, { uuAppProfileAuthorities: "." });
   try {
-    await TestHelper.executePostCommand(UPDATE, {});
+    await TestHelper.executePostCommand(CATEGORY_UPDATE, {});
   } catch (e) {
     expect(e.code).toEqual("uu-jokes-main/category/update/invalidDtoIn");
     expect(e.message).toEqual("DtoIn is not valid.");
@@ -79,12 +75,12 @@ test("A4 - invalid dtoIn", async () => {
 
 test("A5 - category with such name already exists", async () => {
   expect.assertions(3);
-  await TestHelper.executePostCommand(INIT, { uuAppProfileAuthorities: "." });
+  await TestHelper.executePostCommand(JOKES_INSTANCE_INIT, { uuAppProfileAuthorities: "." });
   let name = "Myanmar";
-  await TestHelper.executePostCommand(CREATE, { name });
-  let response = await TestHelper.executePostCommand(CREATE, { name: "." });
+  await TestHelper.executePostCommand(CATEGORY_CREATE, { name });
+  let response = await TestHelper.executePostCommand(CATEGORY_CREATE, { name: "." });
   try {
-    await TestHelper.executePostCommand(UPDATE, { id: response.id, name });
+    await TestHelper.executePostCommand(CATEGORY_UPDATE, { id: response.id, name });
   } catch (e) {
     expect(e.code).toEqual("uu-jokes-main/category/update/categoryNameNotUnique");
     expect(e.message).toEqual("Category name is not unique in awid.");
@@ -94,9 +90,9 @@ test("A5 - category with such name already exists", async () => {
 
 test("A6 - category update fails, especially if there is no category", async () => {
   expect.assertions(2);
-  await TestHelper.executePostCommand(INIT, { uuAppProfileAuthorities: "." });
+  await TestHelper.executePostCommand(JOKES_INSTANCE_INIT, { uuAppProfileAuthorities: "." });
   try {
-    await TestHelper.executePostCommand(UPDATE, { id: MONGO_ID });
+    await TestHelper.executePostCommand(CATEGORY_UPDATE, { id: MONGO_ID });
   } catch (e) {
     expect(e.code).toEqual("uu-jokes-main/category/update/categoryDaoUpateFailed");
     expect(e.message).toEqual("Update category by category Dao update failed.");

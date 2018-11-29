@@ -1,13 +1,16 @@
 const { TestHelper } = require("uu_appg01_workspace-test");
-const path = require("path");
-const fs = require("fs");
-const { DaoFactory, ObjectStoreError } = require("uu_appg01_server").ObjectStore;
-
-const INIT = "jokesInstance/init";
-const CREATE = "joke/create";
-const DELETE = "joke/delete";
-const GET = "joke/get";
-const MONGO_ID = "012345678910111213141516";
+const { ObjectStoreError } = require("uu_appg01_server").ObjectStore;
+const {
+  JOKES_INSTANCE_INIT,
+  JOKE_CREATE,
+  JOKE_DELETE,
+  JOKE_GET,
+  MONGO_ID,
+  getImageStream,
+  mockDaoFactory,
+  getSessionMock,
+  getAuthzResultMock
+} = require("../general-test-hepler");
 
 beforeAll(async () => {
   await TestHelper.setup();
@@ -30,13 +33,13 @@ afterEach(() => {
 
 test("HDS", async () => {
   expect.assertions(2);
-  await TestHelper.executePostCommand(INIT, { uuAppProfileAuthorities: ".", state: "active" });
+  await TestHelper.executePostCommand(JOKES_INSTANCE_INIT, { uuAppProfileAuthorities: ".", state: "active" });
   await TestHelper.login("Authority");
-  let joke = await TestHelper.executePostCommand(CREATE, { name: "There should be unicorns" });
-  let result = await TestHelper.executePostCommand(DELETE, { id: joke.id });
+  let joke = await TestHelper.executePostCommand(JOKE_CREATE, { name: "There should be unicorns" });
+  let result = await TestHelper.executePostCommand(JOKE_DELETE, { id: joke.id });
   expect(result.status).toEqual(200);
   try {
-    await TestHelper.executeGetCommand(GET, { id: joke.id });
+    await TestHelper.executeGetCommand(JOKE_GET, { id: joke.id });
   } catch (e) {
     expect(e.code).toEqual("uu-jokes-main/joke/get/jokeDoesNotExist");
   }
@@ -44,16 +47,16 @@ test("HDS", async () => {
 
 test("HDS - deleting image", async () => {
   expect.assertions(3);
-  await TestHelper.executePostCommand(INIT, { uuAppProfileAuthorities: ".", state: "active" });
+  await TestHelper.executePostCommand(JOKES_INSTANCE_INIT, { uuAppProfileAuthorities: ".", state: "active" });
   await TestHelper.login("Authority");
-  let joke = await TestHelper.executePostCommand(CREATE, {
+  let joke = await TestHelper.executePostCommand(JOKE_CREATE, {
     name: "The ones with the purple eyes",
     image: getImageStream()
   });
-  let result = await TestHelper.executePostCommand(DELETE, { id: joke.id });
+  let result = await TestHelper.executePostCommand(JOKE_DELETE, { id: joke.id });
   expect(result.status).toEqual(200);
   try {
-    await TestHelper.executeGetCommand(GET, { id: joke.id });
+    await TestHelper.executeGetCommand(JOKE_GET, { id: joke.id });
   } catch (e) {
     expect(e.code).toEqual("uu-jokes-main/joke/get/jokeDoesNotExist");
   }
@@ -63,9 +66,9 @@ test("HDS - deleting image", async () => {
 
 test("HDS - deleting ratings", async () => {
   expect.assertions(4);
-  await TestHelper.executePostCommand(INIT, { uuAppProfileAuthorities: ".", state: "active" });
+  await TestHelper.executePostCommand(JOKES_INSTANCE_INIT, { uuAppProfileAuthorities: ".", state: "active" });
   await TestHelper.login("Authority");
-  let joke = await TestHelper.executePostCommand(CREATE, { name: "Not the green eyes" });
+  let joke = await TestHelper.executePostCommand(JOKE_CREATE, { name: "Not the green eyes" });
 
   // joke/addRating is yet to be implemented, thia creates some ratings in database
   await TestHelper.executeDbScript(
@@ -76,7 +79,7 @@ test("HDS - deleting ratings", async () => {
     ])`
   );
 
-  let result = await TestHelper.executePostCommand(DELETE, { id: joke.id });
+  let result = await TestHelper.executePostCommand(JOKE_DELETE, { id: joke.id });
   expect(result.status).toEqual(200);
 
   // only on rating remains in the db
@@ -86,7 +89,7 @@ test("HDS - deleting ratings", async () => {
 
   // getting joke results in error as it was just deleted
   try {
-    await TestHelper.executeGetCommand(GET, { id: joke.id });
+    await TestHelper.executeGetCommand(JOKE_GET, { id: joke.id });
   } catch (e) {
     expect(e.code).toEqual("uu-jokes-main/joke/get/jokeDoesNotExist");
   }
@@ -96,7 +99,7 @@ test("A1 - jokes instance does not exist", async () => {
   expect.assertions(2);
   await TestHelper.login("Authority");
   try {
-    await TestHelper.executePostCommand(DELETE, { id: MONGO_ID });
+    await TestHelper.executePostCommand(JOKE_DELETE, { id: MONGO_ID });
   } catch (e) {
     expect(e.code).toEqual("uu-jokes-main/joke/delete/jokesInstanceDoesNotExist");
     expect(e.message).toEqual("JokesInstance does not exist.");
@@ -105,10 +108,10 @@ test("A1 - jokes instance does not exist", async () => {
 
 test("A2 - jokes instance is closed", async () => {
   expect.assertions(4);
-  await TestHelper.executePostCommand(INIT, { uuAppProfileAuthorities: ".", state: "closed" });
+  await TestHelper.executePostCommand(JOKES_INSTANCE_INIT, { uuAppProfileAuthorities: ".", state: "closed" });
   await TestHelper.login("Authority");
   try {
-    await TestHelper.executePostCommand(DELETE, { id: MONGO_ID });
+    await TestHelper.executePostCommand(JOKE_DELETE, { id: MONGO_ID });
   } catch (e) {
     expect(e.code).toEqual("uu-jokes-main/joke/delete/jokesInstanceNotInProperState");
     expect(e.message).toEqual("JokesInstance is not in proper state [active|underConstruction].");
@@ -118,10 +121,13 @@ test("A2 - jokes instance is closed", async () => {
 });
 
 test("A3 - unsupported keys in dtoIn", async () => {
-  await TestHelper.executePostCommand(INIT, { uuAppProfileAuthorities: ".", state: "active" });
+  await TestHelper.executePostCommand(JOKES_INSTANCE_INIT, { uuAppProfileAuthorities: ".", state: "active" });
   await TestHelper.login("Authority");
-  let joke = await TestHelper.executePostCommand(CREATE, { name: "If the police shows up.." });
-  joke = await TestHelper.executePostCommand(DELETE, { id: joke.id, continued: "..we will give them so much money.." });
+  let joke = await TestHelper.executePostCommand(JOKE_CREATE, { name: "If the police shows up.." });
+  joke = await TestHelper.executePostCommand(JOKE_DELETE, {
+    id: joke.id,
+    continued: "..we will give them so much money.."
+  });
   expect(joke.status).toEqual(200);
   let warning = joke.uuAppErrorMap["uu-jokes-main/joke/delete/unsupportedKeys"];
   expect(warning).toBeTruthy();
@@ -132,10 +138,10 @@ test("A3 - unsupported keys in dtoIn", async () => {
 
 test("A4 - invalid dtoIn", async () => {
   expect.assertions(2);
-  await TestHelper.executePostCommand(INIT, { uuAppProfileAuthorities: ".", state: "active" });
+  await TestHelper.executePostCommand(JOKES_INSTANCE_INIT, { uuAppProfileAuthorities: ".", state: "active" });
   await TestHelper.login("Authority");
   try {
-    await TestHelper.executePostCommand(DELETE, {});
+    await TestHelper.executePostCommand(JOKE_DELETE, {});
   } catch (e) {
     expect(e.code).toEqual("uu-jokes-main/joke/delete/invalidDtoIn");
     expect(e.message).toEqual("DtoIn is not valid.");
@@ -144,10 +150,10 @@ test("A4 - invalid dtoIn", async () => {
 
 test("A5 - joke does nto exist", async () => {
   expect.assertions(2);
-  await TestHelper.executePostCommand(INIT, { uuAppProfileAuthorities: ".", state: "active" });
+  await TestHelper.executePostCommand(JOKES_INSTANCE_INIT, { uuAppProfileAuthorities: ".", state: "active" });
   await TestHelper.login("Authority");
   try {
-    await TestHelper.executePostCommand(DELETE, { id: MONGO_ID });
+    await TestHelper.executePostCommand(JOKE_DELETE, { id: MONGO_ID });
   } catch (e) {
     expect(e.code).toEqual("uu-jokes-main/joke/delete/jokeDoesNotExist");
     expect(e.message).toEqual("Joke does not exist.");
@@ -156,12 +162,12 @@ test("A5 - joke does nto exist", async () => {
 
 test("A6 - Executives trying to delete Authorities' joke", async () => {
   expect.assertions(2);
-  await TestHelper.executePostCommand(INIT, { uuAppProfileAuthorities: ".", state: "active" });
+  await TestHelper.executePostCommand(JOKES_INSTANCE_INIT, { uuAppProfileAuthorities: ".", state: "active" });
   await TestHelper.login("Authority");
-  let joke = await TestHelper.executePostCommand(CREATE, { name: "..it will make them cry. And forgive us." });
+  let joke = await TestHelper.executePostCommand(JOKE_CREATE, { name: "..it will make them cry. And forgive us." });
   await TestHelper.login("Executive");
   try {
-    await TestHelper.executePostCommand(DELETE, { id: joke.id });
+    await TestHelper.executePostCommand(JOKE_DELETE, { id: joke.id });
   } catch (e) {
     expect(e.code).toEqual("uu-jokes-main/joke/delete/userNotAuthorized");
     expect(e.message).toEqual("User not authorized.");
@@ -206,38 +212,10 @@ test("A8 - deleting image fails", async () => {
 });
 
 function mockModels() {
-  // this mock ensures that all of the models can be required
-  jest.spyOn(DaoFactory, "getDao").mockImplementation(() => {
-    let dao = {};
-    dao.createSchema = () => {};
-    return dao;
-  });
-
+  mockDaoFactory();
   const JokeModel = require("../../app/models/joke-model");
   const { UuBinaryModel } = require("uu_appg01_binarystore-cmd");
   const JokesInstanceModel = require("../../app/models/jokes-instance-model");
-
   JokesInstanceModel.checkInstance = () => null;
-
   return { JokeModel, UuBinaryModel };
-}
-
-function getSessionMock() {
-  let identity = {
-    getUuIdentity: () => {},
-    getName: () => {}
-  };
-  return {
-    getIdentity: () => identity
-  };
-}
-
-function getAuthzResultMock() {
-  return {
-    getAuthorizedProfiles: () => []
-  };
-}
-
-function getImageStream() {
-  return fs.createReadStream(path.resolve(__dirname, "..", "logo.png"));
 }

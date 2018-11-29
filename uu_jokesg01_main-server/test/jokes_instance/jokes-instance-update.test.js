@@ -1,11 +1,11 @@
 const { TestHelper } = require("uu_appg01_workspace-test");
-const path = require("path");
-const fs = require("fs");
-const { DaoFactory } = require("uu_appg01_server").ObjectStore;
-
-const INIT = "jokesInstance/init";
-const UPDATE = "jokesInstance/update";
-const ROLE_URI = "roleUri";
+const { ObjectStoreError } = require("uu_appg01_server").ObjectStore;
+const {
+  JOKES_INSTANCE_INIT,
+  JOKES_INSTANCE_UPDATE,
+  getImageStream,
+  mockDaoFactory
+} = require("../general-test-hepler");
 
 beforeAll(async () => {
   await TestHelper.setup(null, { authEnabled: false });
@@ -26,26 +26,24 @@ afterEach(() => {
 });
 
 test("HDS - without logo machinations", async () => {
-  let result = await TestHelper.executePostCommand(INIT, { uuAppProfileAuthorities: ROLE_URI });
+  let result = await TestHelper.executePostCommand(JOKES_INSTANCE_INIT, { uuAppProfileAuthorities: "." });
   expect(result.state).toEqual("underConstruction");
 
   let closed = "closed";
-  result = await TestHelper.executePostCommand(UPDATE, { state: closed });
+  result = await TestHelper.executePostCommand(JOKES_INSTANCE_UPDATE, { state: closed });
   expect(result.status).toEqual(200);
   expect(result.state).toEqual(closed);
 });
 
 test("HDS - create logo", async () => {
-  let result = await TestHelper.executePostCommand(INIT, { uuAppProfileAuthorities: ROLE_URI });
+  let result = await TestHelper.executePostCommand(JOKES_INSTANCE_INIT, { uuAppProfileAuthorities: "." });
   expect(result.logo).toBeUndefined();
   // there are no binaries yet
   result = await TestHelper.executeGetCommand("uu-app-binarystore/listBinaries");
   expect(result.pageInfo.total).toEqual(0);
 
-  let dtoIn = {
-    logo: getLogoStream()
-  };
-  result = await TestHelper.executePostCommand(UPDATE, dtoIn);
+  let dtoIn = { logo: getImageStream() };
+  result = await TestHelper.executePostCommand(JOKES_INSTANCE_UPDATE, dtoIn);
   expect(result.status).toEqual(200);
   expect(result.logo).toEqual("logo");
 
@@ -55,21 +53,16 @@ test("HDS - create logo", async () => {
 });
 
 test("HDS - update logo", async () => {
-  let dtoIn = {
-    uuAppProfileAuthorities: ROLE_URI,
-    logo: getLogoStream()
-  };
-  let result = await TestHelper.executePostCommand(INIT, dtoIn);
+  let dtoIn = { uuAppProfileAuthorities: ".", logo: getImageStream() };
+  let result = await TestHelper.executePostCommand(JOKES_INSTANCE_INIT, dtoIn);
   expect(result.logo).toEqual("logo");
 
   // the binary has been just created, its revision is 0
   result = await TestHelper.executeGetCommand("uu-app-binarystore/getBinary", { code: result.logo });
   expect(result.sys.rev).toEqual(0);
 
-  dtoIn = {
-    logo: getLogoStream()
-  };
-  result = await TestHelper.executePostCommand(UPDATE, dtoIn);
+  dtoIn = { logo: getImageStream() };
+  result = await TestHelper.executePostCommand(JOKES_INSTANCE_UPDATE, dtoIn);
   expect(result.status).toEqual(200);
   expect(result.logo).toEqual("logo");
 
@@ -79,9 +72,9 @@ test("HDS - update logo", async () => {
 });
 
 test("A1 - unsupported keys", async () => {
-  await TestHelper.executePostCommand(INIT, { uuAppProfileAuthorities: ROLE_URI });
+  await TestHelper.executePostCommand(JOKES_INSTANCE_INIT, { uuAppProfileAuthorities: "." });
 
-  let result = await TestHelper.executePostCommand(UPDATE, { something: "something" });
+  let result = await TestHelper.executePostCommand(JOKES_INSTANCE_UPDATE, { something: "something" });
   expect(result.status).toBe(200);
   let errorMap = result.uuAppErrorMap;
   expect(errorMap).toBeTruthy();
@@ -94,7 +87,7 @@ test("A1 - unsupported keys", async () => {
 test("A2 - invalid dtoIn", async () => {
   expect.assertions(2);
   try {
-    await TestHelper.executePostCommand(UPDATE, { state: "Czech Republic" });
+    await TestHelper.executePostCommand(JOKES_INSTANCE_UPDATE, { state: "Czech Republic" });
   } catch (e) {
     expect(e.code).toEqual("uu-jokes-main/jokesInstance/update/invalidDtoIn");
     expect(e.message).toEqual("DtoIn is not valid.");
@@ -103,11 +96,9 @@ test("A2 - invalid dtoIn", async () => {
 
 test("A3 - updating logo, but jokes instance does not exist", async () => {
   expect.assertions(2);
-  let dtoIn = {
-    logo: getLogoStream()
-  };
+  let dtoIn = { logo: getImageStream() };
   try {
-    await TestHelper.executePostCommand(UPDATE, dtoIn);
+    await TestHelper.executePostCommand(JOKES_INSTANCE_UPDATE, dtoIn);
   } catch (e) {
     expect(e.code).toEqual("uu-jokes-main/jokesInstance/update/jokesInstanceDoesNotExist");
     expect(e.message).toEqual("JokesInstance does not exist.");
@@ -125,9 +116,7 @@ test("A4 - creating logo fails", async () => {
     return {};
   };
 
-  let dtoIn = {
-    logo: getLogoStream()
-  };
+  let dtoIn = { logo: getImageStream() };
   try {
     await JokesInstanceModel.update("awid", dtoIn);
   } catch (e) {
@@ -147,9 +136,7 @@ test("A5 - updating logo fails", async () => {
     return { logo: "code" };
   };
 
-  let dtoIn = {
-    logo: getLogoStream()
-  };
+  let dtoIn = { logo: getImageStream() };
   try {
     await JokesInstanceModel.update("awid", dtoIn);
   } catch (e) {
@@ -158,20 +145,26 @@ test("A5 - updating logo fails", async () => {
   }
 });
 
-function mockModels() {
-  // this mock ensures that all of the models can be required
-  jest.spyOn(DaoFactory, "getDao").mockImplementation(() => {
-    let dao = {};
-    dao.createSchema = () => {};
-    return dao;
-  });
+test("A6 - updating joke instance fails", async () => {
+  expect.assertions(2);
 
+  let { JokesInstanceModel } = mockModels();
+  JokesInstanceModel.dao.update = () => {
+    throw new ObjectStoreError("it failed.");
+  };
+
+  let dtoIn = { state: "active" };
+  try {
+    await JokesInstanceModel.update("awid", dtoIn);
+  } catch (e) {
+    expect(e.code).toEqual("uu-jokes-main/jokesInstance/update/jokesInstanceDaoUpdateByAwidFailed");
+    expect(e.message).toEqual("Update jokesInstance by jokesInstance Dao updateByAwid failed.");
+  }
+});
+
+function mockModels() {
+  mockDaoFactory();
   const JokesInstanceModel = require("../../app/models/jokes-instance-model");
   const { UuBinaryModel } = require("uu_appg01_binarystore-cmd");
-
   return { JokesInstanceModel, UuBinaryModel };
-}
-
-function getLogoStream() {
-  return fs.createReadStream(path.resolve(__dirname, "..", "logo.png"));
 }
