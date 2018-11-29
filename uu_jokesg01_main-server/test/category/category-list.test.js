@@ -107,7 +107,7 @@ test("A4 - unsupported keys in dtoIn", async () => {
   await TestHelper.login("Authority");
   let response = await TestHelper.executeGetCommand(LIST, { brambor: true });
   expect(response.status).toEqual(200);
-  let warning = response.data.uuAppErrorMap["uu-jokes-main/category/list/unsupportedKeys"];
+  let warning = response.uuAppErrorMap["uu-jokes-main/category/list/unsupportedKeys"];
   expect(warning).toBeTruthy();
   expect(warning.type).toEqual("warning");
   expect(warning.message).toEqual("DtoIn contains unsupported keys.");

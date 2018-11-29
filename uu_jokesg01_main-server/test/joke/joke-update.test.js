@@ -38,10 +38,10 @@ test("HDS - no image", async () => {
     text: `${string}${string}${string}`
   });
   expect(update.status).toEqual(200);
-  expect(update.data.name).not.toEqual(create.data.name);
-  expect(update.data.name).toEqual(`${string}${string}`);
-  expect(update.data.text).not.toEqual(create.data.text);
-  expect(update.data.text).toEqual(`${string}${string}${string}`);
+  expect(update.name).not.toEqual(create.name);
+  expect(update.name).toEqual(`${string}${string}`);
+  expect(update.text).not.toEqual(create.text);
+  expect(update.text).toEqual(`${string}${string}${string}`);
 });
 
 test("HDS - create image", async () => {
@@ -50,13 +50,13 @@ test("HDS - create image", async () => {
   let create = await TestHelper.executePostCommand(CREATE, { name: "mlzi se tu Okna" });
   let update = await TestHelper.executePostCommand(UPDATE, { id: create.id, image: getImageStream() });
   expect(update.status).toEqual(200);
-  expect(update.data.image).not.toEqual(create.data.image);
-  expect(update.data.image).toBeTruthy();
+  expect(update.image).not.toEqual(create.image);
+  expect(update.image).toBeTruthy();
 
   //check if binary was really created
   let result = await TestHelper.executeGetCommand("uu-app-binarystore/listBinaries");
-  expect(result.data.pageInfo.total).toEqual(1);
-  expect(result.data.itemList[0].code).toEqual(update.data.image);
+  expect(result.pageInfo.total).toEqual(1);
+  expect(result.itemList[0].code).toEqual(update.image);
 });
 
 test("HDS - update image", async () => {
@@ -69,17 +69,17 @@ test("HDS - update image", async () => {
 
   // check if binary was created
   let result = await TestHelper.executeGetCommand("uu-app-binarystore/listBinaries");
-  expect(result.data.pageInfo.total).toEqual(1);
-  expect(result.data.itemList[0].sys.rev).toEqual(0);
+  expect(result.pageInfo.total).toEqual(1);
+  expect(result.itemList[0].sys.rev).toEqual(0);
 
   let update = await TestHelper.executePostCommand(UPDATE, { image: getImageStream(), id: create.id });
-  expect(update.data.image).toEqual(create.data.image);
-  expect(update.data.image).toBeTruthy();
+  expect(update.image).toEqual(create.image);
+  expect(update.image).toBeTruthy();
 
   // check if binary was updated
   result = await TestHelper.executeGetCommand("uu-app-binarystore/listBinaries");
-  expect(result.data.pageInfo.total).toEqual(1);
-  expect(result.data.itemList[0].sys.rev).toEqual(1);
+  expect(result.pageInfo.total).toEqual(1);
+  expect(result.itemList[0].sys.rev).toEqual(1);
 });
 
 test("A1 - jokes instance does not exist", async () => {
@@ -113,7 +113,7 @@ test("A3 - unsupported keys in dtoIn", async () => {
   let joke = await TestHelper.executePostCommand(CREATE, { name: "Velmi vtipny vtip, opet.." });
   joke = await TestHelper.executePostCommand(UPDATE, { id: joke.id, zmatenyTurista: "kudy se dostanu na..." });
   expect(joke.status).toEqual(200);
-  let warning = joke.data.uuAppErrorMap["uu-jokes-main/joke/update/unsupportedKeys"];
+  let warning = joke.uuAppErrorMap["uu-jokes-main/joke/update/unsupportedKeys"];
   expect(warning).toBeTruthy();
 });
 
@@ -176,8 +176,8 @@ test("A7 - categories don't exist", async () => {
   });
 
   expect(joke.status).toEqual(200);
-  expect(joke.data.categoryList).toEqual([existingCategoryId]);
-  let warning = joke.data.uuAppErrorMap["uu-jokes-main/joke/update/categoryDoesNotExist"];
+  expect(joke.categoryList).toEqual([existingCategoryId]);
+  let warning = joke.uuAppErrorMap["uu-jokes-main/joke/update/categoryDoesNotExist"];
   expect(warning).toBeTruthy();
   expect(warning.type).toEqual("warning");
   expect(warning.message).toEqual("One or more categories with given categoryId do not exist.");

@@ -58,7 +58,7 @@ test("HDS - deleting image", async () => {
     expect(e.code).toEqual("uu-jokes-main/joke/get/jokeDoesNotExist");
   }
   let binaries = await TestHelper.executeGetCommand("uu-app-binarystore/listBinaries");
-  expect(binaries.data.pageInfo.total).toEqual(0);
+  expect(binaries.pageInfo.total).toEqual(0);
 });
 
 test("HDS - deleting ratings", async () => {
@@ -123,7 +123,7 @@ test("A3 - unsupported keys in dtoIn", async () => {
   let joke = await TestHelper.executePostCommand(CREATE, { name: "If the police shows up.." });
   joke = await TestHelper.executePostCommand(DELETE, { id: joke.id, continued: "..we will give them so much money.." });
   expect(joke.status).toEqual(200);
-  let warning = joke.data.uuAppErrorMap["uu-jokes-main/joke/delete/unsupportedKeys"];
+  let warning = joke.uuAppErrorMap["uu-jokes-main/joke/delete/unsupportedKeys"];
   expect(warning).toBeTruthy();
   expect(warning.type).toEqual("warning");
   expect(warning.message).toEqual("DtoIn contains unsupported keys.");

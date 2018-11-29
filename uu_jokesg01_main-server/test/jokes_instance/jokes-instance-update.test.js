@@ -27,17 +27,17 @@ afterEach(() => {
 
 test("HDS - without logo machinations", async () => {
   let result = await TestHelper.executePostCommand(INIT, { uuAppProfileAuthorities: ROLE_URI });
-  expect(result.data.state).toEqual("underConstruction");
+  expect(result.state).toEqual("underConstruction");
 
   let closed = "closed";
   result = await TestHelper.executePostCommand(UPDATE, { state: closed });
   expect(result.status).toEqual(200);
-  expect(result.data.state).toEqual(closed);
+  expect(result.state).toEqual(closed);
 });
 
 test("HDS - create logo", async () => {
   let result = await TestHelper.executePostCommand(INIT, { uuAppProfileAuthorities: ROLE_URI });
-  expect(result.data.logo).toBeUndefined();
+  expect(result.logo).toBeUndefined();
   // there are no binaries yet
   result = await TestHelper.executeGetCommand("uu-app-binarystore/listBinaries");
   expect(result.pageInfo.total).toEqual(0);
@@ -47,7 +47,7 @@ test("HDS - create logo", async () => {
   };
   result = await TestHelper.executePostCommand(UPDATE, dtoIn);
   expect(result.status).toEqual(200);
-  expect(result.data.logo).toEqual("logo");
+  expect(result.logo).toEqual("logo");
 
   // check if binary was really created
   result = await TestHelper.executeGetCommand("uu-app-binarystore/listBinaries");
@@ -60,22 +60,22 @@ test("HDS - update logo", async () => {
     logo: getLogoStream()
   };
   let result = await TestHelper.executePostCommand(INIT, dtoIn);
-  expect(result.data.logo).toEqual("logo");
+  expect(result.logo).toEqual("logo");
 
   // the binary has been just created, its revision is 0
-  result = await TestHelper.executeGetCommand("uu-app-binarystore/getBinary", { code: result.data.logo });
-  expect(result.data.sys.rev).toEqual(0);
+  result = await TestHelper.executeGetCommand("uu-app-binarystore/getBinary", { code: result.logo });
+  expect(result.sys.rev).toEqual(0);
 
   dtoIn = {
     logo: getLogoStream()
   };
   result = await TestHelper.executePostCommand(UPDATE, dtoIn);
   expect(result.status).toEqual(200);
-  expect(result.data.logo).toEqual("logo");
+  expect(result.logo).toEqual("logo");
 
   // the binary was updated, i.e. revision increased
-  result = await TestHelper.executeGetCommand("uu-app-binarystore/getBinary", { code: result.data.logo });
-  expect(result.data.sys.rev).toEqual(1);
+  result = await TestHelper.executeGetCommand("uu-app-binarystore/getBinary", { code: result.logo });
+  expect(result.sys.rev).toEqual(1);
 });
 
 test("A1 - unsupported keys", async () => {
@@ -83,7 +83,7 @@ test("A1 - unsupported keys", async () => {
 
   let result = await TestHelper.executePostCommand(UPDATE, { something: "something" });
   expect(result.status).toBe(200);
-  let errorMap = result.data.uuAppErrorMap;
+  let errorMap = result.uuAppErrorMap;
   expect(errorMap).toBeTruthy();
   let warning = errorMap["uu-jokes-main/jokesInstance/update/unsupportedKeys"];
   expect(warning).toBeTruthy();

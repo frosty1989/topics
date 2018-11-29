@@ -27,7 +27,7 @@ test("HDS", async () => {
   let create = await TestHelper.executePostCommand(CREATE, { name: "Silvester Stalin" });
   let get = await TestHelper.executeGetCommand(GET, { id: create.id });
   expect(get.status).toEqual(200);
-  expect(get.data).toEqual(create.data);
+  expect(get).toEqual(create);
 });
 
 test("A1 - jokes instance does not exist", async () => {
@@ -80,7 +80,7 @@ test("A4 - unsupported keys in dtoIn", async () => {
   let joke = await TestHelper.executePostCommand(CREATE, { name: "zelena okurka" });
   joke = await TestHelper.executeGetCommand(GET, { id: joke.id, cosi: "to je jedno, co tu je" });
   expect(joke.status).toEqual(200);
-  let warning = joke.data.uuAppErrorMap["uu-jokes-main/joke/get/unsupportedKeys"];
+  let warning = joke.uuAppErrorMap["uu-jokes-main/joke/get/unsupportedKeys"];
   expect(warning).toBeTruthy();
   expect(warning.type).toEqual("warning");
   expect(warning.message).toEqual("DtoIn contains unsupported keys.");

@@ -57,7 +57,7 @@ test("HDS - no image, Authorities call", async () => {
   };
   let joke = await TestHelper.executePostCommand(CREATE, dtoIn);
   expect(joke.status).toEqual(200);
-  let dtoOut = joke.data;
+  let dtoOut = joke;
   expect(dtoOut.text).toEqual(text);
   expect(dtoOut.name).toEqual(name);
   expect(dtoOut.uuIdentity).toEqual("19-7019-1");
@@ -81,7 +81,7 @@ test("HDS - no image, Executives call", async () => {
   };
   let joke = await TestHelper.executePostCommand(CREATE, dtoIn);
   expect(joke.status).toEqual(200);
-  let dtoOut = joke.data;
+  let dtoOut = joke;
   expect(dtoOut.uuIdentity).toEqual("14-2710-1");
   expect(dtoOut.visibility).toEqual(false);
   expect(dtoOut.uuAppErrorMap).toEqual({});
@@ -97,7 +97,7 @@ test("HDS - image", async () => {
   };
   let joke = await TestHelper.executePostCommand(CREATE, dtoIn);
   expect(joke.status).toEqual(200);
-  let dtoOut = joke.data;
+  let dtoOut = joke;
   expect(dtoOut.image).toBeTruthy();
   expect(dtoOut.uuAppErrorMap).toEqual({});
 });
@@ -133,7 +133,7 @@ test("A3 - unsupported keys in dtoIn", async () => {
 
   let joke = await TestHelper.executePostCommand(CREATE, { name: "Hrebik v zasuvce", navic: "ja jsem navic" });
   expect(joke.status).toEqual(200);
-  let warning = joke.data.uuAppErrorMap["uu-jokes-main/joke/create/unsupportedKeys"];
+  let warning = joke.uuAppErrorMap["uu-jokes-main/joke/create/unsupportedKeys"];
   expect(warning).toBeTruthy();
   expect(warning.type).toEqual("warning");
   expect(warning.message).toEqual("DtoIn contains unsupported keys.");
@@ -191,7 +191,7 @@ test("A6 - categories don't exist", async () => {
 
   let result = await TestHelper.executePostCommand(CREATE, dtoIn);
   expect(result.status).toBe(200);
-  let dtoOut = result.data;
+  let dtoOut = result;
   expect(dtoOut.categoryList).toEqual([existingCategoryId]);
 
   let warning = dtoOut.uuAppErrorMap["uu-jokes-main/joke/create/categoryDoesNotExist"];

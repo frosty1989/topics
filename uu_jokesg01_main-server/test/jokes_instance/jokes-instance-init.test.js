@@ -27,14 +27,14 @@ test("HDS with minimal dtoIn and without logo", async () => {
   let roleUri = "kedluben"; //almost any string can pass as uri
   let result = await TestHelper.executePostCommand(USE_CASE, { uuAppProfileAuthorities: roleUri });
   expect(result.status).toBe(200);
-  let dtoOut = result.data;
+  let dtoOut = result;
   expect(dtoOut.state).toEqual("underConstruction");
   expect(dtoOut.name).toEqual("uuJokes");
   expect(dtoOut.logo).toBeUndefined();
 
   result = await TestHelper.executeGetCommand("sys/getProfile", { code: "Authorities" });
   expect(result.status).toBe(200);
-  expect(result.data.roleUri).toEqual(roleUri);
+  expect(result.roleUri).toEqual(roleUri);
 });
 
 test("HDS with minimal dtoIn and logo", async () => {
@@ -44,7 +44,7 @@ test("HDS with minimal dtoIn and logo", async () => {
   };
   let result = await TestHelper.executePostCommand(USE_CASE, dtoIn);
   expect(result.status).toBe(200);
-  let dtoOut = result.data;
+  let dtoOut = result;
   expect(dtoOut.state).toEqual("underConstruction");
   expect(dtoOut.name).toEqual("uuJokes");
   expect(dtoOut.logo).toEqual("logo");
@@ -64,7 +64,7 @@ test("HDS with more complete dtoIn", async () => {
   };
   let result = await TestHelper.executePostCommand(USE_CASE, dtoIn);
   expect(result.status).toBe(200);
-  let dtoOut = result.data;
+  let dtoOut = result;
   expect(dtoOut.state).toEqual(state);
   expect(dtoOut.name).toEqual(name);
   expect(dtoOut.logo).toBeUndefined();
@@ -89,7 +89,7 @@ test("A2 - unsupported keys", async () => {
   let result = await TestHelper.executePostCommand(USE_CASE, dtoIn);
   expect(result.status).toBe(200);
 
-  let errorMap = result.data.uuAppErrorMap;
+  let errorMap = result.uuAppErrorMap;
   expect(errorMap).toBeTruthy();
   let warning = errorMap["uu-jokes-main/jokesInstance/init/unsupportedKeys"];
   expect(warning).toBeTruthy();

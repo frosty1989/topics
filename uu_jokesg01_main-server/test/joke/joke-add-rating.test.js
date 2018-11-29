@@ -31,12 +31,12 @@ test("HDS - vote for the first time", async () => {
   await TestHelper.login("Authority");
   let response = await TestHelper.executePostCommand(CREATE, { name: "And she knows that.." });
   await TestHelper.login("Executive");
-  let ratedResponse = await TestHelper.executePostCommand(ADD_RATING, { id: response.data.id, rating: 4 });
+  let ratedResponse = await TestHelper.executePostCommand(ADD_RATING, { id: response.id, rating: 4 });
   expect(ratedResponse.status).toEqual(200);
-  expect(ratedResponse.data.averageRating).toEqual(4);
-  expect(ratedResponse.data.ratingCount).toEqual(1);
-  response = await TestHelper.executeGetCommand(GET, { id: response.data.id });
-  expect(response.data).toEqual(ratedResponse.data);
+  expect(ratedResponse.averageRating).toEqual(4);
+  expect(ratedResponse.ratingCount).toEqual(1);
+  response = await TestHelper.executeGetCommand(GET, { id: response.id });
+  expect(response).toEqual(ratedResponse);
 });
 
 test("HDS - change the vote, it wasn't funny after all", async () => {
@@ -44,16 +44,16 @@ test("HDS - change the vote, it wasn't funny after all", async () => {
   await TestHelper.login("Authority");
   let response = await TestHelper.executePostCommand(CREATE, { name: "it'd be tragic if thos eveil robots win" });
   await TestHelper.login("Executive");
-  let ratedResponse = await TestHelper.executePostCommand(ADD_RATING, { id: response.data.id, rating: 4 });
+  let ratedResponse = await TestHelper.executePostCommand(ADD_RATING, { id: response.id, rating: 4 });
   expect(ratedResponse.status).toEqual(200);
-  expect(ratedResponse.data.averageRating).toEqual(4);
-  expect(ratedResponse.data.ratingCount).toEqual(1);
-  ratedResponse = await TestHelper.executePostCommand(ADD_RATING, { id: response.data.id, rating: 1 });
+  expect(ratedResponse.averageRating).toEqual(4);
+  expect(ratedResponse.ratingCount).toEqual(1);
+  ratedResponse = await TestHelper.executePostCommand(ADD_RATING, { id: response.id, rating: 1 });
   expect(ratedResponse.status).toEqual(200);
-  expect(ratedResponse.data.averageRating).toEqual(1);
-  expect(ratedResponse.data.ratingCount).toEqual(1);
-  response = await TestHelper.executeGetCommand(GET, { id: response.data.id });
-  expect(response.data).toEqual(ratedResponse.data);
+  expect(ratedResponse.averageRating).toEqual(1);
+  expect(ratedResponse.ratingCount).toEqual(1);
+  response = await TestHelper.executeGetCommand(GET, { id: response.id });
+  expect(response).toEqual(ratedResponse);
 });
 
 test("HDS - correct rating recalculating", async () => {
@@ -73,14 +73,14 @@ test("HDS - correct rating recalculating", async () => {
   // cast the first vote
   let response = await TestHelper.executePostCommand(ADD_RATING, { id: MONGO_ID, rating: 2 });
   expect(response.status).toEqual(200);
-  expect(response.data.averageRating).toEqual(3.2);
-  expect(response.data.ratingCount).toEqual(5);
+  expect(response.averageRating).toEqual(3.2);
+  expect(response.ratingCount).toEqual(5);
 
   // change the vote
   response = await TestHelper.executePostCommand(ADD_RATING, { id: MONGO_ID, rating: 1 });
   expect(response.status).toEqual(200);
-  expect(response.data.averageRating).toEqual(3);
-  expect(response.data.ratingCount).toEqual(5);
+  expect(response.averageRating).toEqual(3);
+  expect(response.ratingCount).toEqual(5);
 });
 
 test("A1 - jokes instance does not exist", async () => {
@@ -115,7 +115,7 @@ test("A3 - unsupported keys in dtoIn", async () => {
   await TestHelper.login("Executive");
   joke = await TestHelper.executePostCommand(ADD_RATING, { id: joke.id, rating: 3, dog: "woof" });
   expect(joke.status).toEqual(200);
-  let warning = joke.data.uuAppErrorMap["uu-jokes-main/joke/addRating/unsupportedKeys"];
+  let warning = joke.uuAppErrorMap["uu-jokes-main/joke/addRating/unsupportedKeys"];
   expect(warning).toBeTruthy();
 });
 

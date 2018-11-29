@@ -31,10 +31,10 @@ test("HDS", async () => {
   let joke = await TestHelper.executePostCommand(CREATE, {
     name: "She lives with a broken man, a cracked polystyrene man"
   });
-  expect(joke.data.visibility).toEqual(true);
+  expect(joke.visibility).toEqual(true);
   joke = await TestHelper.executePostCommand(UPDATE_VISIBILITY, { id: joke.id, visibility: false });
   expect(joke.status).toEqual(200);
-  expect(joke.data.visibility).toEqual(false);
+  expect(joke.visibility).toEqual(false);
 });
 
 test("A1 - jokes instance does not exist", async () => {
@@ -68,7 +68,7 @@ test("A3 - unsupported keys in dtoIn", async () => {
   let joke = await TestHelper.executePostCommand(CREATE, { name: "Predavkovali se smutnymi pribehy" });
   joke = await TestHelper.executePostCommand(UPDATE_VISIBILITY, { id: joke.id, visibility: true, ema: "mele maso" });
   expect(joke.status).toEqual(200);
-  let warning = joke.data.uuAppErrorMap["uu-jokes-main/joke/updateVisibility/unsupportedKeys"];
+  let warning = joke.uuAppErrorMap["uu-jokes-main/joke/updateVisibility/unsupportedKeys"];
   expect(warning).toBeTruthy();
 });
 

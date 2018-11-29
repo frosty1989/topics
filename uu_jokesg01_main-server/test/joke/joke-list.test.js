@@ -31,7 +31,7 @@ test("HDS", async () => {
 
   let response = await TestHelper.executeGetCommand(LIST);
   expect(response.status).toEqual(200);
-  let dtoOut = response.data;
+  let dtoOut = response;
   expect(dtoOut.pageInfo.total).toEqual(3);
   expect(dtoOut.pageInfo.pageIndex).toEqual(0);
   expect(dtoOut.pageInfo.pageSize).toEqual(100);
@@ -52,7 +52,7 @@ test("HDS - default sort by (name), default order (ascending)", async () => {
 
   let response = await TestHelper.executeGetCommand(LIST);
   expect(response.status).toEqual(200);
-  let dtoOut = response.data;
+  let dtoOut = response;
   expect(dtoOut.pageInfo.total).toEqual(3);
   expect(dtoOut.itemList[0].name).toEqual("A");
   expect(dtoOut.itemList[1].name).toEqual("B");
@@ -70,7 +70,7 @@ test("HDS - default sort by (name), custom order", async () => {
 
   let response = await TestHelper.executeGetCommand(LIST, { order: "desc" });
   expect(response.status).toEqual(200);
-  let dtoOut = response.data;
+  let dtoOut = response;
   expect(dtoOut.pageInfo.total).toEqual(3);
   expect(dtoOut.itemList[0].name).toEqual("C");
   expect(dtoOut.itemList[1].name).toEqual("B");
@@ -92,7 +92,7 @@ test("HDS - custom sort by, default order (ascending)", async () => {
 
   let response = await TestHelper.executeGetCommand(LIST, { sortBy: "rating" });
   expect(response.status).toEqual(200);
-  let dtoOut = response.data;
+  let dtoOut = response;
   expect(dtoOut.pageInfo.total).toEqual(3);
   expect(dtoOut.itemList[0].name).toEqual("B");
   expect(dtoOut.itemList[1].name).toEqual("C");
@@ -112,7 +112,7 @@ test("HDS - pageInfo", async () => {
   let pSize = 1;
   let response = await TestHelper.executeGetCommand(LIST, { pageInfo: { pageSize: pSize, pageIndex: pIndex } });
   expect(response.status).toEqual(200);
-  let dtoOut = response.data;
+  let dtoOut = response;
   expect(dtoOut.pageInfo.total).toEqual(3);
   expect(dtoOut.pageInfo.pageIndex).toEqual(pIndex);
   expect(dtoOut.pageInfo.pageSize).toEqual(pSize);
@@ -131,7 +131,7 @@ test("HDS - only pageSize in pageInfo", async () => {
   let pSize = 1;
   let response = await TestHelper.executeGetCommand(LIST, { pageInfo: { pageSize: pSize } });
   expect(response.status).toEqual(200);
-  let dtoOut = response.data;
+  let dtoOut = response;
   expect(dtoOut.pageInfo.total).toEqual(3);
   expect(dtoOut.pageInfo.pageIndex).toEqual(0);
   expect(dtoOut.pageInfo.pageSize).toEqual(pSize);
@@ -150,7 +150,7 @@ test("HDS - only pageIndex in pageInfo", async () => {
   let pIndex = 2;
   let response = await TestHelper.executeGetCommand(LIST, { pageInfo: { pageIndex: pIndex } });
   expect(response.status).toEqual(200);
-  let dtoOut = response.data;
+  let dtoOut = response;
   expect(dtoOut.pageInfo.total).toEqual(3);
   expect(dtoOut.pageInfo.pageIndex).toEqual(pIndex);
   expect(dtoOut.pageInfo.pageSize).toEqual(100);
@@ -175,7 +175,7 @@ test("HDS - filter by category", async () => {
   // from string to mongodb's objectID in some dao.
   let response = await TestHelper.executeGetCommand(LIST, { categoryList: [MONGO_ID, `${MONGO_ID}12345678`] });
   expect(response.status).toEqual(200);
-  let dtoOut = response.data;
+  let dtoOut = response;
   expect(dtoOut.pageInfo.total).toEqual(2);
   expect(dtoOut.itemList[0].name).toEqual("A");
   expect(dtoOut.itemList[1].name).toEqual("C");
@@ -230,7 +230,7 @@ test("A4 - unsupported keys in dtoIn", async () => {
   await TestHelper.login("Authority");
   let response = await TestHelper.executeGetCommand(LIST, { kedluben: true });
   expect(response.status).toEqual(200);
-  let warning = response.data.uuAppErrorMap["uu-jokes-main/joke/list/unsupportedKeys"];
+  let warning = response.uuAppErrorMap["uu-jokes-main/joke/list/unsupportedKeys"];
   expect(warning).toBeTruthy();
   expect(warning.type).toEqual("warning");
   expect(warning.message).toEqual("DtoIn contains unsupported keys.");

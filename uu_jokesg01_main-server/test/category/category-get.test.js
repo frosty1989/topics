@@ -29,12 +29,12 @@ test("HDS", async () => {
   // get category by id
   let getOne = await TestHelper.executeGetCommand(GET, { id: create.id });
   expect(getOne.status).toEqual(200);
-  expect(getOne.data).toEqual(create.data);
+  expect(getOne).toEqual(create);
 
   // get category by name (it is the same category as before)
   let getTwo = await TestHelper.executeGetCommand(GET, { name: name });
   expect(getTwo.status).toEqual(200);
-  expect(getTwo.data).toEqual(getOne.data);
+  expect(getTwo).toEqual(getOne);
 });
 
 test("A1 - jokes instance does not exist", async () => {
@@ -81,7 +81,7 @@ test("A4 - unsupported keys in dtoIn", async () => {
   let joke = await TestHelper.executePostCommand(CREATE, { name: "..." });
   joke = await TestHelper.executeGetCommand(GET, { id: joke.id, whatThe: "heck" });
   expect(joke.status).toEqual(200);
-  let warning = joke.data.uuAppErrorMap["uu-jokes-main/category/get/unsupportedKeys"];
+  let warning = joke.uuAppErrorMap["uu-jokes-main/category/get/unsupportedKeys"];
   expect(warning).toBeTruthy();
   expect(warning.type).toEqual("warning");
   expect(warning.message).toEqual("DtoIn contains unsupported keys.");

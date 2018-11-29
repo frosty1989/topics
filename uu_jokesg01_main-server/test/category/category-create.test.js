@@ -29,7 +29,7 @@ test("HDS", async () => {
   let categoryName = "(Mg,Fe2+)2(Mg,Fe2+)5Si8O2(OH)2";
   let response = await TestHelper.executePostCommand(CREATE, { name: categoryName });
   expect(response.status).toEqual(200);
-  let dtoOut = response.data;
+  let dtoOut = response;
   expect(dtoOut.name).toEqual(categoryName);
   expect(dtoOut.icon).toEqual("mdi-label");
   expect(dtoOut.awid).toEqual(TestHelper.getAwid());
@@ -66,7 +66,7 @@ test("A3 - unsupported keys in dtoIn", async () => {
   await TestHelper.login("Authority");
   let response = await TestHelper.executePostCommand(CREATE, { name: "I don't know anymore..", pche: "brm brm" });
   expect(response.status).toEqual(200);
-  let warning = response.data.uuAppErrorMap["uu-jokes-main/category/create/unsupportedKeys"];
+  let warning = response.uuAppErrorMap["uu-jokes-main/category/create/unsupportedKeys"];
   expect(warning).toBeTruthy();
   expect(warning.type).toEqual("warning");
   expect(warning.message).toEqual("DtoIn contains unsupported keys.");

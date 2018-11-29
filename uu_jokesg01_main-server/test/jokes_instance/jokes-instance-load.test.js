@@ -22,7 +22,7 @@ test("HDS", async () => {
   await TestHelper.login("Authority");
   let result = await TestHelper.executePostCommand(LOAD);
   expect(result.status).toBe(200);
-  let dtoOut = result.data;
+  let dtoOut = result;
   expect(dtoOut.state).toEqual("underConstruction");
   expect(dtoOut.name).toEqual("uuJokes");
   expect(dtoOut.logo).toBeUndefined();
