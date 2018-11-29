@@ -3,33 +3,33 @@
 const JokeModel = require("../models/joke-model.js");
 
 class JokeController {
-  create(ucEnv) {
+  static create(ucEnv) {
     return JokeModel.create(ucEnv.uri.getAwid(), ucEnv.parameters, ucEnv.session, ucEnv.getAuthorizationResult());
   }
 
-  get(ucEnv) {
+  static get(ucEnv) {
     return JokeModel.get(ucEnv.uri.getAwid(), ucEnv.parameters);
   }
 
-  update(ucEnv) {
+  static update(ucEnv) {
     return JokeModel.update(ucEnv.uri.getAwid(), ucEnv.parameters, ucEnv.session, ucEnv.getAuthorizationResult());
   }
 
-  updateVisibility(ucEnv) {
+  static updateVisibility(ucEnv) {
     return JokeModel.updateVisibility(ucEnv.uri.getAwid(), ucEnv.parameters);
   }
 
-  delete(ucEnv) {
+  static delete(ucEnv) {
     return JokeModel.delete(ucEnv.uri.getAwid(), ucEnv.parameters, ucEnv.session, ucEnv.getAuthorizationResult());
   }
 
-  list(ucEnv) {
+  static list(ucEnv) {
     return JokeModel.list(ucEnv.uri.getAwid(), ucEnv.parameters);
   }
 
-  addRating(ucEnv) {
+  static addRating(ucEnv) {
     return JokeModel.addRating(ucEnv.uri.getAwid(), ucEnv.parameters, ucEnv.session);
   }
 }
 
-module.exports = new JokeController();
+module.exports = JokeController;
