@@ -1,15 +1,15 @@
 {
   "_type": "export",
   "__export_format": 3,
-  "__export_date": "2018-06-20T09:18:39.272Z",
-  "__export_source": "insomnia.desktop.app:v5.16.6",
+  "__export_date": "2018-11-30T12:03:24.423Z",
+  "__export_source": "insomnia.desktop.app:v6.0.1",
   "resources": [
     {
       "_id": "wrk_febe812c08564d3c9c547a1093c2c350",
       "created": 1529416531547,
       "description": "",
-      "modified": 1529416531547,
-      "name": "uuJokes javascript",
+      "modified": 1543483981973,
+      "name": "uuJokes node.js",
       "parentId": null,
       "_type": "workspace"
     },
@@ -18,11 +18,12 @@
       "color": null,
       "created": 1529416531704,
       "data": {
-        "contextPath": "uu-demoappg01-main",
+        "contextPath": "uu-jokes-maing01",
         "token": "<token>"
       },
       "isPrivate": false,
-      "modified": 1529416617597,
+      "metaSortKey": 1543483722005,
+      "modified": 1543484201336,
       "name": "New Environment",
       "parentId": "wrk_febe812c08564d3c9c547a1093c2c350",
       "_type": "environment"
@@ -41,56 +42,44 @@
       "created": 1529483906651,
       "description": "",
       "environment": {},
-      "metaSortKey": -1529483906651,
-      "modified": 1529483906651,
+      "metaSortKey": -1543484084617,
+      "modified": 1543484138997,
       "name": "sys",
       "parentId": "wrk_febe812c08564d3c9c547a1093c2c350",
       "_type": "request_group"
     },
     {
-      "_id": "fld_bfb1bfe66fab4c0ca291d0bed39a6695",
-      "created": 1529484066832,
+      "_id": "fld_36a9452556cb4ef2b76213e913cbc2e0",
+      "created": 1543484084567,
       "description": "",
       "environment": {},
-      "metaSortKey": -1529484066832,
-      "modified": 1529484066832,
-      "name": "uuObjectStore",
+      "metaSortKey": -1543484084613.875,
+      "modified": 1543485126593,
+      "name": "jokesInstance",
       "parentId": "wrk_febe812c08564d3c9c547a1093c2c350",
       "_type": "request_group"
     },
     {
-      "_id": "req_8a99cc02ac154f11b4eaf6194bd995ba",
-      "authentication": {
-        "token": "{{ token  }}",
-        "type": "bearer"
-      },
-      "body": {
-        "mimeType": "application/json",
-        "text": "{\n\t\"uuAppProfileAuthorities\": \"urn:uu:GGALL\"\n}"
-      },
-      "created": 1529483708170,
+      "_id": "fld_639bc615f05d4dd7958f15ffb6ce7a24",
+      "created": 1543484499512,
       "description": "",
-      "headers": [
-        {
-          "id": "pair_d87cb25daad74bf6a0dcef02e3d918d3",
-          "name": "Content-Type",
-          "value": "application/json"
-        }
-      ],
-      "isPrivate": false,
-      "metaSortKey": -1529483708170,
-      "method": "POST",
-      "modified": 1529486169373,
-      "name": "init",
-      "parameters": [],
+      "environment": {},
+      "metaSortKey": -1543484084612.3125,
+      "modified": 1543485127851,
+      "name": "joke",
       "parentId": "wrk_febe812c08564d3c9c547a1093c2c350",
-      "settingDisableRenderRequestBody": false,
-      "settingEncodeUrl": true,
-      "settingRebuildPath": true,
-      "settingSendCookies": true,
-      "settingStoreCookies": true,
-      "url": "{{ host  }}/{{ contextPath  }}/{{ tid  }}-{{ awid  }}/init",
-      "_type": "request"
+      "_type": "request_group"
+    },
+    {
+      "_id": "fld_4ceecec2b2cd480896da7f43c17f01af",
+      "created": 1543485117384,
+      "description": "",
+      "environment": {},
+      "metaSortKey": -1543484084610.75,
+      "modified": 1543485121995,
+      "name": "category",
+      "parentId": "wrk_febe812c08564d3c9c547a1093c2c350",
+      "_type": "request_group"
     },
     {
       "_id": "env_002788c81de34cce929263027ddfc9b1",
@@ -101,11 +90,11 @@
         "awid": "11111111111111111111111111111111",
         "awidOwner": "<awidOwner>",
         "host": "http://localhost:6221",
-        "tid": "00000000000000000000000000000000",
-        "token": "<token>"
+        "tid": "00000000000000000000000000000000"
       },
       "isPrivate": false,
-      "modified": 1529486285234,
+      "metaSortKey": 1543483721822,
+      "modified": 1543484242935,
       "name": "localhost",
       "parentId": "env_ec9e84ca5fdc4dc0abb91b08fbe8c9cd",
       "_type": "environment"
@@ -119,11 +108,11 @@
         "awid": "<awid>",
         "awidOwner": "<awidOwner>",
         "host": "https://uuos9.plus4u.net",
-        "tid": "<tid>",
-        "token": "<token>"
+        "tid": "<tid>"
       },
       "isPrivate": false,
-      "modified": 1529486272684,
+      "metaSortKey": 1543483721729,
+      "modified": 1543484257046,
       "name": "cloud DEV",
       "parentId": "env_ec9e84ca5fdc4dc0abb91b08fbe8c9cd",
       "_type": "environment"
@@ -148,14 +137,15 @@
         }
       ],
       "isPrivate": false,
-      "metaSortKey": -1529483917682,
+      "metaSortKey": -1529485542268,
       "method": "POST",
-      "modified": 1529484010456,
+      "modified": 1543485652284,
       "name": "sys/initApp",
       "parameters": [],
       "parentId": "fld_2f60670987ad4932ae31589cf58581b0",
       "settingDisableRenderRequestBody": false,
       "settingEncodeUrl": true,
+      "settingMaxTimelineDataSize": 1000,
       "settingRebuildPath": true,
       "settingSendCookies": true,
       "settingStoreCookies": true,
@@ -182,14 +172,15 @@
         }
       ],
       "isPrivate": false,
-      "metaSortKey": -1529483936719,
+      "metaSortKey": -1529485542243,
       "method": "POST",
-      "modified": 1529484024735,
+      "modified": 1543485652799,
       "name": "sys/initAppWorkspace",
       "parameters": [],
       "parentId": "fld_2f60670987ad4932ae31589cf58581b0",
       "settingDisableRenderRequestBody": false,
       "settingEncodeUrl": true,
+      "settingMaxTimelineDataSize": 1000,
       "settingRebuildPath": true,
       "settingSendCookies": true,
       "settingStoreCookies": true,
@@ -218,12 +209,13 @@
       "isPrivate": false,
       "metaSortKey": -1529485542218,
       "method": "POST",
-      "modified": 1529485578458,
+      "modified": 1543485653474,
       "name": "sys/createPermission",
       "parameters": [],
       "parentId": "fld_2f60670987ad4932ae31589cf58581b0",
       "settingDisableRenderRequestBody": false,
       "settingEncodeUrl": true,
+      "settingMaxTimelineDataSize": 1000,
       "settingRebuildPath": true,
       "settingSendCookies": true,
       "settingStoreCookies": true,
@@ -231,445 +223,744 @@
       "_type": "request"
     },
     {
-      "_id": "req_75ae8d6dfc4e41d3a29ccbe1fdbc2566",
+      "_id": "req_304d8429aed445d7a4fc88de5e99aece",
       "authentication": {
+        "prefix": "",
         "token": "{{ token  }}",
         "type": "bearer"
       },
       "body": {
         "mimeType": "application/json",
-        "text": "{\n\t\"name\": \"haha joke\",\n\t\"text\": \"That chicken is so black that it tried to steal my bike\",\n\t\"categoryList\": [\"5b2a1924c9f63fb04e6bcffa\"]\n}"
+        "text": "{\n\t\"uuAppProfileAuthorities\": \".\"\n}"
       },
-      "created": 1529484093599,
+      "created": 1543484096943,
       "description": "",
       "headers": [
         {
-          "id": "pair_cbe4c5cb644542fda895eea818e1ba1b",
+          "id": "pair_058dc9a25a5a45fb9e9bf0629625e59f",
           "name": "Content-Type",
           "value": "application/json"
         }
       ],
       "isPrivate": false,
-      "metaSortKey": -1529484093599,
+      "metaSortKey": -1543484334566,
       "method": "POST",
-      "modified": 1529485747001,
-      "name": "createJoke",
+      "modified": 1543579372870,
+      "name": "init",
       "parameters": [],
-      "parentId": "fld_bfb1bfe66fab4c0ca291d0bed39a6695",
+      "parentId": "fld_36a9452556cb4ef2b76213e913cbc2e0",
       "settingDisableRenderRequestBody": false,
       "settingEncodeUrl": true,
+      "settingMaxTimelineDataSize": 1000,
       "settingRebuildPath": true,
       "settingSendCookies": true,
       "settingStoreCookies": true,
-      "url": "{{ host  }}/{{ contextPath  }}/{{ tid  }}-{{ awid  }}/createJoke",
+      "url": "{{ host  }}/{{ contextPath  }}/{{ tid  }}-{{ awid  }}/jokesInstance/init",
       "_type": "request"
     },
     {
-      "_id": "req_466b7d2abcac4d01ba226b544e1a4d9b",
+      "_id": "req_e1e16cceffc74b13aade74bfee3c3d5d",
       "authentication": {
         "token": "{{ token  }}",
         "type": "bearer"
       },
       "body": {
         "mimeType": "application/json",
-        "text": "{\n\t\"id\": \"5b2a1936c9f63fb04e6bcffc\",\n\t\"name\": \"funny joke haha\"\n}"
+        "text": ""
       },
-      "created": 1529484105745,
+      "created": 1543484334516,
       "description": "",
       "headers": [
         {
-          "id": "pair_70ddfdee928244679f1477f4715d494b",
+          "id": "pair_923c53a3b71946d28c78e3ad0975bd09",
           "name": "Content-Type",
           "value": "application/json"
         }
       ],
       "isPrivate": false,
-      "metaSortKey": -1529484105745,
+      "metaSortKey": -1543484334516,
       "method": "POST",
-      "modified": 1529485637893,
-      "name": "updateJoke",
+      "modified": 1543579376046,
+      "name": "load",
       "parameters": [],
-      "parentId": "fld_bfb1bfe66fab4c0ca291d0bed39a6695",
+      "parentId": "fld_36a9452556cb4ef2b76213e913cbc2e0",
       "settingDisableRenderRequestBody": false,
       "settingEncodeUrl": true,
+      "settingMaxTimelineDataSize": 1000,
       "settingRebuildPath": true,
       "settingSendCookies": true,
       "settingStoreCookies": true,
-      "url": "{{ host  }}/{{ contextPath  }}/{{ tid  }}-{{ awid  }}/updateJoke",
+      "url": "{{ host  }}/{{ contextPath  }}/{{ tid  }}-{{ awid  }}/jokesInstance/load",
       "_type": "request"
     },
     {
-      "_id": "req_1392dc10fbe041c9adaac49a21dd183a",
+      "_id": "req_af815871383542d9a685494eacd9c28e",
       "authentication": {
+        "prefix": "",
         "token": "{{ token  }}",
         "type": "bearer"
       },
       "body": {
         "mimeType": "application/json",
-        "text": "{\n\t\"id\": \"5b2a19a5c9f63fb04e6bd005\"\n}"
+        "text": "{\n\t\"state\": \"active\",\n\t\"name\": \"My custom name\"\n}"
       },
-      "created": 1529484115994,
+      "created": 1543484380458,
       "description": "",
       "headers": [
         {
-          "id": "pair_10dd38b41cf24449ab3dcdbf862a0fbb",
+          "id": "pair_8323e5fd2c6f40d099f735f3330518a7",
           "name": "Content-Type",
           "value": "application/json"
         }
       ],
       "isPrivate": false,
-      "metaSortKey": -1529484115994,
+      "metaSortKey": -1543484334466,
       "method": "POST",
-      "modified": 1529485737910,
-      "name": "deleteJoke",
+      "modified": 1543579377603,
+      "name": "update",
       "parameters": [],
-      "parentId": "fld_bfb1bfe66fab4c0ca291d0bed39a6695",
+      "parentId": "fld_36a9452556cb4ef2b76213e913cbc2e0",
       "settingDisableRenderRequestBody": false,
       "settingEncodeUrl": true,
+      "settingMaxTimelineDataSize": 1000,
       "settingRebuildPath": true,
       "settingSendCookies": true,
       "settingStoreCookies": true,
-      "url": "{{ host  }}/{{ contextPath  }}/{{ tid  }}-{{ awid  }}/deleteJoke",
+      "url": "{{ host  }}/{{ contextPath  }}/{{ tid  }}-{{ awid  }}/jokesInstance/update",
       "_type": "request"
     },
     {
-      "_id": "req_9c08e62ee78a447f8ec45b70117713b4",
+      "_id": "req_fac648bc0c984fdc83aaf7f1905f4fd5",
       "authentication": {
+        "prefix": "",
         "token": "{{ token  }}",
         "type": "bearer"
       },
       "body": {
-        "mimeType": "application/json",
-        "text": "{\n\t\"jokeId\": \"5b2a1936c9f63fb04e6bcffc\",\n\t\"categoryList\": [\"5b2a1968c9f63fb04e6bd000\"]\n}"
+        "mimeType": "multipart/form-data",
+        "params": [
+          {
+            "id": "pair_8083c8c3db904fc1b2cf38078b7e45fc",
+            "name": "uuAppProfileAuthorities",
+            "value": "."
+          },
+          {
+            "id": "pair_3edc6674fca144eab8b87fa6cf1a99c8",
+            "name": "logo",
+            "type": "file",
+            "value": ""
+          }
+        ]
       },
-      "created": 1529484128198,
+      "created": 1543485540347,
       "description": "",
       "headers": [
         {
-          "id": "pair_3cc3ec0cb6d84a64aea1df0b5336dff4",
+          "id": "pair_058dc9a25a5a45fb9e9bf0629625e59f",
           "name": "Content-Type",
-          "value": "application/json"
+          "value": "multipart/form-data"
         }
       ],
       "isPrivate": false,
-      "metaSortKey": -1529484128198,
+      "metaSortKey": -1543484334541,
       "method": "POST",
-      "modified": 1529485693274,
-      "name": "addJokeCategory",
+      "modified": 1543579373985,
+      "name": "init with binary",
       "parameters": [],
-      "parentId": "fld_bfb1bfe66fab4c0ca291d0bed39a6695",
+      "parentId": "fld_36a9452556cb4ef2b76213e913cbc2e0",
       "settingDisableRenderRequestBody": false,
       "settingEncodeUrl": true,
+      "settingMaxTimelineDataSize": 1000,
       "settingRebuildPath": true,
       "settingSendCookies": true,
       "settingStoreCookies": true,
-      "url": "{{ host  }}/{{ contextPath  }}/{{ tid  }}-{{ awid  }}/addJokeCategory",
+      "url": "{{ host  }}/{{ contextPath  }}/{{ tid  }}-{{ awid  }}/jokesInstance/init",
       "_type": "request"
     },
     {
-      "_id": "req_845c5fa204554d6b876bd4c1129e38d5",
+      "_id": "req_a107172f5caf481c88c3ec59425b5e96",
       "authentication": {
+        "prefix": "",
         "token": "{{ token  }}",
         "type": "bearer"
       },
       "body": {
-        "mimeType": "application/json",
-        "text": "{\n\t\"jokeId\": \"5b2a1936c9f63fb04e6bcffc\",\n\t\"categoryList\": [\"5b2a1924c9f63fb04e6bcffa\"]\n}"
+        "mimeType": "multipart/form-data",
+        "params": [
+          {
+            "id": "pair_3edc6674fca144eab8b87fa6cf1a99c8",
+            "name": "logo",
+            "type": "file",
+            "value": ""
+          }
+        ]
       },
-      "created": 1529484138631,
+      "created": 1543485568977,
       "description": "",
       "headers": [
         {
-          "id": "pair_40e9f5b3bac6479492523d81e3ebabab",
+          "id": "pair_058dc9a25a5a45fb9e9bf0629625e59f",
           "name": "Content-Type",
-          "value": "application/json"
+          "value": "multipart/form-data"
         }
       ],
       "isPrivate": false,
-      "metaSortKey": -1529484138631,
+      "metaSortKey": -1543484334416,
       "method": "POST",
-      "modified": 1529485848543,
-      "name": "removeJokeCategory",
+      "modified": 1543579378491,
+      "name": "update with binary",
       "parameters": [],
-      "parentId": "fld_bfb1bfe66fab4c0ca291d0bed39a6695",
+      "parentId": "fld_36a9452556cb4ef2b76213e913cbc2e0",
       "settingDisableRenderRequestBody": false,
       "settingEncodeUrl": true,
+      "settingMaxTimelineDataSize": 1000,
       "settingRebuildPath": true,
       "settingSendCookies": true,
       "settingStoreCookies": true,
-      "url": "{{ host  }}/{{ contextPath  }}/{{ tid  }}-{{ awid  }}/removeJokeCategory",
+      "url": "{{ host  }}/{{ contextPath  }}/{{ tid  }}-{{ awid  }}/jokesInstance/update",
       "_type": "request"
     },
     {
-      "_id": "req_1eab5fbbe5314e67b1e028f556fdbf34",
+      "_id": "req_4244c967f9174473ae530ac0ff24f4bd",
       "authentication": {
+        "prefix": "",
         "token": "{{ token  }}",
         "type": "bearer"
       },
       "body": {
         "mimeType": "application/json",
-        "text": "{\n\t\"name\": \"WauuuWauuuř\",\n\t\"desc\": \"ehm ehm ehm\"\n}"
+        "text": "{\n\t\"name\": \"Hurvínek a moucha\",\n  \"text\": \"Víš co řekl ...\",\n  \"categoryList\" : []\n}"
       },
-      "created": 1529484149904,
+      "created": 1543484523301,
       "description": "",
       "headers": [
         {
-          "id": "pair_3e3ad5d98c2c4e1489e4887f76a7d9ef",
+          "id": "pair_058dc9a25a5a45fb9e9bf0629625e59f",
           "name": "Content-Type",
           "value": "application/json"
         }
       ],
       "isPrivate": false,
-      "metaSortKey": -1529484149904,
+      "metaSortKey": -1543484334291,
       "method": "POST",
-      "modified": 1529486064887,
-      "name": "createCategory",
+      "modified": 1543579386209,
+      "name": "create",
       "parameters": [],
-      "parentId": "fld_bfb1bfe66fab4c0ca291d0bed39a6695",
+      "parentId": "fld_639bc615f05d4dd7958f15ffb6ce7a24",
       "settingDisableRenderRequestBody": false,
       "settingEncodeUrl": true,
+      "settingMaxTimelineDataSize": 1000,
       "settingRebuildPath": true,
       "settingSendCookies": true,
       "settingStoreCookies": true,
-      "url": "{{ host  }}/{{ contextPath  }}/{{ tid  }}-{{ awid  }}/createCategory",
+      "url": "{{ host  }}/{{ contextPath  }}/{{ tid  }}-{{ awid  }}/joke/create",
       "_type": "request"
     },
     {
-      "_id": "req_e0fe948fa06d461eabbe5e3d40d8695f",
+      "_id": "req_24a4e58a525041d1acb4af9b9c53cad9",
       "authentication": {
+        "prefix": "",
         "token": "{{ token  }}",
         "type": "bearer"
       },
       "body": {
-        "mimeType": "application/json",
-        "text": "{\n\t\"id\": \"5b2a1af1c9f63fb04e6bd01f\",\n\t\"name\": \"Jahuuuu\"\n}"
+        "mimeType": "multipart/form-data",
+        "params": [
+          {
+            "id": "pair_d18504f5a8124f4a8ab9a9b994fa6df4",
+            "name": "name",
+            "value": "Hurvínek a moucha"
+          },
+          {
+            "id": "pair_027e9f8f59fa4c88a8704be0125704e2",
+            "name": "text",
+            "value": "Víš co řekl ..."
+          },
+          {
+            "id": "pair_395d4c38d7ef45a99556ccff25486fdf",
+            "name": "image",
+            "type": "file",
+            "value": ""
+          }
+        ]
       },
-      "created": 1529484159609,
+      "created": 1543484620609,
       "description": "",
       "headers": [
         {
-          "id": "pair_a570db86094840c8b4fc08f58c60ab8b",
+          "id": "pair_058dc9a25a5a45fb9e9bf0629625e59f",
           "name": "Content-Type",
-          "value": "application/json"
+          "value": "multipart/form-data"
         }
       ],
       "isPrivate": false,
-      "metaSortKey": -1529484159609,
+      "metaSortKey": -1541242008291.5,
       "method": "POST",
-      "modified": 1529486069831,
-      "name": "updateCategory",
+      "modified": 1543485528836,
+      "name": "create with binary",
       "parameters": [],
-      "parentId": "fld_bfb1bfe66fab4c0ca291d0bed39a6695",
+      "parentId": "fld_639bc615f05d4dd7958f15ffb6ce7a24",
       "settingDisableRenderRequestBody": false,
       "settingEncodeUrl": true,
+      "settingMaxTimelineDataSize": 1000,
       "settingRebuildPath": true,
       "settingSendCookies": true,
       "settingStoreCookies": true,
-      "url": "{{ host  }}/{{ contextPath  }}/{{ tid  }}-{{ awid  }}/updateCategory",
+      "url": "{{ host  }}/{{ contextPath  }}/{{ tid  }}-{{ awid  }}/joke/create",
       "_type": "request"
     },
     {
-      "_id": "req_789aa600d38f4fc9915421d29bdd1257",
+      "_id": "req_c567eeccec6048d1b770780873d38d36",
       "authentication": {
+        "prefix": "",
         "token": "{{ token  }}",
         "type": "bearer"
       },
       "body": {
         "mimeType": "application/json",
-        "text": "{\n\t\"id\": \"5b2a1adcc9f63fb04e6bd01c\"\n}"
+        "text": "{\n\t\"id\": \"...\"\n}"
       },
-      "created": 1529484174785,
+      "created": 1543484710890,
       "description": "",
       "headers": [
         {
-          "id": "pair_e7193f4fefe646f981f9708f91f71bbe",
+          "id": "pair_058dc9a25a5a45fb9e9bf0629625e59f",
           "name": "Content-Type",
           "value": "application/json"
         }
       ],
       "isPrivate": false,
-      "metaSortKey": -1529484174785,
-      "method": "POST",
-      "modified": 1529486050904,
-      "name": "deleteCategory",
-      "parameters": [],
-      "parentId": "fld_bfb1bfe66fab4c0ca291d0bed39a6695",
-      "settingDisableRenderRequestBody": false,
-      "settingEncodeUrl": true,
-      "settingRebuildPath": true,
-      "settingSendCookies": true,
-      "settingStoreCookies": true,
-      "url": "{{ host  }}/{{ contextPath  }}/{{ tid  }}-{{ awid  }}/deleteCategory",
-      "_type": "request"
-    },
-    {
-      "_id": "req_3b37c7a2efc84c5ea70746bbfb6c688a",
-      "authentication": {
-        "token": "{{ token  }}",
-        "type": "bearer"
-      },
-      "body": {
-        "mimeType": "application/json",
-        "text": "{\n\t\"id\": \"5b2a1936c9f63fb04e6bcffc\"\n}"
-      },
-      "created": 1529484182488,
-      "description": "",
-      "headers": [
-        {
-          "id": "pair_7edbdf88da574cd18b59696b8d196577",
-          "name": "Content-Type",
-          "value": "application/json"
-        }
-      ],
-      "isPrivate": false,
-      "metaSortKey": -1529484182488,
+      "metaSortKey": -1541242008241.5,
       "method": "GET",
-      "modified": 1529485823298,
-      "name": "getJoke",
+      "modified": 1543485523286,
+      "name": "get",
       "parameters": [],
-      "parentId": "fld_bfb1bfe66fab4c0ca291d0bed39a6695",
+      "parentId": "fld_639bc615f05d4dd7958f15ffb6ce7a24",
       "settingDisableRenderRequestBody": false,
       "settingEncodeUrl": true,
+      "settingMaxTimelineDataSize": 1000,
       "settingRebuildPath": true,
       "settingSendCookies": true,
       "settingStoreCookies": true,
-      "url": "{{ host  }}/{{ contextPath  }}/{{ tid  }}-{{ awid  }}/getJoke",
+      "url": "{{ host  }}/{{ contextPath  }}/{{ tid  }}-{{ awid  }}/joke/get",
       "_type": "request"
     },
     {
-      "_id": "req_986d27a01d8742a7a7ee1eeb6cbb84d3",
+      "_id": "req_f053ab86568f4010ac4708908d54f489",
       "authentication": {
+        "prefix": "",
         "token": "{{ token  }}",
         "type": "bearer"
       },
       "body": {
         "mimeType": "application/json",
-        "text": "{\n\t\"order\": \"desc\",\n\t\"sortBy\": \"name\"\n}"
+        "text": "{\n\t\"id\": \"...\",\n\t\"name\": \"Hurvínek a moucha\",\n  \"text\": \"Víš co řekl ...\",\n  \"categoryList\" : []\n}"
       },
-      "created": 1529484193710,
+      "created": 1543484792086,
       "description": "",
       "headers": [
         {
-          "id": "pair_1210ecd0ea9e47819a50274643040389",
+          "id": "pair_058dc9a25a5a45fb9e9bf0629625e59f",
           "name": "Content-Type",
           "value": "application/json"
         }
       ],
       "isPrivate": false,
-      "metaSortKey": -1529484193710,
-      "method": "GET",
-      "modified": 1529485323480,
-      "name": "listJokes",
-      "parameters": [],
-      "parentId": "fld_bfb1bfe66fab4c0ca291d0bed39a6695",
-      "settingDisableRenderRequestBody": false,
-      "settingEncodeUrl": true,
-      "settingRebuildPath": true,
-      "settingSendCookies": true,
-      "settingStoreCookies": true,
-      "url": "{{ host  }}/{{ contextPath  }}/{{ tid  }}-{{ awid  }}/listJokes",
-      "_type": "request"
-    },
-    {
-      "_id": "req_53c6cd4589104199bdc652fc159217e9",
-      "authentication": {
-        "token": "{{ token  }}",
-        "type": "bearer"
-      },
-      "body": {
-        "mimeType": "application/json",
-        "text": "{\n\t\"categoryId\": \"5b2a1936c9f63fb04e6bcffc\"\n}"
-      },
-      "created": 1529484203848,
-      "description": "",
-      "headers": [
-        {
-          "id": "pair_a3315eb724fc48e8933657343484b39a",
-          "name": "Content-Type",
-          "value": "application/json"
-        }
-      ],
-      "isPrivate": false,
-      "metaSortKey": -1529484203848,
-      "method": "GET",
-      "modified": 1529485936140,
-      "name": "listCategoryJokes",
-      "parameters": [],
-      "parentId": "fld_bfb1bfe66fab4c0ca291d0bed39a6695",
-      "settingDisableRenderRequestBody": false,
-      "settingEncodeUrl": true,
-      "settingRebuildPath": true,
-      "settingSendCookies": true,
-      "settingStoreCookies": true,
-      "url": "{{ host  }}/{{ contextPath  }}/{{ tid  }}-{{ awid  }}/listCategoryJokes",
-      "_type": "request"
-    },
-    {
-      "_id": "req_e87218391f5e48a7b38c2793da5baa39",
-      "authentication": {
-        "token": "{{ token  }}",
-        "type": "bearer"
-      },
-      "body": {
-        "mimeType": "application/json",
-        "text": "{\n\t\"order\": \"desc\"\n}"
-      },
-      "created": 1529484212403,
-      "description": "",
-      "headers": [
-        {
-          "id": "pair_3fd4505c60cd4bc3b179b5525e0cac84",
-          "name": "Content-Type",
-          "value": "application/json"
-        }
-      ],
-      "isPrivate": false,
-      "metaSortKey": -1529484212403,
-      "method": "GET",
-      "modified": 1529485311283,
-      "name": "listCategories",
-      "parameters": [],
-      "parentId": "fld_bfb1bfe66fab4c0ca291d0bed39a6695",
-      "settingDisableRenderRequestBody": false,
-      "settingEncodeUrl": true,
-      "settingRebuildPath": true,
-      "settingSendCookies": true,
-      "settingStoreCookies": true,
-      "url": "{{ host  }}/{{ contextPath  }}/{{ tid  }}-{{ awid  }}/listCategories",
-      "_type": "request"
-    },
-    {
-      "_id": "req_0f0c65918a5649cf8d932617bed6d818",
-      "authentication": {
-        "token": "{{ token  }}",
-        "type": "bearer"
-      },
-      "body": {
-        "mimeType": "application/json",
-        "text": "{\n\t\"id\": \"5b2a1936c9f63fb04e6bcffc\",\n\t\"rating\" : 3\n}"
-      },
-      "created": 1529484223907,
-      "description": "",
-      "headers": [
-        {
-          "id": "pair_392e3175cc6146d087730567c0c38e2f",
-          "name": "Content-Type",
-          "value": "application/json"
-        }
-      ],
-      "isPrivate": false,
-      "metaSortKey": -1529484223907,
+      "metaSortKey": -1541242008191.5,
       "method": "POST",
-      "modified": 1529486005551,
-      "name": "addJokeRating",
+      "modified": 1543579382799,
+      "name": "update",
       "parameters": [],
-      "parentId": "fld_bfb1bfe66fab4c0ca291d0bed39a6695",
+      "parentId": "fld_639bc615f05d4dd7958f15ffb6ce7a24",
       "settingDisableRenderRequestBody": false,
       "settingEncodeUrl": true,
+      "settingMaxTimelineDataSize": 1000,
       "settingRebuildPath": true,
       "settingSendCookies": true,
       "settingStoreCookies": true,
-      "url": "{{ host  }}/{{ contextPath  }}/{{ tid  }}-{{ awid  }}/addJokeRating",
+      "url": "{{ host  }}/{{ contextPath  }}/{{ tid  }}-{{ awid  }}/joke/update",
+      "_type": "request"
+    },
+    {
+      "_id": "req_2e1c20ddaf994f0aa63cfc8a6857f0e6",
+      "authentication": {
+        "prefix": "",
+        "token": "{{ token  }}",
+        "type": "bearer"
+      },
+      "body": {
+        "mimeType": "multipart/form-data",
+        "params": [
+          {
+            "id": "pair_98bd2df3a9af47c691bdd8a0c549b1ba",
+            "name": "id",
+            "value": "..."
+          },
+          {
+            "id": "pair_d18504f5a8124f4a8ab9a9b994fa6df4",
+            "name": "name",
+            "value": "Hurvínek a moucha"
+          },
+          {
+            "id": "pair_027e9f8f59fa4c88a8704be0125704e2",
+            "name": "text",
+            "value": "Víš co řekl ..."
+          },
+          {
+            "id": "pair_395d4c38d7ef45a99556ccff25486fdf",
+            "name": "image",
+            "type": "file",
+            "value": ""
+          }
+        ]
+      },
+      "created": 1543484855184,
+      "description": "",
+      "headers": [
+        {
+          "id": "pair_058dc9a25a5a45fb9e9bf0629625e59f",
+          "name": "Content-Type",
+          "value": "multipart/form-data"
+        }
+      ],
+      "isPrivate": false,
+      "metaSortKey": -1541242008141.5,
+      "method": "POST",
+      "modified": 1543485533085,
+      "name": "update with binary",
+      "parameters": [],
+      "parentId": "fld_639bc615f05d4dd7958f15ffb6ce7a24",
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingMaxTimelineDataSize": 1000,
+      "settingRebuildPath": true,
+      "settingSendCookies": true,
+      "settingStoreCookies": true,
+      "url": "{{ host  }}/{{ contextPath  }}/{{ tid  }}-{{ awid  }}/joke/update",
+      "_type": "request"
+    },
+    {
+      "_id": "req_77f3f446a55d4e2993037009a94b6f45",
+      "authentication": {
+        "prefix": "",
+        "token": "{{ token  }}",
+        "type": "bearer"
+      },
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n\t\"id\": \"...\",\n\t\"visibility\": false\n}"
+      },
+      "created": 1543484964148,
+      "description": "",
+      "headers": [
+        {
+          "id": "pair_058dc9a25a5a45fb9e9bf0629625e59f",
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "isPrivate": false,
+      "metaSortKey": -1541242008091.5,
+      "method": "POST",
+      "modified": 1543485530601,
+      "name": "updateVisibility",
+      "parameters": [],
+      "parentId": "fld_639bc615f05d4dd7958f15ffb6ce7a24",
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingMaxTimelineDataSize": 1000,
+      "settingRebuildPath": true,
+      "settingSendCookies": true,
+      "settingStoreCookies": true,
+      "url": "{{ host  }}/{{ contextPath  }}/{{ tid  }}-{{ awid  }}/joke/updateVisibility",
+      "_type": "request"
+    },
+    {
+      "_id": "req_135c6f6252b44bb2bee077f5080bb96f",
+      "authentication": {
+        "prefix": "",
+        "token": "{{ token  }}",
+        "type": "bearer"
+      },
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n\t\"id\": \"...\"\n}"
+      },
+      "created": 1543485023557,
+      "description": "",
+      "headers": [
+        {
+          "id": "pair_058dc9a25a5a45fb9e9bf0629625e59f",
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "isPrivate": false,
+      "metaSortKey": -1540120845191.75,
+      "method": "POST",
+      "modified": 1543485534256,
+      "name": "delete",
+      "parameters": [],
+      "parentId": "fld_639bc615f05d4dd7958f15ffb6ce7a24",
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingMaxTimelineDataSize": 1000,
+      "settingRebuildPath": true,
+      "settingSendCookies": true,
+      "settingStoreCookies": true,
+      "url": "{{ host  }}/{{ contextPath  }}/{{ tid  }}-{{ awid  }}/joke/delete",
+      "_type": "request"
+    },
+    {
+      "_id": "req_00932834ba7944ad8b0a5cdbadea5101",
+      "authentication": {
+        "prefix": "",
+        "token": "{{ token  }}",
+        "type": "bearer"
+      },
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n}"
+      },
+      "created": 1543485046957,
+      "description": "",
+      "headers": [
+        {
+          "id": "pair_058dc9a25a5a45fb9e9bf0629625e59f",
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "isPrivate": false,
+      "metaSortKey": -1540120845141.75,
+      "method": "GET",
+      "modified": 1543485534806,
+      "name": "list",
+      "parameters": [],
+      "parentId": "fld_639bc615f05d4dd7958f15ffb6ce7a24",
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingMaxTimelineDataSize": 1000,
+      "settingRebuildPath": true,
+      "settingSendCookies": true,
+      "settingStoreCookies": true,
+      "url": "{{ host  }}/{{ contextPath  }}/{{ tid  }}-{{ awid  }}/joke/list",
+      "_type": "request"
+    },
+    {
+      "_id": "req_3edd994c82a74a3d8a62b80e72aa360d",
+      "authentication": {
+        "prefix": "",
+        "token": "{{ token  }}",
+        "type": "bearer"
+      },
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n\t\"id\": \"...\",\n\t\"rating\": 3\n}"
+      },
+      "created": 1543485067756,
+      "description": "",
+      "headers": [
+        {
+          "id": "pair_058dc9a25a5a45fb9e9bf0629625e59f",
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "isPrivate": false,
+      "metaSortKey": -1540120845091.75,
+      "method": "POST",
+      "modified": 1543579369618,
+      "name": "addRating",
+      "parameters": [],
+      "parentId": "fld_639bc615f05d4dd7958f15ffb6ce7a24",
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingMaxTimelineDataSize": 1000,
+      "settingRebuildPath": true,
+      "settingSendCookies": true,
+      "settingStoreCookies": true,
+      "url": "{{ host  }}/{{ contextPath  }}/{{ tid  }}-{{ awid  }}/joke/addRating",
+      "_type": "request"
+    },
+    {
+      "_id": "req_7f48ecc5930342c083c3f2634dacf460",
+      "authentication": {
+        "prefix": "",
+        "token": "{{ token  }}",
+        "type": "bearer"
+      },
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n\t\"name\": \"New Category\"\n}"
+      },
+      "created": 1543485146144,
+      "description": "",
+      "headers": [
+        {
+          "id": "pair_058dc9a25a5a45fb9e9bf0629625e59f",
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "isPrivate": false,
+      "metaSortKey": -1543484084560.75,
+      "method": "POST",
+      "modified": 1543485509591,
+      "name": "create",
+      "parameters": [],
+      "parentId": "fld_4ceecec2b2cd480896da7f43c17f01af",
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingMaxTimelineDataSize": 1000,
+      "settingRebuildPath": true,
+      "settingSendCookies": true,
+      "settingStoreCookies": true,
+      "url": "{{ host  }}/{{ contextPath  }}/{{ tid  }}-{{ awid  }}/category/create",
+      "_type": "request"
+    },
+    {
+      "_id": "req_c17152e23cc244dfb0c502e5c584af63",
+      "authentication": {
+        "prefix": "",
+        "token": "{{ token  }}",
+        "type": "bearer"
+      },
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n\t\"id\": \"...\"\n}"
+      },
+      "created": 1543485187373,
+      "description": "",
+      "headers": [
+        {
+          "id": "pair_058dc9a25a5a45fb9e9bf0629625e59f",
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "isPrivate": false,
+      "metaSortKey": -1542363046426.125,
+      "method": "GET",
+      "modified": 1543485510192,
+      "name": "get",
+      "parameters": [],
+      "parentId": "fld_4ceecec2b2cd480896da7f43c17f01af",
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingMaxTimelineDataSize": 1000,
+      "settingRebuildPath": true,
+      "settingSendCookies": true,
+      "settingStoreCookies": true,
+      "url": "{{ host  }}/{{ contextPath  }}/{{ tid  }}-{{ awid  }}/category/get",
+      "_type": "request"
+    },
+    {
+      "_id": "req_d26bc02c54204793a494cb47ef351f9f",
+      "authentication": {
+        "prefix": "",
+        "token": "{{ token  }}",
+        "type": "bearer"
+      },
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n\t\"id\": \"...\",\n\t\"name\": \"New Category Name\"\n}"
+      },
+      "created": 1543485237183,
+      "description": "",
+      "headers": [
+        {
+          "id": "pair_058dc9a25a5a45fb9e9bf0629625e59f",
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "isPrivate": false,
+      "metaSortKey": -1542363046376.125,
+      "method": "POST",
+      "modified": 1543485497901,
+      "name": "update",
+      "parameters": [],
+      "parentId": "fld_4ceecec2b2cd480896da7f43c17f01af",
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingMaxTimelineDataSize": 1000,
+      "settingRebuildPath": true,
+      "settingSendCookies": true,
+      "settingStoreCookies": true,
+      "url": "{{ host  }}/{{ contextPath  }}/{{ tid  }}-{{ awid  }}/category/update",
+      "_type": "request"
+    },
+    {
+      "_id": "req_13b4b6570fb544bbaa6fe8a201424ce1",
+      "authentication": {
+        "prefix": "",
+        "token": "{{ token  }}",
+        "type": "bearer"
+      },
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n\t\"id\": \"...\"\n}"
+      },
+      "created": 1543485274598,
+      "description": "",
+      "headers": [
+        {
+          "id": "pair_058dc9a25a5a45fb9e9bf0629625e59f",
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "isPrivate": false,
+      "metaSortKey": -1541802527333.8125,
+      "method": "POST",
+      "modified": 1543485511533,
+      "name": "delete",
+      "parameters": [],
+      "parentId": "fld_4ceecec2b2cd480896da7f43c17f01af",
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingMaxTimelineDataSize": 1000,
+      "settingRebuildPath": true,
+      "settingSendCookies": true,
+      "settingStoreCookies": true,
+      "url": "{{ host  }}/{{ contextPath  }}/{{ tid  }}-{{ awid  }}/category/delete",
+      "_type": "request"
+    },
+    {
+      "_id": "req_ddb01748e52442269a78b2cafcab5eda",
+      "authentication": {
+        "prefix": "",
+        "token": "{{ token  }}",
+        "type": "bearer"
+      },
+      "body": {
+        "mimeType": "application/json",
+        "text": "{}"
+      },
+      "created": 1543485293025,
+      "description": "",
+      "headers": [
+        {
+          "id": "pair_058dc9a25a5a45fb9e9bf0629625e59f",
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "isPrivate": false,
+      "metaSortKey": -1541802527283.8125,
+      "method": "GET",
+      "modified": 1543485504922,
+      "name": "list",
+      "parameters": [],
+      "parentId": "fld_4ceecec2b2cd480896da7f43c17f01af",
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingMaxTimelineDataSize": 1000,
+      "settingRebuildPath": true,
+      "settingSendCookies": true,
+      "settingStoreCookies": true,
+      "url": "{{ host  }}/{{ contextPath  }}/{{ tid  }}-{{ awid  }}/category/list",
       "_type": "request"
     }
   ]
