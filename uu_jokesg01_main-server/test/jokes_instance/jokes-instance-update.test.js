@@ -149,7 +149,7 @@ test("A6 - updating joke instance fails", async () => {
   expect.assertions(2);
 
   let { JokesInstanceModel } = mockModels();
-  JokesInstanceModel.dao.update = () => {
+  JokesInstanceModel.dao.updateByAwid = () => {
     throw new ObjectStoreError("it failed.");
   };
 

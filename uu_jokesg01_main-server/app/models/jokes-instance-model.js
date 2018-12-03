@@ -181,7 +181,7 @@ class JokesInstanceModel {
     //HDS 3
     try {
       dtoIn.awid = awid;
-      jokeInstance = await this.dao.update(dtoIn);
+      jokeInstance = await this.dao.updateByAwid(dtoIn);
     } catch (e) {
       if (e instanceof ObjectStoreError) {
         // A6
