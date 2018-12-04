@@ -11,6 +11,9 @@ class JokeMongo extends UuObjectDao {
   }
 
   async create(uuObject) {
+    if (uuObject.categoryList) {
+      uuObject.categoryList = uuObject.categoryList.map(categoryId => new ObjectId(categoryId));
+    }
     return await super.insertOne(uuObject);
   }
 
