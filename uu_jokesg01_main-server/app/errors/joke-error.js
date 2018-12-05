@@ -216,13 +216,6 @@ const Delete = {
       this.code = `${Delete.UC_CODE}uuBinaryDeleteFailed`;
       this.message = "Deleting uuBinary failed.";
     }
-  },
-  JokeRatingDaoDeleteByJokeIdFailed: class extends UuJokesError {
-    constructor() {
-      super(...arguments);
-      this.code = `${Delete.UC_CODE}jokeRatingDaoDeleteByJokeIdFailed`;
-      this.message = "Delete jokeRating by jokeRating Dao deleteByJokeId failed.";
-    }
   }
 };
 

@@ -320,22 +320,14 @@ class JokeModel {
     }
 
     // hds 5
-    try {
-      await this.jokeRatingDao.deleteByJokeId(awid, joke.id);
-    } catch (e) {
-      if (e instanceof ObjectStoreError) {
-        // A7
-        throw new Errors.Delete.JokeRatingDaoDeleteByJokeIdFailed({ uuAppErrorMap }, e);
-      }
-      throw e;
-    }
+    await this.jokeRatingDao.deleteByJokeId(awid, joke.id);
 
     // hds 6
     if (joke.image) {
       try {
         await UuBinaryModel.deleteBinary(awid, { code: joke.image });
       } catch (e) {
-        // A8
+        // A7
         throw new Errors.Delete.UuBinaryDeleteFailed({ uuAppErrorMap }, e);
       }
     }

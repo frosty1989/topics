@@ -79,7 +79,7 @@ class JokesInstanceModel {
         binary = await UuBinaryModel.createBinary(awid, { data: dtoIn.logo, code: "logo" });
       } catch (e) {
         //A5
-        throw new Errors.Init.CreateBinaryFailed({ uuAppErrorMap }, e);
+        throw new Errors.Init.UuBinaryCreateFailed({ uuAppErrorMap }, e);
       }
       //HDS 6
       dtoIn.logo = binary.code;

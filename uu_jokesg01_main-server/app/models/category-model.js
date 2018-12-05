@@ -237,8 +237,7 @@ class CategoryModel {
       WARNINGS.listUnsupportedKeys.code,
       Errors.List.InvalidDtoIn
     );
-
-    // defaults (potentially hds 2.4 in the future)
+    // hds 2.4
     if (!dtoIn.pageInfo) {
       dtoIn.pageInfo = {
         pageSize: DEFAULTS.pageSize,

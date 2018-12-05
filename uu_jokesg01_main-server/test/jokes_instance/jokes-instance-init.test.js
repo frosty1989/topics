@@ -139,8 +139,8 @@ test("A5 - creating uuBinary fails", async () => {
   try {
     await JokesInstanceModel.init("awid", dtoIn);
   } catch (e) {
-    expect(e.message).toEqual("Create uuBinary logo failed.");
-    expect(e.code).toEqual("uu-jokes-main/jokesInstance/init/uu-app-binarystore/createBinaryFailed");
+    expect(e.message).toEqual("Creating uuBinary failed.");
+    expect(e.code).toEqual("uu-jokes-main/jokesInstance/init/uuBinaryCreateFailed");
   }
 });
 

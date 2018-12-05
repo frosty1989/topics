@@ -174,25 +174,7 @@ test("A6 - Executives trying to delete Authorities' joke", async () => {
   }
 });
 
-test("A7 - deleting ratings fails", async () => {
-  expect.assertions(2);
-  let { JokeModel } = mockModels();
-  JokeModel.dao.get = () => {
-    return {};
-  };
-  JokeModel.jokeRatingDao.deleteByJokeId = () => {
-    throw new ObjectStoreError("it failed.");
-  };
-
-  try {
-    await JokeModel.delete("awid", { id: MONGO_ID }, getSessionMock(), getAuthzResultMock());
-  } catch (e) {
-    expect(e.code).toEqual("uu-jokes-main/joke/delete/jokeRatingDaoDeleteByJokeIdFailed");
-    expect(e.message).toEqual("Delete jokeRating by jokeRating Dao deleteByJokeId failed.");
-  }
-});
-
-test("A8 - deleting image fails", async () => {
+test("A7 - deleting image fails", async () => {
   expect.assertions(2);
   let { JokeModel, UuBinaryModel } = mockModels();
   JokeModel.dao.get = () => {

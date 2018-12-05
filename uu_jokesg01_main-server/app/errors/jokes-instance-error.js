@@ -26,11 +26,11 @@ const Init = {
       this.message = "Create uuAppProfile failed.";
     }
   },
-  CreateBinaryFailed: class extends UuJokesError {
+  UuBinaryCreateFailed: class extends UuJokesError {
     constructor() {
       super(...arguments);
-      this.code = `${Init.UC_CODE}uu-app-binarystore/createBinaryFailed`;
-      this.message = "Create uuBinary logo failed.";
+      this.code = `${Init.UC_CODE}uuBinaryCreateFailed`;
+      this.message = "Creating uuBinary failed.";
     }
   },
   JokesInstanceDaoCreateFailed: class extends UuJokesError {
