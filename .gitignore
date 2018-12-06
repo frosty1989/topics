@@ -20,3 +20,4 @@
 **/package-lock.json
 **/oidc-token
 **/test/config/jest.config.node.json
+**/.npmrc

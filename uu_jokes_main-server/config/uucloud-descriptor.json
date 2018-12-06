@@ -1,21 +1,21 @@
 {
   "schemaUri": "ues:SYSTEM:UU.OS/UUAPP-DEPLOY-SCHEMA-V2.1",
   "data": {
-    "code": "UU.JOKESG01.MAIN",
+    "code": "UU.JOKES.MAING01",
     "name": "uuJokes",
     "version": null,
     "multitenant": true,
     "packs": [
       {
-        "code": "UU.JOKESG01.MAIN/SERVER-PACK",
+        "code": "UU.JOKES.MAING01/SERVER-PACK",
         "targetNodeSets": [
-          "UU.JOKESG01.MAIN/CMD-CONTAINER"
+          "UU.JOKES.MAING01/CMD-CONTAINER"
         ]
       }
     ],
     "nodeSets": [
       {
-        "code": "UU.JOKESG01.MAIN/CMD-CONTAINER",
+        "code": "UU.JOKES.MAING01/CMD-CONTAINER",
         "nodeSize": "G1_S",
         "runtimeStack": "UU.OS9/UC_NODEJS_STACK-V1.0"
       }
