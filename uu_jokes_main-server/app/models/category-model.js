@@ -79,7 +79,7 @@ class CategoryModel {
     return category;
   }
 
-  async get(awid, dtoIn) {
+  async get(awid, dtoIn, authorizationResult) {
     // hds 1, A1, hds 1.1, A2
     let jokesInstance = await JokesInstanceModel.checkInstance(
       awid,
@@ -87,7 +87,12 @@ class CategoryModel {
       Errors.Get.JokesInstanceNotInProperState
     );
     // A3
-    if (jokesInstance.state === JokesInstanceModel.STATE_UNDER_CONSTRUCTION) {
+    let authorizedProfiles = authorizationResult.getAuthorizedProfiles();
+    if (
+      jokesInstance.state === JokesInstanceModel.STATE_UNDER_CONSTRUCTION &&
+      !authorizedProfiles.includes(JokesInstanceModel.AUTHORITIES) &&
+      !authorizedProfiles.includes(JokesInstanceModel.EXECUTIVES)
+    ) {
       throw new Errors.Get.JokesInstanceIsUnderConstruction({}, { state: jokesInstance.state });
     }
 
@@ -216,7 +221,7 @@ class CategoryModel {
     return { uuAppErrorMap };
   }
 
-  async list(awid, dtoIn) {
+  async list(awid, dtoIn, authorizationResult) {
     // hds 1, A1, hds 1.1, A2
     let jokesInstance = await JokesInstanceModel.checkInstance(
       awid,
@@ -224,7 +229,12 @@ class CategoryModel {
       Errors.List.JokesInstanceNotInProperState
     );
     // A3
-    if (jokesInstance.state === JokesInstanceModel.STATE_UNDER_CONSTRUCTION) {
+    let authorizedProfiles = authorizationResult.getAuthorizedProfiles();
+    if (
+      jokesInstance.state === JokesInstanceModel.STATE_UNDER_CONSTRUCTION &&
+      !authorizedProfiles.includes(JokesInstanceModel.AUTHORITIES) &&
+      !authorizedProfiles.includes(JokesInstanceModel.EXECUTIVES)
+    ) {
       throw new Errors.List.JokesInstanceIsUnderConstruction({}, { state: jokesInstance.state });
     }
 

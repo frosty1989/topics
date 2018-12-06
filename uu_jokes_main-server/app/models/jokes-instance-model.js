@@ -33,19 +33,20 @@ class JokesInstanceModel {
     this.STATE_ACTIVE = STATE_ACTIVE;
     this.STATE_UNDER_CONSTRUCTION = STATE_UNDER_CONSTRUCTION;
     this.AUTHORITIES = AUTHORITIES;
+    this.EXECUTIVES = EXECUTIVES;
   }
 
   async init(awid, dtoIn) {
-    //HDS 1
+    // hds 1
     let jokeInstance = await this.dao.getByAwid(awid);
-    //A1
+    // A1
     if (jokeInstance) {
       throw new Errors.Init.JokesInstanceAlreadyInitialized({});
     }
 
-    //HDS 2
+    // hds 2
     let validationResult = this.validator.validate("jokesInstanceInitDtoInType", dtoIn);
-    //A2, A3
+    // A2, A3
     let uuAppErrorMap = ValidationHelper.processValidationResult(
       dtoIn,
       validationResult,
@@ -56,7 +57,7 @@ class JokesInstanceModel {
     dtoIn.name = dtoIn.name || DEFAULT_NAME;
     dtoIn.awid = awid;
 
-    //HDS 3
+    // hds 3
     await Promise.all([
       this.dao.createSchema(),
       DaoFactory.getDao("joke").createSchema(),
@@ -65,83 +66,73 @@ class JokesInstanceModel {
     ]);
 
     try {
-      //HDS 4
+      // hds 4
       await SysProfileModel.setProfile(awid, { code: AUTHORITIES, roleUri: dtoIn.uuAppProfileAuthorities });
     } catch (e) {
-      //A4
+      // A4
       throw new Errors.Init.SysSetProfileFailed({ uuAppErrorMap }, { role: dtoIn.uuAppProfileAuthorities }, e);
     }
 
-    //HDS 5
+    // hds 5
     if (dtoIn.logo) {
       let binary;
       try {
         binary = await UuBinaryModel.createBinary(awid, { data: dtoIn.logo, code: "logo" });
       } catch (e) {
-        //A5
+        // A5
         throw new Errors.Init.UuBinaryCreateFailed({ uuAppErrorMap }, e);
       }
-      //HDS 6
+      // hds 6
       dtoIn.logo = binary.code;
     }
 
-    //HDS 7
+    // hds 7
     try {
       jokeInstance = await this.dao.create(dtoIn);
     } catch (e) {
-      //A6
+      // A6
       if (e instanceof ObjectStoreError) {
         throw new Errors.Init.JokesInstanceDaoCreateFailed({ uuAppErrorMap }, e);
       }
       throw e;
     }
 
-    //HDS 8
+    // hds 8
     jokeInstance.uuAppErrorMap = uuAppErrorMap;
     return jokeInstance;
   }
 
   async load(awid, authorizationResult) {
-    //HDS 1
-    let jokeInstance = await this.dao.getByAwid(awid);
-    //A1
-    if (!jokeInstance) {
-      throw new Errors.Load.JokesInstanceDoesNotExist({});
-    }
-    //A2
-    if (jokeInstance.state === STATE_CLOSED) {
-      throw new Errors.Load.JokesInstanceNotInProperState(
-        {},
-        {
-          state: jokeInstance.state,
-          expectedStateList: [STATE_ACTIVE, STATE_UNDER_CONSTRUCTION]
-        }
-      );
-    }
-    //A3
+    // hds 1, A1, hds 1.1, A2
+    let jokesInstance = await this.checkInstance(
+      awid,
+      Errors.Load.JokesInstanceDoesNotExist,
+      Errors.Load.JokesInstanceNotInProperState
+    );
+    // A3
     let authorizedProfiles = authorizationResult.getAuthorizedProfiles();
     if (
-      jokeInstance.state === STATE_UNDER_CONSTRUCTION &&
+      jokesInstance.state === STATE_UNDER_CONSTRUCTION &&
       !authorizedProfiles.includes(AUTHORITIES) &&
       !authorizedProfiles.includes(EXECUTIVES)
     ) {
-      throw new Errors.Load.JokesInstanceIsUnderConstruction({}, { state: jokeInstance.state });
+      throw new Errors.Load.JokesInstanceIsUnderConstruction({}, { state: jokesInstance.state });
     }
 
-    //HDS 2
-    jokeInstance.categoryList = (await this.categoryDao.list(awid)).itemList;
+    // hds 2
+    jokesInstance.categoryList = (await this.categoryDao.list(awid)).itemList;
 
-    //HDS 3
-    jokeInstance.authorizedProfileList = authorizedProfiles;
+    // hds 3
+    jokesInstance.authorizedProfileList = authorizedProfiles;
 
     // HDS 4
-    return jokeInstance;
+    return jokesInstance;
   }
 
   async update(awid, dtoIn) {
-    //HDS 1
+    // hds 1
     let validationResult = this.validator.validate("jokesInstanceUpdateDtoInType", dtoIn);
-    //A1, A2
+    // A1, A2
     let uuAppErrorMap = ValidationHelper.processValidationResult(
       dtoIn,
       validationResult,
@@ -149,36 +140,36 @@ class JokesInstanceModel {
       Errors.Update.InvalidDtoIn
     );
 
-    //HDS 2
+    // hds 2
     let jokeInstance;
     if (dtoIn.logo) {
       jokeInstance = await this.dao.getByAwid(awid);
-      //A3
+      // A3
       if (!jokeInstance) {
         throw new Errors.Update.JokesInstanceDoesNotExist(uuAppErrorMap);
       }
       let binary;
-      //HDS 2.1
+      // hds 2.1
       if (!jokeInstance.logo) {
         try {
           binary = await UuBinaryModel.createBinary(awid, { data: dtoIn.logo, code: "logo" });
         } catch (e) {
-          //A4
+          // A4
           throw new Errors.Update.UuBinaryCreateFailed(uuAppErrorMap, e);
         }
       } else {
-        //HDS 2.2
+        // hds 2.2
         try {
           binary = await UuBinaryModel.updateBinary(awid, { data: dtoIn.logo, code: "logo", revisionStrategy: "NONE" });
         } catch (e) {
-          //A5
+          // A5
           throw new Errors.Update.UuBinaryUpdateBinaryDataFailed(uuAppErrorMap, e);
         }
       }
       dtoIn.logo = binary.code;
     }
 
-    //HDS 3
+    // hds 3
     try {
       dtoIn.awid = awid;
       jokeInstance = await this.dao.updateByAwid(dtoIn);
@@ -190,7 +181,7 @@ class JokesInstanceModel {
       throw e;
     }
 
-    //HDS 4
+    // hds 4
     jokeInstance.uuAppErrorMap = uuAppErrorMap;
     return jokeInstance;
   }

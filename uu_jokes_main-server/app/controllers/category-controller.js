@@ -8,7 +8,7 @@ class CategoryController {
   }
 
   static get(ucEnv) {
-    return CategoryModel.get(ucEnv.uri.getAwid(), ucEnv.parameters);
+    return CategoryModel.get(ucEnv.uri.getAwid(), ucEnv.parameters, ucEnv.getAuthorizationResult());
   }
 
   static update(ucEnv) {
@@ -20,7 +20,7 @@ class CategoryController {
   }
 
   static list(ucEnv) {
-    return CategoryModel.list(ucEnv.uri.getAwid(), ucEnv.parameters);
+    return CategoryModel.list(ucEnv.uri.getAwid(), ucEnv.parameters, ucEnv.getAuthorizationResult());
   }
 }
 

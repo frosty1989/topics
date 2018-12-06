@@ -8,7 +8,7 @@ class JokeController {
   }
 
   static get(ucEnv) {
-    return JokeModel.get(ucEnv.uri.getAwid(), ucEnv.parameters);
+    return JokeModel.get(ucEnv.uri.getAwid(), ucEnv.parameters, ucEnv.getAuthorizationResult());
   }
 
   static update(ucEnv) {
@@ -24,7 +24,7 @@ class JokeController {
   }
 
   static list(ucEnv) {
-    return JokeModel.list(ucEnv.uri.getAwid(), ucEnv.parameters);
+    return JokeModel.list(ucEnv.uri.getAwid(), ucEnv.parameters, ucEnv.getAuthorizationResult());
   }
 
   static addRating(ucEnv) {

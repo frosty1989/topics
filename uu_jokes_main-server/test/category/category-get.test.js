@@ -67,7 +67,7 @@ test("A3 - jokes instance is under construction", async () => {
     uuAppProfileAuthorities: ".",
     state: "underConstruction"
   });
-  await TestHelper.login("Authority");
+  await TestHelper.login("Reader");
   try {
     await TestHelper.executeGetCommand(CATEGORY_GET, { id: MONGO_ID });
   } catch (e) {
