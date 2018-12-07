@@ -12,7 +12,7 @@ class UuJokesError extends UseCaseError {
       paramMap = {};
     }
 
-    super({ dtoOut: dtoOut, paramMap: paramMap, status: 400, cause: cause });
+    super({ dtoOut, paramMap, cause, status: 400 });
   }
 }
 

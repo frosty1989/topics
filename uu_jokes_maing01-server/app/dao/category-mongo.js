@@ -30,8 +30,8 @@ class CategoryMongo extends UuObjectDao {
     await super.deleteOne({ awid, id });
   }
 
-  async list(awid, pageInfo) {
-    return await super.find({ awid }, pageInfo);
+  async list(awid, order, pageInfo) {
+    return await super.find({ awid }, pageInfo, order);
   }
 
   async listByCategoryIdList(awid, categoryIdList, pageInfo) {

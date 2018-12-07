@@ -41,7 +41,7 @@ class JokesInstanceModel {
     let jokeInstance = await this.dao.getByAwid(awid);
     // A1
     if (jokeInstance) {
-      throw new Errors.Init.JokesInstanceAlreadyInitialized({});
+      throw new Errors.Init.JokesInstanceAlreadyInitialized();
     }
 
     // hds 2
@@ -196,7 +196,7 @@ class JokesInstanceModel {
   async checkInstance(awid, notExistError, closedStateError) {
     let jokesInstance = await this.dao.getByAwid(awid);
     if (!jokesInstance) {
-      throw new notExistError({});
+      throw new notExistError();
     }
     if (jokesInstance.state === STATE_CLOSED) {
       throw new closedStateError(

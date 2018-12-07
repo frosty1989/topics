@@ -373,15 +373,9 @@ class JokeModel {
     // hds 2.4
     if (!dtoIn.sortBy) dtoIn.sortBy = DEFAULTS.sortBy;
     if (!dtoIn.order) dtoIn.order = DEFAULTS.order;
-    if (!dtoIn.pageInfo) {
-      dtoIn.pageInfo = {
-        pageSize: DEFAULTS.pageSize,
-        pageIndex: DEFAULTS.pageIndex
-      };
-    } else {
-      if (!dtoIn.pageInfo.pageSize) dtoIn.pageInfo.pageSize = DEFAULTS.pageSize;
-      if (!dtoIn.pageInfo.pageIndex) dtoIn.pageInfo.pageIndex = DEFAULTS.pageIndex;
-    }
+    if (!dtoIn.pageInfo) dtoIn.pageInfo = {};
+    if (!dtoIn.pageInfo.pageSize) dtoIn.pageInfo.pageSize = DEFAULTS.pageSize;
+    if (!dtoIn.pageInfo.pageIndex) dtoIn.pageInfo.pageIndex = DEFAULTS.pageIndex;
 
     // hds 3
     let list;
@@ -492,10 +486,10 @@ class JokeModel {
    * @returns {Promise<[]>} Ids of existing categories
    */
   async _checkCategoriesExistence(awid, categoryList) {
-    let categories,
-      pageInfo = { pageIndex: 0 },
-      presentCategories = [],
-      categoryIndex;
+    let categories;
+    let pageInfo = { pageIndex: 0 };
+    let presentCategories = [];
+    let categoryIndex;
     while (true) {
       categories = await this.categoryDao.listByCategoryIdList(awid, categoryList, pageInfo);
       categories.itemList.forEach(category => {

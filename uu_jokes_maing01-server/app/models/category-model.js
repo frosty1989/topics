@@ -26,6 +26,7 @@ const WARNINGS = {
 };
 const DEFAULT_ICON = "mdi-label";
 const DEFAULTS = {
+  order: "asc",
   pageIndex: 0,
   pageSize: 100
 };
@@ -248,18 +249,14 @@ class CategoryModel {
       Errors.List.InvalidDtoIn
     );
     // hds 2.4
-    if (!dtoIn.pageInfo) {
-      dtoIn.pageInfo = {
-        pageSize: DEFAULTS.pageSize,
-        pageIndex: DEFAULTS.pageIndex
-      };
-    } else {
-      if (!dtoIn.pageInfo.pageSize) dtoIn.pageInfo.pageSize = DEFAULTS.pageSize;
-      if (!dtoIn.pageInfo.pageIndex) dtoIn.pageInfo.pageIndex = DEFAULTS.pageIndex;
-    }
+    if (!dtoIn.pageInfo) dtoIn.pageInfo = {};
+    if (!dtoIn.pageInfo.pageSize) dtoIn.pageInfo.pageSize = DEFAULTS.pageSize;
+    if (!dtoIn.pageInfo.pageIndex) dtoIn.pageInfo.pageIndex = DEFAULTS.pageIndex;
+    if (!dtoIn.order) dtoIn.order = DEFAULTS.order;
 
     // hds 3
-    let list = await this.dao.list(awid, dtoIn.pageInfo);
+    let order = { name: dtoIn.order === "asc" ? 1 : -1 };
+    let list = await this.dao.list(awid, order, dtoIn.pageInfo);
 
     // hds 4
     list.uuAppErrorMap = uuAppErrorMap;

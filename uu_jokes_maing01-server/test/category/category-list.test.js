@@ -20,15 +20,17 @@ test("HDS", async () => {
   await TestHelper.executePostCommand(JOKES_INSTANCE_INIT, { uuAppProfileAuthorities: ".", state: "active" });
   await TestHelper.login("Authority");
 
-  let nameOne = "cats",
-    nameTwo = "dogs";
+  let nameOne = "cats";
+  let nameTwo = "dogs";
   await TestHelper.executePostCommand(CATEGORY_CREATE, { name: nameOne });
   await TestHelper.executePostCommand(CATEGORY_CREATE, { name: nameTwo });
 
-  let list = await TestHelper.executeGetCommand(CATEGORY_LIST);
+  let list = await TestHelper.executeGetCommand(CATEGORY_LIST, { order: "desc" });
   expect(list.status).toEqual(200);
   expect(list.pageInfo.total).toEqual(2);
 
+  expect(list.itemList[0].name).toEqual("dogs");
+  expect(list.itemList[1].name).toEqual("cats");
   let names = [list.itemList[0].name, list.itemList[1].name].slice(0).sort();
   expect(names).toEqual([nameOne, nameTwo]);
 });
@@ -37,13 +39,13 @@ test("HDS - custom pageInfo", async () => {
   await TestHelper.executePostCommand(JOKES_INSTANCE_INIT, { uuAppProfileAuthorities: ".", state: "active" });
   await TestHelper.login("Authority");
 
-  let nameOne = "birds",
-    nameTwo = "pokemons";
+  let nameOne = "birds";
+  let nameTwo = "pokemons";
   await TestHelper.executePostCommand(CATEGORY_CREATE, { name: nameOne });
   await TestHelper.executePostCommand(CATEGORY_CREATE, { name: nameTwo });
 
-  let pageSize = 1,
-    pageIndex = 1;
+  let pageSize = 1;
+  let pageIndex = 1;
   let list = await TestHelper.executeGetCommand(CATEGORY_LIST, {
     pageInfo: { pageSize: pageSize, pageIndex: pageIndex }
   });

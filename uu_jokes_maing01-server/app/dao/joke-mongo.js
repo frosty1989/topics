@@ -52,14 +52,12 @@ class JokeMongo extends UuObjectDao {
   }
 
   async list(awid, sortBy, order, pageInfo) {
-    let sort = {};
-    sort[sortBy] = order === "asc" ? 1 : -1;
+    let sort = { [sortBy]: order === "asc" ? 1 : -1 };
     return await super.find({ awid }, pageInfo, sort);
   }
 
   async listByCategoryIdList(awid, categoryIdList, sortBy, order, pageInfo) {
-    let sort = {};
-    sort[sortBy] = order === "asc" ? 1 : -1;
+    let sort = { [sortBy]: order === "asc" ? 1 : -1 };
     return await super.find(
       {
         awid,
