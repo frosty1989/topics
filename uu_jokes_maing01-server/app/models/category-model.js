@@ -255,8 +255,7 @@ class CategoryModel {
     if (!dtoIn.order) dtoIn.order = DEFAULTS.order;
 
     // hds 3
-    let order = { name: dtoIn.order === "asc" ? 1 : -1 };
-    let list = await this.dao.list(awid, order, dtoIn.pageInfo);
+    let list = await this.dao.list(awid, dtoIn.order, dtoIn.pageInfo);
 
     // hds 4
     list.uuAppErrorMap = uuAppErrorMap;

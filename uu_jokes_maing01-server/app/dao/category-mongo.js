@@ -31,7 +31,8 @@ class CategoryMongo extends UuObjectDao {
   }
 
   async list(awid, order, pageInfo) {
-    return await super.find({ awid }, pageInfo, order);
+    let sort = { name: order === "asc" ? 1 : -1 };
+    return await super.find({ awid }, pageInfo, sort);
   }
 
   async listByCategoryIdList(awid, categoryIdList, pageInfo) {
