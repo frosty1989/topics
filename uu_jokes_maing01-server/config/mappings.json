@@ -8,7 +8,7 @@
       },
       "jokesInstance/load": {
         "realization": "controllers/JokesInstanceController.load",
-        "httpMethod": "POST",
+        "httpMethod": "GET",
         "type": "CMD"
       },
       "jokesInstance/update": {
