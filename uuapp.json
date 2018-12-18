@@ -1,0 +1,20 @@
+{
+  "product": "uu_jokes_maing01",
+  "version": "2.0.0-3",
+  "license": "License Commercial",
+  "description": {
+    "en": "Server project example for developing UAF application in Node.js",
+    "cs": ""
+  },
+  "uu_jokes_maing01-client": {
+    "namespace": "UuJokes"
+  },
+  "uu_jokes_maing01-server": {
+    "devkit": {
+      "development": {
+        "appBoxLocationUri": "ues:UU-BT:PRD.UU-JOKESG01-NODEJS/APPBOX",
+        "appDeploymentUri": "ues:DEV0116-BT[84723967990075193]:DEV[590ad6f527928911f9d6078d]:UU.JOKES.MAING01[5c18f6f54f1d8ab7bf35549a]"
+      }
+    }
+  }
+}

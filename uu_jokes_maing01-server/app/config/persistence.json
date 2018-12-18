@@ -1,0 +1,27 @@
+{
+  "maxNoa": 10,
+  "uuSubAppDataStore": {
+    "primary": {
+      "type": "uuAppObjectStore",
+      "realization": "MongoDB",
+      "schemaMap": {
+        "jokesInstance": {
+          "realization": "dao/JokesInstanceMongo",
+          "maxNoi": 1
+        },
+        "joke": {
+          "realization": "dao/JokeMongo",
+          "maxNoi": 1000
+        },
+        "jokeRating": {
+          "realization": "dao/JokeRatingMongo",
+          "maxNoi": 10000
+        },
+        "category": {
+          "realization": "dao/CategoryMongo",
+          "maxNoi": 128
+        }
+      }
+    }
+  }
+}
