@@ -2,77 +2,77 @@
   "{vendor}-{uuApp}-{uuSubApp}": {
     "useCaseMap": {
       "jokesInstance/init": {
-        "realization": "controllers/JokesInstanceController.init",
+        "realization": "api/JokesInstanceApi.init",
         "httpMethod": "POST",
         "type": "CMD"
       },
       "jokesInstance/load": {
-        "realization": "controllers/JokesInstanceController.load",
+        "realization": "api/JokesInstanceApi.load",
         "httpMethod": "GET",
         "type": "CMD"
       },
       "jokesInstance/update": {
-        "realization": "controllers/JokesInstanceController.update",
+        "realization": "api/JokesInstanceApi.update",
         "httpMethod": "POST",
         "type": "CMD"
       },
       "joke/create": {
-        "realization": "controllers/JokeController.create",
+        "realization": "api/JokeApi.create",
         "httpMethod": "POST",
         "type": "CMD"
       },
       "joke/get": {
-        "realization": "controllers/JokeController.get",
+        "realization": "api/JokeApi.get",
         "httpMethod": "GET",
         "type": "CMD"
       },
       "joke/update": {
-        "realization": "controllers/JokeController.update",
+        "realization": "api/JokeApi.update",
         "httpMethod": "POST",
         "type": "CMD"
       },
       "joke/updateVisibility": {
-        "realization": "controllers/JokeController.updateVisibility",
+        "realization": "api/JokeApi.updateVisibility",
         "httpMethod": "POST",
         "type": "CMD"
       },
       "joke/delete": {
-        "realization": "controllers/JokeController.delete",
+        "realization": "api/JokeApi.delete",
         "httpMethod": "POST",
         "type": "CMD"
       },
       "joke/list": {
-        "realization": "controllers/JokeController.list",
+        "realization": "api/JokeApi.list",
         "httpMethod": "GET",
         "type": "CMD"
       },
       "joke/addRating": {
-        "realization": "controllers/JokeController.addRating",
+        "realization": "api/JokeApi.addRating",
         "httpMethod": "POST",
         "type": "CMD"
       },
       "category/create": {
-        "realization": "controllers/CategoryController.create",
+        "realization": "api/CategoryApi.create",
         "httpMethod": "POST",
         "type": "CMD"
       },
       "category/get": {
-        "realization": "controllers/CategoryController.get",
+        "realization": "api/CategoryApi.get",
         "httpMethod": "GET",
         "type": "CMD"
       },
       "category/update": {
-        "realization": "controllers/CategoryController.update",
+        "realization": "api/CategoryApi.update",
         "httpMethod": "POST",
         "type": "CMD"
       },
       "category/delete": {
-        "realization": "controllers/CategoryController.delete",
+        "realization": "api/CategoryApi.delete",
         "httpMethod": "POST",
         "type": "CMD"
       },
       "category/list": {
-        "realization": "controllers/CategoryController.list",
+        "realization": "api/CategoryApi.list",
         "httpMethod": "GET",
         "type": "CMD"
       }

@@ -24,12 +24,12 @@ const STATE_ACTIVE = "active";
 const STATE_UNDER_CONSTRUCTION = "underConstruction";
 const STATE_CLOSED = "closed";
 
-class JokesInstanceModel {
+class JokesInstanceAbl {
   constructor() {
     this.validator = new Validator(Path.join(__dirname, "..", "validation_types", "jokes-instance-types.js"));
     this.dao = DaoFactory.getDao("jokesInstance");
     this.categoryDao = DaoFactory.getDao("category");
-    // redeclare some constants, so they can be used from other models
+    // redeclare some constants, so they can be used from other abls
     this.STATE_ACTIVE = STATE_ACTIVE;
     this.STATE_UNDER_CONSTRUCTION = STATE_UNDER_CONSTRUCTION;
     this.AUTHORITIES = AUTHORITIES;
@@ -211,4 +211,4 @@ class JokesInstanceModel {
   }
 }
 
-module.exports = new JokesInstanceModel();
+module.exports = new JokesInstanceAbl();

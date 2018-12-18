@@ -3,7 +3,7 @@
 const { Validator } = require("uu_appg01_server").Validation;
 const { DaoFactory, ObjectStoreError, DuplicateKey } = require("uu_appg01_server").ObjectStore;
 const { ValidationHelper } = require("uu_appg01_server").AppServer;
-const JokesInstanceModel = require("./jokes-instance-model");
+const JokesInstanceAbl = require("./jokes-instance-abl");
 const Errors = require("../errors/category-error");
 const Path = require("path");
 
@@ -31,7 +31,7 @@ const DEFAULTS = {
   pageSize: 100
 };
 
-class CategoryModel {
+class CategoryAbl {
   constructor() {
     this.validator = new Validator(Path.join(__dirname, "..", "validation_types", "category-types.js"));
     this.dao = DaoFactory.getDao("category");
@@ -40,7 +40,7 @@ class CategoryModel {
 
   async create(awid, dtoIn) {
     // hds 1, A1, hds 1.1, A2
-    await JokesInstanceModel.checkInstance(
+    await JokesInstanceAbl.checkInstance(
       awid,
       Errors.Create.JokesInstanceDoesNotExist,
       Errors.Create.JokesInstanceNotInProperState
@@ -82,7 +82,7 @@ class CategoryModel {
 
   async get(awid, dtoIn, authorizationResult) {
     // hds 1, A1, hds 1.1, A2
-    let jokesInstance = await JokesInstanceModel.checkInstance(
+    let jokesInstance = await JokesInstanceAbl.checkInstance(
       awid,
       Errors.Get.JokesInstanceDoesNotExist,
       Errors.Get.JokesInstanceNotInProperState
@@ -90,9 +90,9 @@ class CategoryModel {
     // A3
     let authorizedProfiles = authorizationResult.getAuthorizedProfiles();
     if (
-      jokesInstance.state === JokesInstanceModel.STATE_UNDER_CONSTRUCTION &&
-      !authorizedProfiles.includes(JokesInstanceModel.AUTHORITIES) &&
-      !authorizedProfiles.includes(JokesInstanceModel.EXECUTIVES)
+      jokesInstance.state === JokesInstanceAbl.STATE_UNDER_CONSTRUCTION &&
+      !authorizedProfiles.includes(JokesInstanceAbl.AUTHORITIES) &&
+      !authorizedProfiles.includes(JokesInstanceAbl.EXECUTIVES)
     ) {
       throw new Errors.Get.JokesInstanceIsUnderConstruction({}, { state: jokesInstance.state });
     }
@@ -129,7 +129,7 @@ class CategoryModel {
 
   async update(awid, dtoIn) {
     // hds 1, A1, hds 1.1, A2
-    await JokesInstanceModel.checkInstance(
+    await JokesInstanceAbl.checkInstance(
       awid,
       Errors.Update.JokesInstanceDoesNotExist,
       Errors.Update.JokesInstanceNotInProperState
@@ -169,7 +169,7 @@ class CategoryModel {
 
   async delete(awid, dtoIn) {
     // hds 1, A1, hds 1.1, A2
-    await JokesInstanceModel.checkInstance(
+    await JokesInstanceAbl.checkInstance(
       awid,
       Errors.Delete.JokesInstanceDoesNotExist,
       Errors.Delete.JokesInstanceNotInProperState
@@ -224,7 +224,7 @@ class CategoryModel {
 
   async list(awid, dtoIn, authorizationResult) {
     // hds 1, A1, hds 1.1, A2
-    let jokesInstance = await JokesInstanceModel.checkInstance(
+    let jokesInstance = await JokesInstanceAbl.checkInstance(
       awid,
       Errors.List.JokesInstanceDoesNotExist,
       Errors.List.JokesInstanceNotInProperState
@@ -232,9 +232,9 @@ class CategoryModel {
     // A3
     let authorizedProfiles = authorizationResult.getAuthorizedProfiles();
     if (
-      jokesInstance.state === JokesInstanceModel.STATE_UNDER_CONSTRUCTION &&
-      !authorizedProfiles.includes(JokesInstanceModel.AUTHORITIES) &&
-      !authorizedProfiles.includes(JokesInstanceModel.EXECUTIVES)
+      jokesInstance.state === JokesInstanceAbl.STATE_UNDER_CONSTRUCTION &&
+      !authorizedProfiles.includes(JokesInstanceAbl.AUTHORITIES) &&
+      !authorizedProfiles.includes(JokesInstanceAbl.EXECUTIVES)
     ) {
       throw new Errors.List.JokesInstanceIsUnderConstruction({}, { state: jokesInstance.state });
     }
@@ -263,4 +263,4 @@ class CategoryModel {
   }
 }
 
-module.exports = new CategoryModel();
+module.exports = new CategoryAbl();
