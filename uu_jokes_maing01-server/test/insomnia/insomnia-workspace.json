@@ -279,7 +279,7 @@
       ],
       "isPrivate": false,
       "metaSortKey": -1543484334516,
-      "method": "POST",
+      "method": "GET",
       "modified": 1543579376046,
       "name": "load",
       "parameters": [],
