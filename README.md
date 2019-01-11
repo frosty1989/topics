@@ -27,37 +27,9 @@
 ## 1. Installing client
 (This step can be skipped if only the server side of the application is needed.)  
 1. In client project:
-   1. Create empty folder **uu_jokes_maing01-server**
    4. Execute command  
    ```npm install```
    in folder **uu_jokes_maing01-client**
-   2. Execute command  
-   ```npm run build```
-   in folder **uu_jokes_maing01-client**
-2. Copy (or move) the folder **uu_jokes_maing01-server\public** from client project to the server project.
-3. In the server project, add following to the **uu_jokes_maing01-server\config\mappings.json**:
-   ```
-   "about": {
-     "realization": "index.html",
-     "httpMethod": "GET",
-     "type": "UVE"
-   },
-   "categoryManagement": {
-     "realization": "index.html",
-     "httpMethod": "GET",
-     "type": "UVE"
-   },
-   "jokes": {
-     "realization": "index.html",
-     "httpMethod": "GET",
-     "type": "UVE"
-   },
-   "login": {
-     "realization": "index.html",
-     "httpMethod": "GET",
-     "type": "UVE"
-   }
-   ```
 ## 2. Configuring and running server
 13. Start mongoDB
 7. In config file **uu_jokes_maing01-server\env\development.json**, replace \<uuIdentity> in *privilegedUserMap.asidOwner* field with your uuIdentity. Connection strings can be optionally changed as well (fields *uuSubAppDataStoreMap.primary* and *uuSubAppDataStoreMap.binary*)
@@ -75,7 +47,7 @@ All the following calls have to have the ```Authorization``` header set to ```Be
 Initialize uuApp and change runtime mode to STANDARD to allow calls of unprivileged commands.  
 Use any rest client and call the following:
 ```
-POST http://localhost:6221/uu-jokes-maing01/00000000000000000000000000000001/sys/initApp
+POST http://localhost:8080/uu-jokes-maing01/00000000000000000000000000000000-11111111111111111111111111111111/sys/initApp
 Request body:
 {
   "runtimeMode": {
@@ -86,10 +58,10 @@ Request body:
 ## 2. uuAppWorkspace initialization
 Use any rest client and call the following:  
 ```
-POST http://localhost:6221/uu-jokes-maing01/00000000000000000000000000000001/sys/initAppWorkspace
+POST http://localhost:8080/uu-jokes-maing01/00000000000000000000000000000000-11111111111111111111111111111111/sys/initAppWorkspace
 Request body:
 {
-  "awid": "11111111111111111111111111111111",
+  "awid": "22222222222222222222222222222222",
   "awidOwner": "<uuIdentity>",
   "licenseOwner": {
     "organization" : {
@@ -111,7 +83,7 @@ Request body:
 ## 3. uuJokes instance initialization
 Use any rest client and call the following:
 ```
-POST http://localhost:6221/uu-jokes-maing01/11111111111111111111111111111111/jokesInstance/init
+POST http://localhost:8080/uu-jokes-maing01/00000000000000000000000000000000-22222222222222222222222222222222/jokesInstance/init
 Request body:
 {
   "uuAppProfileAuthorities": "urn:uu:GGALL"
@@ -120,7 +92,7 @@ Request body:
 This call assigns *Authorities* rights to all users.
 
 ## 4. Testing functionality
-Open [this link](http://localhost:6221/uu-jokes-maing01/11111111111111111111111111111111/jokes) in browser.  
+Open [this link](http://localhost:8080/uu-jokes-maing01/00000000000000000000000000000000-22222222222222222222222222222222/jokes) in browser.  
 
 
 # Additional information sources

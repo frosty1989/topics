@@ -31,17 +31,66 @@ export const About = {
   },
   leadingAuthors: [
     {
-      name: "Pavel Valenta",
-      uuIdentity: "11-8580-1",
+      name: "Vladimír Kovář",
+      uuIdentity: "1-1",
       role: {
         en: "Chief Business Architect & Stakeholder"
       }
-    }
-  ],
-  otherAuthors: [
+    },
+    {
+      name: "Pavel Valenta",
+      uuIdentity: "11-8580-1",
+      role: {
+        en: "Product Manager"
+      }
+    },
+    {
+      name: "Lucie Melounouvá",
+      uuIdentity: "3-5444-1",
+      role: {
+        en: "Designer"
+      }
+    },
     {
       name: "Milan Martinek",
       uuIdentity: "6-138-1",
+      role: {
+        en: "Developer"
+      }
+    },
+  ],
+  otherAuthors: [
+    {
+      name: "David Kimr",
+      uuIdentity: "2-1",
+      role: {
+        en: "UAF Authority & Supervision"
+      }
+    },
+    {
+      name: "Marek Štastný",
+      uuIdentity: "11-1",
+      role: {
+        en: "UAF Authority & Supervision"
+      }
+    },
+    {
+      name: "Klára Hniličková",
+      uuIdentity: "13-2340-1",
+      role: {
+        en: "Designer"
+      }
+    },
+    {
+      name: "Michal Husák",
+      uuIdentity: "7709-1",
+      role: {
+        en: "UX Designer"
+      }
+    },
+    {
+      name: "Petr Bartoš",
+      uuIdentity: "192-168-0000-1",
       role: {
         en: "Developer"
       }
@@ -51,6 +100,27 @@ export const About = {
       uuIdentity: "12-9488-1",
       role: {
         en: "Developer"
+      }
+    },
+    {
+      name: "Mykhaylo Komarichyn",
+      uuIdentity: "11-8571-1",
+      role: {
+        en: "Developer"
+      }
+    },
+    {
+      name: "Yuliia Kulyk",
+      uuIdentity: "19-6434-1",
+      role: {
+        en: "Developer"
+      }
+    },
+    {
+      name: "Ondřej Rykl",
+      uuIdentity: "20-3538-1",
+      role: {
+        en: "Technical Writer"
       }
     }
   ],
