@@ -49,5 +49,8 @@
       "uuIdentity": "14-2710-1",
       "profileList": ["Readers"]
     }
-  }
+  },
+  "log_level": "FATAL",
+  "uuapp.appserver.monitoring.accesslog.log_level": "OFF",
+  "uuapp.perflog.logger.log_level": "OFF"
 }
