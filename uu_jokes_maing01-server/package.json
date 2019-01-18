@@ -1,39 +1,43 @@
 {
-  "name": "uu_jokesg01_main-server",
+  "name": "uu_jokes_maing01-server",
   "version": "2.0.0",
-  "description": "Server project template for developing UAF application in Node.js",
-  "license": "Licence Commercial",
+  "description": "Server project example for developing UAF application in Node.js",
+  "license": "License Commercial",
+  "spec": "nodejs-app; uu_appg01@1.0.0",
+  "dependencies": {
+    "uu_appg01_server": "^4.3.0",
+    "uu_appg01_datastore": "^2.1.0",
+    "uu_appg01_binarystore-cmd": "^2.1.0",
+    "bson": "1.1.0"
+  },
+  "devDependencies": {
+    "uu_appg01_devkit": "^1.0.0",
+    "uu_appg01_workspace-test": "^2.2.0"
+  },
   "engines": {
     "node": ">=8.9.0"
   },
-  "dependencies": {
-    "uu_appg01_server": "^4.0.0",
-    "bson": "1.1.0",
-    "uu_appg01_datastore": "^2.2.0"
-  },
-  "devDependencies": {
-    "uu_appg01_core-npm": "^4.0.0",
-    "uu_appg01_workspace-test": "^2.0.0",
-    "uu_appg01_binarystore-cmd": "^2.0.0"
-  },
   "scripts": {
-    "clean": "uu-appg01-core-npm clean",
-    "test": "uu-appg01-core-npm test",
-    "build": "uu-appg01-core-npm build",
-    "deploy": "uu-appg01-core-npm deploy",
-    "start": "uu-appg01-core-npm start",
-    "uuAppBox": "uu-appg01-core-npm uuAppBox",
-    "uuCloudDeploy": "uu-appg01-core-npm uuCloudDeploy",
-    "uuCloudUndeploy": "uu-appg01-core-npm uuCloudUndeploy",
-    "uuCloudShare": "uu-appg01-core-npm uuCloudShare",
-    "uuCloudUnshare": "uu-appg01-core-npm uuCloudUnshare",
-    "uuCloudDeployList": "uu-appg01-core-npm uuCloudDeployList",
-    "uuLogStoreExport": "uu-appg01-core-npm uuLogStoreExport"
+    "clean": "uu_appg01_devkit clean",
+    "test": "uu_appg01_devkit test",
+    "build": "uu_appg01_devkit build",
+    "package": "uu_appg01_devkit package",
+    "dist": "uu_appg01_devkit package",
+    "deploy": "uu_appg01_devkit deploy",
+    "start": "uu_appg01_devkit start",
+    "prettify": "uu_appg01_devkit prettify",
+    "uuAppBox": "uu_appg01_devkit uuAppBox",
+    "uuCloudDeploy": "uu_appg01_devkit uuCloudDeploy",
+    "uuCloudUndeploy": "uu_appg01_devkit uuCloudUndeploy",
+    "uuCloudShare": "uu_appg01_devkit uuCloudShare",
+    "uuCloudUnshare": "uu_appg01_devkit uuCloudUnshare",
+    "uuCloudDeployList": "uu_appg01_devkit uuCloudDeployList",
+    "uuLogStoreExport": "uu_appg01_devkit uuLogStoreExport"
   },
   "main": "app.js",
   "files": [
     "app",
-    "config",
+    "env",
     "public"
   ],
   "prettier": {
