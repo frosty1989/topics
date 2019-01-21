@@ -192,11 +192,11 @@ test("A7 - categories don't exist", async () => {
 
 test("A8 - creating binary fails", async () => {
   expect.assertions(2);
-  let { JokeModel, UuBinaryModel } = mockModels();
-  jest.spyOn(UuBinaryModel, "createBinary").mockImplementation(() => {
+  let { JokeAbl, UuBinaryAbl } = mockAbl();
+  jest.spyOn(UuBinaryAbl, "createBinary").mockImplementation(() => {
     throw new Error("it failed");
   });
-  JokeModel.dao = {
+  JokeAbl.dao = {
     get: () => {
       return {
         uuIdentity: "19-7019-1"
@@ -210,7 +210,7 @@ test("A8 - creating binary fails", async () => {
   };
 
   try {
-    await JokeModel.update("awid", dtoIn, getSessionMock("19-7019-1"), getAuthzResultMock());
+    await JokeAbl.update("awid", dtoIn, getSessionMock("19-7019-1"), getAuthzResultMock());
   } catch (e) {
     expect(e.code).toEqual("uu-jokes-main/joke/update/uuBinaryCreateFailed");
     expect(e.message).toEqual("Creating uuBinary failed.");
@@ -219,11 +219,11 @@ test("A8 - creating binary fails", async () => {
 
 test("A9 - updating binary fails", async () => {
   expect.assertions(2);
-  let { JokeModel, UuBinaryModel } = mockModels();
-  jest.spyOn(UuBinaryModel, "updateBinaryData").mockImplementation(() => {
+  let { JokeAbl, UuBinaryAbl } = mockAbl();
+  jest.spyOn(UuBinaryAbl, "updateBinaryData").mockImplementation(() => {
     throw new Error("it failed");
   });
-  JokeModel.dao = {
+  JokeAbl.dao = {
     get: () => {
       return {
         uuIdentity: "19-7019-1",
@@ -238,7 +238,7 @@ test("A9 - updating binary fails", async () => {
   };
 
   try {
-    await JokeModel.update("awid", dtoIn, getSessionMock("19-7019-1"), getAuthzResultMock());
+    await JokeAbl.update("awid", dtoIn, getSessionMock("19-7019-1"), getAuthzResultMock());
   } catch (e) {
     expect(e.code).toEqual("uu-jokes-main/joke/update/uuBinaryUpdateBinaryDataFailed");
     expect(e.message).toEqual("Updating uuBinary data failed.");
@@ -247,8 +247,8 @@ test("A9 - updating binary fails", async () => {
 
 test("A10 - updating joke fails", async () => {
   expect.assertions(2);
-  let { JokeModel } = mockModels();
-  JokeModel.dao = {
+  let { JokeAbl } = mockAbl();
+  JokeAbl.dao = {
     get: () => {
       return {
         uuIdentity: "19-7019-1"
@@ -260,18 +260,18 @@ test("A10 - updating joke fails", async () => {
   };
 
   try {
-    await JokeModel.update("awid", { id: MONGO_ID }, getSessionMock("19-7019-1"), getAuthzResultMock());
+    await JokeAbl.update("awid", { id: MONGO_ID }, getSessionMock("19-7019-1"), getAuthzResultMock());
   } catch (e) {
     expect(e.code).toEqual("uu-jokes-main/joke/update/jokeDaoUpdateFailed");
     expect(e.message).toEqual("Update joke by joke Dao update failed.");
   }
 });
 
-function mockModels() {
+function mockAbl() {
   mockDaoFactory();
-  const JokeModel = require("../../app/models/joke-model");
-  const { UuBinaryModel } = require("uu_appg01_binarystore-cmd");
-  const JokesInstanceModel = require("../../app/models/jokes-instance-model");
-  JokesInstanceModel.checkInstance = () => null;
-  return { JokeModel, UuBinaryModel };
+  const JokeAbl = require("../../app/abl/joke-abl");
+  const { UuBinaryAbl } = require("uu_appg01_binarystore-cmd");
+  const JokesInstanceAbl = require("../../app/abl/jokes-instance-abl");
+  JokesInstanceAbl.checkInstance = () => null;
+  return { JokeAbl, UuBinaryAbl };
 }

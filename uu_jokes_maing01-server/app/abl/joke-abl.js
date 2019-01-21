@@ -4,7 +4,7 @@
 const { Validator } = require("uu_appg01_server").Validation;
 const { DaoFactory, ObjectStoreError } = require("uu_appg01_server").ObjectStore;
 const { ValidationHelper } = require("uu_appg01_server").AppServer;
-const { UuBinaryModel } = require("uu_appg01_binarystore-cmd");
+const { UuBinaryAbl } = require("uu_appg01_binarystore-cmd");
 const JokesInstanceAbl = require("./jokes-instance-abl");
 const Errors = require("../errors/joke-error");
 const Path = require("path");
@@ -83,7 +83,7 @@ class JokeAbl {
     // hds 3
     if (dtoIn.image) {
       try {
-        let binary = await UuBinaryModel.createBinary(awid, { data: dtoIn.image });
+        let binary = await UuBinaryAbl.createBinary(awid, { data: dtoIn.image });
         dtoIn.image = binary.code;
       } catch (e) {
         // A5
@@ -218,7 +218,7 @@ class JokeAbl {
       if (!joke.image) {
         // hds 6.1
         try {
-          binary = await UuBinaryModel.createBinary(awid, { data: dtoIn.image });
+          binary = await UuBinaryAbl.createBinary(awid, { data: dtoIn.image });
         } catch (e) {
           // A8
           throw new Errors.Update.UuBinaryCreateFailed({ uuAppErrorMap }, e);
@@ -226,7 +226,7 @@ class JokeAbl {
       } else {
         // hds 6.2
         try {
-          binary = await UuBinaryModel.updateBinaryData(awid, {
+          binary = await UuBinaryAbl.updateBinaryData(awid, {
             data: dtoIn.image,
             code: joke.image,
             revisionStrategy: "NONE"
@@ -330,7 +330,7 @@ class JokeAbl {
     // hds 6
     if (joke.image) {
       try {
-        await UuBinaryModel.deleteBinary(awid, { code: joke.image });
+        await UuBinaryAbl.deleteBinary(awid, { code: joke.image });
       } catch (e) {
         // A7
         throw new Errors.Delete.UuBinaryDeleteFailed({ uuAppErrorMap }, e);

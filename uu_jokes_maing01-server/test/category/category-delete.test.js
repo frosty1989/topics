@@ -118,13 +118,13 @@ test("A4 - dtoIn is not valid", async () => {
 test("A5 - obtaining count of relevant jokes fails", async () => {
   expect.assertions(2);
 
-  let CategoryModel = mockModel();
-  CategoryModel.jokeDao.getCountByCategoryId = () => {
+  let CategoryAbl = mockAbl();
+  CategoryAbl.jokeDao.getCountByCategoryId = () => {
     throw new ObjectStoreError("it failed.");
   };
 
   try {
-    await CategoryModel.delete("awid", { id: MONGO_ID });
+    await CategoryAbl.delete("awid", { id: MONGO_ID });
   } catch (e) {
     expect(e.code).toEqual("uu-jokes-main/category/delete/jokeDaoGetCountByCategoryFailed");
     expect(e.message).toEqual("Get count by joke Dao getCountByCategory failed.");
@@ -148,25 +148,25 @@ test("A6 - there are jokes with deleted category and the delete is not forced", 
 test("A7 - removing category fails", async () => {
   expect.assertions(2);
 
-  let CategoryModel = mockModel();
-  CategoryModel.jokeDao.removeCategory = () => {
+  let CategoryAbl = mockAbl();
+  CategoryAbl.jokeDao.removeCategory = () => {
     throw new ObjectStoreError("it failed.");
   };
 
   try {
-    await CategoryModel.delete("awid", { id: MONGO_ID, forceDelete: true });
+    await CategoryAbl.delete("awid", { id: MONGO_ID, forceDelete: true });
   } catch (e) {
     expect(e.code).toEqual("uu-jokes-main/category/delete/jokeDaoRemoveCategoryFailed");
     expect(e.message).toEqual("Removing category by joke Dao removeCategory failed.");
   }
 });
 
-function mockModel() {
+function mockAbl() {
   mockDaoFactory();
-  const CategoryModel = require("../../app/models/category-model");
-  const JokesInstanceModel = require("../../app/models/jokes-instance-model");
-  JokesInstanceModel.checkInstance = () => null;
-  return CategoryModel;
+  const CategoryAbl = require("../../app/abl/category-abl");
+  const JokesInstanceAbl = require("../../app/abl/jokes-instance-abl");
+  JokesInstanceAbl.checkInstance = () => null;
+  return CategoryAbl;
 }
 
 // calling joke/create doesn't work with disabled authorization/authentication, this is a shortcut

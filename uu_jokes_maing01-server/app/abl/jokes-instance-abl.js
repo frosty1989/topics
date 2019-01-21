@@ -3,8 +3,8 @@
 const { Validator } = require("uu_appg01_server").Validation;
 const { DaoFactory, ObjectStoreError } = require("uu_appg01_server").ObjectStore;
 const { ValidationHelper } = require("uu_appg01_server").AppServer;
-const { SysProfileModel } = require("uu_appg01_server").Workspace;
-const { UuBinaryModel } = require("uu_appg01_binarystore-cmd");
+const { SysProfileAbl } = require("uu_appg01_server").Workspace;
+const { UuBinaryAbl } = require("uu_appg01_binarystore-cmd");
 const Path = require("path");
 const Errors = require("../errors/jokes-instance-error");
 
@@ -67,7 +67,7 @@ class JokesInstanceAbl {
 
     try {
       // hds 4
-      await SysProfileModel.setProfile(awid, { code: AUTHORITIES, roleUri: dtoIn.uuAppProfileAuthorities });
+      await SysProfileAbl.setProfile(awid, { code: AUTHORITIES, roleUri: dtoIn.uuAppProfileAuthorities });
     } catch (e) {
       // A4
       throw new Errors.Init.SysSetProfileFailed({ uuAppErrorMap }, { role: dtoIn.uuAppProfileAuthorities }, e);
@@ -77,7 +77,7 @@ class JokesInstanceAbl {
     if (dtoIn.logo) {
       let binary;
       try {
-        binary = await UuBinaryModel.createBinary(awid, { data: dtoIn.logo, code: "logo" });
+        binary = await UuBinaryAbl.createBinary(awid, { data: dtoIn.logo, code: "logo" });
       } catch (e) {
         // A5
         throw new Errors.Init.UuBinaryCreateFailed({ uuAppErrorMap }, e);
@@ -152,7 +152,7 @@ class JokesInstanceAbl {
       // hds 2.1
       if (!jokeInstance.logo) {
         try {
-          binary = await UuBinaryModel.createBinary(awid, { data: dtoIn.logo, code: "logo" });
+          binary = await UuBinaryAbl.createBinary(awid, { data: dtoIn.logo, code: "logo" });
         } catch (e) {
           // A4
           throw new Errors.Update.UuBinaryCreateFailed(uuAppErrorMap, e);
@@ -160,7 +160,7 @@ class JokesInstanceAbl {
       } else {
         // hds 2.2
         try {
-          binary = await UuBinaryModel.updateBinary(awid, { data: dtoIn.logo, code: "logo", revisionStrategy: "NONE" });
+          binary = await UuBinaryAbl.updateBinary(awid, { data: dtoIn.logo, code: "logo", revisionStrategy: "NONE" });
         } catch (e) {
           // A5
           throw new Errors.Update.UuBinaryUpdateBinaryDataFailed(uuAppErrorMap, e);

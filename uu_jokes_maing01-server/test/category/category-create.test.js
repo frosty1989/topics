@@ -103,15 +103,15 @@ test("A5 - category with such name already exists", async () => {
 
 test("A6 - creating category fails", async () => {
   mockDaoFactory();
-  const CategoryModel = require("../../app/models/category-model");
-  const JokesInstanceModel = require("../../app/models/jokes-instance-model");
-  JokesInstanceModel.checkInstance = () => null;
-  CategoryModel.dao.create = () => {
+  const CategoryAbl = require("../../app/abl/category-abl");
+  const JokesInstanceAbl = require("../../app/abl/jokes-instance-abl");
+  JokesInstanceAbl.checkInstance = () => null;
+  CategoryAbl.dao.create = () => {
     throw new ObjectStoreError("it fails.");
   };
 
   try {
-    await CategoryModel.create("awid", { name: "..." });
+    await CategoryAbl.create("awid", { name: "..." });
   } catch (e) {
     expect(e.code).toEqual("uu-jokes-main/category/create/categoryDaoCreateFailed");
     expect(e.message).toEqual("Create category by category DAO create failed.");

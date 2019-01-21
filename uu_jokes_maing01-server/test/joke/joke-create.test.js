@@ -159,13 +159,13 @@ test("A4 - dtoIn is not valid", async () => {
 test("A5 - creating image fails", async () => {
   expect.assertions(2);
 
-  let { JokeModel, UuBinaryModel } = mockModels();
-  jest.spyOn(UuBinaryModel, "createBinary").mockImplementation(() => {
+  let { JokeAbl, UuBinaryAbl } = mockAbl();
+  jest.spyOn(UuBinaryAbl, "createBinary").mockImplementation(() => {
     throw new Error("it failed");
   });
 
   try {
-    await JokeModel.create(
+    await JokeAbl.create(
       "awid",
       { name: "astronaut s pletenou cepici", image: getImageStream() },
       getSessionMock(),
@@ -207,24 +207,24 @@ test("A6 - categories don't exist", async () => {
 test("A7 - storing the joke fails", async () => {
   expect.assertions(2);
 
-  let { JokeModel } = mockModels();
-  JokeModel.dao.create = () => {
+  let { JokeAbl } = mockAbl();
+  JokeAbl.dao.create = () => {
     throw new ObjectStoreError("it failed");
   };
 
   try {
-    await JokeModel.create("awid", { name: "za chvili pujdu domu" }, getSessionMock(), getAuthzResultMock());
+    await JokeAbl.create("awid", { name: "za chvili pujdu domu" }, getSessionMock(), getAuthzResultMock());
   } catch (e) {
     expect(e.code).toEqual("uu-jokes-main/joke/create/jokeDaoCreateFailed");
     expect(e.message).toEqual("Create joke by joke DAO create failed.");
   }
 });
 
-function mockModels() {
+function mockAbl() {
   mockDaoFactory();
-  const JokeModel = require("../../app/models/joke-model");
-  const { UuBinaryModel } = require("uu_appg01_binarystore-cmd");
-  const JokesInstanceModel = require("../../app/models/jokes-instance-model");
-  JokesInstanceModel.checkInstance = () => null;
-  return { JokeModel, UuBinaryModel };
+  const JokeAbl = require("../../app/abl/joke-abl");
+  const { UuBinaryAbl } = require("uu_appg01_binarystore-cmd");
+  const JokesInstanceAbl = require("../../app/abl/jokes-instance-abl");
+  JokesInstanceAbl.checkInstance = () => null;
+  return { JokeAbl, UuBinaryAbl };
 }

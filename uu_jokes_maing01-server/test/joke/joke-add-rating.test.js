@@ -163,16 +163,16 @@ test("A6 - Authorities trying to rate their own joke", async () => {
 test("A7 - joke rating update fails", async () => {
   expect.assertions(2);
 
-  let JokeModel = mockModels();
-  JokeModel.jokeRatingDao.getByJokeIdAndUuIdentity = () => {
+  let JokeAbl = mockAbl();
+  JokeAbl.jokeRatingDao.getByJokeIdAndUuIdentity = () => {
     return { value: null };
   };
-  JokeModel.jokeRatingDao.update = () => {
+  JokeAbl.jokeRatingDao.update = () => {
     throw new ObjectStoreError("it failed.");
   };
 
   try {
-    await JokeModel.addRating("awid", { id: MONGO_ID, rating: 2 }, getSessionMock());
+    await JokeAbl.addRating("awid", { id: MONGO_ID, rating: 2 }, getSessionMock());
   } catch (e) {
     expect(e.code).toEqual("uu-jokes-main/joke/addRating/jokeRatingDaoUpdateFailed");
     expect(e.message).toEqual("Update jokeRating by jokeRating DAO update failed.");
@@ -182,14 +182,14 @@ test("A7 - joke rating update fails", async () => {
 test("A7 - creating new joke rating fails", async () => {
   expect.assertions(2);
 
-  let JokeModel = mockModels();
-  JokeModel.jokeRatingDao.getByJokeIdAndUuIdentity = () => null;
-  JokeModel.jokeRatingDao.create = () => {
+  let JokeAbl = mockAbl();
+  JokeAbl.jokeRatingDao.getByJokeIdAndUuIdentity = () => null;
+  JokeAbl.jokeRatingDao.create = () => {
     throw new ObjectStoreError("it failed.");
   };
 
   try {
-    await JokeModel.addRating("awid", { id: MONGO_ID, rating: 2 }, getSessionMock());
+    await JokeAbl.addRating("awid", { id: MONGO_ID, rating: 2 }, getSessionMock());
   } catch (e) {
     expect(e.code).toEqual("uu-jokes-main/joke/addRating/jokeRatingDaoCreateFailed");
     expect(e.message).toEqual("Create jokeRating by jokeRating DAO create failed.");
@@ -199,28 +199,28 @@ test("A7 - creating new joke rating fails", async () => {
 test("A8 - updating joke fails", async () => {
   expect.assertions(2);
 
-  let JokeModel = mockModels();
-  JokeModel.jokeRatingDao.getByJokeIdAndUuIdentity = () => false;
-  JokeModel.jokeRatingDao.create = () => null;
-  JokeModel.dao.update = () => {
+  let JokeAbl = mockAbl();
+  JokeAbl.jokeRatingDao.getByJokeIdAndUuIdentity = () => false;
+  JokeAbl.jokeRatingDao.create = () => null;
+  JokeAbl.dao.update = () => {
     throw new ObjectStoreError("it failed.");
   };
 
   try {
-    await JokeModel.addRating("awid", { id: MONGO_ID, rating: 2 }, getSessionMock());
+    await JokeAbl.addRating("awid", { id: MONGO_ID, rating: 2 }, getSessionMock());
   } catch (e) {
     expect(e.code).toEqual("uu-jokes-main/joke/addRating/jokeDaoUpdateFailed");
     expect(e.message).toEqual("Update joke by joke DAO update failed.");
   }
 });
 
-function mockModels() {
+function mockAbl() {
   mockDaoFactory();
-  const JokeModel = require("../../app/models/joke-model");
-  const JokesInstanceModel = require("../../app/models/jokes-instance-model");
-  JokesInstanceModel.checkInstance = () => null;
-  JokeModel.dao.get = () => {
+  const JokeAbl = require("../../app/abl/joke-abl");
+  const JokesInstanceAbl = require("../../app/abl/jokes-instance-abl");
+  JokesInstanceAbl.checkInstance = () => null;
+  JokeAbl.dao.get = () => {
     return { id: 1, uuIdentity: 2 };
   };
-  return JokeModel;
+  return JokeAbl;
 }

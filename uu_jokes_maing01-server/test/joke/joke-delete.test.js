@@ -176,28 +176,28 @@ test("A6 - Executives trying to delete Authorities' joke", async () => {
 
 test("A7 - deleting image fails", async () => {
   expect.assertions(2);
-  let { JokeModel, UuBinaryModel } = mockModels();
-  JokeModel.dao.get = () => {
+  let { JokeAbl, UuBinaryAbl } = mockAbl();
+  JokeAbl.dao.get = () => {
     return { image: "For the love of god, javascript, I hope this is truthy!!" };
   };
-  JokeModel.jokeRatingDao.deleteByJokeId = () => null;
-  UuBinaryModel.deleteBinary = () => {
+  JokeAbl.jokeRatingDao.deleteByJokeId = () => null;
+  UuBinaryAbl.deleteBinary = () => {
     throw new Error("it failed.");
   };
 
   try {
-    await JokeModel.delete("awid", { id: MONGO_ID }, getSessionMock(), getAuthzResultMock());
+    await JokeAbl.delete("awid", { id: MONGO_ID }, getSessionMock(), getAuthzResultMock());
   } catch (e) {
     expect(e.code).toEqual("uu-jokes-main/joke/delete/uuBinaryDeleteFailed");
     expect(e.message).toEqual("Deleting uuBinary failed.");
   }
 });
 
-function mockModels() {
+function mockAbl() {
   mockDaoFactory();
-  const JokeModel = require("../../app/models/joke-model");
-  const { UuBinaryModel } = require("uu_appg01_binarystore-cmd");
-  const JokesInstanceModel = require("../../app/models/jokes-instance-model");
-  JokesInstanceModel.checkInstance = () => null;
-  return { JokeModel, UuBinaryModel };
+  const JokeAbl = require("../../app/abl/joke-abl");
+  const { UuBinaryAbl } = require("uu_appg01_binarystore-cmd");
+  const JokesInstanceAbl = require("../../app/abl/jokes-instance-abl");
+  JokesInstanceAbl.checkInstance = () => null;
+  return { JokeAbl, UuBinaryAbl };
 }

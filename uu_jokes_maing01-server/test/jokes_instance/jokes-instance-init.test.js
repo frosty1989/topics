@@ -107,8 +107,8 @@ test("A3 - invalid dtoIn", async () => {
 test("A4 - setProfile fails", async () => {
   expect.assertions(2);
 
-  let { JokesInstanceModel, SysProfileModel } = mockModels();
-  jest.spyOn(SysProfileModel, "setProfile").mockImplementation(() => {
+  let { JokesInstanceAbl, SysProfileAbl } = mockAbl();
+  jest.spyOn(SysProfileAbl, "setProfile").mockImplementation(() => {
     throw new Error("kolobezka");
   });
 
@@ -116,7 +116,7 @@ test("A4 - setProfile fails", async () => {
     uuAppProfileAuthorities: "bicykl"
   };
   try {
-    await JokesInstanceModel.init("awid", dtoIn);
+    await JokesInstanceAbl.init("awid", dtoIn);
   } catch (e) {
     expect(e.message).toEqual("Create uuAppProfile failed.");
     expect(e.code).toEqual("uu-jokes-main/jokesInstance/init/sys/setProfileFailed");
@@ -126,9 +126,9 @@ test("A4 - setProfile fails", async () => {
 test("A5 - creating uuBinary fails", async () => {
   expect.assertions(2);
 
-  let { JokesInstanceModel, SysProfileModel, UuBinaryModel } = mockModels();
-  jest.spyOn(SysProfileModel, "setProfile").mockImplementation(() => {});
-  jest.spyOn(UuBinaryModel, "createBinary").mockImplementation(() => {
+  let { JokesInstanceAbl, SysProfileAbl, UuBinaryAbl } = mockAbl();
+  jest.spyOn(SysProfileAbl, "setProfile").mockImplementation(() => {});
+  jest.spyOn(UuBinaryAbl, "createBinary").mockImplementation(() => {
     throw new Error("kotrmelec");
   });
 
@@ -137,7 +137,7 @@ test("A5 - creating uuBinary fails", async () => {
     logo: getImageStream()
   };
   try {
-    await JokesInstanceModel.init("awid", dtoIn);
+    await JokesInstanceAbl.init("awid", dtoIn);
   } catch (e) {
     expect(e.message).toEqual("Creating uuBinary failed.");
     expect(e.code).toEqual("uu-jokes-main/jokesInstance/init/uuBinaryCreateFailed");
@@ -147,29 +147,29 @@ test("A5 - creating uuBinary fails", async () => {
 test("A6 - storing jokes instance fails", async () => {
   expect.assertions(2);
 
-  let { JokesInstanceModel, SysProfileModel, UuBinaryModel } = mockModels();
-  JokesInstanceModel.dao.create = () => {
+  let { JokesInstanceAbl, SysProfileAbl, UuBinaryAbl } = mockAbl();
+  JokesInstanceAbl.dao.create = () => {
     throw new ObjectStoreError("it failed");
   };
-  jest.spyOn(SysProfileModel, "setProfile").mockImplementation(() => {});
-  jest.spyOn(UuBinaryModel, "createBinary").mockImplementation(() => {});
+  jest.spyOn(SysProfileAbl, "setProfile").mockImplementation(() => {});
+  jest.spyOn(UuBinaryAbl, "createBinary").mockImplementation(() => {});
 
   let dtoIn = {
     uuAppProfileAuthorities: "someUri"
   };
   try {
-    await JokesInstanceModel.init("awid", dtoIn);
+    await JokesInstanceAbl.init("awid", dtoIn);
   } catch (e) {
     expect(e.message).toEqual("Create jokesInstance by jokesInstance DAO create failed.");
     expect(e.code).toEqual("uu-jokes-main/jokesInstance/init/jokesInstanceDaoCreateFailed");
   }
 });
 
-function mockModels() {
+function mockAbl() {
   mockDaoFactory();
-  const JokesInstanceModel = require("../../app/models/jokes-instance-model");
-  const { SysProfileModel } = require("uu_appg01_server").Workspace;
-  const { UuBinaryModel } = require("uu_appg01_binarystore-cmd");
-  JokesInstanceModel.dao.getByAwid = () => null;
-  return { JokesInstanceModel, SysProfileModel, UuBinaryModel };
+  const JokesInstanceAbl = require("../../app/abl/jokes-instance-abl");
+  const { SysProfileAbl } = require("uu_appg01_server").Workspace;
+  const { UuBinaryAbl } = require("uu_appg01_binarystore-cmd");
+  JokesInstanceAbl.dao.getByAwid = () => null;
+  return { JokesInstanceAbl, SysProfileAbl, UuBinaryAbl };
 }
