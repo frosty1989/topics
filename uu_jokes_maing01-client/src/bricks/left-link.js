@@ -7,6 +7,7 @@ import "uu5g04-bricks";
 
 import Config from "./config/config.js";
 import Uri from "../helpers/uri-helpers.js";
+import { ensureClosedMenu } from "../helpers/menu-helper";
 
 import "./left-link.less";
 //@@viewOff:imports
@@ -54,14 +55,11 @@ const LeftLink = createReactClass({
 
   //@@viewOn:overriding
   _goRoute() {
-    // to reset menu
-    // UU5.Environment.App.menuRef.update("");
-    UU5.Environment.setRoute(this.props.route);
+    // change route and ensure the menu gets closed when applicable
+    UU5.Environment.setRoute(this.props.route, ensureClosedMenu);
   },
 
   _tabRoute() {
-    // to reset menu
-    // UU5.Environment.App.menuRef.update("");
     Uri.openNewTab({ code: this.props.route });
   },
   //@@viewOff:overriding

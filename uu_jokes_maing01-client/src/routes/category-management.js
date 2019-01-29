@@ -12,7 +12,6 @@ import { reportError, reportSuccess } from "../helpers/alert-helper";
 
 import "./category-management.less";
 import LSI from "./category-management-lsi.js";
-import { ensureClosedMenu } from "../helpers/menu-helper";
 //@@viewOff:imports
 
 export const CategoryManagement = createReactClass({
@@ -68,7 +67,6 @@ export const CategoryManagement = createReactClass({
   onRouteChanged_() {
     let menu = this.getCcrComponentByKey(Config.LEFT_MENU_CCR_KEY);
     menu && menu.setActiveRoute("categoryManagement");
-    ensureClosedMenu();
   },
   //@@viewOff:overriding
 

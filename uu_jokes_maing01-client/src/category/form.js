@@ -55,7 +55,7 @@ export const Form = createReactClass({
         {/* // TextInput */}
         <UU5.Forms.Text inputAttrs={{ maxLength: 255 }} name="name" label={this.getLsiComponent("name")} required />
         {/* // IconCode */}
-        <UU5.Forms.Iconpicker name="icon" label={this.getLsiComponent("icon")} value="mdi-label" />
+        <UU5.Forms.Iconpicker name="icon" label={this.getLsiComponent("icon")} value="mdi-label" openToContent={true} />
       </UU5.Bricks.Div>
     );
   }

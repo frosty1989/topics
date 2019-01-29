@@ -1,5 +1,5 @@
 // filter out object values only for selected keys
-function allowedKeys(object, ...keys) {
+function whitelistedKeys(object, ...keys) {
   let result = {};
   keys.forEach(key => {
     if (object.hasOwnProperty(key)) {
@@ -21,5 +21,5 @@ function dig(object, ...keys) {
   return pointer;
 }
 
-export { allowedKeys, dig };
-export default { allowedKeys };
+export { whitelistedKeys, dig };
+export default { whitelistedKeys };

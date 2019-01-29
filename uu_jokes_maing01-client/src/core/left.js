@@ -5,10 +5,10 @@ import PropTypes from "prop-types";
 import * as UU5 from "uu5g04";
 import "uu5g04-bricks";
 
-import { dig } from "../helpers/object-utils.js";
 import Config from "./config/config.js";
 import Uri from "../helpers/uri-helpers.js";
 import LeftLink from "../bricks/left-link.js";
+import { ensureClosedMenu } from "../helpers/menu-helper";
 
 import "./left.less";
 import LSI from "./left-lsi.js";
@@ -16,7 +16,7 @@ import LSI from "./left-lsi.js";
 
 export const Left = createReactClass({
   //@@viewOn:mixins
-  mixins: [UU5.Common.BaseMixin, UU5.Common.CcrWriterMixin],
+  mixins: [UU5.Common.BaseMixin, UU5.Common.CcrWriterMixin, UU5.Common.PureRenderMixin],
   //@@viewOff:mixins
 
   //@@viewOn:statics
@@ -29,18 +29,26 @@ export const Left = createReactClass({
     },
     lsi: LSI,
     opt: {
-      ccrKey: Config.LEFT_MENU_CCR_KEY
+      ccrKey: Config.LEFT_MENU_CCR_KEY,
+      pureRender: true
     }
   },
   //@@viewOff:statics
 
   //@@viewOn:propTypes
   propTypes: {
-    appData: PropTypes.object
+    appData: PropTypes.object,
+    authenticated: PropTypes.bool
   },
   //@@viewOff:propTypes
 
   //@@viewOn:getDefaultProps
+  getDefaultProps() {
+    return {
+      appData: {},
+      authenticated: false
+    };
+  },
   //@@viewOff:getDefaultProps
 
   //@@viewOn:reactLifeCycle
@@ -61,23 +69,14 @@ export const Left = createReactClass({
   //@@viewOff:overriding
 
   //@@viewOn:private
-  _onItemClick(item, e) {
-    Uri.setRoute(item);
-  },
-
   _handleGoHome() {
-    let code = this.props.appData ? Config.AUTH_HOME_ROUTE : Config.NOT_AUTH_HOME_ROUTE;
-    UU5.Environment.App.menuRef.update(code);
-    UU5.Environment.setRoute(code);
+    let code = this.props.authenticated ? Config.AUTH_HOME_ROUTE : Config.NOT_AUTH_HOME_ROUTE;
+    UU5.Environment.setRoute(code, ensureClosedMenu);
   },
 
   _handleTabHome() {
-    let code = this.props.appData ? Config.AUTH_HOME_ROUTE : Config.NOT_AUTH_HOME_ROUTE;
+    let code = this.props.authenticated ? Config.AUTH_HOME_ROUTE : Config.NOT_AUTH_HOME_ROUTE;
     Uri.openNewTab({ code });
-  },
-
-  _registerMenu(cmp) {
-    UU5.Environment.App.menuRef = cmp;
   },
 
   _getAuthenticatedMenu() {
@@ -86,7 +85,7 @@ export const Left = createReactClass({
         <LeftLink route="jokes" active={this.state.activeRoute === "jokes"}>
           {this.getLsiComponent("jokes")}
         </LeftLink>
-        {this.props.appData.authorization.canManage() && (
+        {UU5.Environment.App.authorization.canManage() && (
           <LeftLink route="categoryManagement" active={this.state.activeRoute === "categoryManagement"}>
             {this.getLsiComponent("categories")}
           </LeftLink>
@@ -95,7 +94,7 @@ export const Left = createReactClass({
     );
   },
 
-  _getUnauthorizedMenu() {
+  _getNonAuthenticatedMenu() {
     return (
       <LeftLink route="login" active={this.state.activeRoute === "login"}>
         {this.getLsiComponent("login")}
@@ -104,10 +103,7 @@ export const Left = createReactClass({
   },
 
   _getImage() {
-    let imageUrl = Uri.buildUrl({
-      useCase: "uu-app-binarystore/getBinaryData",
-      parameters: { code: this.props.appData.logo }
-    });
+    let imageUrl = Uri.getBinaryUrl(this.props.appData.logo);
     return <UU5.Bricks.Image src={imageUrl} authenticate />;
   },
   //@@viewOff:private
@@ -123,15 +119,14 @@ export const Left = createReactClass({
             onCtrlClick={this._handleTabHome}
           >
             {/* // Logo */}
-            {dig(this.props, "appData", "logo") ? (
+            {this.props.appData.logo ? (
               this._getImage()
             ) : (
               <UU5.Bricks.Image name="Logo" responsive src="assets/logo.png" />
             )}
           </UU5.Bricks.Link>
         </UU5.Bricks.Div>
-
-        {dig(this.props, "appData", "uuIdentity") ? this._getAuthenticatedMenu() : this._getUnauthorizedMenu()}
+        {this.props.authenticated ? this._getAuthenticatedMenu() : this._getNonAuthenticatedMenu()}
         <LeftLink route="about" size="xl" active={this.state.activeRoute === "about"}>
           {this.getLsiComponent("about")}
         </LeftLink>

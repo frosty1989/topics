@@ -10,7 +10,6 @@ import AboutCfg from "../config/about.js";
 
 import "./about.less";
 import LSI from "./about-lsi.js";
-import { ensureClosedMenu } from "../helpers/menu-helper";
 //@@viewOff:imports
 
 export const About = createReactClass({
@@ -46,7 +45,6 @@ export const About = createReactClass({
   onRouteChanged_() {
     let menu = this.getCcrComponentByKey(Config.LEFT_MENU_CCR_KEY);
     menu && menu.setActiveRoute("about");
-    ensureClosedMenu();
   },
   //@@viewOff:overriding
 

@@ -50,8 +50,7 @@ export const SpaReady = createReactClass({
         })
       ),
       userProfiles: PropTypes.arrayOf(PropTypes.string),
-      setAppData: PropTypes.func,
-      authorization: PropTypes.object
+      setAppData: PropTypes.func
     }).isRequired
   },
   //@@viewOff:propTypes
@@ -80,7 +79,7 @@ export const SpaReady = createReactClass({
         bottom={<Bottom />}
         type={1}
         displayedLanguages={["cs", "en"]}
-        left={<Left appData={this.props.appData} />}
+        left={<Left appData={this.props.appData} authenticated={true} />}
         leftWidth="!xs-320px !s-320px !m-256px l-256px xl-256px"
       >
         <UU5.Common.Router

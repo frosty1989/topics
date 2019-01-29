@@ -2,7 +2,7 @@
   "uuSubApp": {
     "code": "UU.JOKES.MAING01",
     "name": "uuJokes",
-    "version": "2.0.0",
+    "version": "2.0.0-DEV",
     "description": "Server project example for developing UAF application in Node.js",
     "license": "License Commercial",
     "asidRequired": true,
@@ -16,7 +16,7 @@
           "min": 1,
           "max": 1
         },
-        "appPackUri": "ues:UU-BT:UU.JOKES.MAING01/APPBOX-2.0.0:UU.JOKES.MAING01/CMD-PACK",
+        "appPackUri": "ues:UU-BT:UU.JOKES.MAING01/APPBOX-2.0.0-DEV:UU.JOKES.MAING01/CMD-PACK",
         "runtimeStack": "UU.OS9/UC_NODEJS_STACK-V1.1"
       }
     },
@@ -26,7 +26,7 @@
         "alias": "primary"
       }
     },
-	"uuAppBinaryStoreMap": {
+    "uuAppBinaryStoreMap": {
       "BSID_1": {
         "size": 0.25,
         "alias": "binary"
@@ -48,7 +48,7 @@
         "osid": "80za2kzvz0bvj6z6shu2gdla70gt7thi"
       }
     },
-	"uuAppBinaryStoreMap": {
+    "uuAppBinaryStoreMap": {
       "BSID_1": {
         "bsid": "80za2kzvz0bvj6z6shu2gdla70gt7thi"
       }
