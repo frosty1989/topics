@@ -153,7 +153,7 @@ export const Jokes = createReactClass({
       {
         key: "category",
         label: this.getLsi("filterByCategory"),
-        filterFn: (item, filterValue) => item.categoryList.includes(filterValue)
+        filterFn: (item, filterValue) => item.categoryList && item.categoryList.includes(filterValue)
       },
       {
         key: "image",
