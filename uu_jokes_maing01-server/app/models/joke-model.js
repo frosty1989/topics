@@ -104,6 +104,8 @@ class JokeModel {
         );
       }
       dtoIn.categoryList = [...new Set(presentCategories)];
+    } else {
+      dtoIn.categoryList = [];
     }
 
     // hds 5
