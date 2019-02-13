@@ -69,7 +69,7 @@ test("HDS - no image, Authorities call", async () => {
   expect(dtoOut.ratingCount).toEqual(0);
   expect(dtoOut.visibility).toEqual(true);
   expect(dtoOut.image).toBeUndefined();
-  expect(dtoOut.categoryList).toBeUndefined();
+  expect(dtoOut.categoryList).toEqual([]);
   expect(dtoOut.uuAppErrorMap).toEqual({});
   expect(dtoOut.awid).toEqual(TestHelper.getAwid());
 });
