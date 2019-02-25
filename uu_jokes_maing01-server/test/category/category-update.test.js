@@ -94,7 +94,7 @@ test("A6 - category update fails, especially if there is no category", async () 
   try {
     await TestHelper.executePostCommand(CATEGORY_UPDATE, { id: MONGO_ID });
   } catch (e) {
-    expect(e.code).toEqual("uu-jokes-main/category/update/categoryDaoUpateFailed");
+    expect(e.code).toEqual("uu-jokes-main/category/update/categoryDaoUpdateFailed");
     expect(e.message).toEqual("Update category by category Dao update failed.");
   }
 });
