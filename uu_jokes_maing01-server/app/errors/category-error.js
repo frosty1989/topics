@@ -114,7 +114,7 @@ const Update = {
   CategoryDaoUpdateFailed: class extends UuJokesError {
     constructor() {
       super(...arguments);
-      this.code = `${Update.UC_CODE}categoryDaoUpateFailed`;
+      this.code = `${Update.UC_CODE}categoryDaoUpdateFailed`;
       this.message = "Update category by category Dao update failed.";
     }
   }
@@ -203,5 +203,5 @@ module.exports = {
   Get,
   Update,
   Delete,
-  List,
+  List
 };
