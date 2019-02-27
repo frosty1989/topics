@@ -29,6 +29,9 @@ class JokeMongo extends UuObjectDao {
   }
 
   async update(uuObject) {
+    if (uuObject.categoryList) {
+      uuObject.categoryList = uuObject.categoryList.map(categoryId => new ObjectId(categoryId));
+    }
     let filter = { id: uuObject.id, awid: uuObject.awid };
     return await super.findOneAndUpdate(filter, uuObject, "NONE");
   }
@@ -52,12 +55,16 @@ class JokeMongo extends UuObjectDao {
   }
 
   async list(awid, sortBy, order, pageInfo) {
-    let sort = { [sortBy]: order === "asc" ? 1 : -1 };
+    let sort = {
+      [sortBy]: order === "asc" ? 1 : -1
+    };
     return await super.find({ awid }, pageInfo, sort);
   }
 
   async listByCategoryIdList(awid, categoryIdList, sortBy, order, pageInfo) {
-    let sort = { [sortBy]: order === "asc" ? 1 : -1 };
+    let sort = {
+      [sortBy]: order === "asc" ? 1 : -1
+    };
     return await super.find(
       {
         awid,
