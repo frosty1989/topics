@@ -8,7 +8,7 @@ import * as Plus4U5 from "uu_plus4u5g01";
 import "uu_plus4u5g01-app";
 
 import Config from "./config/config.js";
-import { allowedKeys } from "../helpers/object-utils.js";
+import { whitelistedKeys } from "../helpers/object-utils.js";
 import SpaReady from "./spa-ready.js";
 import Calls from "calls";
 import { dig } from "../helpers/object-utils";
@@ -54,7 +54,7 @@ const SpaAuthenticated = createReactClass({
   //@@viewOn:interface
   setAppData(appData, setStateCallback) {
     // filter out keys, no possibility to set awid or userProfiles
-    let newData = allowedKeys(appData, "state", "name", "categories", "logo");
+    let newData = whitelistedKeys(appData, "state", "name", "categories", "logo");
     this.setState(newData, setStateCallback);
     return this;
   },
@@ -62,8 +62,11 @@ const SpaAuthenticated = createReactClass({
 
   //@@viewOn:overriding
   onLoadSuccess_(dtoOut, setStateCallback) {
+    // setup authorization service in Environment to access it across the application
+    UU5.Environment.App.authorization = new Authorization(dtoOut.authorizedProfileList, this.props.identity.uuIdentity);
+
     // transform keys for easier access
-    this.setState(
+    this.setAsyncState(
       {
         loadFeedback: Config.FEEDBACK.READY,
         awid: dtoOut.awid,
@@ -76,6 +79,7 @@ const SpaAuthenticated = createReactClass({
       },
       setStateCallback
     );
+
     return this;
   },
   //@@viewOff:overriding
@@ -90,8 +94,7 @@ const SpaAuthenticated = createReactClass({
       uuIdentity: this.props.identity.uuIdentity,
       categories: this.state.categories,
       userProfiles: this.state.userProfiles,
-      setAppData: this.setAppData,
-      authorization: new Authorization(this.state.userProfiles, this.props.identity.uuIdentity)
+      setAppData: this.setAppData
     };
   },
 

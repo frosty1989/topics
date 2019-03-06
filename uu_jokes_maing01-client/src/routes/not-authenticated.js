@@ -9,7 +9,6 @@ import Config from "./config/config.js";
 
 import "./not-authenticated.less";
 import LSI from "./not-authenticated-lsi.js";
-import { ensureClosedMenu } from "../helpers/menu-helper";
 //@@viewOff:imports
 
 const NotAuthenticated = createReactClass({
@@ -21,9 +20,7 @@ const NotAuthenticated = createReactClass({
   statics: {
     tagName: Config.TAG + "NotAuthenticated",
     classNames: {
-      main: Config.CSS + "notauthenticated",
-      login: Config.CSS + "notauthenticated-login",
-      loginButton: Config.CSS + "notauthenticated-loginbutton"
+      main: Config.CSS + "notauthenticated"
     },
     lsi: LSI
   },
@@ -36,10 +33,6 @@ const NotAuthenticated = createReactClass({
   //@@viewOff:getDefaultProps
 
   //@@viewOn:reactLifeCycle
-  componentDidMount() {
-    // enforce redirect to correct address
-    UU5.Environment.setRoute("login");
-  },
   //@@viewOff:reactLifeCycle
 
   //@@viewOn:interface
@@ -49,7 +42,6 @@ const NotAuthenticated = createReactClass({
   onRouteChanged_() {
     let menu = this.getCcrComponentByKey(Config.LEFT_MENU_CCR_KEY);
     menu && menu.setActiveRoute("login");
-    ensureClosedMenu();
   },
   //@@viewOff:overriding
 

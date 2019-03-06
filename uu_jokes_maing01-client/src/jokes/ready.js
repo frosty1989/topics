@@ -117,7 +117,7 @@ export const Jokes = createReactClass({
 
   _getActions() {
     let actions = [];
-    if (this.props.appData.authorization.canManage()) {
+    if (UU5.Environment.App.authorization.canManage()) {
       actions.push({
         content: this.getLsi("create"), // CreateJoke Button
         onClick: () => {
@@ -181,7 +181,7 @@ export const Jokes = createReactClass({
       }
     ];
 
-    if (this.props.appData.authorization.canFilterOwnRecords()) {
+    if (UU5.Environment.App.authorization.canFilterOwnRecords()) {
       filters.push({
         key: "uuIdentity",
         label: this.getLsi("filterByUser"),
@@ -190,7 +190,7 @@ export const Jokes = createReactClass({
         }
       });
     }
-    if (this.props.appData.authorization.canFilterPublished()) {
+    if (UU5.Environment.App.authorization.canFilterPublished()) {
       filters.push({
         key: "visibility",
         label: this.getLsi("filterByVisibility"),

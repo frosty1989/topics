@@ -91,16 +91,13 @@ export const Tile = createReactClass({
 
   _canManage(joke) {
     return (
-      this.props.appData.authorization.canManageAll() ||
-      (this.props.appData.authorization.canManage() && this.props.appData.authorization.isOwner(joke))
+      UU5.Environment.App.authorization.canManageAll() ||
+      (UU5.Environment.App.authorization.canManage() && UU5.Environment.App.authorization.isOwner(joke))
     );
   },
 
   _getImage() {
-    let imageUrl = Uri.buildUrl({
-      useCase: "uu-app-binarystore/getBinaryData",
-      parameters: { code: this.props.data.image }
-    });
+    let imageUrl = Uri.getBinaryUrl(this.props.data.image);
     return <UU5.Bricks.Image src={imageUrl} authenticate />;
   },
   //@@viewOff:private
@@ -113,11 +110,19 @@ export const Tile = createReactClass({
           {/* // Icon */}
           {!this.props.data.visibility && <UU5.Bricks.Icon icon="mdi-eye-off" />}
           {/* // Joke name */}
-          <span>{this.props.data.name}</span>
+          <span>
+            {
+              // basic HTML tags are used to prevent possible uu5string from execution
+              this.props.data.name
+            }
+          </span>
         </UU5.Bricks.Div>
         <UU5.Bricks.Div className={this.getClassName("content")} mainAttrs={{ onClick: this._handleDetail }}>
           {/* // Joke text */}
-          <div className={this.getClassName("text")}>{nl2br(this.props.data.text)}</div>
+          <div className={this.getClassName("text")}>
+            {// basic HTML tags are used to prevent possible uu5string from execution
+            nl2br(this.props.data.text)}
+          </div>
           {/* // Joke image */}
           {this.props.data.image && this._getImage()}
         </UU5.Bricks.Div>
@@ -128,7 +133,7 @@ export const Tile = createReactClass({
               {/* // EditButton */}
               <UU5.Bricks.Icon icon="mdi-pencil" mainAttrs={{ onClick: this._handleUpdate }} />
               {/* // PublishButton */}
-              {this.props.appData.authorization.canToggleVisibility() && (
+              {UU5.Environment.App.authorization.canToggleVisibility() && (
                 <UU5.Bricks.Icon icon="mdi-eye" mainAttrs={{ onClick: this._handleUpdateVisibility }} />
               )}
               {/* // DeleteButton */}

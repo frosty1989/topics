@@ -39,11 +39,14 @@ export const FormModal = createReactClass({
 
   //@@viewOn:interface
   open(setup, setStateCallback) {
-    this._modal.open({
-      header: setup.header,
-      // build content as form
-      content: this._prepareForm(setup)
-    });
+    this._modal.open(
+      {
+        header: setup.header,
+        // build content as form
+        content: this._prepareForm(setup)
+      },
+      setStateCallback
+    );
     return this;
   },
   //@@viewOff:interface

@@ -83,10 +83,7 @@ export const Detail = createReactClass({
   },
 
   _getImage() {
-    let imageUrl = Uri.buildUrl({
-      useCase: "uu-app-binarystore/getBinaryData",
-      parameters: { code: this.props.data.image }
-    });
+    let imageUrl = Uri.getBinaryUrl(this.props.data.image);
     return <UU5.Bricks.Image src={imageUrl} authenticate />;
   },
   //@@viewOff:private
@@ -96,7 +93,10 @@ export const Detail = createReactClass({
     return (
       <UU5.Bricks.Div {...this.getMainPropsToPass()}>
         {/* // Text */}
-        <div>{nl2br(this.props.data.text)}</div>
+        <div>
+          {// basic HTML tags are used to prevent possible uu5string from execution
+          nl2br(this.props.data.text)}
+        </div>
         {/* // Image */}
         {this.props.data.image && this._getImage()}
         <UU5.Bricks.Div className={this.getClassName("rating")}>
@@ -109,7 +109,7 @@ export const Detail = createReactClass({
         {/* // Author */}
         {this._getLine("mdi-account", this.props.data.uuIdentityName)}
         {/* // Creation Date */}
-        {this._getLine("mdi-calendar", <UU5.Bricks.DateTime vallue={this.props.data.sys.cts} dateOnly />)}
+        {this._getLine("mdi-calendar", <UU5.Bricks.DateTime value={this.props.data.sys.cts} dateOnly />)}
       </UU5.Bricks.Div>
     );
   }

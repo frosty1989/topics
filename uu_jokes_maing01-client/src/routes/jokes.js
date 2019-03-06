@@ -14,7 +14,6 @@ import { reportSuccess, reportError } from "../helpers/alert-helper";
 
 import "./jokes.less";
 import LSI from "./jokes-lsi.js";
-import { ensureClosedMenu } from "../helpers/menu-helper";
 //@@viewOff:imports
 
 export const Jokes = createReactClass({
@@ -42,7 +41,7 @@ export const Jokes = createReactClass({
 
   //@@viewOn:propTypes
   propTypes: {
-    appData: PropTypes.object
+    appData: PropTypes.object.isRequired
   },
   //@@viewOff:propTypes
 
@@ -50,10 +49,6 @@ export const Jokes = createReactClass({
   //@@viewOff:getDefaultProps
 
   //@@viewOn:reactLifeCycle
-  componentDidMount() {
-    // enforce redirect to correct address
-    UU5.Environment.setRoute("jokes");
-  },
   //@@viewOff:reactLifeCycle
 
   //@@viewOn:interface
@@ -62,6 +57,8 @@ export const Jokes = createReactClass({
   //@@viewOn:overriding
   onLoadSuccess_(dtoOut, setStateCallback) {
     // cast itemList directly into dtoOut
+    // it is easier to work with array structure instead of object wrapper
+    // in many cases this step is not needed
     this.setAsyncState(
       {
         loadFeedback: Config.FEEDBACK.READY,
@@ -85,7 +82,6 @@ export const Jokes = createReactClass({
   onRouteChanged_() {
     let menu = this.getCcrComponentByKey(Config.LEFT_MENU_CCR_KEY);
     menu && menu.setActiveRoute("jokes");
-    ensureClosedMenu();
   },
   //@@viewOff:overriding
 
@@ -283,14 +279,15 @@ export const Jokes = createReactClass({
   },
 
   _filterOutVisibility(jokes) {
+    let canSeeAllUnpublished = UU5.Environment.App.authorization.canSeeAllUnpublished();
+    let canSeeUnpublished = UU5.Environment.App.authorization.canSeeUnpublished();
+
     return jokes.filter(joke => {
       let result;
-      if (this.props.appData.authorization.canSeeAllUnpublished()) {
+
+      if (canSeeAllUnpublished) {
         result = true;
-      } else if (
-        this.props.appData.authorization.canSeeUnpublished() &&
-        this.props.appData.authorization.isOwner(joke)
-      ) {
+      } else if (canSeeUnpublished && UU5.Environment.App.authorization.isOwner(joke)) {
         result = true;
       } else {
         result = joke.visibility;

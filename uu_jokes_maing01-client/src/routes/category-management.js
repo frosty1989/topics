@@ -12,7 +12,6 @@ import { reportError, reportSuccess } from "../helpers/alert-helper";
 
 import "./category-management.less";
 import LSI from "./category-management-lsi.js";
-import { ensureClosedMenu } from "../helpers/menu-helper";
 //@@viewOff:imports
 
 export const CategoryManagement = createReactClass({
@@ -65,10 +64,18 @@ export const CategoryManagement = createReactClass({
     return this;
   },
 
+  getOnLoadData_(props) {
+    // load 1000 items by default
+    return {
+      pageInfo: {
+        pageSize: 1000
+      }
+    };
+  },
+
   onRouteChanged_() {
     let menu = this.getCcrComponentByKey(Config.LEFT_MENU_CCR_KEY);
     menu && menu.setActiveRoute("categoryManagement");
-    ensureClosedMenu();
   },
   //@@viewOff:overriding
 
