@@ -1,7 +1,7 @@
 {
   "name": "uu_jokes_main-client",
-  "version": "2.0.0-DEV",
-  "description": "Server project example for developing UAF application in Node.js",
+  "version": "0.1.0",
+  "description": "",
   "license": "License Commercial",
   "namespace": "UuJokes",
   "spec": "uu5-app; uu_appg01@1.0.0",

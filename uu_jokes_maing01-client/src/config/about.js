@@ -45,7 +45,7 @@ export const About = {
       }
     },
     {
-      name: "Lucie Melounouvá",
+      name: "Lucie Melounová",
       uuIdentity: "3-5444-1",
       role: {
         en: "Designer"

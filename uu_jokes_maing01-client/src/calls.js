@@ -10,6 +10,11 @@ let Calls = {
   APP_BASE_URI: location.protocol + "//" + location.host + UU5.Environment.getAppBasePath(),
 
   call(method, url, dtoIn, headers) {
+    if(method === "get" && isIE()){
+      // prevent proactive caching of get requests in IE by adding current timestamp to the request data
+      dtoIn.data = dtoIn.data || {};
+      dtoIn.data = {ieTmpStmp: Date.now(), ...dtoIn.data};
+    }
     Client[method](url, dtoIn.data || null, headers).then(
       response => dtoIn.done(response.data),
       response => dtoIn.fail(response)
@@ -122,5 +127,9 @@ let Calls = {
     return targetUriStr;
   }
 };
+
+function isIE(){
+  return !!window.MSInputMethodContext && !!document.documentMode;
+}
 
 export default Calls;

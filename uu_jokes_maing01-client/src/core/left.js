@@ -62,6 +62,7 @@ export const Left = createReactClass({
   //@@viewOn:interface
   setActiveRoute(route, setStateCallback) {
     this.setState({ activeRoute: route }, setStateCallback);
+    return this;
   },
   //@@viewOff:interface
 
