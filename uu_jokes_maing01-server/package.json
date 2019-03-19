@@ -1,0 +1,46 @@
+{
+  "name": "uu_jokes_maing01-server",
+  "version": "2.0.0-DEV",
+  "description": "Server project example for developing UAF application in Node.js",
+  "license": "License Commercial",
+  "spec": "nodejs-app; uu_appg01@1.0.0",
+  "dependencies": {
+    "uu_appg01_server": "^4.3.0",
+    "uu_appg01_datastore": "^2.1.0",
+    "uu_appg01_binarystore-cmd": "^2.1.0",
+    "bson": "1.1.0"
+  },
+  "devDependencies": {
+    "uu_appg01_devkit": "^1.0.0",
+    "uu_appg01_workspace-test": "^2.2.0"
+  },
+  "engines": {
+    "node": ">=8.9.0"
+  },
+  "scripts": {
+    "clean": "uu_appg01_devkit clean",
+    "test": "uu_appg01_devkit test",
+    "build": "uu_appg01_devkit build",
+    "package": "uu_appg01_devkit package",
+    "dist": "uu_appg01_devkit package",
+    "deploy": "uu_appg01_devkit deploy",
+    "start": "uu_appg01_devkit start",
+    "prettify": "uu_appg01_devkit prettify",
+    "uuAppBox": "uu_appg01_devkit uuAppBox",
+    "uuCloudDeploy": "uu_appg01_devkit uuCloudDeploy",
+    "uuCloudUndeploy": "uu_appg01_devkit uuCloudUndeploy",
+    "uuCloudShare": "uu_appg01_devkit uuCloudShare",
+    "uuCloudUnshare": "uu_appg01_devkit uuCloudUnshare",
+    "uuCloudDeployList": "uu_appg01_devkit uuCloudDeployList",
+    "uuLogStoreExport": "uu_appg01_devkit uuLogStoreExport"
+  },
+  "main": "app.js",
+  "files": [
+    "app",
+    "env",
+    "public"
+  ],
+  "prettier": {
+    "printWidth": 120
+  }
+}
