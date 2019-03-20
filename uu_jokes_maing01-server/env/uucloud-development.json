@@ -2,13 +2,13 @@
   "uuSubApp": {
     "code": "UU.JOKES.MAING01",
     "name": "uuJokes",
-    "version": "2.0.0-DEV",
+    "version": "2.0.0",
     "description": "Server project example for developing UAF application in Node.js",
     "license": "License Commercial",
     "asidRequired": true,
     "awidCount": 1,
-    "resourcePoolUri": "ues:DEV0116-BT:DEV",
-    "targetSlot": "BETA",
+    "resourcePoolUri": "ues:DEV0114-BT[84723967990073193]:AWE_DEMO[5c90a9904f1d8a75778df379]",
+    "targetSlot": "PRODUCTION",
     "uuAppNodeSetMap": {
       "CMD": {
         "nodeSize": "G1_S",
@@ -16,8 +16,8 @@
           "min": 1,
           "max": 1
         },
-        "appPackUri": "ues:UU-BT:UU.JOKES.MAING01/APPBOX-2.0.0-DEV:UU.JOKES.MAING01/CMD-PACK",
-        "runtimeStack": "UU.OS9/UC_NODEJS_STACK-V1.1"
+        "appPackUri": "ues:UU-BT:UU.JOKES.MAING01/APPBOX-2.0.0:UU.JOKES.MAING01/CMD-PACK",
+        "runtimeStack": "UU.APPG01/APPSERVER_NODEJS_STACK-1.0"
       }
     },
     "uuAppObjectStoreMap": {
@@ -35,22 +35,22 @@
     "uuConfigMap": {}
   },
   "uuSubAppInstance": {
-    "asid": "f4b8bc0330b2400fa9667f9f1c26da5d",
-    "asidOwner": "19-4043-1",
+    "asid": "1ebf79d54d2e4e91a58b1376117fa623",
+    "asidOwner": "23-8392-1",
     "awidList": [
       {
-        "awid": "268b3a2cdbe546dc92119dd8da18624b",
-        "awidOwner": "19-4044-1"
+        "awid": "4ef6a7b01b5942ecbfb925b249af987f",
+        "awidOwner": "23-8393-1"
       }
     ],
     "uuAppObjectStoreMap": {
       "OSID_1": {
-        "osid": "80za2kzvz0bvj6z6shu2gdla70gt7thi"
+        "osid": "9607d315da254e2db2c5ac1c39371233"
       }
     },
     "uuAppBinaryStoreMap": {
       "BSID_1": {
-        "bsid": "80za2kzvz0bvj6z6shu2gdla70gt7thi"
+        "bsid": "9b8559e348fa4df0851fb5e1896af4d7"
       }
     }
   }
