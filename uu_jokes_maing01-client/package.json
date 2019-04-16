@@ -10,16 +10,19 @@
     "prop-types": "15.6.1",
     "react": "16.6.1",
     "react-dom": "16.6.1",
+    "react-dnd": "4.0.4",
+    "react-dnd-html5-backend": "4.0.4",
+    "react-dnd-touch-backend": "0.4.0",
     "systemjs": "0.19.47",
     "uu5g04": "^1.0.0",
-    "uu_appg01": "^4.3.0",
-    "uu_appg01_core": "^4.3.0",
-    "uu_appg01_oidc": "^1.0.0",
+    "uu_appg01": "^4.4.0",
+    "uu_appg01_core": "^4.4.0",
+    "uu_appg01_oidc": "^2.0.0",
     "uu_plus4u5g01": "^1.0.0",
     "uu5tilesg01": "^2.0.0"
   },
   "uuBuildSettings": {
-    "useCdn": true,
+    "useCdn": false,
     "externals": {
       "systemjs": {
         "cdnBaseUri": "https://cdn.plus4u.net/libs/systemjs/${dependencies['systemjs'].version}/",
@@ -56,17 +59,20 @@
         "localBaseUri": "node_modules/uu5g04/dist/"
       },
       "react-dnd": {
-        "cdnBaseUri": "https://cdn.plus4u.net/libs/react-dnd/4.0.4/",
-        "main": "ReactDnD.min.js",
+        "cdnBaseUri": "https://cdn.plus4u.net/libs/react-dnd/${dependencies['react-dnd'].version}/",
+        "localBaseUri": "node_modules/react-dnd/dist/",
+        "main": "ReactDnD.js",
         "mainMinified": "ReactDnD.min.js"
       },
       "react-dnd-html5-backend": {
-        "cdnBaseUri": "https://cdn.plus4u.net/libs/react-dnd-html5-backend/4.0.4/",
-        "main": "ReactDnDHTML5Backend.min.js",
+        "cdnBaseUri": "https://cdn.plus4u.net/libs/react-dnd-html5-backend/${dependencies['react-dnd-html5-backend'].version}/",
+        "localBaseUri": "node_modules/react-dnd-html5-backend/dist/",
+        "main": "ReactDnDHTML5Backend.js",
         "mainMinified": "ReactDnDHTML5Backend.min.js"
       },
       "react-dnd-touch-backend": {
-        "cdnBaseUri": "https://cdn.plus4u.net/libs/react-dnd-touch-backend/0.4.0/",
+        "cdnBaseUri": "https://cdn.plus4u.net/libs/react-dnd-touch-backend/${dependencies['react-dnd-touch-backend'].version}/",
+        "localBaseUri": "node_modules/react-dnd-touch-backend/dist/",
         "main": "Touch.browserified.js",
         "mainMinified": "Touch.browserified.js"
       },
@@ -107,7 +113,7 @@
     }
   },
   "devDependencies": {
-    "uu_appg01_devkit": "^1.0.0"
+    "uu_appg01_devkit": "^1.1.0"
   },
   "engines": {
     "node": ">=8.9.0"
