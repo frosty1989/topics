@@ -1,8 +1,8 @@
 "use strict";
 
-const JokeAbl = require("../abl/joke-abl.js");
+const JokeAbl = require("../../abl/joke-abl.js");
 
-class JokeApi {
+class JokeController {
   static create(ucEnv) {
     return JokeAbl.create(ucEnv.uri.getAwid(), ucEnv.parameters, ucEnv.session, ucEnv.getAuthorizationResult());
   }
@@ -32,4 +32,4 @@ class JokeApi {
   }
 }
 
-module.exports = JokeApi;
+module.exports = JokeController;

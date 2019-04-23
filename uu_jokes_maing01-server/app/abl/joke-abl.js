@@ -6,7 +6,7 @@ const { DaoFactory, ObjectStoreError } = require("uu_appg01_server").ObjectStore
 const { ValidationHelper } = require("uu_appg01_server").AppServer;
 const { UuBinaryAbl } = require("uu_appg01_binarystore-cmd");
 const JokesInstanceAbl = require("./jokes-instance-abl");
-const Errors = require("../errors/joke-error");
+const Errors = require("../api/errors/joke-error");
 const Path = require("path");
 
 const WARNINGS = {
@@ -49,7 +49,7 @@ const DEFAULTS = {
 
 class JokeAbl {
   constructor() {
-    this.validator = new Validator(Path.join(__dirname, "..", "validation_types", "joke-types.js"));
+    this.validator = new Validator(Path.join(__dirname, "..", "api", "validation_types", "joke-types.js"));
     this.dao = DaoFactory.getDao("joke");
     this.categoryDao = DaoFactory.getDao("category");
     this.jokeRatingDao = DaoFactory.getDao("jokeRating");

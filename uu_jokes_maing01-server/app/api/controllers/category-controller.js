@@ -1,8 +1,8 @@
 "use strict";
 
-const CategoryAbl = require("../abl/category-abl.js");
+const CategoryAbl = require("../../abl/category-abl.js");
 
-class CategoryApi {
+class CategoryController {
   static create(ucEnv) {
     return CategoryAbl.create(ucEnv.uri.getAwid(), ucEnv.parameters);
   }
@@ -24,4 +24,4 @@ class CategoryApi {
   }
 }
 
-module.exports = CategoryApi;
+module.exports = CategoryController;

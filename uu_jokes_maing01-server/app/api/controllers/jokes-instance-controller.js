@@ -1,8 +1,8 @@
 "use strict";
 
-const JokesInstanceAbl = require("../abl/jokes-instance-abl.js");
+const JokesInstanceAbl = require("../../abl/jokes-instance-abl.js");
 
-class JokesInstanceApi {
+class JokesInstanceController {
   static init(ucEnv) {
     return JokesInstanceAbl.init(ucEnv.uri.getAwid(), ucEnv.parameters);
   }
@@ -16,4 +16,4 @@ class JokesInstanceApi {
   }
 }
 
-module.exports = JokesInstanceApi;
+module.exports = JokesInstanceController;

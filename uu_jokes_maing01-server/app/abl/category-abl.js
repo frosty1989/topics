@@ -4,7 +4,7 @@ const { Validator } = require("uu_appg01_server").Validation;
 const { DaoFactory, ObjectStoreError, DuplicateKey } = require("uu_appg01_server").ObjectStore;
 const { ValidationHelper } = require("uu_appg01_server").AppServer;
 const JokesInstanceAbl = require("./jokes-instance-abl");
-const Errors = require("../errors/category-error");
+const Errors = require("../api/errors/category-error");
 const Path = require("path");
 
 const WARNINGS = {
@@ -33,7 +33,7 @@ const DEFAULTS = {
 
 class CategoryAbl {
   constructor() {
-    this.validator = new Validator(Path.join(__dirname, "..", "validation_types", "category-types.js"));
+    this.validator = new Validator(Path.join(__dirname, "..", "api", "validation_types", "category-types.js"));
     this.dao = DaoFactory.getDao("category");
     this.jokeDao = DaoFactory.getDao("joke");
   }

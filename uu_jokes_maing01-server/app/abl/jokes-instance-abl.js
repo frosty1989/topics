@@ -6,7 +6,7 @@ const { ValidationHelper } = require("uu_appg01_server").AppServer;
 const { SysProfileAbl } = require("uu_appg01_server").Workspace;
 const { UuBinaryAbl } = require("uu_appg01_binarystore-cmd");
 const Path = require("path");
-const Errors = require("../errors/jokes-instance-error");
+const Errors = require("../api/errors/jokes-instance-error");
 
 const WARNINGS = {
   initUnsupportedKeys: {
@@ -26,7 +26,7 @@ const STATE_CLOSED = "closed";
 
 class JokesInstanceAbl {
   constructor() {
-    this.validator = new Validator(Path.join(__dirname, "..", "validation_types", "jokes-instance-types.js"));
+    this.validator = new Validator(Path.join(__dirname, "..", "api", "validation_types", "jokes-instance-types.js"));
     this.dao = DaoFactory.getDao("jokesInstance");
     this.categoryDao = DaoFactory.getDao("category");
     // redeclare some constants, so they can be used from other abls
