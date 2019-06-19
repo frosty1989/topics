@@ -104,7 +104,7 @@ export const Left = createReactClass({
   },
 
   _getImage() {
-    let imageUrl = Uri.getBinaryUrl(this.props.appData.logo);
+    let imageUrl = Uri.getBinaryUrl(this.props.appData.logos["16x9"]);
     return <UU5.Bricks.Image src={imageUrl} authenticate />;
   },
   //@@viewOff:private
@@ -120,10 +120,10 @@ export const Left = createReactClass({
             onCtrlClick={this._handleTabHome}
           >
             {/* // Logo */}
-            {this.props.appData.logo ? (
+            {this.props.appData.logos && this.props.appData.logos["16x9"] ? (
               this._getImage()
             ) : (
-              <UU5.Bricks.Image name="Logo" responsive src="assets/logo.png" />
+              <UU5.Bricks.Image name="Logo" responsive src="assets/logos/16x9.png" />
             )}
           </UU5.Bricks.Link>
         </UU5.Bricks.Div>

@@ -6,6 +6,7 @@ const { ValidationHelper } = require("uu_appg01_server").AppServer;
 const { SysProfileModel } = require("uu_appg01_server").Workspace;
 const { UuBinaryModel } = require("uu_appg01_binarystore-cmd");
 const Path = require("path");
+const fs = require("fs");
 const Errors = require("../errors/jokes-instance-error");
 
 const WARNINGS = {
@@ -14,6 +15,12 @@ const WARNINGS = {
   },
   updateUnsupportedKeys: {
     code: `${Errors.Update.UC_CODE}unsupportedKeys`
+  },
+  setLogoUnsupportedKeys: {
+    code: `${Errors.SetLogo.UC_CODE}unsupportedKeys`
+  },
+  getProductLogoUnsupportedKeys: {
+    code: `${Errors.GetProductLogo.UC_CODE}unsupportedKeys`
   }
 };
 
@@ -23,8 +30,9 @@ const EXECUTIVES = "Executives";
 const STATE_ACTIVE = "active";
 const STATE_UNDER_CONSTRUCTION = "underConstruction";
 const STATE_CLOSED = "closed";
+const DEFAULT_LOGO_TYPE = "16x9";
 
-class JokesInstanceModel {
+class JokesInstanceModel{
   constructor() {
     this.validator = new Validator(Path.join(__dirname, "..", "validation_types", "jokes-instance-types.js"));
     this.dao = DaoFactory.getDao("jokesInstance");
@@ -141,16 +149,16 @@ class JokesInstanceModel {
     );
 
     // hds 2
-    let jokeInstance;
+    let jokesInstance;
     if (dtoIn.logo) {
-      jokeInstance = await this.dao.getByAwid(awid);
+      jokesInstance = await this.dao.getByAwid(awid);
       // A3
-      if (!jokeInstance) {
+      if (!jokesInstance) {
         throw new Errors.Update.JokesInstanceDoesNotExist(uuAppErrorMap);
       }
       let binary;
       // hds 2.1
-      if (!jokeInstance.logo) {
+      if (!jokesInstance.logo) {
         try {
           binary = await UuBinaryModel.createBinary(awid, { data: dtoIn.logo, code: "logo" });
         } catch (e) {
@@ -172,7 +180,7 @@ class JokesInstanceModel {
     // hds 3
     try {
       dtoIn.awid = awid;
-      jokeInstance = await this.dao.updateByAwid(dtoIn);
+      jokesInstance = await this.dao.updateByAwid(dtoIn);
     } catch (e) {
       if (e instanceof ObjectStoreError) {
         // A6
@@ -182,9 +190,106 @@ class JokesInstanceModel {
     }
 
     // hds 4
-    jokeInstance.uuAppErrorMap = uuAppErrorMap;
-    return jokeInstance;
+    jokesInstance.uuAppErrorMap = uuAppErrorMap;
+    return jokesInstance;
   }
+
+  async setLogo(awid, dtoIn) {
+    // hds 1
+    let validationResult = this.validator.validate("setLogoDtoInType", dtoIn);
+    // A1, A2
+    let uuAppErrorMap = ValidationHelper.processValidationResult(
+      dtoIn,
+      validationResult,
+      WARNINGS.setLogoUnsupportedKeys.code,
+      Errors.SetLogo.InvalidDtoIn
+    );
+
+    // hds 1, A1, hds 1.1, A2
+    let jokesInstance = await this.checkInstance(
+      awid,
+      Errors.Load.JokesInstanceDoesNotExist,
+      Errors.Load.JokesInstanceNotInProperState
+    );
+
+    let type = dtoIn.type ? dtoIn.type : DEFAULT_LOGO_TYPE;
+    let binary;
+    if(!jokesInstance.logos || !jokesInstance.logos[type]){
+      try {
+        binary = await UuBinaryModel.createBinary(awid, { data: dtoIn.logo, code: type });
+      } catch (e) {
+        // A4
+        throw new Errors.SetLogo.UuBinaryCreateFailed(uuAppErrorMap, e);
+      }
+    }else{
+      try {
+        binary = await UuBinaryModel.updateBinary(awid, { data: dtoIn.logo, code: type, revisionStrategy: "NONE" });
+      } catch (e) {
+        // A5
+        throw new Errors.SetLogo.UuBinaryUpdateBinaryDataFailed(uuAppErrorMap, e);
+      }
+    }
+
+    if(!jokesInstance.logos) jokesInstance.logos = {};
+    jokesInstance.logos[type] = binary.code;
+    jokesInstance.awid = awid;
+
+    try {
+      jokesInstance = await this.dao.updateByAwid(jokesInstance);
+    } catch (e) {
+      if (e instanceof ObjectStoreError) {
+        throw new Errors.Update.JokesInstanceDaoUpdateByAwidFailed({ uuAppErrorMap }, e);
+      }
+      throw e;
+    }
+
+    // hds 4
+    jokesInstance.uuAppErrorMap = uuAppErrorMap;
+    return jokesInstance;
+  }
+
+  async getProductInfo(awid) {
+    // hds 1
+    let jokesInstance = await this.dao.getByAwid(awid);
+    // hds 2
+    return {
+      name: jokesInstance ? jokesInstance.name : DEFAULT_NAME,
+      uuAppErrorMap: {}
+    };
+  }
+
+  async getProductLogo(awid, dtoIn) {
+    // hds 1
+    let validationResult = this.validator.validate("getProductLogoDtoInType", dtoIn);
+    // A1, A2
+    let uuAppErrorMap = ValidationHelper.processValidationResult(
+      dtoIn,
+      validationResult,
+      WARNINGS.getProductLogoUnsupportedKeys.code,
+      Errors.GetProductLogo.InvalidDtoIn
+    );
+
+
+    let type = dtoIn.type ? dtoIn.type : DEFAULT_LOGO_TYPE;
+    let dtoOut = {};
+    let jokesInstance = await this.dao.getByAwid(awid);
+    if (jokesInstance && jokesInstance.logos && jokesInstance.logos[type]) {
+      try {
+        dtoOut.data = await UuBinaryModel.getBinaryData(awid, { code: type });
+      } catch (e) {
+        throw new Errors.GetProductLogo.LogoDoesNotExist(uuAppErrorMap, e);
+      }
+    }
+
+    if (!dtoOut.data) {
+      let filePath = Path.resolve(__dirname, `../../public/assets/logos/${type}.png`);
+      dtoOut.data = fs.createReadStream(filePath);
+    }
+
+    dtoOut.uuAppErrorMap = uuAppErrorMap;
+    return dtoOut;
+  }
+
 
   /**
    * Checks whether jokes instance exists and that it is not in closed state.

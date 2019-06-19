@@ -5,7 +5,7 @@
     "binary": "mongodb://127.0.0.1:27017/JokesMainBinary"
   },
   "privilegedUserMap": {
-    "asidOwner": "14-2710-1"
+    "asidOwner": "4-1"
   },
   "tid": "00000000000000000000000000000000",
   "asid": "11111111111111111111111111111111",

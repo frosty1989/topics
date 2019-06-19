@@ -16,6 +16,11 @@
         "httpMethod": "POST",
         "type": "CMD"
       },
+      "jokesInstance/setLogo": {
+        "realization": "controllers/JokesInstanceController.setLogo",
+        "httpMethod": "POST",
+        "type": "CMD"
+      },
       "joke/create": {
         "realization": "controllers/JokeController.create",
         "httpMethod": "POST",
@@ -76,6 +81,18 @@
         "httpMethod": "GET",
         "type": "CMD"
       },
+
+      "getProductInfo": {
+        "realization": "controllers/JokesInstanceController.getProductInfo",
+        "httpMethod": "GET",
+        "type": "CMD"
+      },
+      "getProductLogo": {
+        "realization": "controllers/JokesInstanceController.getProductLogo",
+        "httpMethod": "GET",
+        "type": "CMD"
+      },
+
       "about": {
         "realization": "index.html",
         "httpMethod": "GET",

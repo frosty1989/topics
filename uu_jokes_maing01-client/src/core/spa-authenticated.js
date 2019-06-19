@@ -54,7 +54,7 @@ const SpaAuthenticated = createReactClass({
   //@@viewOn:interface
   setAppData(appData, setStateCallback) {
     // filter out keys, no possibility to set awid or userProfiles
-    let newData = whitelistedKeys(appData, "state", "name", "categories", "logo");
+    let newData = whitelistedKeys(appData, "state", "name", "categories", "logos");
     this.setState(newData, setStateCallback);
     return this;
   },
@@ -72,7 +72,7 @@ const SpaAuthenticated = createReactClass({
         awid: dtoOut.awid,
         state: dtoOut.state,
         name: dtoOut.name,
-        logo: dtoOut.logo,
+        logos: dtoOut.logos,
         categories: dtoOut.categoryList,
         userProfiles: dtoOut.authorizedProfileList,
         errorDtoOut: null
@@ -90,7 +90,7 @@ const SpaAuthenticated = createReactClass({
       awid: this.state.awid,
       state: this.state.state,
       name: this.state.name,
-      logo: this.state.logo,
+      logos: this.state.logos,
       uuIdentity: this.props.identity.uuIdentity,
       categories: this.state.categories,
       userProfiles: this.state.userProfiles,

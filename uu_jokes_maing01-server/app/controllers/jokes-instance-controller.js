@@ -14,6 +14,19 @@ class JokesInstanceController {
   static update(ucEnv) {
     return JokesInstanceModel.update(ucEnv.uri.getAwid(), ucEnv.parameters);
   }
+
+  static setLogo(ucEnv) {
+    return JokesInstanceModel.setLogo(ucEnv.uri.getAwid(), ucEnv.parameters);
+  }
+
+  static getProductInfo(ucEnv){
+    return JokesInstanceModel.getProductInfo(ucEnv.uri.getAwid());
+  }
+
+  static async getProductLogo(ucEnv){
+    let dtoOut = await JokesInstanceModel.getProductLogo(ucEnv.getUri().getAwid(), ucEnv.parameters);
+    return ucEnv.setBinaryDtoOut(dtoOut);
+  }
 }
 
 module.exports = JokesInstanceController;

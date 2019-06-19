@@ -106,8 +106,74 @@ const Update = {
   }
 };
 
+const SetLogo = {
+  UC_CODE: `${JOKES_INSTANCE_ERROR_PREFIX}setLogo/`,
+  InvalidDtoIn: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${SetLogo.UC_CODE}invalidDtoIn`;
+      this.message = "DtoIn is not valid.";
+    }
+  },
+  JokesInstanceDoesNotExist: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${SetLogo.UC_CODE}jokesInstanceDoesNotExist`;
+      this.message = "JokesInstance does not exist.";
+    }
+  },
+  JokesInstanceNotInProperState: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${SetLogo.UC_CODE}jokesInstanceNotInProperState`;
+      this.message = "JokesInstance is not in proper state [active|underConstruction].";
+    }
+  },
+  UuBinaryCreateFailed: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${SetLogo.UC_CODE}uuBinaryCreateFailed`;
+      this.message = "Creating uuBinary failed.";
+    }
+  },
+  UuBinaryUpdateBinaryDataFailed: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${SetLogo.UC_CODE}uuBinaryUpdateBinaryDataFailed`;
+      this.message = "Updating uuBinary data failed.";
+    }
+  },
+  JokesInstanceDaoUpdateByAwidFailed: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${SetLogo.UC_CODE}jokesInstanceDaoUpdateByAwidFailed`;
+      this.message = "Update jokesInstance by jokesInstance Dao updateByAwid failed.";
+    }
+  }
+};
+
+const GetProductLogo = {
+  UC_CODE: `${JOKES_INSTANCE_ERROR_PREFIX}getProductLogo/`,
+  InvalidDtoIn: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${GetProductLogo.UC_CODE}invalidDtoIn`;
+      this.message = "DtoIn is not valid.";
+    }
+  },
+  LogoDoesNotExist: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${GetProductLogo.UC_CODE}logoDoesNotExists`;
+      this.message = "Logo does not exist.";
+    }
+  }
+};
+
 module.exports = {
   Init,
   Load,
   Update,
+  SetLogo,
+  GetProductLogo
 };
