@@ -4,6 +4,7 @@ const { Validator } = require("uu_appg01_server").Validation;
 const { DaoFactory, ObjectStoreError } = require("uu_appg01_server").ObjectStore;
 const { ValidationHelper } = require("uu_appg01_server").AppServer;
 const { SysProfileModel } = require("uu_appg01_server").Workspace;
+const { LoggerFactory } = require("uu_appg01_server").Logging;
 const { UuBinaryModel } = require("uu_appg01_binarystore-cmd");
 const Path = require("path");
 const fs = require("fs");
@@ -21,8 +22,13 @@ const WARNINGS = {
   },
   getProductLogoUnsupportedKeys: {
     code: `${Errors.GetProductLogo.UC_CODE}unsupportedKeys`
+  },
+  getProductLogoLogoDoesNotExists: {
+    code: `${Errors.GetProductLogo.UC_CODE}logoDoesNotExists`
   }
 };
+
+const logger = LoggerFactory.get("UuJokes.Models.JokesInstanceModel");
 
 const DEFAULT_NAME = "uuJokes";
 const AUTHORITIES = "Authorities";
@@ -85,13 +91,14 @@ class JokesInstanceModel{
     if (dtoIn.logo) {
       let binary;
       try {
-        binary = await UuBinaryModel.createBinary(awid, { data: dtoIn.logo, code: "logo" });
+        binary = await UuBinaryModel.createBinary(awid, { data: dtoIn.logo, code: DEFAULT_LOGO_TYPE });
       } catch (e) {
         // A5
         throw new Errors.Init.UuBinaryCreateFailed({ uuAppErrorMap }, e);
       }
       // hds 6
-      dtoIn.logo = binary.code;
+      dtoIn.logos = [DEFAULT_LOGO_TYPE];
+      delete dtoIn.logo;
     }
 
     // hds 7
@@ -148,36 +155,8 @@ class JokesInstanceModel{
       Errors.Update.InvalidDtoIn
     );
 
-    // hds 2
-    let jokesInstance;
-    if (dtoIn.logo) {
-      jokesInstance = await this.dao.getByAwid(awid);
-      // A3
-      if (!jokesInstance) {
-        throw new Errors.Update.JokesInstanceDoesNotExist(uuAppErrorMap);
-      }
-      let binary;
-      // hds 2.1
-      if (!jokesInstance.logo) {
-        try {
-          binary = await UuBinaryModel.createBinary(awid, { data: dtoIn.logo, code: "logo" });
-        } catch (e) {
-          // A4
-          throw new Errors.Update.UuBinaryCreateFailed(uuAppErrorMap, e);
-        }
-      } else {
-        // hds 2.2
-        try {
-          binary = await UuBinaryModel.updateBinary(awid, { data: dtoIn.logo, code: "logo", revisionStrategy: "NONE" });
-        } catch (e) {
-          // A5
-          throw new Errors.Update.UuBinaryUpdateBinaryDataFailed(uuAppErrorMap, e);
-        }
-      }
-      dtoIn.logo = binary.code;
-    }
-
     // hds 3
+    let jokesInstance;
     try {
       dtoIn.awid = awid;
       jokesInstance = await this.dao.updateByAwid(dtoIn);
@@ -205,45 +184,49 @@ class JokesInstanceModel{
       Errors.SetLogo.InvalidDtoIn
     );
 
-    // hds 1, A1, hds 1.1, A2
+    // hds 2, hds 2.1, A3, A4
     let jokesInstance = await this.checkInstance(
       awid,
-      Errors.Load.JokesInstanceDoesNotExist,
-      Errors.Load.JokesInstanceNotInProperState
+      Errors.SetLogo.JokesInstanceDoesNotExist,
+      Errors.SetLogo.JokesInstanceNotInProperState
     );
 
+    // hds 3
     let type = dtoIn.type ? dtoIn.type : DEFAULT_LOGO_TYPE;
     let binary;
-    if(!jokesInstance.logos || !jokesInstance.logos[type]){
+    if (!jokesInstance.logos || !jokesInstance.logos.includes(type)) {
+      // hds 3.1
       try {
         binary = await UuBinaryModel.createBinary(awid, { data: dtoIn.logo, code: type });
       } catch (e) {
-        // A4
+        // A5
         throw new Errors.SetLogo.UuBinaryCreateFailed(uuAppErrorMap, e);
       }
-    }else{
+    } else {
+      // hds 3.2
       try {
-        binary = await UuBinaryModel.updateBinary(awid, { data: dtoIn.logo, code: type, revisionStrategy: "NONE" });
+        binary = await UuBinaryModel.updateBinaryData(awid, { data: dtoIn.logo, code: type, revisionStrategy: "NONE" });
       } catch (e) {
-        // A5
+        // A6
         throw new Errors.SetLogo.UuBinaryUpdateBinaryDataFailed(uuAppErrorMap, e);
       }
     }
 
-    if(!jokesInstance.logos) jokesInstance.logos = {};
-    jokesInstance.logos[type] = binary.code;
+    // hds 4
+    if (!jokesInstance.logos) jokesInstance.logos = [];
+    jokesInstance.logos.push(type);
     jokesInstance.awid = awid;
 
     try {
       jokesInstance = await this.dao.updateByAwid(jokesInstance);
     } catch (e) {
-      if (e instanceof ObjectStoreError) {
-        throw new Errors.Update.JokesInstanceDaoUpdateByAwidFailed({ uuAppErrorMap }, e);
+      if (e instanceof ObjectStoreError) { // A7
+        throw new Errors.SetLogo.JokesInstanceDaoUpdateByAwidFailed({ uuAppErrorMap }, e);
       }
       throw e;
     }
 
-    // hds 4
+    // hds 5
     jokesInstance.uuAppErrorMap = uuAppErrorMap;
     return jokesInstance;
   }
@@ -269,23 +252,36 @@ class JokesInstanceModel{
       Errors.GetProductLogo.InvalidDtoIn
     );
 
-
+    // hds 2
     let type = dtoIn.type ? dtoIn.type : DEFAULT_LOGO_TYPE;
     let dtoOut = {};
     let jokesInstance = await this.dao.getByAwid(awid);
-    if (jokesInstance && jokesInstance.logos && jokesInstance.logos[type]) {
+    if (jokesInstance && jokesInstance.logos && jokesInstance.logos.includes(type)) {
       try {
-        dtoOut.data = await UuBinaryModel.getBinaryData(awid, { code: type });
+        dtoOut = await UuBinaryModel.getBinaryData(awid, { code: type });
       } catch (e) {
-        throw new Errors.GetProductLogo.LogoDoesNotExist(uuAppErrorMap, e);
+        // A3
+        if (logger.isWarnLoggable()) {
+          logger.warn(`Unable to load uuBinary logo ${type} for jokes instance ${awid}. Error: ${e} `);
+        }
+        ValidationHelper.addWarning(
+          uuAppErrorMap,
+          WARNINGS.getProductLogoLogoDoesNotExists.code,
+          {
+            type: type
+          }
+        );
       }
     }
 
-    if (!dtoOut.data) {
+    // hds 2.1
+    if (!dtoOut.stream) {
       let filePath = Path.resolve(__dirname, `../../public/assets/logos/${type}.png`);
-      dtoOut.data = fs.createReadStream(filePath);
+      dtoOut.contentType = "image/png";
+      dtoOut.stream = fs.createReadStream(filePath);
     }
 
+    // hds 3
     dtoOut.uuAppErrorMap = uuAppErrorMap;
     return dtoOut;
   }

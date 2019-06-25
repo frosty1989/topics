@@ -76,27 +76,6 @@ const Update = {
       this.message = "DtoIn is not valid.";
     }
   },
-  JokesInstanceDoesNotExist: class extends UuJokesError {
-    constructor() {
-      super(...arguments);
-      this.code = `${Update.UC_CODE}jokesInstanceDoesNotExist`;
-      this.message = "JokesInstance does not exist.";
-    }
-  },
-  UuBinaryCreateFailed: class extends UuJokesError {
-    constructor() {
-      super(...arguments);
-      this.code = `${Update.UC_CODE}uuBinaryCreateFailed`;
-      this.message = "Creating uuBinary failed.";
-    }
-  },
-  UuBinaryUpdateBinaryDataFailed: class extends UuJokesError {
-    constructor() {
-      super(...arguments);
-      this.code = `${Update.UC_CODE}uuBinaryUpdateBinaryDataFailed`;
-      this.message = "Updating uuBinary data failed.";
-    }
-  },
   JokesInstanceDaoUpdateByAwidFailed: class extends UuJokesError {
     constructor() {
       super(...arguments);
@@ -159,13 +138,6 @@ const GetProductLogo = {
       super(...arguments);
       this.code = `${GetProductLogo.UC_CODE}invalidDtoIn`;
       this.message = "DtoIn is not valid.";
-    }
-  },
-  LogoDoesNotExist: class extends UuJokesError {
-    constructor() {
-      super(...arguments);
-      this.code = `${GetProductLogo.UC_CODE}logoDoesNotExists`;
-      this.message = "Logo does not exist.";
     }
   }
 };

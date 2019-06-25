@@ -41,7 +41,7 @@ export const SpaReady = createReactClass({
       awid: PropTypes.string,
       state: PropTypes.string,
       name: PropTypes.string,
-      logos: PropTypes.object,
+      logos: PropTypes.array,
       uuIdentity: PropTypes.string,
       categories: PropTypes.arrayOf(
         PropTypes.shape({

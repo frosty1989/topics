@@ -27,7 +27,7 @@ test("HDS with minimal dtoIn and without logo", async () => {
   let dtoOut = result;
   expect(dtoOut.state).toEqual("underConstruction");
   expect(dtoOut.name).toEqual("uuJokes");
-  expect(dtoOut.logo).toBeUndefined();
+  expect(dtoOut.logos).toBeUndefined();
 
   result = await TestHelper.executeGetCommand("sys/getProfile", { code: "Authorities" });
   expect(result.status).toBe(200);
@@ -44,10 +44,10 @@ test("HDS with minimal dtoIn and logo", async () => {
   let dtoOut = result;
   expect(dtoOut.state).toEqual("underConstruction");
   expect(dtoOut.name).toEqual("uuJokes");
-  expect(dtoOut.logo).toEqual("logo");
+  expect(["16x9"]).toEqual(expect.arrayContaining(result.logos));
 
   //check if binary really exists
-  result = await TestHelper.executeGetCommand("uu-app-binarystore/getBinary", { code: dtoOut.logo });
+  result = await TestHelper.executeGetCommand("uu-app-binarystore/getBinary", { code: "16x9" });
   expect(result.status).toBe(200);
 });
 
@@ -64,7 +64,7 @@ test("HDS with more complete dtoIn", async () => {
   let dtoOut = result;
   expect(dtoOut.state).toEqual(state);
   expect(dtoOut.name).toEqual(name);
-  expect(dtoOut.logo).toBeUndefined();
+  expect(dtoOut.logos).toBeUndefined();
 });
 
 test("A1 - jokesInstance already exists", async () => {

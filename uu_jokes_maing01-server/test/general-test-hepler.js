@@ -5,6 +5,7 @@ const { DaoFactory } = require("uu_appg01_server").ObjectStore;
 const JOKES_INSTANCE_INIT = "jokesInstance/init";
 const JOKES_INSTANCE_LOAD = "jokesInstance/load";
 const JOKES_INSTANCE_UPDATE = "jokesInstance/update";
+const JOKES_INSTANCE_SET_LOGO = "jokesInstance/setLogo";
 const JOKE_CREATE = "joke/create";
 const JOKE_GET = "joke/get";
 const JOKE_UPDATE = "joke/update";
@@ -52,6 +53,7 @@ module.exports = {
   JOKES_INSTANCE_INIT,
   JOKES_INSTANCE_LOAD,
   JOKES_INSTANCE_UPDATE,
+  JOKES_INSTANCE_SET_LOGO,
   JOKE_CREATE,
   JOKE_GET,
   JOKE_UPDATE,
