@@ -17,13 +17,13 @@ export const About = {
     authorities: {
       cs: [
         {
-          name: "Name Surname",
+          name: "Vladimír Kovář",
           uri: "https://www.unicorn.com/"
         }
       ],
       en: [
         {
-          name: "Name Surname",
+          name: "Vladimír Kovář",
           uri: "https://www.unicorn.com/"
         }
       ]
@@ -38,8 +38,8 @@ export const About = {
       }
     },
     {
-      name: "Pavel Valenta",
-      uuIdentity: "11-8580-1",
+      name: "Radek Dolejš",
+      uuIdentity: "4-1",
       role: {
         en: "Product Manager"
       }
@@ -107,20 +107,6 @@ export const About = {
       uuIdentity: "11-8571-1",
       role: {
         en: "Developer"
-      }
-    },
-    {
-      name: "Yuliia Kulyk",
-      uuIdentity: "19-6434-1",
-      role: {
-        en: "Developer"
-      }
-    },
-    {
-      name: "Ondřej Rykl",
-      uuIdentity: "20-3538-1",
-      role: {
-        en: "Technical Writer"
       }
     }
   ],

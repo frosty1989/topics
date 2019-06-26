@@ -9,5 +9,8 @@
   },
   "tid": "00000000000000000000000000000000",
   "asid": "11111111111111111111111111111111",
-  "log_level": "INFO"
+  "log_level": "INFO",
+
+  "uu_app_oidc_providers_oidcg02_enabled": true,
+  "uu_app_oidc_primary_provider": "oidcg02"
 }

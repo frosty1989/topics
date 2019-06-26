@@ -32,7 +32,10 @@
         "alias": "binary"
       }
     },
-    "uuConfigMap": {}
+    "uuConfigMap": {
+      "uu_app_oidc_providers_oidcg02_enabled": true,
+      "uu_app_oidc_primary_provider": "oidcg02"
+    }
   },
   "uuSubAppInstance": {
     "asid": "1ebf79d54d2e4e91a58b1376117fa623",
