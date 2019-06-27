@@ -22,7 +22,7 @@
     "uu5tilesg01": "^2.0.0"
   },
   "uuBuildSettings": {
-    "useCdn": true,
+    "useCdn": false,
     "externals": {
       "systemjs": {
         "cdnBaseUri": "https://cdn.plus4u.net/libs/systemjs/${dependencies['systemjs'].version}/",
