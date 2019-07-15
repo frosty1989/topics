@@ -130,7 +130,8 @@ const DEFAULTS = {
   },
   name: "uuJokes",
   description: "Database of jokes in which users can create and update jokes, manage them, rate them and sort them into categories.",
-  logoType: "16x9"
+  logoType: "16x9",
+  ttl: 3600
 };
 
 const logger = LoggerFactory.get("UuJokes.Models.JokesInstanceModel");
@@ -151,6 +152,7 @@ class JokesInstanceModel{
     this.STATE_UNDER_CONSTRUCTION = STATE_UNDER_CONSTRUCTION;
     this.AUTHORITIES = AUTHORITIES;
     this.EXECUTIVES = EXECUTIVES;
+    this.metaDataCache = {}
   }
 
   async init(awid, dtoIn) {
@@ -402,9 +404,19 @@ class JokesInstanceModel{
     );
 
     // hds 2
+    let now = Date.now();
     let dtoOut = {};
-    let jokesInstance = await this.dao.getByAwid(awid);
-    if (jokesInstance && jokesInstance.uveMetaData && jokesInstance.uveMetaData[dtoIn.type]) {
+    let uveMetaData;
+    if(this.metaDataCache[awid] && now - this.metaDataCache[awid].ttl <= DEFAULTS.ttl){
+      uveMetaData = this.metaDataCache[awid];
+    } else {
+      let jokesInstance = await this.dao.getByAwid(awid);
+      uveMetaData = jokesInstance.uveMetaData ? jokesInstance.uveMetaData : {};
+      this.metaDataCache[awid] = uveMetaData;
+      this.metaDataCache[awid].ttl = now;
+    }
+
+    if (uveMetaData && uveMetaData[dtoIn.type]) {
       try {
         dtoOut = await UuBinaryModel.getBinaryData(awid, { code: jokesInstance.uveMetaData[dtoIn.type] });
       } catch (e) {
