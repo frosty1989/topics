@@ -142,6 +142,17 @@ const GetProductLogo = {
   }
 };
 
+const GetIndex = {
+  UC_CODE: `${JOKES_INSTANCE_ERROR_PREFIX}getIndex/`,
+  UnableToReadHtmlFile: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${GetIndex.UC_CODE}nnableToReadHtmlFile`;
+      this.message = "Unable to read html file.";
+    }
+  }
+};
+
 const GetUveMetaData = {
   UC_CODE: `${JOKES_INSTANCE_ERROR_PREFIX}getUveMetaData/`,
   InvalidDtoIn: class extends UuJokesError {
@@ -159,5 +170,6 @@ module.exports = {
   Update,
   SetLogo,
   GetProductLogo,
+  GetIndex,
   GetUveMetaData
 };

@@ -7,11 +7,6 @@
         "httpMethod": "GET",
         "type": "CMD"
       },
-      "defaultUve/{route}": {
-        "realization": "controllers/JokesInstanceController.getIndex",
-        "httpMethod": "GET",
-        "type": "CMD"
-      },
       "workaround": {
         "realization": "index.html",
         "httpMethod": "GET",

@@ -436,20 +436,15 @@ class JokesInstanceModel{
 
 
   async getIndex(awid, uri) {
-    let indexHtml;
+
     let readFilePromise = new Promise((resolve, reject) => {
-      indexHtml = fs.readFile(Path.resolve(`./public/index.html`), "utf8", (err, contents) => {
-        indexHtml = contents;
-        if (err) console.log(err);
-        resolve(indexHtml);
+      return fs.readFile(Path.resolve(`./public/index.html`), "utf8", (err, contents) => {
+        if (err) throw new Errors.GetIndex.UnableToReadHtmlFile(err);
+        resolve(contents);
       });
     });
 
-    await readFilePromise.then(result => {
-      indexHtml = result;
-    }).catch(err => {
-      throw err
-    });
+    let indexHtml = await readFilePromise;
 
     let jokesInstance = await this.dao.getByAwid(awid);
     let name, description;
@@ -483,10 +478,10 @@ class JokesInstanceModel{
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <link rel="manifest" href="${uri.getBaseUri()}/getUveMetaData?type=manifest"/>
     
-    <link rel="apple-touch-icon-precomposed" sizes="57x57" href="${uri.getBaseUri()}/getUveMetaData?type=touchicon-57"/> 
-    <link rel="apple-touch-icon-precomposed" sizes="60x60" href="${uri.getBaseUri()}/getUveMetaData?type=touchicon-60"/>      
-    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="${uri.getBaseUri()}/getUveMetaData?type=touchicon-72"/> 
-    <link rel="apple-touch-icon-precomposed" sizes="76x76" href="${uri.getBaseUri()}/getUveMetaData?type=touchicon-76"/> 
+    <link rel="apple-touch-icon-precomposed" sizes="57x57" href="${uri.getBaseUri()}/getUveMetaData?type=touchicon-57"/>
+    <link rel="apple-touch-icon-precomposed" sizes="60x60" href="${uri.getBaseUri()}/getUveMetaData?type=touchicon-60"/>
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="${uri.getBaseUri()}/getUveMetaData?type=touchicon-72"/>
+    <link rel="apple-touch-icon-precomposed" sizes="76x76" href="${uri.getBaseUri()}/getUveMetaData?type=touchicon-76"/>
     <link rel="apple-touch-icon-precomposed" sizes="114x114" href="${uri.getBaseUri()}/getUveMetaData?type=touchicon-114"/>
     <link rel="apple-touch-icon-precomposed" sizes="120x120" href="${uri.getBaseUri()}/getUveMetaData?type=touchicon-120"/>
     <link rel="apple-touch-icon-precomposed" sizes="144x144" href="${uri.getBaseUri()}/getUveMetaData?type=touchicon-144"/>
