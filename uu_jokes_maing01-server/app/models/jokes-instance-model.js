@@ -407,7 +407,7 @@ class JokesInstanceModel{
     let now = Date.now();
     let dtoOut = {};
     let uveMetaData;
-    if(this.metaDataCache[awid] && now - this.metaDataCache[awid].ttl <= DEFAULTS.ttl){
+    if (this.metaDataCache[awid] && now - this.metaDataCache[awid].ttl <= DEFAULTS.ttl) {
       uveMetaData = this.metaDataCache[awid];
     } else {
       let jokesInstance = await this.dao.getByAwid(awid);
@@ -456,27 +456,32 @@ class JokesInstanceModel{
       });
     });
 
+
     let indexHtml = await readFilePromise;
 
-    let jokesInstance = await this.dao.getByAwid(awid);
-    let name, description;
-    if (jokesInstance) {
-      name = jokesInstance.name;
-      description = jokesInstance.description ? jokesInstance.description : DEFAULTS.description
+
+    let now = Date.now();
+    let uveMetaData;
+    if (this.metaDataCache[awid] && now - this.metaDataCache[awid].ttl <= DEFAULTS.ttl) {
+      uveMetaData = this.metaDataCache[awid];
     } else {
-      name = DEFAULTS.name;
-      description = DEFAULTS.description
+      let jokesInstance = await this.dao.getByAwid(awid);
+      uveMetaData = (jokesInstance && jokesInstance.uveMetaData) ? jokesInstance.uveMetaData : {};
+      uveMetaData.name = jokesInstance ? jokesInstance.name : DEFAULTS.name;
+      uveMetaData.description = (jokesInstance && jokesInstance.description) ? jokesInstance.description : DEFAULTS.description;
+      this.metaDataCache[awid] = uveMetaData;
+      this.metaDataCache[awid].ttl = now;
     }
 
     let metatags = `
-    <title>${name}</title>
-    <meta name="description" content="${description}" />
-    <meta property="og:title" content="${name}" />
+    <title>${uveMetaData.name}</title>
+    <meta name="description" content="${uveMetaData.description}" />
+    <meta property="og:title" content="${uveMetaData.name}" />
     <meta property="og:image" content="${uri.getBaseUri()}/getProductLogo?type=${DEFAULTS.logoType}" />
     <meta property="og:image:type" content="image/jpg" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:description" content="${description}" />
+    <meta property="og:description" content="${uveMetaData.description}" />
     <meta property="og:url" content="${uri.getBaseUri()}/" />
     
     <link rel="icon" href="${uri.getBaseUri()}/getUveMetaData?type=favicon-32"/>
@@ -486,7 +491,7 @@ class JokesInstanceModel{
     <link rel="icon" type="image/png" sizes="194x194" href="${uri.getBaseUri()}/getUveMetaData?type=favicon-194"/>
     
     <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-title" content="${name}">
+    <meta name="apple-mobile-web-app-title" content="${uveMetaData.name}">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <link rel="manifest" href="${uri.getBaseUri()}/getUveMetaData?type=manifest"/>
     
@@ -501,8 +506,8 @@ class JokesInstanceModel{
     <link rel="apple-touch-icon-precomposed" sizes="180x180" href="${uri.getBaseUri()}/getUveMetaData?type=touchicon-180"/>
     <link rel="apple-touch-icon-precomposed" sizes="512x512" href="${uri.getBaseUri()}/getUveMetaData?type=touchicon-512"/>
     
-    <meta name="application-name" content="${name}">
-    <meta name="msapplication-TileColor" content="${(jokesInstance && jokesInstance.metaData && jokesInstance.metaData["tilecolor"]) ? jokesInstance.metaData["tilecolor"] : DEFAULTS.metaData["tilecolor"]}"/>
+    <meta name="application-name" content="${uveMetaData.name}">
+    <meta name="msapplication-TileColor" content="${uveMetaData["tilecolor"] ? uveMetaData["tilecolor"] : DEFAULTS.metaData["tilecolor"]}"/>
     <meta name="msapplication-config" content="${uri.getBaseUri()}/getUveMetaData?type=browserconfig"/>
     
     <link rel="mask-icon" href="${uri.getBaseUri()}/getUveMetaData?type=safari-pinned-tab" color="#d81e05"/>
