@@ -27,6 +27,15 @@ class JokesInstanceController {
     let dtoOut = await JokesInstanceModel.getProductLogo(ucEnv.getUri().getAwid(), ucEnv.parameters);
     return ucEnv.setBinaryDtoOut(dtoOut);
   }
+
+  static async getUveMetaData(ucEnv){
+    let dtoOut = await JokesInstanceModel.getUveMetaData(ucEnv.getUri().getAwid(), ucEnv.parameters);
+    return ucEnv.setBinaryDtoOut(dtoOut);
+  }
+
+  static async getIndex(ucEnv){
+    return JokesInstanceModel.getIndex(ucEnv.uri.getAwid(), ucEnv.getUri());
+  }
 }
 
 module.exports = JokesInstanceController;

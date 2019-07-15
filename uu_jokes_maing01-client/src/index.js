@@ -14,7 +14,7 @@ UU5.Environment["appVersion"] = process.env.VERSION;
 if (!navigator.userAgent.match(/iPhone|iPad|iPod/)) {
   let link = document.createElement("link");
   link.rel = "manifest";
-  link.href = "assets/manifest.json";
+  link.href = "assets/manifest.json.json";
   document.head.appendChild(link);
 }
 

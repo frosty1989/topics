@@ -15,6 +15,9 @@
   "*": {
     "profileList": ["AwidOwner", "Authorities", "Executives", "Readers"],
     "useCaseMap": {
+      "defaultUve": ["Public"],
+      "defaultUve/{route}": ["Public"],
+
       "jokesInstance/init": ["AwidOwner"],
       "jokesInstance/load": ["Authorities", "Executives", "Readers"],
       "jokesInstance/update": ["Authorities"],
@@ -34,7 +37,7 @@
 
       "getProductInfo": ["Public"],
       "getProductLogo": ["Public"],
-
+      "getUveMetaData": ["Public"],
 
       "sys/getAppWorkspace": ["Authorities", "AwidOwner"],
       "sys/getProfile": ["Authorities", "AwidOwner"],
