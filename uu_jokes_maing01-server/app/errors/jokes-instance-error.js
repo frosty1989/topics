@@ -128,6 +128,13 @@ const SetLogo = {
       this.code = `${SetLogo.UC_CODE}jokesInstanceDaoUpdateByAwidFailed`;
       this.message = "Update jokesInstance by jokesInstance Dao updateByAwid failed.";
     }
+  },
+  InvalidPhotoContentType: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${SetLogo.UC_CODE}invalidPhotoContentType`;
+      this.message = "ContentType of new photo is invalid.";
+    }
   }
 };
 

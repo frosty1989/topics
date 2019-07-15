@@ -9,6 +9,7 @@ const { UuBinaryModel } = require("uu_appg01_binarystore-cmd");
 const Path = require("path");
 const fs = require("fs");
 const Errors = require("../errors/jokes-instance-error");
+const FileHelper = require("../helpers/file-helper");
 
 const WARNINGS = {
   initUnsupportedKeys: {
@@ -183,7 +184,26 @@ class JokesInstanceModel{
       WARNINGS.setLogoUnsupportedKeys.code,
       Errors.SetLogo.InvalidDtoIn
     );
-
+    
+    
+    //check if stream or base64  
+    if (dtoIn.logo.readable) {
+      //check if the stream is valid         
+      let {valid: isValidStream, stream} = await FileHelper.validateImageStream(dtoIn.logo);
+      if (!isValidStream) {
+        throw new Errors.SetLogo.InvalidPhotoContentType({ uuAppErrorMap });
+      }
+      dtoIn.logo = stream;
+    } else {
+      //check if the base64 is valid
+      let binaryBuffer = FileHelper.getBufferFromBase64UrlImage(dtoIn.logo);
+      if (!FileHelper.validateImageBuffer(binaryBuffer).valid) {
+        throw new Errors.SetLogo.InvalidPhotoContentType({ uuAppErrorMap });
+      }
+      
+      dtoIn.logo = FileHelper.toStream(binaryBuffer);
+    }
+    
     // hds 2, hds 2.1, A3, A4
     let jokesInstance = await this.checkInstance(
       awid,
@@ -310,6 +330,8 @@ class JokesInstanceModel{
     }
     return jokesInstance;
   }
+  
+  
 }
 
 module.exports = new JokesInstanceModel();
