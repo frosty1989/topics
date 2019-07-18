@@ -26,18 +26,122 @@ const WARNINGS = {
   },
   getProductLogoLogoDoesNotExists: {
     code: `${Errors.GetProductLogo.UC_CODE}logoDoesNotExists`
+  },
+  getUveMetaDataUnsupportedKeys: {
+    code: `${Errors.GetUveMetaData.UC_CODE}unsupportedKeys`
+  },
+  getUveMetaDataDataDoesNotExists: {
+    code: `${Errors.GetUveMetaData.UC_CODE}dataDoesNotExists`
   }
+};
+
+const DEFAULTS = {
+  metaData: {
+    "favicon": {
+      type: "image/x-icon",
+      file: "../../public/assets/meta/favicon.ico"
+    },
+    "favicon-16": {
+      type: "image/png",
+      file: "../../public/assets/meta/favicon-16x16.png",
+    },
+    "favicon-32": {
+      type: "image/png",
+      file: "../../public/assets/meta/favicon-32x32.png",
+    },
+    "favicon-96": {
+      type: "image/png",
+      file: "../../public/assets/meta/favicon-96x96.png",
+    },
+    "favicon-194": {
+      type: "image/png",
+      file: "../../public/assets/meta/favicon-194x194.png",
+    },
+
+    "manifest": {
+      type: "image/png",
+      file: "../../public/assets/meta/manifest.json",
+    },
+    "touchicon-57": {
+      type: "image/png",
+      file: "../../public/assets/meta/apple-touch-icon-57x57.png",
+    },
+    "touchicon-60": {
+      type: "image/png",
+      file: "../../public/assets/meta/apple-touch-icon-60x60.png",
+    },
+    "touchicon-2": {
+      type: "image/png",
+      file: "../../public/assets/meta/apple-touch-icon-72x72.png",
+    },
+    "touchicon-76": {
+      type: "image/png",
+      file: "../../public/assets/meta/apple-touch-icon-76x76.png",
+    },
+    "touchicon-114": {
+      type: "image/png",
+      file: "../../public/assets/meta/apple-touch-icon-114x114.png",
+    },
+    "touchicon-120": {
+      type: "image/png",
+      file: "../../public/assets/meta/apple-touch-icon-120x120.png",
+    },
+    "touchicon-144": {
+      type: "image/png",
+      file: "../../public/assets/meta/apple-touch-icon-144x144.png",
+    },
+    "touchicon-152": {
+      type: "image/png",
+      file: "../../public/assets/meta/apple-touch-icon-152x152.png",
+    },
+    "touchicon-180": {
+      type: "image/png",
+      file: "../../public/assets/meta/apple-touch-icon-180x180.png",
+    },
+    "touchicon-512": {
+      type: "image/png",
+      file: "../../public/assets/meta/apple-touch-icon-512x512.png",
+    },
+
+    "tilecolor": "#014ca4",
+    "browserconfig": {
+      type: "text/xml",
+      file: "../../public/assets/meta/browserconfig.xml"
+    },
+    "tile-144": {
+      type: "image/png",
+      file: "../../public/assets/meta/mstile-144x144.png",
+    },
+    "tile-150": {
+      type: "image/png",
+      file: "../../public/assets/meta/mstile-150x150.png",
+    },
+    "tile-310-150": {
+      type: "image/png",
+      file: "../../public/assets/meta/mstile-310x150.png",
+    },
+    "tile-310": {
+      type: "image/png",
+      file: "../../public/assets/meta/mstile-310x310.png",
+    },
+    "safari-pinned-tab": {
+      type: "image/png",
+      file: "../../public/assets/meta/safari-pinned-tab.svg",
+    }
+  },
+  name: "uuJokes",
+  description: "Database of jokes in which users can create and update jokes, manage them, rate them and sort them into categories.",
+  logoType: "16x9",
+  ttl: 3600
 };
 
 const logger = LoggerFactory.get("UuJokes.Models.JokesInstanceModel");
 
-const DEFAULT_NAME = "uuJokes";
 const AUTHORITIES = "Authorities";
 const EXECUTIVES = "Executives";
 const STATE_ACTIVE = "active";
 const STATE_UNDER_CONSTRUCTION = "underConstruction";
 const STATE_CLOSED = "closed";
-const DEFAULT_LOGO_TYPE = "16x9";
 
 class JokesInstanceModel{
   constructor() {
@@ -49,6 +153,7 @@ class JokesInstanceModel{
     this.STATE_UNDER_CONSTRUCTION = STATE_UNDER_CONSTRUCTION;
     this.AUTHORITIES = AUTHORITIES;
     this.EXECUTIVES = EXECUTIVES;
+    this.metaDataCache = {}
   }
 
   async init(awid, dtoIn) {
@@ -69,7 +174,7 @@ class JokesInstanceModel{
       Errors.Init.InvalidDtoIn
     );
     dtoIn.state = dtoIn.state || STATE_UNDER_CONSTRUCTION;
-    dtoIn.name = dtoIn.name || DEFAULT_NAME;
+    dtoIn.name = dtoIn.name || DEFAULTS.name;
     dtoIn.awid = awid;
 
     // hds 3
@@ -92,13 +197,13 @@ class JokesInstanceModel{
     if (dtoIn.logo) {
       let binary;
       try {
-        binary = await UuBinaryModel.createBinary(awid, { data: dtoIn.logo, code: DEFAULT_LOGO_TYPE });
+        binary = await UuBinaryModel.createBinary(awid, { data: dtoIn.logo, code: DEFAULTS.logoType });
       } catch (e) {
         // A5
         throw new Errors.Init.UuBinaryCreateFailed({ uuAppErrorMap }, e);
       }
       // hds 6
-      dtoIn.logos = [DEFAULT_LOGO_TYPE];
+      dtoIn.logos = [DEFAULTS.logoType];
       delete dtoIn.logo;
     }
 
@@ -212,7 +317,7 @@ class JokesInstanceModel{
     );
 
     // hds 3
-    let type = dtoIn.type ? dtoIn.type : DEFAULT_LOGO_TYPE;
+    let type = dtoIn.type ? dtoIn.type : DEFAULTS.logoType;
     let binary;
     if (!jokesInstance.logos || !jokesInstance.logos.includes(type)) {
       // hds 3.1
@@ -256,7 +361,7 @@ class JokesInstanceModel{
     let jokesInstance = await this.dao.getByAwid(awid);
     // hds 2
     return {
-      name: jokesInstance ? jokesInstance.name : DEFAULT_NAME,
+      name: jokesInstance ? jokesInstance.name : DEFAULTS.name,
       uuAppErrorMap: {}
     };
   }
@@ -273,7 +378,7 @@ class JokesInstanceModel{
     );
 
     // hds 2
-    let type = dtoIn.type ? dtoIn.type : DEFAULT_LOGO_TYPE;
+    let type = dtoIn.type ? dtoIn.type : DEFAULTS.logoType;
     let dtoOut = {};
     let jokesInstance = await this.dao.getByAwid(awid);
     if (jokesInstance && jokesInstance.logos && jokesInstance.logos.includes(type)) {
@@ -306,6 +411,132 @@ class JokesInstanceModel{
     return dtoOut;
   }
 
+
+  async getUveMetaData(awid, dtoIn) {
+    // hds 1
+    let validationResult = this.validator.validate("getUveMetaDataDtoInType", dtoIn);
+    // A1, A2
+    let uuAppErrorMap = ValidationHelper.processValidationResult(
+      dtoIn,
+      validationResult,
+      WARNINGS.getUveMetaDataUnsupportedKeys.code,
+      Errors.GetUveMetaData.InvalidDtoIn
+    );
+
+    // hds 2
+    let now = Date.now();
+    let dtoOut = {};
+    let uveMetaData;
+    if (this.metaDataCache[awid] && now - this.metaDataCache[awid].ttl <= DEFAULTS.ttl) {
+      uveMetaData = this.metaDataCache[awid];
+    } else {
+      let jokesInstance = await this.dao.getByAwid(awid);
+      uveMetaData = jokesInstance.uveMetaData ? jokesInstance.uveMetaData : {};
+      this.metaDataCache[awid] = uveMetaData;
+      this.metaDataCache[awid].ttl = now;
+    }
+
+    if (uveMetaData && uveMetaData[dtoIn.type]) {
+      try {
+        dtoOut = await UuBinaryModel.getBinaryData(awid, { code: jokesInstance.uveMetaData[dtoIn.type] });
+      } catch (e) {
+        // A3
+        if (logger.isWarnLoggable()) {
+          logger.warn(`Unable to load uuBinary meta data ${type} for jokes instance ${awid}. Error: ${e} `);
+        }
+        ValidationHelper.addWarning(
+          uuAppErrorMap,
+          WARNINGS.getUveMetaDataDataDoesNotExists.code,
+          {
+            type: type
+          }
+        );
+      }
+    }
+
+    // hds 2.1
+    if (!dtoOut.stream) {
+      let filePath = Path.resolve(__dirname, DEFAULTS.metaData[dtoIn.type].file);
+      dtoOut.contentType = DEFAULTS.metaData[dtoIn.type].type;
+      dtoOut.stream = fs.createReadStream(filePath);
+    }
+
+    // hds 3
+    dtoOut.uuAppErrorMap = uuAppErrorMap;
+    return dtoOut;
+  }
+
+
+  async getIndex(awid, uri) {
+
+    let readFilePromise = new Promise((resolve, reject) => {
+      return fs.readFile(Path.resolve(`./public/index.html`), "utf8", (err, contents) => {
+        if (err) throw new Errors.GetIndex.UnableToReadHtmlFile(err);
+        resolve(contents);
+      });
+    });
+
+
+    let indexHtml = await readFilePromise;
+
+
+    let now = Date.now();
+    let uveMetaData;
+    if (this.metaDataCache[awid] && now - this.metaDataCache[awid].ttl <= DEFAULTS.ttl) {
+      uveMetaData = this.metaDataCache[awid];
+    } else {
+      let jokesInstance = await this.dao.getByAwid(awid);
+      uveMetaData = (jokesInstance && jokesInstance.uveMetaData) ? jokesInstance.uveMetaData : {};
+      uveMetaData.name = jokesInstance ? jokesInstance.name : DEFAULTS.name;
+      uveMetaData.description = (jokesInstance && jokesInstance.description) ? jokesInstance.description : DEFAULTS.description;
+      this.metaDataCache[awid] = uveMetaData;
+      this.metaDataCache[awid].ttl = now;
+    }
+
+    let metatags = `
+    <title>${uveMetaData.name}</title>
+    <meta name="description" content="${uveMetaData.description}" />
+    <meta property="og:title" content="${uveMetaData.name}" />
+    <meta property="og:image" content="${uri.getBaseUri()}/getProductLogo?type=${DEFAULTS.logoType}" />
+    <meta property="og:image:type" content="image/jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="${uveMetaData.description}" />
+    <meta property="og:url" content="${uri.getBaseUri()}/" />
+    
+    <link rel="icon" href="${uri.getBaseUri()}/getUveMetaData?type=favicon-32"/>
+    <link rel="icon" type="image/png" sizes="16x16" href="${uri.getBaseUri()}/getUveMetaData?type=favicon-16"/>
+    <link rel="icon" type="image/png" sizes="32x32" href="${uri.getBaseUri()}/getUveMetaData?type=favicon-32"/>
+    <link rel="icon" type="image/png" sizes="96x96" href="${uri.getBaseUri()}/getUveMetaData?type=favicon-96"/>
+    <link rel="icon" type="image/png" sizes="194x194" href="${uri.getBaseUri()}/getUveMetaData?type=favicon-194"/>
+    
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="${uveMetaData.name}">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <link rel="manifest" href="${uri.getBaseUri()}/getUveMetaData?type=manifest"/>
+    
+    <link rel="apple-touch-icon-precomposed" sizes="57x57" href="${uri.getBaseUri()}/getUveMetaData?type=touchicon-57"/>
+    <link rel="apple-touch-icon-precomposed" sizes="60x60" href="${uri.getBaseUri()}/getUveMetaData?type=touchicon-60"/>
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="${uri.getBaseUri()}/getUveMetaData?type=touchicon-72"/>
+    <link rel="apple-touch-icon-precomposed" sizes="76x76" href="${uri.getBaseUri()}/getUveMetaData?type=touchicon-76"/>
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="${uri.getBaseUri()}/getUveMetaData?type=touchicon-114"/>
+    <link rel="apple-touch-icon-precomposed" sizes="120x120" href="${uri.getBaseUri()}/getUveMetaData?type=touchicon-120"/>
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="${uri.getBaseUri()}/getUveMetaData?type=touchicon-144"/>
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="${uri.getBaseUri()}/getUveMetaData?type=touchicon-152"/>
+    <link rel="apple-touch-icon-precomposed" sizes="180x180" href="${uri.getBaseUri()}/getUveMetaData?type=touchicon-180"/>
+    <link rel="apple-touch-icon-precomposed" sizes="512x512" href="${uri.getBaseUri()}/getUveMetaData?type=touchicon-512"/>
+    
+    <meta name="application-name" content="${uveMetaData.name}">
+    <meta name="msapplication-TileColor" content="${uveMetaData["tilecolor"] ? uveMetaData["tilecolor"] : DEFAULTS.metaData["tilecolor"]}"/>
+    <meta name="msapplication-config" content="${uri.getBaseUri()}/getUveMetaData?type=browserconfig"/>
+    
+    <link rel="mask-icon" href="${uri.getBaseUri()}/getUveMetaData?type=safari-pinned-tab" color="#d81e05"/>
+    `;
+
+    indexHtml = indexHtml.replace("<meta name=\"uuapp-meta-template\">", metatags);
+
+    return indexHtml;
+  }
 
   /**
    * Checks whether jokes instance exists and that it is not in closed state.

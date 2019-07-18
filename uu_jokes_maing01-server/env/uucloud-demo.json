@@ -7,7 +7,7 @@
     "license": "License Commercial",
     "asidRequired": true,
     "awidCount": 1,
-    "resourcePoolUri": "ues:UU-BT:AWE_EGL",
+    "resourcePoolUri": "ues:DEV0114-BT[84723967990073193]:AWE_DEMO[5c90a9904f1d8a75778df379]",
     "targetSlot": "PRODUCTION",
     "uuAppNodeSetMap": {
       "CMD": {
@@ -23,19 +23,13 @@
     "uuAppObjectStoreMap": {
       "OSID_1": {
         "size": 0.25,
-        "alias": "primary",
-        "technology": "MongoDB-4.0",
-        "backup": false,
-        "id": "OSID_1"
+        "alias": "primary"
       }
     },
     "uuAppBinaryStoreMap": {
       "BSID_1": {
         "size": 0.25,
-        "alias": "binary",
-        "technology": "MongoDB-4.0",
-        "backup": false,
-        "id": "BSID_1"
+        "alias": "binary"
       }
     },
     "uuConfigMap": {
@@ -44,20 +38,22 @@
     }
   },
   "uuSubAppInstance": {
-    "asid": "b39ee01ca39744dbbf0280f1f087c449",
-    "asidOwner": "24-5659-1",
-    "awidList": [{
-      "awid": "00c97dde5a404db099b31a7764355fec",
-      "awidOwner": "24-5660-1"
-    }],
+    "asid": "1ebf79d54d2e4e91a58b1376117fa623",
+    "asidOwner": "23-8392-1",
+    "awidList": [
+      {
+        "awid": "4ef6a7b01b5942ecbfb925b249af987f",
+        "awidOwner": "23-8393-1"
+      }
+    ],
     "uuAppObjectStoreMap": {
       "OSID_1": {
-        "osid": "d19a1c24e9a944dfaf392cce16d51118"
+        "osid": "9607d315da254e2db2c5ac1c39371233"
       }
     },
     "uuAppBinaryStoreMap": {
       "BSID_1": {
-        "bsid": "9af924b01fbf4b2aa7c82c23cad41ce7"
+        "bsid": "9b8559e348fa4df0851fb5e1896af4d7"
       }
     }
   }

@@ -149,10 +149,34 @@ const GetProductLogo = {
   }
 };
 
+const GetIndex = {
+  UC_CODE: `${JOKES_INSTANCE_ERROR_PREFIX}getIndex/`,
+  UnableToReadHtmlFile: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${GetIndex.UC_CODE}nnableToReadHtmlFile`;
+      this.message = "Unable to read html file.";
+    }
+  }
+};
+
+const GetUveMetaData = {
+  UC_CODE: `${JOKES_INSTANCE_ERROR_PREFIX}getUveMetaData/`,
+  InvalidDtoIn: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${GetUveMetaData.UC_CODE}invalidDtoIn`;
+      this.message = "DtoIn is not valid.";
+    }
+  }
+};
+
 module.exports = {
   Init,
   Load,
   Update,
   SetLogo,
-  GetProductLogo
+  GetProductLogo,
+  GetIndex,
+  GetUveMetaData
 };
