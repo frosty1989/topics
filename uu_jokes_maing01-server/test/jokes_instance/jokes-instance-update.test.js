@@ -58,26 +58,77 @@ test("A2 - invalid dtoIn", async () => {
   }
 });
 
+test("A3 - updating logo, but jokes instance does not exist", async () => {
+  expect.assertions(2);
+  let dtoIn = { logo: getImageStream() };
+  try {
+    await TestHelper.executePostCommand(JOKES_INSTANCE_UPDATE, dtoIn);
+  } catch (e) {
+    expect(e.code).toEqual("uu-jokes-main/jokesInstance/update/jokesInstanceDoesNotExist");
+    expect(e.message).toEqual("JokesInstance does not exist.");
+  }
+});
+
+test("A4 - creating logo fails", async () => {
+  expect.assertions(2);
+
+  let { JokesInstanceAbl, UuBinaryAbl } = mockAbl();
+  jest.spyOn(UuBinaryAbl, "createBinary").mockImplementation(() => {
+    throw new Error("it failed");
+  });
+  JokesInstanceAbl.dao.getByAwid = () => {
+    return {};
+  };
+
+  let dtoIn = { logo: getImageStream() };
+  try {
+    await JokesInstanceAbl.update("awid", dtoIn);
+  } catch (e) {
+    expect(e.code).toEqual("uu-jokes-main/jokesInstance/update/uuBinaryCreateFailed");
+    expect(e.message).toEqual("Creating uuBinary failed.");
+  }
+});
+
+test("A5 - updating logo fails", async () => {
+  expect.assertions(2);
+
+  let { JokesInstanceAbl, UuBinaryAbl } = mockAbl();
+  jest.spyOn(UuBinaryAbl, "updateBinary").mockImplementation(() => {
+    throw new Error("it failed");
+  });
+  JokesInstanceAbl.dao.getByAwid = () => {
+    return { logo: "code" };
+  };
+
+  let dtoIn = { logo: getImageStream() };
+  try {
+    await JokesInstanceAbl.update("awid", dtoIn);
+  } catch (e) {
+    expect(e.code).toEqual("uu-jokes-main/jokesInstance/update/uuBinaryUpdateBinaryDataFailed");
+    expect(e.message).toEqual("Updating uuBinary data failed.");
+  }
+});
+
 test("A6 - updating joke instance fails", async () => {
   expect.assertions(2);
 
-  let { JokesInstanceModel } = mockModels();
-  JokesInstanceModel.dao.updateByAwid = () => {
+  let { JokesInstanceAbl } = mockAbl();
+  JokesInstanceAbl.dao.updateByAwid = () => {
     throw new ObjectStoreError("it failed.");
   };
 
   let dtoIn = { state: "active" };
   try {
-    await JokesInstanceModel.update("awid", dtoIn);
+    await JokesInstanceAbl.update("awid", dtoIn);
   } catch (e) {
     expect(e.code).toEqual("uu-jokes-main/jokesInstance/update/jokesInstanceDaoUpdateByAwidFailed");
     expect(e.message).toEqual("Update jokesInstance by jokesInstance Dao updateByAwid failed.");
   }
 });
 
-function mockModels() {
+function mockAbl() {
   mockDaoFactory();
-  const JokesInstanceModel = require("../../app/models/jokes-instance-model");
-  const { UuBinaryModel } = require("uu_appg01_binarystore-cmd");
-  return { JokesInstanceModel, UuBinaryModel };
+  const JokesInstanceAbl = require("../../app/abl/jokes-instance-abl");
+  const { UuBinaryAbl } = require("uu_appg01_binarystore-cmd");
+  return { JokesInstanceAbl, UuBinaryAbl };
 }

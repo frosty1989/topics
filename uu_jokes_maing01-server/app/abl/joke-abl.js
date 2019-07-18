@@ -4,9 +4,9 @@
 const { Validator } = require("uu_appg01_server").Validation;
 const { DaoFactory, ObjectStoreError } = require("uu_appg01_server").ObjectStore;
 const { ValidationHelper } = require("uu_appg01_server").AppServer;
-const { UuBinaryModel } = require("uu_appg01_binarystore-cmd");
-const JokesInstanceModel = require("./jokes-instance-model");
-const Errors = require("../errors/joke-error");
+const { UuBinaryAbl } = require("uu_appg01_binarystore-cmd");
+const JokesInstanceAbl = require("./jokes-instance-abl");
+const Errors = require("../api/errors/joke-error");
 const Path = require("path");
 
 const WARNINGS = {
@@ -47,9 +47,9 @@ const DEFAULTS = {
   pageSize: 100
 };
 
-class JokeModel {
+class JokeAbl {
   constructor() {
-    this.validator = new Validator(Path.join(__dirname, "..", "validation_types", "joke-types.js"));
+    this.validator = new Validator(Path.join(__dirname, "..", "api", "validation_types", "joke-types.js"));
     this.dao = DaoFactory.getDao("joke");
     this.categoryDao = DaoFactory.getDao("category");
     this.jokeRatingDao = DaoFactory.getDao("jokeRating");
@@ -57,7 +57,7 @@ class JokeModel {
 
   async create(awid, dtoIn, session, authorizationResult) {
     // hds 1, A1, hds 1.1, A2
-    await JokesInstanceModel.checkInstance(
+    await JokesInstanceAbl.checkInstance(
       awid,
       Errors.Create.JokesInstanceDoesNotExist,
       Errors.Create.JokesInstanceNotInProperState
@@ -75,7 +75,7 @@ class JokeModel {
     // hds 2.4
     dtoIn.averageRating = 0;
     dtoIn.ratingCount = 0;
-    dtoIn.visibility = authorizationResult.getAuthorizedProfiles().includes(JokesInstanceModel.AUTHORITIES);
+    dtoIn.visibility = authorizationResult.getAuthorizedProfiles().includes(JokesInstanceAbl.AUTHORITIES);
     dtoIn.uuIdentity = session.getIdentity().getUuIdentity();
     dtoIn.uuIdentityName = session.getIdentity().getName();
     dtoIn.awid = awid;
@@ -83,7 +83,7 @@ class JokeModel {
     // hds 3
     if (dtoIn.image) {
       try {
-        let binary = await UuBinaryModel.createBinary(awid, { data: dtoIn.image });
+        let binary = await UuBinaryAbl.createBinary(awid, { data: dtoIn.image });
         dtoIn.image = binary.code;
       } catch (e) {
         // A5
@@ -127,7 +127,7 @@ class JokeModel {
 
   async get(awid, dtoIn, authorizationResult) {
     // hds 1, A1, hds 1.1, A2
-    let jokesInstance = await JokesInstanceModel.checkInstance(
+    let jokesInstance = await JokesInstanceAbl.checkInstance(
       awid,
       Errors.Get.JokesInstanceDoesNotExist,
       Errors.Get.JokesInstanceNotInProperState
@@ -135,9 +135,9 @@ class JokeModel {
     // A3
     let authorizedProfiles = authorizationResult.getAuthorizedProfiles();
     if (
-      jokesInstance.state === JokesInstanceModel.STATE_UNDER_CONSTRUCTION &&
-      !authorizedProfiles.includes(JokesInstanceModel.AUTHORITIES) &&
-      !authorizedProfiles.includes(JokesInstanceModel.EXECUTIVES)
+      jokesInstance.state === JokesInstanceAbl.STATE_UNDER_CONSTRUCTION &&
+      !authorizedProfiles.includes(JokesInstanceAbl.AUTHORITIES) &&
+      !authorizedProfiles.includes(JokesInstanceAbl.EXECUTIVES)
     ) {
       throw new Errors.Get.JokesInstanceIsUnderConstruction({}, { state: jokesInstance.state });
     }
@@ -166,7 +166,7 @@ class JokeModel {
 
   async update(awid, dtoIn, session, authorizationResult) {
     // hds 1, A1, hds 1.1, A2
-    await JokesInstanceModel.checkInstance(
+    await JokesInstanceAbl.checkInstance(
       awid,
       Errors.Update.JokesInstanceDoesNotExist,
       Errors.Update.JokesInstanceNotInProperState
@@ -194,7 +194,7 @@ class JokeModel {
     // A6
     if (
       uuId !== joke.uuIdentity &&
-      !authorizationResult.getAuthorizedProfiles().includes(JokesInstanceModel.AUTHORITIES)
+      !authorizationResult.getAuthorizedProfiles().includes(JokesInstanceAbl.AUTHORITIES)
     ) {
       throw new Errors.Update.UserNotAuthorized({ uuAppErrorMap });
     }
@@ -220,7 +220,7 @@ class JokeModel {
       if (!joke.image) {
         // hds 6.1
         try {
-          binary = await UuBinaryModel.createBinary(awid, { data: dtoIn.image });
+          binary = await UuBinaryAbl.createBinary(awid, { data: dtoIn.image });
         } catch (e) {
           // A8
           throw new Errors.Update.UuBinaryCreateFailed({ uuAppErrorMap }, e);
@@ -228,7 +228,7 @@ class JokeModel {
       } else {
         // hds 6.2
         try {
-          binary = await UuBinaryModel.updateBinaryData(awid, {
+          binary = await UuBinaryAbl.updateBinaryData(awid, {
             data: dtoIn.image,
             code: joke.image,
             revisionStrategy: "NONE"
@@ -260,7 +260,7 @@ class JokeModel {
 
   async updateVisibility(awid, dtoIn) {
     // hds 1, A1, hds 1.1, A2
-    await JokesInstanceModel.checkInstance(
+    await JokesInstanceAbl.checkInstance(
       awid,
       Errors.UpdateVisibility.JokesInstanceDoesNotExist,
       Errors.UpdateVisibility.JokesInstanceNotInProperState
@@ -295,7 +295,7 @@ class JokeModel {
 
   async delete(awid, dtoIn, session, authorizationResult) {
     // hds 1, A1, hds 1.1, A2
-    await JokesInstanceModel.checkInstance(
+    await JokesInstanceAbl.checkInstance(
       awid,
       Errors.Delete.JokesInstanceDoesNotExist,
       Errors.Delete.JokesInstanceNotInProperState
@@ -321,7 +321,7 @@ class JokeModel {
     // hds 4, A6
     if (
       session.getIdentity().getUuIdentity() !== joke.uuIdentity &&
-      !authorizationResult.getAuthorizedProfiles().includes(JokesInstanceModel.AUTHORITIES)
+      !authorizationResult.getAuthorizedProfiles().includes(JokesInstanceAbl.AUTHORITIES)
     ) {
       throw new Errors.Delete.UserNotAuthorized({ uuAppErrorMap });
     }
@@ -332,7 +332,7 @@ class JokeModel {
     // hds 6
     if (joke.image) {
       try {
-        await UuBinaryModel.deleteBinary(awid, { code: joke.image });
+        await UuBinaryAbl.deleteBinary(awid, { code: joke.image });
       } catch (e) {
         // A7
         throw new Errors.Delete.UuBinaryDeleteFailed({ uuAppErrorMap }, e);
@@ -348,7 +348,7 @@ class JokeModel {
 
   async list(awid, dtoIn, authorizationResult) {
     // hds 1, A1, hds 1.1, A2
-    let jokesInstance = await JokesInstanceModel.checkInstance(
+    let jokesInstance = await JokesInstanceAbl.checkInstance(
       awid,
       Errors.List.JokesInstanceDoesNotExist,
       Errors.List.JokesInstanceNotInProperState
@@ -356,9 +356,9 @@ class JokeModel {
     // A3
     let authorizedProfiles = authorizationResult.getAuthorizedProfiles();
     if (
-      jokesInstance.state === JokesInstanceModel.STATE_UNDER_CONSTRUCTION &&
-      !authorizedProfiles.includes(JokesInstanceModel.AUTHORITIES) &&
-      !authorizedProfiles.includes(JokesInstanceModel.EXECUTIVES)
+      jokesInstance.state === JokesInstanceAbl.STATE_UNDER_CONSTRUCTION &&
+      !authorizedProfiles.includes(JokesInstanceAbl.AUTHORITIES) &&
+      !authorizedProfiles.includes(JokesInstanceAbl.EXECUTIVES)
     ) {
       throw new Errors.List.JokesInstanceIsUnderConstruction({}, { state: jokesInstance.state });
     }
@@ -394,7 +394,7 @@ class JokeModel {
 
   async addRating(awid, dtoIn, session) {
     // hds 1, A1, hds 1.1, A2
-    await JokesInstanceModel.checkInstance(
+    await JokesInstanceAbl.checkInstance(
       awid,
       Errors.AddRating.JokesInstanceDoesNotExist,
       Errors.AddRating.JokesInstanceNotInProperState
@@ -510,4 +510,4 @@ class JokeModel {
   }
 }
 
-module.exports = new JokeModel();
+module.exports = new JokeAbl();

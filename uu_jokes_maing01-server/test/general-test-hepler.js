@@ -25,7 +25,7 @@ const getImageStream = () => {
 };
 
 const mockDaoFactory = () => {
-  // this mock ensures that all of the models can be required
+  // this mock ensures that all of the abl can be required
   jest.spyOn(DaoFactory, "getDao").mockImplementation(() => {
     let dao = {};
     dao.createSchema = () => {};

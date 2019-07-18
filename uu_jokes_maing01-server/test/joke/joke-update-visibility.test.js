@@ -95,11 +95,11 @@ test("A5 - the update in db fails", async () => {
 
   mockDaoFactory();
 
-  const JokeModel = require("../../app/models/joke-model");
-  const JokesInstanceModel = require("../../app/models/jokes-instance-model");
+  const JokeAbl = require("../../app/abl/joke-abl");
+  const JokesInstanceAbl = require("../../app/abl/jokes-instance-abl");
 
-  JokesInstanceModel.checkInstance = () => null;
-  JokeModel.dao = {
+  JokesInstanceAbl.checkInstance = () => null;
+  JokeAbl.dao = {
     updateVisibility: () => {
       throw new ObjectStoreError("it failed");
     }
@@ -111,7 +111,7 @@ test("A5 - the update in db fails", async () => {
   };
 
   try {
-    await JokeModel.updateVisibility("awid", dtoIn);
+    await JokeAbl.updateVisibility("awid", dtoIn);
   } catch (e) {
     expect(e.code).toEqual("uu-jokes-main/joke/updateVisibility/jokeDaoUpdateVisibilityFailed");
     expect(e.message).toEqual("Update joke by joke Dao updateVisibility failed");

@@ -3,7 +3,7 @@
     "useCaseMap": {
 
       "defaultUve": {
-        "realization": "controllers/JokesInstanceController.getIndex",
+        "realization": "api/controllers/JokesInstanceController.getIndex",
         "httpMethod": "GET",
         "type": "CMD"
       },
@@ -13,98 +13,98 @@
         "type": "UVE"
       },
       "jokesInstance/init": {
-        "realization": "controllers/JokesInstanceController.init",
+        "realization": "api/controllers/JokesInstanceController.init",
         "httpMethod": "POST",
         "type": "CMD"
       },
       "jokesInstance/load": {
-        "realization": "controllers/JokesInstanceController.load",
+        "realization": "api/controllers/JokesInstanceController.load",
         "httpMethod": "GET",
         "type": "CMD"
       },
       "jokesInstance/update": {
-        "realization": "controllers/JokesInstanceController.update",
+        "realization": "api/controllers/JokesInstanceController.update",
         "httpMethod": "POST",
         "type": "CMD"
       },
       "jokesInstance/setLogo": {
-        "realization": "controllers/JokesInstanceController.setLogo",
+        "realization": "api/controllers/JokesInstanceController.setLogo",
         "httpMethod": "POST",
         "type": "CMD"
       },
       "joke/create": {
-        "realization": "controllers/JokeController.create",
+        "realization": "api/controllers/JokeController.create",
         "httpMethod": "POST",
         "type": "CMD"
       },
       "joke/get": {
-        "realization": "controllers/JokeController.get",
+        "realization": "api/controllers/JokeController.get",
         "httpMethod": "GET",
         "type": "CMD"
       },
       "joke/update": {
-        "realization": "controllers/JokeController.update",
+        "realization": "api/controllers/JokeController.update",
         "httpMethod": "POST",
         "type": "CMD"
       },
       "joke/updateVisibility": {
-        "realization": "controllers/JokeController.updateVisibility",
+        "realization": "api/controllers/JokeController.updateVisibility",
         "httpMethod": "POST",
         "type": "CMD"
       },
       "joke/delete": {
-        "realization": "controllers/JokeController.delete",
+        "realization": "api/controllers/JokeController.delete",
         "httpMethod": "POST",
         "type": "CMD"
       },
       "joke/list": {
-        "realization": "controllers/JokeController.list",
+        "realization": "api/controllers/JokeController.list",
         "httpMethod": "GET",
         "type": "CMD"
       },
       "joke/addRating": {
-        "realization": "controllers/JokeController.addRating",
+        "realization": "api/controllers/JokeController.addRating",
         "httpMethod": "POST",
         "type": "CMD"
       },
       "category/create": {
-        "realization": "controllers/CategoryController.create",
+        "realization": "api/controllers/CategoryController.create",
         "httpMethod": "POST",
         "type": "CMD"
       },
       "category/get": {
-        "realization": "controllers/CategoryController.get",
+        "realization": "api/controllers/CategoryController.get",
         "httpMethod": "GET",
         "type": "CMD"
       },
       "category/update": {
-        "realization": "controllers/CategoryController.update",
+        "realization": "api/controllers/CategoryController.update",
         "httpMethod": "POST",
         "type": "CMD"
       },
       "category/delete": {
-        "realization": "controllers/CategoryController.delete",
+        "realization": "api/controllers/CategoryController.delete",
         "httpMethod": "POST",
         "type": "CMD"
       },
       "category/list": {
-        "realization": "controllers/CategoryController.list",
+        "realization": "api/controllers/CategoryController.list",
         "httpMethod": "GET",
         "type": "CMD"
       },
 
       "getProductInfo": {
-        "realization": "controllers/JokesInstanceController.getProductInfo",
+        "realization": "api/controllers/JokesInstanceController.getProductInfo",
         "httpMethod": "GET",
         "type": "CMD"
       },
       "getProductLogo": {
-        "realization": "controllers/JokesInstanceController.getProductLogo",
+        "realization": "api/controllers/JokesInstanceController.getProductLogo",
         "httpMethod": "GET",
         "type": "CMD"
       },
       "getUveMetaData": {
-        "realization": "controllers/JokesInstanceController.getUveMetaData",
+        "realization": "api/controllers/JokesInstanceController.getUveMetaData",
         "httpMethod": "GET",
         "type": "CMD"
       }

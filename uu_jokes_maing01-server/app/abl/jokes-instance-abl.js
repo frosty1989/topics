@@ -3,13 +3,13 @@
 const { Validator } = require("uu_appg01_server").Validation;
 const { DaoFactory, ObjectStoreError } = require("uu_appg01_server").ObjectStore;
 const { ValidationHelper } = require("uu_appg01_server").AppServer;
-const { SysProfileModel } = require("uu_appg01_server").Workspace;
+const { SysProfileAbl } = require("uu_appg01_server").Workspace;
 const { LoggerFactory } = require("uu_appg01_server").Logging;
-const { UuBinaryModel } = require("uu_appg01_binarystore-cmd");
+const { UuBinaryAbl } = require("uu_appg01_binarystore-cmd");
 const Path = require("path");
 const fs = require("fs");
-const Errors = require("../errors/jokes-instance-error");
 const FileHelper = require("../helpers/file-helper");
+const Errors = require("../api/errors/jokes-instance-error");
 
 const WARNINGS = {
   initUnsupportedKeys: {
@@ -137,18 +137,19 @@ const DEFAULTS = {
 
 const logger = LoggerFactory.get("UuJokes.Models.JokesInstanceModel");
 
+const DEFAULT_NAME = "uuJokes";
 const AUTHORITIES = "Authorities";
 const EXECUTIVES = "Executives";
 const STATE_ACTIVE = "active";
 const STATE_UNDER_CONSTRUCTION = "underConstruction";
 const STATE_CLOSED = "closed";
 
-class JokesInstanceModel{
+class JokesInstanceAbl {
   constructor() {
-    this.validator = new Validator(Path.join(__dirname, "..", "validation_types", "jokes-instance-types.js"));
+    this.validator = new Validator(Path.join(__dirname, "..", "api", "validation_types", "jokes-instance-types.js"));
     this.dao = DaoFactory.getDao("jokesInstance");
     this.categoryDao = DaoFactory.getDao("category");
-    // redeclare some constants, so they can be used from other models
+    // redeclare some constants, so they can be used from other abls
     this.STATE_ACTIVE = STATE_ACTIVE;
     this.STATE_UNDER_CONSTRUCTION = STATE_UNDER_CONSTRUCTION;
     this.AUTHORITIES = AUTHORITIES;
@@ -187,7 +188,7 @@ class JokesInstanceModel{
 
     try {
       // hds 4
-      await SysProfileModel.setProfile(awid, { code: AUTHORITIES, roleUri: dtoIn.uuAppProfileAuthorities });
+      await SysProfileAbl.setProfile(awid, { code: AUTHORITIES, roleUri: dtoIn.uuAppProfileAuthorities });
     } catch (e) {
       // A4
       throw new Errors.Init.SysSetProfileFailed({ uuAppErrorMap }, { role: dtoIn.uuAppProfileAuthorities }, e);
@@ -197,7 +198,7 @@ class JokesInstanceModel{
     if (dtoIn.logo) {
       let binary;
       try {
-        binary = await UuBinaryModel.createBinary(awid, { data: dtoIn.logo, code: DEFAULTS.logoType });
+        binary = await UuBinaryAbl.createBinary(awid, { data: dtoIn.logo, code: "logo" });
       } catch (e) {
         // A5
         throw new Errors.Init.UuBinaryCreateFailed({ uuAppErrorMap }, e);
@@ -289,11 +290,11 @@ class JokesInstanceModel{
       WARNINGS.setLogoUnsupportedKeys.code,
       Errors.SetLogo.InvalidDtoIn
     );
-    
-    
-    //check if stream or base64  
+
+
+    //check if stream or base64
     if (dtoIn.logo.readable) {
-      //check if the stream is valid         
+      //check if the stream is valid
       let {valid: isValidStream, stream} = await FileHelper.validateImageStream(dtoIn.logo);
       if (!isValidStream) {
         throw new Errors.SetLogo.InvalidPhotoContentType({ uuAppErrorMap });
@@ -305,10 +306,10 @@ class JokesInstanceModel{
       if (!FileHelper.validateImageBuffer(binaryBuffer).valid) {
         throw new Errors.SetLogo.InvalidPhotoContentType({ uuAppErrorMap });
       }
-      
+
       dtoIn.logo = FileHelper.toStream(binaryBuffer);
     }
-    
+
     // hds 2, hds 2.1, A3, A4
     let jokesInstance = await this.checkInstance(
       awid,
@@ -322,7 +323,7 @@ class JokesInstanceModel{
     if (!jokesInstance.logos || !jokesInstance.logos.includes(type)) {
       // hds 3.1
       try {
-        binary = await UuBinaryModel.createBinary(awid, { data: dtoIn.logo, code: type });
+        binary = await UuBinaryAbl.createBinary(awid, { data: dtoIn.logo, code: type });
       } catch (e) {
         // A5
         throw new Errors.SetLogo.UuBinaryCreateFailed(uuAppErrorMap, e);
@@ -330,11 +331,12 @@ class JokesInstanceModel{
     } else {
       // hds 3.2
       try {
-        binary = await UuBinaryModel.updateBinaryData(awid, { data: dtoIn.logo, code: type, revisionStrategy: "NONE" });
+        binary = await UuBinaryAbl.updateBinaryData(awid, { data: dtoIn.logo, code: type, revisionStrategy: "NONE" });
       } catch (e) {
         // A6
         throw new Errors.SetLogo.UuBinaryUpdateBinaryDataFailed(uuAppErrorMap, e);
       }
+      throw e;
     }
 
     // hds 4
@@ -475,10 +477,7 @@ class JokesInstanceModel{
         resolve(contents);
       });
     });
-
-
     let indexHtml = await readFilePromise;
-
 
     let now = Date.now();
     let uveMetaData;
@@ -561,8 +560,6 @@ class JokesInstanceModel{
     }
     return jokesInstance;
   }
-  
-  
 }
 
-module.exports = new JokesInstanceModel();
+module.exports = new JokesInstanceAbl();
