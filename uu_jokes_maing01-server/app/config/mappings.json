@@ -32,6 +32,11 @@
         "httpMethod": "POST",
         "type": "CMD"
       },
+      "jokesInstance/setIcons": {
+        "realization": "api/controllers/JokesInstanceController.setIcons",
+        "httpMethod": "POST",
+        "type": "CMD"
+      },
       "joke/create": {
         "realization": "api/controllers/JokeController.create",
         "httpMethod": "POST",

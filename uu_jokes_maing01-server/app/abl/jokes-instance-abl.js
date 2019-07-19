@@ -5,9 +5,11 @@ const { DaoFactory, ObjectStoreError } = require("uu_appg01_server").ObjectStore
 const { ValidationHelper } = require("uu_appg01_server").AppServer;
 const { SysProfileAbl } = require("uu_appg01_server").Workspace;
 const { LoggerFactory } = require("uu_appg01_server").Logging;
-const { UuBinaryAbl } = require("uu_appg01_binarystore-cmd");
+const UuBinaryAbl = require("uu_appg01_binarystore-cmd").UuBinaryModel;
+
 const Path = require("path");
 const fs = require("fs");
+const UnzipHelper = require("../helpers/unzip-helper");
 const FileHelper = require("../helpers/file-helper");
 const Errors = require("../api/errors/jokes-instance-error");
 
@@ -37,100 +39,101 @@ const WARNINGS = {
 
 const DEFAULTS = {
   metaData: {
-    "favicon": {
+    favicon: {
       type: "image/x-icon",
       file: "../../public/assets/meta/favicon.ico"
     },
     "favicon-16": {
       type: "image/png",
-      file: "../../public/assets/meta/favicon-16x16.png",
+      file: "../../public/assets/meta/favicon-16x16.png"
     },
     "favicon-32": {
       type: "image/png",
-      file: "../../public/assets/meta/favicon-32x32.png",
+      file: "../../public/assets/meta/favicon-32x32.png"
     },
     "favicon-96": {
       type: "image/png",
-      file: "../../public/assets/meta/favicon-96x96.png",
+      file: "../../public/assets/meta/favicon-96x96.png"
     },
     "favicon-194": {
       type: "image/png",
-      file: "../../public/assets/meta/favicon-194x194.png",
+      file: "../../public/assets/meta/favicon-194x194.png"
     },
 
-    "manifest": {
+    manifest: {
       type: "image/png",
-      file: "../../public/assets/meta/manifest.json",
+      file: "../../public/assets/meta/manifest.json"
     },
     "touchicon-57": {
       type: "image/png",
-      file: "../../public/assets/meta/apple-touch-icon-57x57.png",
+      file: "../../public/assets/meta/apple-touch-icon-57x57.png"
     },
     "touchicon-60": {
       type: "image/png",
-      file: "../../public/assets/meta/apple-touch-icon-60x60.png",
+      file: "../../public/assets/meta/apple-touch-icon-60x60.png"
     },
     "touchicon-2": {
       type: "image/png",
-      file: "../../public/assets/meta/apple-touch-icon-72x72.png",
+      file: "../../public/assets/meta/apple-touch-icon-72x72.png"
     },
     "touchicon-76": {
       type: "image/png",
-      file: "../../public/assets/meta/apple-touch-icon-76x76.png",
+      file: "../../public/assets/meta/apple-touch-icon-76x76.png"
     },
     "touchicon-114": {
       type: "image/png",
-      file: "../../public/assets/meta/apple-touch-icon-114x114.png",
+      file: "../../public/assets/meta/apple-touch-icon-114x114.png"
     },
     "touchicon-120": {
       type: "image/png",
-      file: "../../public/assets/meta/apple-touch-icon-120x120.png",
+      file: "../../public/assets/meta/apple-touch-icon-120x120.png"
     },
     "touchicon-144": {
       type: "image/png",
-      file: "../../public/assets/meta/apple-touch-icon-144x144.png",
+      file: "../../public/assets/meta/apple-touch-icon-144x144.png"
     },
     "touchicon-152": {
       type: "image/png",
-      file: "../../public/assets/meta/apple-touch-icon-152x152.png",
+      file: "../../public/assets/meta/apple-touch-icon-152x152.png"
     },
     "touchicon-180": {
       type: "image/png",
-      file: "../../public/assets/meta/apple-touch-icon-180x180.png",
+      file: "../../public/assets/meta/apple-touch-icon-180x180.png"
     },
     "touchicon-512": {
       type: "image/png",
-      file: "../../public/assets/meta/apple-touch-icon-512x512.png",
+      file: "../../public/assets/meta/apple-touch-icon-512x512.png"
     },
 
-    "tilecolor": "#014ca4",
-    "browserconfig": {
+    tilecolor: "#014ca4",
+    browserconfig: {
       type: "text/xml",
       file: "../../public/assets/meta/browserconfig.xml"
     },
     "tile-144": {
       type: "image/png",
-      file: "../../public/assets/meta/mstile-144x144.png",
+      file: "../../public/assets/meta/mstile-144x144.png"
     },
     "tile-150": {
       type: "image/png",
-      file: "../../public/assets/meta/mstile-150x150.png",
+      file: "../../public/assets/meta/mstile-150x150.png"
     },
     "tile-310-150": {
       type: "image/png",
-      file: "../../public/assets/meta/mstile-310x150.png",
+      file: "../../public/assets/meta/mstile-310x150.png"
     },
     "tile-310": {
       type: "image/png",
-      file: "../../public/assets/meta/mstile-310x310.png",
+      file: "../../public/assets/meta/mstile-310x310.png"
     },
     "safari-pinned-tab": {
       type: "image/png",
-      file: "../../public/assets/meta/safari-pinned-tab.svg",
+      file: "../../public/assets/meta/safari-pinned-tab.svg"
     }
   },
   name: "uuJokes",
-  description: "Database of jokes in which users can create and update jokes, manage them, rate them and sort them into categories.",
+  description:
+    "Database of jokes in which users can create and update jokes, manage them, rate them and sort them into categories.",
   logoType: "16x9",
   ttl: 3600
 };
@@ -282,7 +285,7 @@ class JokesInstanceAbl {
 
   async setLogo(awid, dtoIn) {
     // hds 1
-    let validationResult = this.validator.validate("setLogoDtoInType", dtoIn);
+    let validationResult = this.validator.validate("jokesInstanceSetLogoDtoInType", dtoIn);
     // A1, A2
     let uuAppErrorMap = ValidationHelper.processValidationResult(
       dtoIn,
@@ -295,7 +298,7 @@ class JokesInstanceAbl {
     //check if stream or base64
     if (dtoIn.logo.readable) {
       //check if the stream is valid
-      let {valid: isValidStream, stream} = await FileHelper.validateImageStream(dtoIn.logo);
+      let { valid: isValidStream, stream } = await FileHelper.validateImageStream(dtoIn.logo);
       if (!isValidStream) {
         throw new Errors.SetLogo.InvalidPhotoContentType({ uuAppErrorMap });
       }
@@ -336,7 +339,6 @@ class JokesInstanceAbl {
         // A6
         throw new Errors.SetLogo.UuBinaryUpdateBinaryDataFailed(uuAppErrorMap, e);
       }
-      throw e;
     }
 
     // hds 4
@@ -356,6 +358,56 @@ class JokesInstanceAbl {
     // hds 5
     jokesInstance.uuAppErrorMap = uuAppErrorMap;
     return jokesInstance;
+  }
+
+  async setIcons(awid, dtoIn) {
+    let jokesInstance = await this.dao.getByAwid(awid);
+    let jokeInstanceUveMetaData = jokesInstance.uveMetaData || {};
+
+    let validationResult = this.validator.validate("jokeInstaceSetIconsDtoInType", dtoIn);
+    // A1, A2
+    let uuAppErrorMap = ValidationHelper.processValidationResult(
+      dtoIn,
+      validationResult,
+      WARNINGS.setLogoUnsupportedKeys.code,
+      Errors.SetLogo.InvalidDtoIn
+    );
+
+    //unzip archive
+    await UnzipHelper.unzip(
+      dtoIn.data,
+      Errors.GetProductLogo.InvalidDtoIn,
+      uuAppErrorMap,
+      async data => (jokeInstanceUveMetaData = await this._store(data, jokeInstanceUveMetaData, awid, UuBinaryAbl))
+    );
+
+    jokesInstance.uveMetaData = jokeInstanceUveMetaData;
+    await this.dao.updateByAwid(jokesInstance);
+
+    //return dtoOut;
+    return { uuAppErrorMap };
+  }
+
+  async _store(data, jokeInstanceUveMetaData, awid, UuBinaryAbl) {
+    if (data.type === "File") {
+      let fileName = data.path;
+      let end = fileName.lastIndexOf(".") === -1 ? fileName.length : fileName.lastIndexOf(".");
+      let start = fileName.lastIndexOf("/") === -1 ? 0 : fileName.lastIndexOf("/") + 1;
+      let code = fileName.substring(start, end);
+
+      try {
+        if (jokeInstanceUveMetaData[code]) {
+          await UuBinaryAbl.updateBinaryData(awid, { data, code, createVersion: false, revisionStrategy: "NONE" });
+        } else {
+          await UuBinaryAbl.createBinary(awid, { data, code });
+          jokeInstanceUveMetaData[code] = code;
+        }
+      } catch (e) {
+        throw e; //TODO error handling
+      }
+    }
+
+    return jokeInstanceUveMetaData;
   }
 
   async getProductInfo(awid) {
@@ -385,7 +437,7 @@ class JokesInstanceAbl {
     let jokesInstance = await this.dao.getByAwid(awid);
     if (jokesInstance && jokesInstance.logos && jokesInstance.logos.includes(type)) {
       try {
-        dtoOut = await UuBinaryModel.getBinaryData(awid, { code: type });
+        dtoOut = await UuBinaryAbl.getBinaryData(awid, { code: type });
       } catch (e) {
         // A3
         if (logger.isWarnLoggable()) {
@@ -429,10 +481,11 @@ class JokesInstanceAbl {
     let now = Date.now();
     let dtoOut = {};
     let uveMetaData;
+    let jokesInstance;
     if (this.metaDataCache[awid] && now - this.metaDataCache[awid].ttl <= DEFAULTS.ttl) {
       uveMetaData = this.metaDataCache[awid];
     } else {
-      let jokesInstance = await this.dao.getByAwid(awid);
+      jokesInstance = await this.dao.getByAwid(awid);
       uveMetaData = jokesInstance.uveMetaData ? jokesInstance.uveMetaData : {};
       this.metaDataCache[awid] = uveMetaData;
       this.metaDataCache[awid].ttl = now;
@@ -440,19 +493,15 @@ class JokesInstanceAbl {
 
     if (uveMetaData && uveMetaData[dtoIn.type]) {
       try {
-        dtoOut = await UuBinaryModel.getBinaryData(awid, { code: jokesInstance.uveMetaData[dtoIn.type] });
+        dtoOut = await UuBinaryAbl.getBinaryData(awid, { code: jokesInstance.uveMetaData[dtoIn.type] });
       } catch (e) {
         // A3
         if (logger.isWarnLoggable()) {
-          logger.warn(`Unable to load uuBinary meta data ${type} for jokes instance ${awid}. Error: ${e} `);
+          logger.warn(`Unable to load uuBinary meta data ${dtoIn.type} for jokes instance ${awid}. Error: ${e} `);
         }
-        ValidationHelper.addWarning(
-          uuAppErrorMap,
-          WARNINGS.getUveMetaDataDataDoesNotExists.code,
-          {
-            type: type
-          }
-        );
+        ValidationHelper.addWarning(uuAppErrorMap, WARNINGS.getUveMetaDataDataDoesNotExists.code, {
+          type: dtoIn.type
+        });
       }
     }
 
@@ -468,9 +517,7 @@ class JokesInstanceAbl {
     return dtoOut;
   }
 
-
   async getIndex(awid, uri) {
-
     let readFilePromise = new Promise((resolve, reject) => {
       return fs.readFile(Path.resolve(`./public/index.html`), "utf8", (err, contents) => {
         if (err) throw new Errors.GetIndex.UnableToReadHtmlFile(err);

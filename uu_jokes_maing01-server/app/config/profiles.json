@@ -22,6 +22,7 @@
       "jokesInstance/load": ["Authorities", "Executives", "Readers"],
       "jokesInstance/update": ["Authorities"],
       "jokesInstance/setLogo": ["Authorities"],
+      "jokesInstance/setIcons": ["Authorities"],
       "joke/create": ["Authorities", "Executives"],
       "joke/get": ["Authorities", "Executives", "Readers"],
       "joke/update": ["Authorities", "Executives"],

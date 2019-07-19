@@ -2,7 +2,7 @@
 
 const JokesInstanceAbl = require("../../abl/jokes-instance-abl.js");
 
-const CACHE_VALUE =  "public, max-age=86400, s-maxage=86400";
+const CACHE_VALUE = "public, max-age=86400, s-maxage=86400";
 
 class JokesInstanceController {
   static init(ucEnv) {
@@ -21,25 +21,29 @@ class JokesInstanceController {
     return JokesInstanceAbl.setLogo(ucEnv.uri.getAwid(), ucEnv.parameters);
   }
 
-  static getProductInfo(ucEnv){
-    ucEnv.getResponse().setHeaders({"Cache-Control": CACHE_VALUE});
+  static setIcons(ucEnv) {
+    return JokesInstanceAbl.setIcons(ucEnv.uri.getAwid(), ucEnv.parameters);
+  }
+
+  static getProductInfo(ucEnv) {
+    ucEnv.getResponse().setHeaders({ "Cache-Control": CACHE_VALUE });
     return JokesInstanceAbl.getProductInfo(ucEnv.uri.getAwid());
   }
 
-  static async getProductLogo(ucEnv){
+  static async getProductLogo(ucEnv) {
     let dtoOut = await JokesInstanceAbl.getProductLogo(ucEnv.getUri().getAwid(), ucEnv.parameters);
-    ucEnv.getResponse().setHeaders({"Cache-Control": CACHE_VALUE});
+    ucEnv.getResponse().setHeaders({ "Cache-Control": CACHE_VALUE });
     return ucEnv.setBinaryDtoOut(dtoOut);
   }
 
-  static async getUveMetaData(ucEnv){
+  static async getUveMetaData(ucEnv) {
     let dtoOut = await JokesInstanceAbl.getUveMetaData(ucEnv.getUri().getAwid(), ucEnv.parameters);
-    ucEnv.getResponse().setHeaders({"Cache-Control": CACHE_VALUE});
+    ucEnv.getResponse().setHeaders({ "Cache-Control": CACHE_VALUE });
     return ucEnv.setBinaryDtoOut(dtoOut);
   }
 
-  static async getIndex(ucEnv){
-    ucEnv.getResponse().setHeaders({"Cache-Control": CACHE_VALUE});
+  static async getIndex(ucEnv) {
+    ucEnv.getResponse().setHeaders({ "Cache-Control": CACHE_VALUE });
     return JokesInstanceAbl.getIndex(ucEnv.uri.getAwid(), ucEnv.getUri());
   }
 }
