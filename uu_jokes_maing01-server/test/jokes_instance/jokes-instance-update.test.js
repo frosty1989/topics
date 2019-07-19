@@ -3,6 +3,7 @@ const { ObjectStoreError } = require("uu_appg01_server").ObjectStore;
 const {
   JOKES_INSTANCE_INIT,
   JOKES_INSTANCE_UPDATE,
+  JOKES_INSTANCE_SET_LOGO,
   getImageStream,
   mockDaoFactory
 } = require("../general-test-hepler");
@@ -62,9 +63,9 @@ test("A3 - updating logo, but jokes instance does not exist", async () => {
   expect.assertions(2);
   let dtoIn = { logo: getImageStream() };
   try {
-    await TestHelper.executePostCommand(JOKES_INSTANCE_UPDATE, dtoIn);
+    await TestHelper.executePostCommand(JOKES_INSTANCE_SET_LOGO, dtoIn);
   } catch (e) {
-    expect(e.code).toEqual("uu-jokes-main/jokesInstance/update/jokesInstanceDoesNotExist");
+    expect(e.code).toEqual("uu-jokes-main/jokesInstance/setLogo/jokesInstanceDoesNotExist");
     expect(e.message).toEqual("JokesInstance does not exist.");
   }
 });
@@ -76,15 +77,18 @@ test("A4 - creating logo fails", async () => {
   jest.spyOn(UuBinaryAbl, "createBinary").mockImplementation(() => {
     throw new Error("it failed");
   });
+  JokesInstanceAbl.dao.updateByAwid = () => {
+    return {};
+  };
   JokesInstanceAbl.dao.getByAwid = () => {
     return {};
   };
 
   let dtoIn = { logo: getImageStream() };
   try {
-    await JokesInstanceAbl.update("awid", dtoIn);
+    await JokesInstanceAbl.setLogo("awid", dtoIn);
   } catch (e) {
-    expect(e.code).toEqual("uu-jokes-main/jokesInstance/update/uuBinaryCreateFailed");
+    expect(e.code).toEqual("uu-jokes-main/jokesInstance/setLogo/uuBinaryCreateFailed");
     expect(e.message).toEqual("Creating uuBinary failed.");
   }
 });
@@ -97,14 +101,14 @@ test("A5 - updating logo fails", async () => {
     throw new Error("it failed");
   });
   JokesInstanceAbl.dao.getByAwid = () => {
-    return { logo: "code" };
+    return { logos: ["16x9"] };
   };
 
   let dtoIn = { logo: getImageStream() };
   try {
-    await JokesInstanceAbl.update("awid", dtoIn);
+    await JokesInstanceAbl.setLogo("awid", dtoIn);
   } catch (e) {
-    expect(e.code).toEqual("uu-jokes-main/jokesInstance/update/uuBinaryUpdateBinaryDataFailed");
+    expect(e.code).toEqual("uu-jokes-main/jokesInstance/setLogo/uuBinaryUpdateBinaryDataFailed");
     expect(e.message).toEqual("Updating uuBinary data failed.");
   }
 });
@@ -129,6 +133,6 @@ test("A6 - updating joke instance fails", async () => {
 function mockAbl() {
   mockDaoFactory();
   const JokesInstanceAbl = require("../../app/abl/jokes-instance-abl");
-  const { UuBinaryAbl } = require("uu_appg01_binarystore-cmd");
+  const UuBinaryAbl = require("uu_appg01_binarystore-cmd").UuBinaryModel;
   return { JokesInstanceAbl, UuBinaryAbl };
 }

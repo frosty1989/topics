@@ -168,8 +168,8 @@ test("A6 - storing jokes instance fails", async () => {
 function mockAbl() {
   mockDaoFactory();
   const JokesInstanceAbl = require("../../app/abl/jokes-instance-abl");
-  const { SysProfileAbl } = require("uu_appg01_server").Workspace;
-  const { UuBinaryAbl } = require("uu_appg01_binarystore-cmd");
+  const SysProfileAbl = require("uu_appg01_server").Workspace.SysProfileModel;
+  const UuBinaryAbl = require("uu_appg01_binarystore-cmd").UuBinaryModel;
   JokesInstanceAbl.dao.getByAwid = () => null;
   return { JokesInstanceAbl, SysProfileAbl, UuBinaryAbl };
 }

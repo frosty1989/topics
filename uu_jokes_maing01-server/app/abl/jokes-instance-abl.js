@@ -3,7 +3,7 @@
 const { Validator } = require("uu_appg01_server").Validation;
 const { DaoFactory, ObjectStoreError } = require("uu_appg01_server").ObjectStore;
 const { ValidationHelper } = require("uu_appg01_server").AppServer;
-const { SysProfileAbl } = require("uu_appg01_server").Workspace;
+const SysProfileAbl = require("uu_appg01_server").Workspace.SysProfileModel;
 const { LoggerFactory } = require("uu_appg01_server").Logging;
 const UuBinaryAbl = require("uu_appg01_binarystore-cmd").UuBinaryModel;
 
@@ -201,7 +201,7 @@ class JokesInstanceAbl {
     if (dtoIn.logo) {
       let binary;
       try {
-        binary = await UuBinaryAbl.createBinary(awid, { data: dtoIn.logo, code: "logo" });
+        binary = await UuBinaryAbl.createBinary(awid, { data: dtoIn.logo, code: "16x9" });
       } catch (e) {
         // A5
         throw new Errors.Init.UuBinaryCreateFailed({ uuAppErrorMap }, e);
@@ -294,7 +294,6 @@ class JokesInstanceAbl {
       Errors.SetLogo.InvalidDtoIn
     );
 
-
     //check if stream or base64
     if (dtoIn.logo.readable) {
       //check if the stream is valid
@@ -349,7 +348,8 @@ class JokesInstanceAbl {
     try {
       jokesInstance = await this.dao.updateByAwid(jokesInstance);
     } catch (e) {
-      if (e instanceof ObjectStoreError) { // A7
+      if (e instanceof ObjectStoreError) {
+        // A7
         throw new Errors.SetLogo.JokesInstanceDaoUpdateByAwidFailed({ uuAppErrorMap }, e);
       }
       throw e;
@@ -443,13 +443,9 @@ class JokesInstanceAbl {
         if (logger.isWarnLoggable()) {
           logger.warn(`Unable to load uuBinary logo ${type} for jokes instance ${awid}. Error: ${e} `);
         }
-        ValidationHelper.addWarning(
-          uuAppErrorMap,
-          WARNINGS.getProductLogoLogoDoesNotExists.code,
-          {
-            type: type
-          }
-        );
+        ValidationHelper.addWarning(uuAppErrorMap, WARNINGS.getProductLogoLogoDoesNotExists.code, {
+          type: type
+        });
       }
     }
 
@@ -532,9 +528,10 @@ class JokesInstanceAbl {
       uveMetaData = this.metaDataCache[awid];
     } else {
       let jokesInstance = await this.dao.getByAwid(awid);
-      uveMetaData = (jokesInstance && jokesInstance.uveMetaData) ? jokesInstance.uveMetaData : {};
+      uveMetaData = jokesInstance && jokesInstance.uveMetaData ? jokesInstance.uveMetaData : {};
       uveMetaData.name = jokesInstance ? jokesInstance.name : DEFAULTS.name;
-      uveMetaData.description = (jokesInstance && jokesInstance.description) ? jokesInstance.description : DEFAULTS.description;
+      uveMetaData.description =
+        jokesInstance && jokesInstance.description ? jokesInstance.description : DEFAULTS.description;
       this.metaDataCache[awid] = uveMetaData;
       this.metaDataCache[awid].ttl = now;
     }
@@ -573,13 +570,15 @@ class JokesInstanceAbl {
     <link rel="apple-touch-icon-precomposed" sizes="512x512" href="${uri.getBaseUri()}/getUveMetaData?type=touchicon-512"/>
     
     <meta name="application-name" content="${uveMetaData.name}">
-    <meta name="msapplication-TileColor" content="${uveMetaData["tilecolor"] ? uveMetaData["tilecolor"] : DEFAULTS.metaData["tilecolor"]}"/>
+    <meta name="msapplication-TileColor" content="${
+      uveMetaData["tilecolor"] ? uveMetaData["tilecolor"] : DEFAULTS.metaData["tilecolor"]
+    }"/>
     <meta name="msapplication-config" content="${uri.getBaseUri()}/getUveMetaData?type=browserconfig"/>
     
     <link rel="mask-icon" href="${uri.getBaseUri()}/getUveMetaData?type=safari-pinned-tab" color="#d81e05"/>
     `;
 
-    indexHtml = indexHtml.replace("<meta name=\"uuapp-meta-template\">", metatags);
+    indexHtml = indexHtml.replace('<meta name="uuapp-meta-template">', metatags);
 
     return indexHtml;
   }

@@ -114,8 +114,8 @@ test("A2 - invalid dtoIn", async () => {
 test("A5 - creating logo fails", async () => {
   expect.assertions(2);
 
-  let { JokesInstanceModel, UuBinaryModel } = mockModels();
-  jest.spyOn(UuBinaryModel, "createBinary").mockImplementation(() => {
+  let { JokesInstanceModel, UuBinaryAbl } = mockModels();
+  jest.spyOn(UuBinaryAbl, "createBinary").mockImplementation(() => {
     throw new Error("it failed");
   });
   JokesInstanceModel.dao.getByAwid = () => {
@@ -134,8 +134,8 @@ test("A5 - creating logo fails", async () => {
 test("A6 - updating logo fails", async () => {
   expect.assertions(2);
 
-  let { JokesInstanceModel, UuBinaryModel } = mockModels();
-  jest.spyOn(UuBinaryModel, "updateBinary").mockImplementation(() => {
+  let { JokesInstanceModel, UuBinaryAbl } = mockModels();
+  jest.spyOn(UuBinaryAbl, "updateBinary").mockImplementation(() => {
     throw new Error("it failed");
   });
   JokesInstanceModel.dao.getByAwid = () => {
@@ -154,8 +154,8 @@ test("A6 - updating logo fails", async () => {
 test("A7 - updating joke instance fails", async () => {
   expect.assertions(2);
 
-  let { JokesInstanceModel, UuBinaryModel } = mockModels();
-  jest.spyOn(UuBinaryModel, "createBinary").mockImplementation(() => {});
+  let { JokesInstanceModel, UuBinaryAbl } = mockModels();
+  jest.spyOn(UuBinaryAbl, "createBinary").mockImplementation(() => {});
 
   JokesInstanceModel.dao = {
     getByAwid: () => {
@@ -177,7 +177,7 @@ test("A7 - updating joke instance fails", async () => {
 
 function mockModels() {
   mockDaoFactory();
-  const JokesInstanceModel = require("../../app/models/jokes-instance-model");
-  const { UuBinaryModel } = require("uu_appg01_binarystore-cmd");
-  return { JokesInstanceModel, UuBinaryModel };
+  const JokesInstanceModel = require("../../app/abl/jokes-instance-abl");
+  const UuBinaryAbl = require("uu_appg01_binarystore-cmd").UuBinaryModel;
+  return { JokesInstanceModel, UuBinaryAbl };
 }

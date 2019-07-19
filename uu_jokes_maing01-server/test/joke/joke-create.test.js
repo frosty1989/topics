@@ -223,7 +223,7 @@ test("A7 - storing the joke fails", async () => {
 function mockAbl() {
   mockDaoFactory();
   const JokeAbl = require("../../app/abl/joke-abl");
-  const { UuBinaryAbl } = require("uu_appg01_binarystore-cmd");
+  const UuBinaryAbl = require("uu_appg01_binarystore-cmd").UuBinaryModel;
   const JokesInstanceAbl = require("../../app/abl/jokes-instance-abl");
   JokesInstanceAbl.checkInstance = () => null;
   return { JokeAbl, UuBinaryAbl };
