@@ -171,6 +171,31 @@ const GetUveMetaData = {
   }
 };
 
+const SetIcons = {
+  UC_CODE: `${JOKES_INSTANCE_ERROR_PREFIX}setIcons/`,
+  InvalidDtoIn: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${SetIcons.UC_CODE}invalidDtoIn`;
+      this.message = "DtoIn is not valid.";
+    }
+  },
+  UuBinaryUpdateBinaryDataFailed: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${SetIcons.UC_CODE}uuBinaryUpdateBinaryDataFailed`;
+      this.message = "Updating uuBinary data failed.";
+    }
+  },
+  UuBinaryCreateFailed: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${SetIcons.UC_CODE}uuBinaryCreateFailed`;
+      this.message = "Creating uuBinary failed.";
+    }
+  }
+};
+
 module.exports = {
   Init,
   Load,
@@ -178,5 +203,6 @@ module.exports = {
   SetLogo,
   GetProductLogo,
   GetIndex,
-  GetUveMetaData
+  GetUveMetaData,
+  SetIcons
 };

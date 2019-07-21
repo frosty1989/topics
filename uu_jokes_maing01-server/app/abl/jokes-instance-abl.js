@@ -5,7 +5,7 @@ const { DaoFactory, ObjectStoreError } = require("uu_appg01_server").ObjectStore
 const { ValidationHelper } = require("uu_appg01_server").AppServer;
 const SysProfileAbl = require("uu_appg01_server").Workspace.SysProfileModel;
 const { LoggerFactory } = require("uu_appg01_server").Logging;
-const UuBinaryAbl = require("uu_appg01_binarystore-cmd").UuBinaryModel;
+const { BinaryStoreCmdError, UuBinaryErrors, UuBinaryModel: UuBinaryAbl } = require("uu_appg01_binarystore-cmd");
 
 const Path = require("path");
 const fs = require("fs");
@@ -22,6 +22,9 @@ const WARNINGS = {
   },
   setLogoUnsupportedKeys: {
     code: `${Errors.SetLogo.UC_CODE}unsupportedKeys`
+  },
+  setInconsUnsupportedKeys: {
+    code: `${Errors.SetIcons.UC_CODE}unsupportedKeys`
   },
   getProductLogoUnsupportedKeys: {
     code: `${Errors.GetProductLogo.UC_CODE}unsupportedKeys`
@@ -361,34 +364,38 @@ class JokesInstanceAbl {
   }
 
   async setIcons(awid, dtoIn) {
-    let jokesInstance = await this.dao.getByAwid(awid);
-    let jokeInstanceUveMetaData = jokesInstance.uveMetaData || {};
-
+    //HDS 1
     let validationResult = this.validator.validate("jokeInstaceSetIconsDtoInType", dtoIn);
     // A1, A2
     let uuAppErrorMap = ValidationHelper.processValidationResult(
       dtoIn,
       validationResult,
-      WARNINGS.setLogoUnsupportedKeys.code,
-      Errors.SetLogo.InvalidDtoIn
+      WARNINGS.setInconsUnsupportedKeys.code,
+      Errors.SetIcons.InvalidDtoIn
     );
 
-    //unzip archive
+    //HDS 2
+    let jokesInstance = await this.dao.getByAwid(awid);
+    let uveMetaData = jokesInstance.uveMetaData || {};
+
+    //HDS 3
     await UnzipHelper.unzip(
       dtoIn.data,
       Errors.GetProductLogo.InvalidDtoIn,
       uuAppErrorMap,
-      async data => (jokeInstanceUveMetaData = await this._store(data, jokeInstanceUveMetaData, awid, UuBinaryAbl))
+      async data => (uveMetaData = await this._store(data, uveMetaData, awid, UuBinaryAbl, uuAppErrorMap))
     );
 
-    jokesInstance.uveMetaData = jokeInstanceUveMetaData;
+    jokesInstance.uveMetaData = uveMetaData;
+
+    //HDS 4
     await this.dao.updateByAwid(jokesInstance);
 
-    //return dtoOut;
+    //HDS 5;
     return { uuAppErrorMap };
   }
 
-  async _store(data, jokeInstanceUveMetaData, awid, UuBinaryAbl) {
+  async _store(data, uveMetaData, awid, UuBinaryAbl, uuAppErrorMap) {
     if (data.type === "File") {
       let fileName = data.path;
       let end = fileName.lastIndexOf(".") === -1 ? fileName.length : fileName.lastIndexOf(".");
@@ -396,18 +403,27 @@ class JokesInstanceAbl {
       let code = fileName.substring(start, end);
 
       try {
-        if (jokeInstanceUveMetaData[code]) {
+        // HDS 3.1
+        if (uveMetaData[code]) {
           await UuBinaryAbl.updateBinaryData(awid, { data, code, createVersion: false, revisionStrategy: "NONE" });
         } else {
+          //HDS 3.2
           await UuBinaryAbl.createBinary(awid, { data, code });
-          jokeInstanceUveMetaData[code] = code;
+          uveMetaData[code] = code;
         }
       } catch (e) {
-        throw e; //TODO error handling
+        if (e instanceof BinaryStoreCmdError) {
+          if (e.code.contains(UuBinaryErrors.CreateBinary.UC_CODE)) {
+            throw new Errors.SetIcons.UuBinaryCreateFailed(uuAppErrorMap, e);
+          } else {
+            throw new Errors.SetIcons.UuBinaryUpdateBinaryDataFailed(uuAppErrorMap, e);
+          }
+        }
+        throw e;
       }
     }
 
-    return jokeInstanceUveMetaData;
+    return uveMetaData;
   }
 
   async getProductInfo(awid) {
