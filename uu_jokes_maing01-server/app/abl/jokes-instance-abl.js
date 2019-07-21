@@ -138,7 +138,7 @@ const DEFAULTS = {
   description:
     "Database of jokes in which users can create and update jokes, manage them, rate them and sort them into categories.",
   logoType: "16x9",
-  ttl: 3600
+  ttl: 3600000
 };
 
 const logger = LoggerFactory.get("UuJokes.Models.JokesInstanceModel");
@@ -389,10 +389,15 @@ class JokesInstanceAbl {
     jokesInstance.uveMetaData = uveMetaData;
 
     //HDS 4
-    await this.dao.updateByAwid(jokesInstance);
+    jokesInstance = await this.dao.updateByAwid(jokesInstance);
+    jokesInstance.uuAppErrorMap = uuAppErrorMap;
 
-    //HDS 5;
-    return { uuAppErrorMap };
+    //hds 5
+    this.metaDataCache[awid] = uveMetaData;
+    this.metaDataCache[awid].ttl = Date.now();
+
+    //HDS 6;
+    return jokesInstance;
   }
 
   async _store(data, uveMetaData, awid, UuBinaryAbl, uuAppErrorMap) {
@@ -401,15 +406,21 @@ class JokesInstanceAbl {
       let end = fileName.lastIndexOf(".") === -1 ? fileName.length : fileName.lastIndexOf(".");
       let start = fileName.lastIndexOf("/") === -1 ? 0 : fileName.lastIndexOf("/") + 1;
       let code = fileName.substring(start, end);
+      let underscoredCode = code.replace(/-/g, "_");
 
       try {
         // HDS 3.1
         if (uveMetaData[code]) {
-          await UuBinaryAbl.updateBinaryData(awid, { data, code, createVersion: false, revisionStrategy: "NONE" });
+          await UuBinaryAbl.updateBinaryData(awid, {
+            data,
+            code: underscoredCode,
+            createVersion: false,
+            revisionStrategy: "NONE"
+          });
         } else {
           //HDS 3.2
-          await UuBinaryAbl.createBinary(awid, { data, code });
-          uveMetaData[code] = code;
+          await UuBinaryAbl.createBinary(awid, { data, code: underscoredCode });
+          uveMetaData[code] = underscoredCode;
         }
       } catch (e) {
         if (e instanceof BinaryStoreCmdError) {
@@ -477,7 +488,6 @@ class JokesInstanceAbl {
     return dtoOut;
   }
 
-
   async getUveMetaData(awid, dtoIn) {
     // hds 1
     let validationResult = this.validator.validate("getUveMetaDataDtoInType", dtoIn);
@@ -505,7 +515,7 @@ class JokesInstanceAbl {
 
     if (uveMetaData && uveMetaData[dtoIn.type]) {
       try {
-        dtoOut = await UuBinaryAbl.getBinaryData(awid, { code: jokesInstance.uveMetaData[dtoIn.type] });
+        dtoOut = await UuBinaryAbl.getBinaryData(awid, { code: uveMetaData[dtoIn.type] });
       } catch (e) {
         // A3
         if (logger.isWarnLoggable()) {

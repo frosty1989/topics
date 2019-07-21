@@ -6,6 +6,8 @@ const JOKES_INSTANCE_INIT = "jokesInstance/init";
 const JOKES_INSTANCE_LOAD = "jokesInstance/load";
 const JOKES_INSTANCE_UPDATE = "jokesInstance/update";
 const JOKES_INSTANCE_SET_LOGO = "jokesInstance/setLogo";
+const JOKES_INSTANCE_SET_ICONS = "jokesInstance/setIcons";
+const JOKES_INSTANCE_GET_UVE_META_DATA = "getUveMetaData";
 const JOKE_CREATE = "joke/create";
 const JOKE_GET = "joke/get";
 const JOKE_UPDATE = "joke/update";
@@ -54,6 +56,8 @@ module.exports = {
   JOKES_INSTANCE_LOAD,
   JOKES_INSTANCE_UPDATE,
   JOKES_INSTANCE_SET_LOGO,
+  JOKES_INSTANCE_SET_ICONS,
+  JOKES_INSTANCE_GET_UVE_META_DATA,
   JOKE_CREATE,
   JOKE_GET,
   JOKE_UPDATE,
