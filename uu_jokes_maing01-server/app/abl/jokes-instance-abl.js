@@ -9,6 +9,7 @@ const { BinaryStoreCmdError, UuBinaryErrors, UuBinaryModel: UuBinaryAbl } = requ
 
 const Path = require("path");
 const fs = require("fs");
+const Lru = require("lru-cache");
 const UnzipHelper = require("../helpers/unzip-helper");
 const FileHelper = require("../helpers/file-helper");
 const Errors = require("../api/errors/jokes-instance-error");
@@ -138,7 +139,7 @@ const DEFAULTS = {
   description:
     "Database of jokes in which users can create and update jokes, manage them, rate them and sort them into categories.",
   logoType: "16x9",
-  ttl: 3600000
+  ttl: 3600 * 1000
 };
 
 const logger = LoggerFactory.get("UuJokes.Models.JokesInstanceModel");
@@ -160,7 +161,7 @@ class JokesInstanceAbl {
     this.STATE_UNDER_CONSTRUCTION = STATE_UNDER_CONSTRUCTION;
     this.AUTHORITIES = AUTHORITIES;
     this.EXECUTIVES = EXECUTIVES;
-    this.metaDataCache = {}
+    this.metaDataCache = new Lru({ maxAge: 60 * 60 * 1000 });
   }
 
   async init(awid, dtoIn) {
@@ -393,8 +394,7 @@ class JokesInstanceAbl {
     jokesInstance.uuAppErrorMap = uuAppErrorMap;
 
     //hds 5
-    this.metaDataCache[awid] = uveMetaData;
-    this.metaDataCache[awid].ttl = Date.now();
+    this.metaDataCache.set(awid, uveMetaData);
 
     //HDS 6;
     return jokesInstance;
@@ -500,17 +500,13 @@ class JokesInstanceAbl {
     );
 
     // hds 2
-    let now = Date.now();
     let dtoOut = {};
-    let uveMetaData;
     let jokesInstance;
-    if (this.metaDataCache[awid] && now - this.metaDataCache[awid].ttl <= DEFAULTS.ttl) {
-      uveMetaData = this.metaDataCache[awid];
-    } else {
+    let uveMetaData = this.metaDataCache.get(awid);
+    if (!uveMetaData) {
       jokesInstance = await this.dao.getByAwid(awid);
       uveMetaData = jokesInstance.uveMetaData ? jokesInstance.uveMetaData : {};
-      this.metaDataCache[awid] = uveMetaData;
-      this.metaDataCache[awid].ttl = now;
+      this.metaDataCache.set(awid, uveMetaData);
     }
 
     if (uveMetaData && uveMetaData[dtoIn.type]) {
@@ -548,18 +544,14 @@ class JokesInstanceAbl {
     });
     let indexHtml = await readFilePromise;
 
-    let now = Date.now();
-    let uveMetaData;
-    if (this.metaDataCache[awid] && now - this.metaDataCache[awid].ttl <= DEFAULTS.ttl) {
-      uveMetaData = this.metaDataCache[awid];
-    } else {
+    let uveMetaData = this.metaDataCache.get(awid);
+    if (!uveMetaData) {
       let jokesInstance = await this.dao.getByAwid(awid);
       uveMetaData = jokesInstance && jokesInstance.uveMetaData ? jokesInstance.uveMetaData : {};
       uveMetaData.name = jokesInstance ? jokesInstance.name : DEFAULTS.name;
       uveMetaData.description =
         jokesInstance && jokesInstance.description ? jokesInstance.description : DEFAULTS.description;
-      this.metaDataCache[awid] = uveMetaData;
-      this.metaDataCache[awid].ttl = now;
+      this.metaDataCache.set(awid, uveMetaData);
     }
 
     let metatags = `

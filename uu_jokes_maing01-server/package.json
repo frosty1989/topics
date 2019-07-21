@@ -8,6 +8,7 @@
     "base64url": "^3.0.1",
     "bson": "1.1.0",
     "file-type": "^12.0.1",
+    "lru-cache": "^5.1.1",
     "pump": "^3.0.0",
     "unzip-stream": "^0.3.0",
     "uu_appg01_binarystore-cmd": "^2.1.0",
