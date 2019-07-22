@@ -2,7 +2,7 @@ const unzip = require("unzip-stream");
 const pump = require("pump");
 
 class UnzipHelper {
-  async unzip(data, error, uuAppErrorMap, callback) {
+  async unzip(data, callback) {
     await new Promise((resolve, reject) => {
       let unzipStream = pump(data, unzip.Parse());
       let entryPromise;
@@ -21,7 +21,7 @@ class UnzipHelper {
       });
 
       unzipStream.on("error", e => {
-        reject(new error({ uuAppErrorMap }, { cause: e.message }, e));
+        reject(e);
       });
 
       unzipStream.on("end", async () => {

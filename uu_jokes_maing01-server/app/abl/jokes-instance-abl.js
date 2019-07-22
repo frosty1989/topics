@@ -382,8 +382,6 @@ class JokesInstanceAbl {
     //HDS 3
     await UnzipHelper.unzip(
       dtoIn.data,
-      Errors.GetProductLogo.InvalidDtoIn,
-      uuAppErrorMap,
       async data => (uveMetaData = await this._store(data, uveMetaData, awid, UuBinaryAbl, uuAppErrorMap))
     );
 
@@ -424,10 +422,12 @@ class JokesInstanceAbl {
         }
       } catch (e) {
         if (e instanceof BinaryStoreCmdError) {
-          if (e.code.contains(UuBinaryErrors.CreateBinary.UC_CODE)) {
-            throw new Errors.SetIcons.UuBinaryCreateFailed(uuAppErrorMap, e);
+          if (e.code.indexOf(UuBinaryErrors.CreateBinary.UC_CODE) !== -1) {
+            //A3
+            throw new Errors.SetIcons.UuBinaryCreateFailed(uuAppErrorMap, { cause: e }, e);
           } else {
-            throw new Errors.SetIcons.UuBinaryUpdateBinaryDataFailed(uuAppErrorMap, e);
+            //A4
+            throw new Errors.SetIcons.UuBinaryUpdateBinaryDataFailed(uuAppErrorMap, { cause: e }, e);
           }
         }
         throw e;
