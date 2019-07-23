@@ -24,7 +24,7 @@ const getProductLogoDtoInType = shape({
   type: oneOf("16x9","3x2","4x3","2x3")
 });
 
-const getUveMetaDataDtoInType = shape({
+const jokeInstaceGetUveMetaDataDtoInType = shape({
   type: string().isRequired()
 });
 

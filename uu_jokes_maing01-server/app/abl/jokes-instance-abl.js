@@ -490,7 +490,7 @@ class JokesInstanceAbl {
 
   async getUveMetaData(awid, dtoIn) {
     // hds 1
-    let validationResult = this.validator.validate("getUveMetaDataDtoInType", dtoIn);
+    let validationResult = this.validator.validate("jokeInstaceGetUveMetaDataDtoInType", dtoIn);
     // A1, A2
     let uuAppErrorMap = ValidationHelper.processValidationResult(
       dtoIn,
