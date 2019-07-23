@@ -23,6 +23,7 @@
       "jokesInstance/update": ["Authorities"],
       "jokesInstance/setLogo": ["Authorities"],
       "jokesInstance/setIcons": ["Authorities"],
+      "jokesInstance/getUveMetaData": ["Public"],
       "joke/create": ["Authorities", "Executives"],
       "joke/get": ["Authorities", "Executives", "Readers"],
       "joke/update": ["Authorities", "Executives"],
@@ -38,7 +39,6 @@
 
       "getProductInfo": ["Public"],
       "getProductLogo": ["Public"],
-      "getUveMetaData": ["Public"],
 
       "sys/getAppWorkspace": ["Authorities", "AwidOwner"],
       "sys/getProfile": ["Authorities", "AwidOwner"],

@@ -37,6 +37,11 @@
         "httpMethod": "POST",
         "type": "CMD"
       },
+      "jokesInstance/getUveMetaData": {
+        "realization": "api/controllers/JokesInstanceController.getUveMetaData",
+        "httpMethod": "GET",
+        "type": "CMD"
+      },
       "joke/create": {
         "realization": "api/controllers/JokeController.create",
         "httpMethod": "POST",
@@ -105,11 +110,6 @@
       },
       "getProductLogo": {
         "realization": "api/controllers/JokesInstanceController.getProductLogo",
-        "httpMethod": "GET",
-        "type": "CMD"
-      },
-      "getUveMetaData": {
-        "realization": "api/controllers/JokesInstanceController.getUveMetaData",
         "httpMethod": "GET",
         "type": "CMD"
       }
