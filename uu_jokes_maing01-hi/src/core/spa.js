@@ -7,6 +7,7 @@ import Plus4U5 from "uu_plus4u5g01";
 import "uu_plus4u5g01-bricks";
 import "uu_plus4u5g01-app";
 
+import { Session } from "uu_oidcg01";
 import Config from "./config/config.js";
 import SpaAuthenticated from "./spa-authenticated.js";
 import SpaNotAuthenticated from "./spa-not-authenticated.js";
@@ -16,7 +17,7 @@ import "./spa.less";
 
 const Spa = createReactClass({
   //@@viewOn:mixins
-  mixins: [UU5.Common.BaseMixin, UU5.Common.IdentityMixin],
+  mixins: [UU5.Common.BaseMixin],
   //@@viewOff:mixins
 
   //@@viewOn:statics
@@ -48,16 +49,21 @@ const Spa = createReactClass({
 
   //@@viewOn:render
   render() {
-    let child;
-    if (this.isAuthenticated()) {
-      child = <SpaAuthenticated {...this.getMainPropsToPass()} identity={this.getIdentity()} />;
-    } else if (this.isNotAuthenticated()) {
-      child = <SpaNotAuthenticated {...this.getMainPropsToPass()} />;
-    } else {
-      child = <Plus4U5.App.SpaLoading {...this.getMainPropsToPass()}>uuJokes</Plus4U5.App.SpaLoading>;
-    }
-
-    return child;
+    return (
+      <UU5.Common.Session session={Session.currentSession}>
+        <UU5.Common.Identity>
+          {({ identity, login, logout, session, ...opt }) => {
+            if (session.isAuthenticated()) {
+              return <SpaAuthenticated {...this.getMainPropsToPass()} identity={identity} />;
+            } else if (session.isAuthenticated() === false) {
+              return <SpaNotAuthenticated {...this.getMainPropsToPass()} />;
+            } else {
+              return <Plus4U5.App.SpaLoading {...this.getMainPropsToPass()}>uuJokes</Plus4U5.App.SpaLoading>;
+            }
+          }}
+        </UU5.Common.Identity>
+      </UU5.Common.Session>
+    );
   }
   //@@viewOff:render
 });
