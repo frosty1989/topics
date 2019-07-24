@@ -193,6 +193,27 @@ const SetIcons = {
       this.code = `${SetIcons.UC_CODE}uuBinaryCreateFailed`;
       this.message = "Creating uuBinary failed.";
     }
+  },
+  JokesInstanceDoesNotExist: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${SetIcons.UC_CODE}jokesInstanceDoesNotExist`;
+      this.message = "JokesInstance does not exist.";
+    }
+  },
+  JokesInstanceNotInProperState: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${SetIcons.UC_CODE}jokesInstanceNotInProperState`;
+      this.message = "JokesInstance is not in proper state [active|underConstruction].";
+    }
+  },
+  JokesInstanceDaoUpdateByAwidFailed: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${SetIcons.UC_CODE}jokesInstanceDaoUpdateByAwidFailed`;
+      this.message = "Update jokesInstance by jokesInstance Dao updateByAwid failed.";
+    }
   }
 };
 
