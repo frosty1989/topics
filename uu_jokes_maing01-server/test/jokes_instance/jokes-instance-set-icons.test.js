@@ -76,16 +76,15 @@ test("A1", async () => {
   }
 });
 
-test("A3", async () => {
+test("A5", async () => {
   expect.assertions(1);
 
   await TestHelper.executePostCommand(JOKES_INSTANCE_INIT, { uuAppProfileAuthorities: "." });
 
-  //created
   let dtoIn = { data: Fs.createReadStream(Path.join(__dirname, "invalid-icons-to-create.zip")) };
-  try {
-    await TestHelper.executePostCommand(JOKES_INSTANCE_SET_ICONS, dtoIn);
-  } catch (e) {
-    expect(e.code).toEqual("uu-jokes-main/jokesInstance/setIcons/uuBinaryCreateFailed");
-  }
+  let result = await TestHelper.executePostCommand(JOKES_INSTANCE_SET_ICONS, dtoIn);
+  console.log(result.data.uuAppErrorMap["uu-jokes-main/jokesInstance/setIcons/unsupportedFileNames"]);
+  expect(
+    result.data.uuAppErrorMap["uu-jokes-main/jokesInstance/setIcons/unsupportedFileNames"].message.unsupportedFileNameList
+  ).toEqual(["android-chrome-512x512***"]);
 });

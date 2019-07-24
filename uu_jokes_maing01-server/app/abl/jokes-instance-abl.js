@@ -38,6 +38,9 @@ const WARNINGS = {
   },
   getUveMetaDataDataDoesNotExists: {
     code: `${Errors.GetUveMetaData.UC_CODE}dataDoesNotExists`
+  },
+  setIconsUnsupportedKeys: {
+    code: `${Errors.SetIcons.UC_CODE}unsupportedFileNames`
   }
 };
 
@@ -375,20 +378,29 @@ class JokesInstanceAbl {
       Errors.SetIcons.InvalidDtoIn
     );
 
-    //HDS 2
-    let jokesInstance = await this.dao.getByAwid(awid);
+    //HDS 2 A3, A4
+    let jokesInstance = await this.checkInstance(
+      awid,
+      Errors.SetIcons.JokesInstanceDoesNotExist,
+      Errors.SetIcons.JokesInstanceNotInProperState
+    );
+
     let uveMetaData = jokesInstance.uveMetaData || {};
 
     //HDS 3
     await UnzipHelper.unzip(
       dtoIn.data,
-      async data => (uveMetaData = await this._store(data, uveMetaData, awid, UuBinaryAbl, uuAppErrorMap))
+      async data => (uveMetaData = await this._store(data, uveMetaData, awid, uuAppErrorMap))
     );
 
     jokesInstance.uveMetaData = uveMetaData;
 
-    //HDS 4
-    jokesInstance = await this.dao.updateByAwid(jokesInstance);
+    //HDS 4 A8
+    try {
+      jokesInstance = await this.dao.updateByAwid(jokesInstance);
+    } catch (e) {
+      throw new Errors.SetIcons.JokesInstanceDaoUpdateByAwidFailed({ uuAppErrorMap }, e);
+    }
     jokesInstance.uuAppErrorMap = uuAppErrorMap;
 
     //hds 5
@@ -398,7 +410,7 @@ class JokesInstanceAbl {
     return jokesInstance;
   }
 
-  async _store(data, uveMetaData, awid, UuBinaryAbl, uuAppErrorMap) {
+  async _store(data, uveMetaData, awid, uuAppErrorMap) {
     if (data.type === "File") {
       let fileName = data.path;
       let end = fileName.lastIndexOf(".") === -1 ? fileName.length : fileName.lastIndexOf(".");
@@ -406,31 +418,44 @@ class JokesInstanceAbl {
       let code = fileName.substring(start, end);
       let underscoredCode = code.replace(/-/g, "_");
 
-      try {
-        // HDS 3.1
-        if (uveMetaData[code]) {
-          await UuBinaryAbl.updateBinaryData(awid, {
-            data,
-            code: underscoredCode,
-            createVersion: false,
-            revisionStrategy: "NONE"
+      //HDS 3.1 A5
+      const codeReq = /^[0-9a-zA-Z-]{3,64}$/;
+      if (!code.match(codeReq)) {
+        if (!uuAppErrorMap[WARNINGS.setIconsUnsupportedKeys.code]) {
+          ValidationHelper.addWarning(uuAppErrorMap, WARNINGS.setIconsUnsupportedKeys.code, {
+            unsupportedFileNameList: [code]
           });
         } else {
-          //HDS 3.2
-          await UuBinaryAbl.createBinary(awid, { data, code: underscoredCode });
-          uveMetaData[code] = underscoredCode;
+          uuAppErrorMap[WARNINGS.setIconsUnsupportedKeys.code].paramMap.unsupportedFileNameList.push(code);
         }
-      } catch (e) {
-        if (e instanceof BinaryStoreCmdError) {
-          if (e.code.indexOf(UuBinaryErrors.CreateBinary.UC_CODE) !== -1) {
-            //A3
-            throw new Errors.SetIcons.UuBinaryCreateFailed(uuAppErrorMap, { cause: e }, e);
+      } else {
+        try {
+          // HDS 3.2
+          if (uveMetaData[code]) {
+            // HDS 3.2.1
+            await UuBinaryAbl.updateBinaryData(awid, {
+              data,
+              code: underscoredCode,
+              createVersion: false,
+              revisionStrategy: "NONE"
+            });
           } else {
-            //A4
-            throw new Errors.SetIcons.UuBinaryUpdateBinaryDataFailed(uuAppErrorMap, { cause: e }, e);
+            //HDS 3.2.2
+            await UuBinaryAbl.createBinary(awid, { data, code: underscoredCode });
+            uveMetaData[code] = underscoredCode;
           }
+        } catch (e) {
+          if (e instanceof BinaryStoreCmdError) {
+            if (e.code.indexOf(UuBinaryErrors.CreateBinary.UC_CODE) !== -1) {
+              //A6
+              throw new Errors.SetIcons.UuBinaryCreateFailed(uuAppErrorMap, { cause: e }, e);
+            } else {
+              //A7
+              throw new Errors.SetIcons.UuBinaryUpdateBinaryDataFailed(uuAppErrorMap, { cause: e }, e);
+            }
+          }
+          throw e;
         }
-        throw e;
       }
     }
 
