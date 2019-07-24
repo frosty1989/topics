@@ -390,8 +390,7 @@ class JokesInstanceAbl {
     //HDS 3
     await UnzipHelper.unzip(
       dtoIn.data,
-      async data =>
-        (uveMetaData = await this._store(data, uveMetaData, awid, UuBinaryAbl, ValidationHelper, uuAppErrorMap))
+      async data => (uveMetaData = await this._store(data, uveMetaData, awid, uuAppErrorMap))
     );
 
     jokesInstance.uveMetaData = uveMetaData;
@@ -411,7 +410,7 @@ class JokesInstanceAbl {
     return jokesInstance;
   }
 
-  async _store(data, uveMetaData, awid, UuBinaryAbl, ValidationHelper, uuAppErrorMap) {
+  async _store(data, uveMetaData, awid, uuAppErrorMap) {
     if (data.type === "File") {
       let fileName = data.path;
       let end = fileName.lastIndexOf(".") === -1 ? fileName.length : fileName.lastIndexOf(".");
