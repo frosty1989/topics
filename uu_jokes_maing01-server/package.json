@@ -16,7 +16,7 @@
     "uu_appg01_server": "^4.4.0"
   },
   "devDependencies": {
-    "uu_appg01_devkit": "^1.1.0",
+    "uu_appg01_devkit": "^1.3.0",
     "uu_appg01_workspace-test": "^2.7.0"
   },
   "engines": {
@@ -37,7 +37,8 @@
     "uuCloudShare": "uu_appg01_devkit uuCloudShare",
     "uuCloudUnshare": "uu_appg01_devkit uuCloudUnshare",
     "uuCloudDeployList": "uu_appg01_devkit uuCloudDeployList",
-    "uuLogStoreExport": "uu_appg01_devkit uuLogStoreExport"
+    "uuLogStoreExport": "uu_appg01_devkit uuLogStoreExport",
+    "uuCmdCreate": "uu_appg01_devkit uuCmdCreate"
   },
   "main": "app.js",
   "files": [
