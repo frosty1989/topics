@@ -27,8 +27,7 @@
         "size": 0.25,
         "alias": "primary",
         "technology": "MongoDB-4.0",
-        "backup": false,
-        "id": "OSID_1"
+        "backup": false
       }
     },
     "uuAppBinaryStoreMap": {
@@ -36,8 +35,7 @@
         "size": 0.25,
         "alias": "binary",
         "technology": "MongoDB-4.0",
-        "backup": false,
-        "id": "BSID_1"
+        "backup": false
       }
     },
     "uuConfigMap": {
