@@ -134,7 +134,7 @@ const DEFAULTS = {
       file: "../../public/assets/meta/mstile-310x310.png"
     },
     "safari-pinned-tab": {
-      type: "image/png",
+      type: "image/svg+xml",
       file: "../../public/assets/meta/safari-pinned-tab.svg"
     }
   },
