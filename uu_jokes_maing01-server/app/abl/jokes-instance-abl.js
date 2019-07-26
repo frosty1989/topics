@@ -68,7 +68,7 @@ const DEFAULTS = {
     },
 
     manifest: {
-      type: "image/png",
+      type: "application/json",
       file: "../../public/assets/meta/manifest.json"
     },
     "touchicon-57": {
@@ -79,7 +79,7 @@ const DEFAULTS = {
       type: "image/png",
       file: "../../public/assets/meta/apple-touch-icon-60x60.png"
     },
-    "touchicon-2": {
+    "touchicon-72": {
       type: "image/png",
       file: "../../public/assets/meta/apple-touch-icon-72x72.png"
     },
