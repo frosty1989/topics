@@ -15,15 +15,16 @@ let Calls = {
       dtoIn.data = dtoIn.data || {};
       dtoIn.data = {ieTmpStmp: Date.now(), ...dtoIn.data};
     }
-    Client[method](url, dtoIn.data || null, headers).then(
+    return Client[method](url, dtoIn.data || null, headers).then(
       response => dtoIn.done(response.data),
       response => dtoIn.fail(response)
     );
   },
 
   loadApp(dtoIn) {
+    console.log("called");
     let commandUri = Calls.getCommandUri("jokesInstance/load");
-    Calls.call("get", commandUri, dtoIn);
+    return Calls.call("get", commandUri, dtoIn);
   },
 
   categoryList(dtoIn) {

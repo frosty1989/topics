@@ -20,7 +20,7 @@ import LSI from "./spa-authenticated-lsi.js";
 
 const SpaAuthenticated = createReactClass({
   //@@viewOn:mixins
-  mixins: [UU5.Common.BaseMixin, UU5.Common.LoadMixin],
+  mixins: [UU5.Common.BaseMixin],
   //@@viewOff:mixins
 
   //@@viewOn:statics
@@ -44,11 +44,7 @@ const SpaAuthenticated = createReactClass({
 
   //@@viewOn:getDefaultProps
   //@@viewOff:getDefaultProps
-
   //@@viewOn:reactLifeCycle
-  componentWillMount() {
-    this.setCalls(Calls);
-  },
   //@@viewOff:reactLifeCycle
 
   //@@viewOn:interface
@@ -79,8 +75,6 @@ const SpaAuthenticated = createReactClass({
       },
       setStateCallback
     );
-
-    return this;
   },
   //@@viewOff:overriding
 
@@ -122,31 +116,42 @@ const SpaAuthenticated = createReactClass({
 
     return content;
   },
+
+  _onLoad(data) {
+    let f = data.done;
+    data.done = data => {
+      this.onLoadSuccess_(data);
+      f(data);
+    };
+
+    Calls.loadApp(data);
+  },
   //@@viewOff:private
 
   //@@viewOn:render
   render() {
     let child;
-    switch (this.getLoadFeedback()) {
-      case "ready":
-        child = <SpaReady {...this.getMainPropsToPass()} appData={this._buildAppDataContext()} />;
-        break;
-      case "error":
-        // error
-        child = (
-          <Plus4U5.App.SpaError
-            {...this.getMainPropsToPass()}
-            error={this.state.errorDtoOut}
-            errorData={dig(this.state, "errorDtoOut", "dtoOut", "uuAppErrorMap")}
-            content={this._handleErrorMessage()}
-          />
-        );
-        break;
-      default:
-        // pending
-        child = <Plus4U5.App.SpaLoading {...this.getMainPropsToPass()}>uuJokes</Plus4U5.App.SpaLoading>;
-    }
-    return child;
+    return (
+      <UU5.Common.Loader onLoad={this._onLoad}>
+        {({ isLoading, isError, data }) => {
+          if (isError) {
+            child = (
+              <Plus4U5.App.SpaError
+                {...this.getMainPropsToPass()}
+                error={this.state.errorDtoOut}
+                errorData={dig(this.state, "errorDtoOut", "dtoOut", "uuAppErrorMap")}
+                content={this._handleErrorMessage()}
+              />
+            );
+          } else if (isLoading) {
+            child = <Plus4U5.App.SpaLoading {...this.getMainPropsToPass()}>uuJokes</Plus4U5.App.SpaLoading>;
+          } else {
+            child = <SpaReady {...this.getMainPropsToPass()} calls={Calls} appData={this._buildAppDataContext(data)} />;
+          }
+          return child;
+        }}
+      </UU5.Common.Loader>
+    );
   }
   //@@viewOff:render
 });

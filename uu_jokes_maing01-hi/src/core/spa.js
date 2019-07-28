@@ -52,7 +52,7 @@ const Spa = createReactClass({
     return (
       <UU5.Common.Session session={Session.currentSession}>
         <UU5.Common.Identity>
-          {({ identity, login, logout, session, ...opt }) => {
+          {({ identity, session }) => {
             if (session.isAuthenticated()) {
               return <SpaAuthenticated {...this.getMainPropsToPass()} identity={identity} />;
             } else if (session.isAuthenticated() === false) {

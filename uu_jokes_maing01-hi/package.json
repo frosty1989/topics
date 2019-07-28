@@ -99,12 +99,12 @@
         "cdnBaseUri": "https://cdn.plus4u.net/libs/react-dnd-html5-backend/7.0.2/",
         "main": "ReactDnDHTML5Backend.js",
         "mainMinified": "ReactDnDHTML5Backend.min.js",
-        "localBaseUri":"node_modules/react-dnd-html5-backend/dist/"
+        "localBaseUri": "node_modules/react-dnd-html5-backend/dist/"
       },
       "react-dnd-touch-backend": {
         "main": "ReactDnDHTML5Backend.js",
         "mainMinified": "ReactDnDHTML5Backend.min.js",
-        "localBaseUri":"node_modules/react-dnd-html5-backend/dist/"
+        "localBaseUri": "node_modules/react-dnd-html5-backend/dist/"
       }
     }
   },
