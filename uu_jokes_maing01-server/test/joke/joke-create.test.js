@@ -1,5 +1,7 @@
 /*eslint-disable no-useless-escape*/
 
+const fs = require("fs");
+const path = require("path");
 const { TestHelper } = require("uu_appg01_workspace-test");
 const { ObjectStoreError } = require("uu_appg01_server").ObjectStore;
 const {
@@ -156,7 +158,22 @@ test("A4 - dtoIn is not valid", async () => {
   }
 });
 
-test("A5 - creating image fails", async () => {
+test("A5 - invalid image content type", async () => {
+  await TestHelper.executePostCommand(JOKES_INSTANCE_INIT, { uuAppProfileAuthorities: "." });
+  await TestHelper.login("Authority");
+
+  let dtoIn = {
+    name: "nejm",
+    image: fs.createReadStream(path.resolve(__dirname, "..", "invalid.svg"))
+  };
+  try {
+    await TestHelper.executePostCommand(JOKE_CREATE, dtoIn);
+  } catch (e) {
+    expect(e.code).toEqual("uu-jokes-main/joke/create/invalidPhotoContentType");
+  }
+});
+
+test("A6 - creating image fails", async () => {
   expect.assertions(2);
 
   let { JokeAbl, UuBinaryAbl } = mockAbl();
@@ -177,7 +194,7 @@ test("A5 - creating image fails", async () => {
   }
 });
 
-test("A6 - categories don't exist", async () => {
+test("A7 - categories don't exist", async () => {
   await TestHelper.executePostCommand(JOKES_INSTANCE_INIT, { uuAppProfileAuthorities: "." });
   await TestHelper.login("Authority");
 
@@ -204,7 +221,7 @@ test("A6 - categories don't exist", async () => {
   expect(warning.paramMap.categoryList).toEqual([nonExistentCategoryId]);
 });
 
-test("A7 - storing the joke fails", async () => {
+test("A8 - storing the joke fails", async () => {
   expect.assertions(2);
 
   let { JokeAbl } = mockAbl();
