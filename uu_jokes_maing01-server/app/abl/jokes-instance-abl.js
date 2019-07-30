@@ -11,7 +11,6 @@ const Path = require("path");
 const fs = require("fs");
 const Lru = require("lru-cache");
 const UnzipHelper = require("../helpers/unzip-helper");
-const FileHelper = require("../helpers/file-helper");
 const Errors = require("../api/errors/jokes-instance-error");
 
 const WARNINGS = {
@@ -68,7 +67,7 @@ const DEFAULTS = {
     },
 
     manifest: {
-      type: "image/png",
+      type: "application/json",
       file: "../../public/assets/meta/manifest.json"
     },
     "touchicon-57": {
@@ -79,7 +78,7 @@ const DEFAULTS = {
       type: "image/png",
       file: "../../public/assets/meta/apple-touch-icon-60x60.png"
     },
-    "touchicon-2": {
+    "touchicon-72": {
       type: "image/png",
       file: "../../public/assets/meta/apple-touch-icon-72x72.png"
     },
@@ -134,7 +133,7 @@ const DEFAULTS = {
       file: "../../public/assets/meta/mstile-310x310.png"
     },
     "safari-pinned-tab": {
-      type: "image/png",
+      type: "image/svg+xml",
       file: "../../public/assets/meta/safari-pinned-tab.svg"
     }
   },
@@ -300,24 +299,6 @@ class JokesInstanceAbl {
       WARNINGS.setLogoUnsupportedKeys.code,
       Errors.SetLogo.InvalidDtoIn
     );
-
-    //check if stream or base64
-    if (dtoIn.logo.readable) {
-      //check if the stream is valid
-      let { valid: isValidStream, stream } = await FileHelper.validateImageStream(dtoIn.logo);
-      if (!isValidStream) {
-        throw new Errors.SetLogo.InvalidPhotoContentType({ uuAppErrorMap });
-      }
-      dtoIn.logo = stream;
-    } else {
-      //check if the base64 is valid
-      let binaryBuffer = FileHelper.getBufferFromBase64UrlImage(dtoIn.logo);
-      if (!FileHelper.validateImageBuffer(binaryBuffer).valid) {
-        throw new Errors.SetLogo.InvalidPhotoContentType({ uuAppErrorMap });
-      }
-
-      dtoIn.logo = FileHelper.toStream(binaryBuffer);
-    }
 
     // hds 2, hds 2.1, A3, A4
     let jokesInstance = await this.checkInstance(
@@ -590,35 +571,35 @@ class JokesInstanceAbl {
     <meta property="og:description" content="${uveMetaData.description}" />
     <meta property="og:url" content="${uri.getBaseUri()}/" />
     
-    <link rel="icon" href="${uri.getBaseUri()}/getUveMetaData?type=favicon-32"/>
-    <link rel="icon" type="image/png" sizes="16x16" href="${uri.getBaseUri()}/getUveMetaData?type=favicon-16"/>
-    <link rel="icon" type="image/png" sizes="32x32" href="${uri.getBaseUri()}/getUveMetaData?type=favicon-32"/>
-    <link rel="icon" type="image/png" sizes="96x96" href="${uri.getBaseUri()}/getUveMetaData?type=favicon-96"/>
-    <link rel="icon" type="image/png" sizes="194x194" href="${uri.getBaseUri()}/getUveMetaData?type=favicon-194"/>
+    <link rel="icon" href="${uri.getBaseUri()}/jokesInstance/getUveMetaData?type=favicon-32"/>
+    <link rel="icon" type="image/png" sizes="16x16" href="${uri.getBaseUri()}/jokesInstance/getUveMetaData?type=favicon-16"/>
+    <link rel="icon" type="image/png" sizes="32x32" href="${uri.getBaseUri()}/jokesInstance/getUveMetaData?type=favicon-32"/>
+    <link rel="icon" type="image/png" sizes="96x96" href="${uri.getBaseUri()}/jokesInstance/getUveMetaData?type=favicon-96"/>
+    <link rel="icon" type="image/png" sizes="194x194" href="${uri.getBaseUri()}/jokesInstance/getUveMetaData?type=favicon-194"/>
     
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-title" content="${uveMetaData.name}">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <link rel="manifest" href="${uri.getBaseUri()}/getUveMetaData?type=manifest"/>
+    <link rel="manifest" href="${uri.getBaseUri()}/jokesInstance/getUveMetaData?type=manifest"/>
     
-    <link rel="apple-touch-icon-precomposed" sizes="57x57" href="${uri.getBaseUri()}/getUveMetaData?type=touchicon-57"/>
-    <link rel="apple-touch-icon-precomposed" sizes="60x60" href="${uri.getBaseUri()}/getUveMetaData?type=touchicon-60"/>
-    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="${uri.getBaseUri()}/getUveMetaData?type=touchicon-72"/>
-    <link rel="apple-touch-icon-precomposed" sizes="76x76" href="${uri.getBaseUri()}/getUveMetaData?type=touchicon-76"/>
-    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="${uri.getBaseUri()}/getUveMetaData?type=touchicon-114"/>
-    <link rel="apple-touch-icon-precomposed" sizes="120x120" href="${uri.getBaseUri()}/getUveMetaData?type=touchicon-120"/>
-    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="${uri.getBaseUri()}/getUveMetaData?type=touchicon-144"/>
-    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="${uri.getBaseUri()}/getUveMetaData?type=touchicon-152"/>
-    <link rel="apple-touch-icon-precomposed" sizes="180x180" href="${uri.getBaseUri()}/getUveMetaData?type=touchicon-180"/>
-    <link rel="apple-touch-icon-precomposed" sizes="512x512" href="${uri.getBaseUri()}/getUveMetaData?type=touchicon-512"/>
+    <link rel="apple-touch-icon-precomposed" sizes="57x57" href="${uri.getBaseUri()}/jokesInstance/getUveMetaData?type=touchicon-57"/>
+    <link rel="apple-touch-icon-precomposed" sizes="60x60" href="${uri.getBaseUri()}/jokesInstance/getUveMetaData?type=touchicon-60"/>
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="${uri.getBaseUri()}/jokesInstance/getUveMetaData?type=touchicon-72"/>
+    <link rel="apple-touch-icon-precomposed" sizes="76x76" href="${uri.getBaseUri()}/jokesInstance/getUveMetaData?type=touchicon-76"/>
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="${uri.getBaseUri()}/jokesInstance/getUveMetaData?type=touchicon-114"/>
+    <link rel="apple-touch-icon-precomposed" sizes="120x120" href="${uri.getBaseUri()}/jokesInstance/getUveMetaData?type=touchicon-120"/>
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="${uri.getBaseUri()}/jokesInstance/getUveMetaData?type=touchicon-144"/>
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="${uri.getBaseUri()}/jokesInstance/getUveMetaData?type=touchicon-152"/>
+    <link rel="apple-touch-icon-precomposed" sizes="180x180" href="${uri.getBaseUri()}/jokesInstance/getUveMetaData?type=touchicon-180"/>
+    <link rel="apple-touch-icon-precomposed" sizes="512x512" href="${uri.getBaseUri()}/jokesInstance/getUveMetaData?type=touchicon-512"/>
     
     <meta name="application-name" content="${uveMetaData.name}">
     <meta name="msapplication-TileColor" content="${
       uveMetaData["tilecolor"] ? uveMetaData["tilecolor"] : DEFAULTS.metaData["tilecolor"]
     }"/>
-    <meta name="msapplication-config" content="${uri.getBaseUri()}/getUveMetaData?type=browserconfig"/>
+    <meta name="msapplication-config" content="${uri.getBaseUri()}/jokesInstance/getUveMetaData?type=browserconfig"/>
     
-    <link rel="mask-icon" href="${uri.getBaseUri()}/getUveMetaData?type=safari-pinned-tab" color="#d81e05"/>
+    <link rel="mask-icon" href="${uri.getBaseUri()}/jokesInstance/getUveMetaData?type=safari-pinned-tab" color="#d81e05"/>
     `;
 
     indexHtml = indexHtml.replace('<meta name="uuapp-meta-template">', metatags);

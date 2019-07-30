@@ -39,6 +39,13 @@ const Create = {
       this.code = `${Create.UC_CODE}jokeDaoCreateFailed`;
       this.message = "Create joke by joke DAO create failed.";
     }
+  },
+  InvalidPhotoContentType: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${Create.UC_CODE}invalidPhotoContentType`;
+      this.message = "ContentType of new photo is invalid.";
+    }
   }
 };
 

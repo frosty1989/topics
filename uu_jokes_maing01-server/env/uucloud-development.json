@@ -1,4 +1,6 @@
-{
+{ 
+  "schemaVersion": "1.0.0",
+  "schemaSpecificationUri": "https://uuos9.plus4u.net/uu-bookkitg01-main/78462435-289fcd2e11d34f3e9b2184bedb236ded/book/page?code=uuSubAppInstanceDescriptor",
   "uuSubApp": {
     "code": "UU.JOKES.MAING01",
     "name": "uuJokes",
@@ -25,8 +27,7 @@
         "size": 0.25,
         "alias": "primary",
         "technology": "MongoDB-4.0",
-        "backup": false,
-        "id": "OSID_1"
+        "backup": false
       }
     },
     "uuAppBinaryStoreMap": {
@@ -34,8 +35,7 @@
         "size": 0.25,
         "alias": "binary",
         "technology": "MongoDB-4.0",
-        "backup": false,
-        "id": "BSID_1"
+        "backup": false
       }
     },
     "uuConfigMap": {
