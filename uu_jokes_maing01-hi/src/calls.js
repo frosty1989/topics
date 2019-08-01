@@ -21,8 +21,7 @@ let Calls = {
     );
   },
 
-  loadApp(dtoIn) {
-    console.log("called");
+  loadApp(dtoIn) {    
     let commandUri = Calls.getCommandUri("jokesInstance/load");
     return Calls.call("get", commandUri, dtoIn);
   },
@@ -49,7 +48,7 @@ let Calls = {
 
   jokeList(dtoIn) {
     let commandUri = Calls.getCommandUri("joke/list");
-    Calls.call("get", commandUri, dtoIn);
+    return Calls.call("get", commandUri, dtoIn);
   },
 
   jokeCreate(dtoIn) {

@@ -5,6 +5,7 @@ import PropTypes from "prop-types";
 import * as UU5 from "uu5g04";
 import "uu5g04-bricks";
 import "uu5tilesg01";
+import Calls from "calls";
 
 import Config from "./config/config.js";
 import JokesReady from "../jokes/ready.js";
@@ -18,7 +19,7 @@ import LSI from "./jokes-lsi.js";
 
 export const Jokes = createReactClass({
   //@@viewOn:mixins
-  mixins: [UU5.Common.BaseMixin, UU5.Common.RouteMixin, UU5.Common.LoadMixin, UU5.Common.CcrReaderMixin],
+  mixins: [UU5.Common.BaseMixin, UU5.Common.RouteMixin, UU5.Common.CcrReaderMixin],
   //@@viewOff:mixins
 
   //@@viewOn:statics
@@ -67,7 +68,6 @@ export const Jokes = createReactClass({
       },
       setStateCallback
     );
-    return this;
   },
 
   getOnLoadData_(props) {
@@ -296,10 +296,20 @@ export const Jokes = createReactClass({
     });
   },
 
-  _getChild() {
+  _onLoad(data) {
+    let f = data.done;
+    data.done = data => {
+      this.onLoadSuccess_(data);
+      f(data);
+    };
+
+    Calls.jokeList(data);
+  },
+
+  _getChild(data) {
     return (
       <JokesReady
-        data={this._filterOutVisibility(this.getDtoOut())}
+        data={this._filterOutVisibility(data)}
         detailId={dig(this.props, "params", "id")}
         appData={this.props.appData}
         onCreate={this._handleCreate}
@@ -315,7 +325,15 @@ export const Jokes = createReactClass({
   //@@viewOn:render
   render() {
     return (
-      <UU5.Bricks.Div {...this.getMainPropsToPass()}>{this.getLoadFeedbackChildren(this._getChild)}</UU5.Bricks.Div>
+      <UU5.Common.Loader onLoad={this._onLoad}>
+        {({ isLoading, isError, data }) => {
+          if (isLoading) {
+            return <UU5.Bricks.Div></UU5.Bricks.Div>;
+          } else if (data && !isError) {
+            return <UU5.Bricks.Div>{this._getChild(data.itemList)}</UU5.Bricks.Div>;
+          }
+        }}
+      </UU5.Common.Loader>
     );
   }
   //@@viewOff:render
