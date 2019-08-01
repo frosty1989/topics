@@ -303,7 +303,7 @@ export const Jokes = createReactClass({
       f(data);
     };
 
-    Calls.jokeList(data);
+    return Calls.jokeList(data);
   },
 
   _getChild(data) {
@@ -325,15 +325,20 @@ export const Jokes = createReactClass({
   //@@viewOn:render
   render() {
     return (
-      <UU5.Common.Loader onLoad={this._onLoad}>
-        {({ isLoading, isError, data }) => {
-          if (isLoading) {
-            return <UU5.Bricks.Div></UU5.Bricks.Div>;
-          } else if (data && !isError) {
-            return <UU5.Bricks.Div>{this._getChild(data.itemList)}</UU5.Bricks.Div>;
+      <UU5.Common.ListDataManager onLoad={Calls.jokeList}>
+        {({ viewState, errorState, errorData, data, handleCreate }) => {
+          if (errorState) {
+            // error
+            return "Error";
+          } else if (data) {
+            // ready
+            return <UU5.Bricks.Div>{this._getChild(data)}</UU5.Bricks.Div>;
+          } else {
+            // loading
+            return <UU5.Bricks.Loading />;
           }
         }}
-      </UU5.Common.Loader>
+      </UU5.Common.ListDataManager>
     );
   }
   //@@viewOff:render

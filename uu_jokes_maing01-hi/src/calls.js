@@ -2,26 +2,18 @@
  * Server calls of application client.
  */
 import { Uri } from "uu_appg01_core";
-import { Client } from "uu_appg01";
 import * as UU5 from "uu5g04";
+import Plus4U5 from "uu_plus4u5g01";
 
 let Calls = {
   /** URL containing app base, e.g. "https://uuos9.plus4u.net/vnd-app/tid-awid/". */
   APP_BASE_URI: location.protocol + "//" + location.host + UU5.Environment.getAppBasePath(),
-
-  call(method, url, dtoIn, headers) {
-    if(method === "get" && isIE()){
-      // prevent proactive caching of get requests in IE by adding current timestamp to the request data
-      dtoIn.data = dtoIn.data || {};
-      dtoIn.data = {ieTmpStmp: Date.now(), ...dtoIn.data};
-    }
-    return Client[method](url, dtoIn.data || null, headers).then(
-      response => dtoIn.done(response.data),
-      response => dtoIn.fail(response)
-    );
+  
+  call(method, url, dtoIn, clientOptions) {
+    return Plus4U5.Common.Calls.call(method, url, dtoIn, clientOptions);
   },
 
-  loadApp(dtoIn) {    
+  loadApp(dtoIn) {
     let commandUri = Calls.getCommandUri("jokesInstance/load");
     return Calls.call("get", commandUri, dtoIn);
   },
@@ -46,14 +38,26 @@ let Calls = {
     Calls.call("post", commandUri, dtoIn);
   },
 
-  jokeList(dtoIn) {
-    let commandUri = Calls.getCommandUri("joke/list");
-    return Calls.call("get", commandUri, dtoIn);
+  jokeList(dtoInData) {
+    return new Promise((resolve, reject) => {
+      let commandUri = Calls.getCommandUri("joke/list");
+      Calls.call("get", commandUri, {
+        data: dtoInData,
+        done: resolve,
+        fail: reject
+      });
+    });
   },
 
-  jokeCreate(dtoIn) {
-    let commandUri = Calls.getCommandUri("joke/create");
-    Calls.call("post", commandUri, dtoIn);
+  jokeCreate(dtoInData) {
+    return new Promise((resolve, reject) => {
+      let commandUri = Calls.getCommandUri("joke/create");
+      Calls.call("post", commandUri, {
+        data: dtoInData,
+        done: resolve,
+        fail: reject
+      });
+    });
   },
 
   jokeUpdate(dtoIn) {
