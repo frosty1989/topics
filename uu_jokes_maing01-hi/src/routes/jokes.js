@@ -94,7 +94,7 @@ export const Jokes = createReactClass({
         dtoOut: ArrayUtils.updateItemProgress(prevState.dtoOut, data, item => (original = item))
       }),
       () => {
-        this.getCall("update")({
+        Calls.jokeUpdate({
           data: data,
           done: dtoOut => this._handleUpdateDone(dtoOut, original),
           fail: response => this._handleUpdateFail(response, original)
@@ -130,7 +130,7 @@ export const Jokes = createReactClass({
         dtoOut: ArrayUtils.updateItemProgress(prevState.dtoOut, data, item => (original = item))
       }),
       () => {
-        this.getCall("rate")({
+        Calls.jokeRate({
           data: { id: data.id, rating: newRate },
           done: dtoOut => this._handleRateDone(dtoOut, original),
           fail: response => this._handleRateFail(response, original)
@@ -164,7 +164,7 @@ export const Jokes = createReactClass({
         dtoOut: ArrayUtils.updateItemProgress(prevState.dtoOut, data, item => (original = item))
       }),
       () => {
-        this.getCall("updateVisibility")({
+        Calls.jokeUpdateVisibility({
           data: data,
           done: dtoOut => this._handleUpdateVisibilityDone(dtoOut, original),
           fail: response => this._handleUpdateVisibilityFail(response, original)
@@ -200,7 +200,7 @@ export const Jokes = createReactClass({
         dtoOut: ArrayUtils.addItem(prevState.dtoOut, data, item => (original = item))
       }),
       () => {
-        this.getCall("create")({
+        Calls.jokeCreate({
           data: data,
           done: dtoOut => this._handleCreateDone(dtoOut, original),
           fail: response => this._handleCreateFail(response, original)
@@ -234,7 +234,7 @@ export const Jokes = createReactClass({
         dtoOut: ArrayUtils.updateItemProgress(prevState.dtoOut, data, item => (original = item))
       }),
       () => {
-        this.getCall("delete")({
+        Calls.jokeDelete({
           data: { id: data.id },
           done: dtoOut => this._handleDeleteDone(dtoOut, original),
           fail: response => this._handleDeleteFail(response, original)
