@@ -11,7 +11,8 @@ import FormModal from "../bricks/form-modal";
 import TileList from "../bricks/tile-list.js";
 import Filter from "./filter.js";
 import Tile from "./tile.js";
-import Form from "./form";
+import CreateForm from "./create-form.js";
+import UpdateForm from "./update-form.js";
 import Detail from "./detail.js";
 import { removeRouteParameters, setRouteParameters } from "../helpers/history-helper.js";
 
@@ -123,7 +124,7 @@ export const Jokes = createReactClass({
         onClick: () => {
           this._formModal.open({
             header: this.getLsiComponent("createHeader"),
-            content: <Form appData={this.props.appData} />,
+            content: <CreateForm appData={this.props.appData} />,
             onSave: this.props.onCreate,
             controls: {
               buttonSubmitProps: {
@@ -204,7 +205,7 @@ export const Jokes = createReactClass({
   _handleUpdate(record) {
     this._formModal.open({
       header: this.getLsiComponent("updateHeader"),
-      content: <Form appData={this.props.appData} />,
+      content: <UpdateForm appData={this.props.appData} />,
       onSave: data => {
         if (typeof data.image === "string") {
           delete data.image; // image code, not a binary

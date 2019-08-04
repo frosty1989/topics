@@ -8,7 +8,8 @@ import "uu5g04-bricks";
 import Config from "./config/config.js";
 import TileList from "../bricks/tile-list.js";
 import Tile from "./tile.js";
-import Form from "./form.js";
+import CreateForm from "./create-form.js";
+import UpdateForm from "./update-form.js";
 import Delete from "./delete.js";
 import FormModal from "../bricks/form-modal.js";
 
@@ -80,7 +81,7 @@ export const Ready = createReactClass({
         onClick: () => {
           this._modal.open({
             header: this.getLsiComponent("createHeader"),
-            content: <Form />,
+            content: <CreateForm />,
             onSave: this.props.onCreate,
             controls: {
               buttonSubmitProps: {
@@ -107,7 +108,7 @@ export const Ready = createReactClass({
   _handleUpdate(record) {
     this._modal.open({
       header: this.getLsiComponent("updateHeader"),
-      content: <Form />,
+      content: <UpdateForm />,
       onSave: data => this.props.onUpdate({ id: record.id, ...data }),
       values: record,
       controls: {
