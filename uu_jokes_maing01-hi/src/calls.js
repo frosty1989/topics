@@ -2,13 +2,14 @@
  * Server calls of application client.
  */
 import { Uri } from "uu_appg01_core";
-import * as UU5 from "uu5g04";
+import { Client } from "uu_appg01";
 import Plus4U5 from "uu_plus4u5g01";
+import * as UU5 from "uu5g04";
 
 let Calls = {
   /** URL containing app base, e.g. "https://uuos9.plus4u.net/vnd-app/tid-awid/". */
   APP_BASE_URI: location.protocol + "//" + location.host + UU5.Environment.getAppBasePath(),
-  
+
   call(method, url, dtoIn, clientOptions) {
     return Plus4U5.Common.Calls.call(method, url, dtoIn, clientOptions);
   },
@@ -18,24 +19,48 @@ let Calls = {
     return Calls.call("get", commandUri, dtoIn);
   },
 
-  categoryList(dtoIn) {
-    let commandUri = Calls.getCommandUri("category/list");
-    Calls.call("get", commandUri, dtoIn);
+  categoryList(dtoInData) {
+    return new Promise((resolve, reject) => {
+      let commandUri = Calls.getCommandUri("category/list");
+      Calls.call("get", commandUri, {
+        data: dtoInData,
+        done: resolve,
+        fail: reject
+      });
+    });
   },
 
-  categoryCreate(dtoIn) {
-    let commandUri = Calls.getCommandUri("category/create");
-    Calls.call("post", commandUri, dtoIn);
+  categoryCreate(dtoInData) {
+    return new Promise((resolve, reject) => {
+      let commandUri = Calls.getCommandUri("category/create");
+      Calls.call("post", commandUri, {
+        data: dtoInData,
+        done: resolve,
+        fail: reject
+      });
+    });
   },
 
-  categoryUpdate(dtoIn) {
-    let commandUri = Calls.getCommandUri("category/update");
-    Calls.call("post", commandUri, dtoIn);
+  categoryUpdate(id, dtoInData) {
+    return new Promise((resolve, reject) => {
+      let commandUri = Calls.getCommandUri("category/update");
+      Calls.call("post", commandUri, {
+        data: dtoInData,
+        done: resolve,
+        fail: reject
+      });
+    });
   },
 
-  categoryDelete(dtoIn) {
-    let commandUri = Calls.getCommandUri("category/delete");
-    Calls.call("post", commandUri, dtoIn);
+  categoryDelete(id, forceDelete) {
+    return new Promise((resolve, reject) => {
+      let commandUri = Calls.getCommandUri("category/delete");
+      Calls.call("post", commandUri, {
+        data: { id, forceDelete },
+        done: resolve,
+        fail: reject
+      });
+    });
   },
 
   jokeList(dtoInData) {
@@ -60,24 +85,59 @@ let Calls = {
     });
   },
 
-  jokeUpdate(dtoIn) {
-    let commandUri = Calls.getCommandUri("joke/update");
-    Calls.call("post", commandUri, dtoIn);
+  jokeDelete(id) {
+    return new Promise((resolve, reject) => {
+      let commandUri = Calls.getCommandUri("joke/delete");
+      Calls.call("post", commandUri, {
+        data: { id },
+        done: resolve,
+        fail: reject
+      });
+    });
   },
 
-  jokeDelete(dtoIn) {
-    let commandUri = Calls.getCommandUri("joke/delete");
-    Calls.call("post", commandUri, dtoIn);
+  jokeUpdate(id, { data, type }) {
+    switch (type) {
+      case "updateWholeJoke":
+        return Calls._updateWholeJoke(data);
+      case "updateVisibility":
+        return Calls._updateJokeVisibility(data);
+      case "updateJokeRating":
+        return Calls._updateJokeRating(data);
+    }
   },
 
-  jokeRate(dtoIn) {
-    let commandUri = Calls.getCommandUri("joke/addRating");
-    Calls.call("post", commandUri, dtoIn);
+  _updateWholeJoke(dtoInData) {
+    return new Promise((resolve, reject) => {
+      let commandUri = Calls.getCommandUri("joke/update");
+      Calls.call("post", commandUri, {
+        data: dtoInData,
+        done: resolve,
+        fail: reject
+      });
+    });
   },
 
-  jokeUpdateVisibility(dtoIn) {
-    let commandUri = Calls.getCommandUri("joke/updateVisibility");
-    Calls.call("post", commandUri, dtoIn);
+  _updateJokeRating(dtoInData) {
+    return new Promise((resolve, reject) => {
+      let commandUri = Calls.getCommandUri("joke/addRating");
+      Calls.call("post", commandUri, {
+        data: dtoInData,
+        done: resolve,
+        fail: reject
+      });
+    });
+  },
+
+  _updateJokeVisibility(dtoInData) {
+    return new Promise((resolve, reject) => {
+      let commandUri = Calls.getCommandUri("joke/updateVisibility");
+      Calls.call("post", commandUri, {
+        data: dtoInData,
+        done: resolve,
+        fail: reject
+      });
+    });
   },
 
   uploadFile(dtoIn) {
@@ -132,8 +192,9 @@ let Calls = {
   }
 };
 
-function isIE(){
+function isIE() {
   return !!window.MSInputMethodContext && !!document.documentMode;
 }
 
 export default Calls;
+

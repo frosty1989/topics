@@ -68,6 +68,8 @@ export const Jokes = createReactClass({
       },
       setStateCallback
     );
+
+    return dtoOut;
   },
 
   getOnLoadData_(props) {
@@ -86,7 +88,7 @@ export const Jokes = createReactClass({
   //@@viewOff:overriding
 
   //@@viewOn:private
-  _handleUpdate(data) {
+  _handleUpdate(data, updateJoke) {
     // set new data (temporally)
     let original;
     this.setState(
@@ -94,11 +96,9 @@ export const Jokes = createReactClass({
         dtoOut: ArrayUtils.updateItemProgress(prevState.dtoOut, data, item => (original = item))
       }),
       () => {
-        Calls.jokeUpdate({
-          data: data,
-          done: dtoOut => this._handleUpdateDone(dtoOut, original),
-          fail: response => this._handleUpdateFail(response, original)
-        });
+        updateJoke(data.id, { data, type: "updateWholeJoke" })
+        .then(dtoOut => this._handleUpdateDone(dtoOut, original))
+        .catch(response => this._handleUpdateFail(response, original));
       }
     );
   },
@@ -120,7 +120,7 @@ export const Jokes = createReactClass({
     reportError(this.getLsiComponent("updateFailHeader"), this._decideErrorDescription(response));
   },
 
-  _handleRate(data) {
+  _handleRate(data, updateRating) {
     // set new data (temporally)
     let original;
     let { newRate } = data;
@@ -130,11 +130,9 @@ export const Jokes = createReactClass({
         dtoOut: ArrayUtils.updateItemProgress(prevState.dtoOut, data, item => (original = item))
       }),
       () => {
-        Calls.jokeRate({
-          data: { id: data.id, rating: newRate },
-          done: dtoOut => this._handleRateDone(dtoOut, original),
-          fail: response => this._handleRateFail(response, original)
-        });
+        updateRating(data.id, { data: { id: data.id, rating: newRate }, type: "updateJokeRating" })
+        .then(dtoOut => this._handleRateDone(dtoOut, original))
+        .catch(response => this._handleRateFail(response, original));
       }
     );
   },
@@ -156,7 +154,7 @@ export const Jokes = createReactClass({
     reportError(this.getLsiComponent("rateFailHeader"), this._decideErrorDescription(response));
   },
 
-  _handleUpdateVisibility(data) {
+  _handleUpdateVisibility(data, updateVisibility) {
     // set new data (temporally)
     let original;
     this.setState(
@@ -164,11 +162,9 @@ export const Jokes = createReactClass({
         dtoOut: ArrayUtils.updateItemProgress(prevState.dtoOut, data, item => (original = item))
       }),
       () => {
-        Calls.jokeUpdateVisibility({
-          data: data,
-          done: dtoOut => this._handleUpdateVisibilityDone(dtoOut, original),
-          fail: response => this._handleUpdateVisibilityFail(response, original)
-        });
+        updateVisibility(data.id, { data, type: "updateVisibility" })
+        .then(dtoOut => this._handleUpdateVisibilityDone(dtoOut, original))
+        .catch(response => this._handleUpdateVisibilityFail(response, original));
       }
     );
   },
@@ -192,7 +188,7 @@ export const Jokes = createReactClass({
     reportError(this.getLsiComponent(`${lsiKey}FailHeader`), this._decideErrorDescription(response));
   },
 
-  _handleCreate(data) {
+  _handleCreate(data, createJoke) {
     let original;
     // add new one
     this.setState(
@@ -200,11 +196,9 @@ export const Jokes = createReactClass({
         dtoOut: ArrayUtils.addItem(prevState.dtoOut, data, item => (original = item))
       }),
       () => {
-        Calls.jokeCreate({
-          data: data,
-          done: dtoOut => this._handleCreateDone(dtoOut, original),
-          fail: response => this._handleCreateFail(response, original)
-        });
+        createJoke(data)
+        .then(dtoOut => this._handleCreateDone(dtoOut, original))
+        .catch(response => this._handleCreateFail(response, original));
       }
     );
   },
@@ -227,18 +221,16 @@ export const Jokes = createReactClass({
     reportError(this.getLsiComponent("createFailHeader"), this._decideErrorDescription(response));
   },
 
-  _handleDelete(data) {
+  _handleDelete(data, deleteJoke) {
     let original;
     this.setState(
       prevState => ({
         dtoOut: ArrayUtils.updateItemProgress(prevState.dtoOut, data, item => (original = item))
       }),
       () => {
-        Calls.jokeDelete({
-          data: { id: data.id },
-          done: dtoOut => this._handleDeleteDone(dtoOut, original),
-          fail: response => this._handleDeleteFail(response, original)
-        });
+        deleteJoke(data.id)
+        .then(dtoOut => this._handleDeleteDone(dtoOut, original))
+        .catch(response => this._handleDeleteFail(response, original));
       }
     );
   },
@@ -297,51 +289,58 @@ export const Jokes = createReactClass({
   },
 
   _onLoad(data) {
-    let f = data.done;
-    data.done = data => {
-      this.onLoadSuccess_(data);
-      f(data);
-    };
-
-    return Calls.jokeList(data);
-  },
-
-  _getChild(data) {
-    return (
-      <JokesReady
-        data={this._filterOutVisibility(data)}
-        detailId={dig(this.props, "params", "id")}
-        appData={this.props.appData}
-        onCreate={this._handleCreate}
-        onUpdate={this._handleUpdate}
-        onRate={this._handleRate}
-        onDelete={this._handleDelete}
-        onUpdateVisibility={this._handleUpdateVisibility}
-      />
-    );
+    return Calls.jokeList(data).then(data => this.onLoadSuccess_(data));
   },
   //@@viewOff:private
 
   //@@viewOn:render
   render() {
     return (
-      <UU5.Common.ListDataManager onLoad={Calls.jokeList}>
-        {({ viewState, errorState, errorData, data, handleCreate }) => {
-          if (errorState) {
-            // error
-            return "Error";
-          } else if (data) {
-            // ready
-            return <UU5.Bricks.Div>{this._getChild(data)}</UU5.Bricks.Div>;
-          } else {
-            // loading
-            return <UU5.Bricks.Loading />;
-          }
-        }}
-      </UU5.Common.ListDataManager>
+      <UU5.Bricks.Div {...this.getMainPropsToPass()}>
+        <UU5.Common.ListDataManager
+          onLoad={this._onLoad}
+          onCreate={Calls.jokeCreate}
+          onDelete={Calls.jokeDelete}
+          onUpdate={Calls.jokeUpdate}
+        >
+          {({ errorState, data, handleCreate, handleUpdate, handleDelete }) => {
+            if (errorState) {
+              // error
+            } else if (data) {
+              // ready
+              return (
+                <JokesReady
+                  data={this._filterOutVisibility(data)}
+                  detailId={dig(this.props, "params", "id")}
+                  appData={this.props.appData}
+                  onCreate={data => {
+                    return this._handleCreate(data, handleCreate);
+                  }}
+                  onUpdate={data => {
+                    return this._handleUpdate(data, handleUpdate);
+                  }}
+                  onRate={data => {
+                    return this._handleRate(data, handleUpdate);
+                  }}
+                  onDelete={data => {
+                    return this._handleDelete(data, handleDelete);
+                  }}
+                  onUpdateVisibility={data => {
+                    return this._handleUpdateVisibility(data, handleUpdate);
+                  }}
+                />
+              );
+            } else {
+              // loading
+              return <UU5.Bricks.Loading />;
+            }
+          }}
+        </UU5.Common.ListDataManager>
+      </UU5.Bricks.Div>
     );
   }
   //@@viewOff:render
 });
 
 export default Jokes;
+

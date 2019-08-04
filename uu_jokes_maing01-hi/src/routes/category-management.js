@@ -5,6 +5,7 @@ import PropTypes from "prop-types";
 import * as UU5 from "uu5g04";
 import "uu5g04-bricks";
 
+import Calls from "calls";
 import Config from "./config/config.js";
 import ArrayUtils from "../helpers/array-utils.js";
 import CategoryReady from "../category/ready.js";
@@ -12,11 +13,13 @@ import { reportError, reportSuccess } from "../helpers/alert-helper";
 
 import "./category-management.less";
 import LSI from "./category-management-lsi.js";
+import JokesReady from "../jokes/ready";
+import { dig } from "../helpers/object-utils";
 //@@viewOff:imports
 
 export const CategoryManagement = createReactClass({
   //@@viewOn:mixins
-  mixins: [UU5.Common.BaseMixin, UU5.Common.RouteMixin, UU5.Common.LoadMixin, UU5.Common.CcrReaderMixin],
+  mixins: [UU5.Common.BaseMixin, UU5.Common.RouteMixin, UU5.Common.CcrReaderMixin],
   //@@viewOff:mixins
 
   //@@viewOn:statics
@@ -61,7 +64,8 @@ export const CategoryManagement = createReactClass({
       },
       setStateCallback
     );
-    return this;
+
+    return dtoOut;
   },
 
   getOnLoadData_(props) {
@@ -80,7 +84,7 @@ export const CategoryManagement = createReactClass({
   //@@viewOff:overriding
 
   //@@viewOn:private
-  _handleUpdate(data) {
+  _handleUpdate(data, updateCategory) {
     // set new data (temporally)
     let original;
     this.setState(
@@ -88,11 +92,9 @@ export const CategoryManagement = createReactClass({
         dtoOut: ArrayUtils.updateItemProgress(prevState.dtoOut, data, item => (original = item))
       }),
       () => {
-        this.getCall("update")({
-          data: data,
-          done: dtoOut => this._handleUpdateDone(dtoOut, original),
-          fail: response => this._handleUpdateFail(response, original)
-        });
+        updateCategory(data.id, data)
+        .then(dtoOut => this._handleUpdateDone(dtoOut, original))
+        .catch(response => this._handleUpdateFail(response, original));
       }
     );
   },
@@ -120,7 +122,7 @@ export const CategoryManagement = createReactClass({
     reportError(this.getLsiComponent("updateFailHeader"), this._decideErrorDescription(response));
   },
 
-  _handleCreate(data) {
+  _handleCreate(data, createCategory) {
     let original;
     // add new one
     this.setState(
@@ -128,11 +130,9 @@ export const CategoryManagement = createReactClass({
         dtoOut: ArrayUtils.addItem(prevState.dtoOut, data, item => (original = item))
       }),
       () => {
-        this.getCall("create")({
-          data: data,
-          done: dtoOut => this._handleCreateDone(dtoOut, original),
-          fail: response => this._handleCreateFail(response, original)
-        });
+        createCategory(data)
+        .then(dtoOut => this._handleCreateDone(dtoOut, original))
+        .catch(response => this._handleCreateFail(response, original));
       }
     );
   },
@@ -158,7 +158,7 @@ export const CategoryManagement = createReactClass({
     reportError(this.getLsiComponent("createFailHeader"), this._decideErrorDescription(response));
   },
 
-  _handleDelete(data) {
+  _handleDelete(data, deleteCategory) {
     let original;
     let { forceDelete } = data;
     delete data.forceDelete; // remove extra key
@@ -167,11 +167,9 @@ export const CategoryManagement = createReactClass({
         dtoOut: ArrayUtils.updateItemProgress(prevState.dtoOut, data, item => (original = item))
       }),
       () => {
-        this.getCall("delete")({
-          data: { id: data.id, forceDelete },
-          done: dtoOut => this._handleDeleteDone(dtoOut, original),
-          fail: response => this._handleDeleteFail(response, original)
-        });
+        deleteCategory(data.id, forceDelete)
+        .then(dtoOut => this._handleDeleteDone(dtoOut, original))
+        .catch(response => this._handleDeleteFail(response, original));
       }
     );
   },
@@ -211,31 +209,59 @@ export const CategoryManagement = createReactClass({
     return this.getLsiComponent("unexpectedServerError");
   },
 
-  _setAppData() {
-    this.props.appData.setAppData({ categories: this.state.dtoOut });
+  _setAppData(callBack) {
+    this.props.appData.setAppData({ categories: this.state.dtoOut }, callBack);
   },
 
-  _getChild() {
-    return (
-      <CategoryReady
-        {...this.getMainPropsToPass()}
-        data={this.getDtoOut()}
-        appData={this.props.appData}
-        onCreate={this._handleCreate}
-        onUpdate={this._handleUpdate}
-        onDelete={this._handleDelete}
-      />
-    );
+  _onLoad(data) {
+    return Calls.categoryList(data).then(data => this.onLoadSuccess_(data));
   },
   //@@viewOff:private
 
   //@@viewOn:render
   render() {
     return (
-      <UU5.Bricks.Div {...this.getMainPropsToPass()}>{this.getLoadFeedbackChildren(this._getChild)}</UU5.Bricks.Div>
+      <UU5.Bricks.Div {...this.getMainPropsToPass()}>
+        <UU5.Common.ListDataManager
+          onLoad={this._onLoad}
+          onCreate={Calls.categoryCreate}
+          onDelete={Calls.categoryDelete}
+          onUpdate={Calls.categoryUpdate}
+          pessimistic={this.state.pessimistic}
+        >
+          {({ errorState, data, handleCreate, handleDelete, handleUpdate }) => {
+            if (errorState) {
+              // error
+              return "Error";
+            } else if (data) {
+              // ready
+              return (
+                <CategoryReady
+                  {...this.getMainPropsToPass()}
+                  data={data}
+                  appData={this.props.appData}
+                  onCreate={data => {
+                    return this._handleCreate(data, handleCreate);
+                  }}
+                  onUpdate={data => {
+                    return this._handleUpdate(data, handleUpdate);
+                  }}
+                  onDelete={data => {
+                    return this._handleDelete(data, handleDelete);
+                  }}
+                />
+              );
+            } else {
+              // loading
+              return <UU5.Bricks.Loading />;
+            }
+          }}
+        </UU5.Common.ListDataManager>
+      </UU5.Bricks.Div>
     );
   }
   //@@viewOff:render
 });
 
 export default CategoryManagement;
+
