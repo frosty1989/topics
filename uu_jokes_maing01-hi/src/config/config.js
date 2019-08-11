@@ -44,6 +44,13 @@ export default {
     JOKE_RATING_NOT_AUTHORIZED: "uu-jokes-main/joke/addRating/userNotAuthorized",
     JOKE_DELETE_NOT_AUTHORIZED: "uu-jokes-main/joke/delete/userNotAuthorized",
     JOKE_UPDATE_NOT_AUTHORIZED: "uu-jokes-main/joke/update/userNotAuthorized",
-    CATEGORY_CONTAIN_JOKES: "uu-jokes-main/category/delete/relatedJokesExist"
+    CATEGORY_CONTAIN_JOKES: "uu-jokes-main/category/delete/relatedJokesExist",
+    CATEGORY_NAME_NOT_UNIQUE: "uu-jokes-main/category/create/categoryNameNotUnique"
+  },
+
+  CALLS: {
+    UPDATE_JOKE_RATING: "updateJokeRating",
+    UPDATE_JOKE_VISIBILITY: "updateJokeVisibility",
+    UPDATE_JOKE: "updateJoke"
   }
 };

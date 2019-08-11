@@ -28,14 +28,6 @@ export const Jokes = createReactClass({
     classNames: {
       main: Config.CSS + "jokes"
     },
-    calls: {
-      onLoad: "jokeList",
-      create: "jokeCreate",
-      update: "jokeUpdate",
-      delete: "jokeDelete",
-      rate: "jokeRate",
-      updateVisibility: "jokeUpdateVisibility"
-    },
     lsi: LSI
   },
   //@@viewOff:statics
@@ -96,9 +88,9 @@ export const Jokes = createReactClass({
         dtoOut: ArrayUtils.updateItemProgress(prevState.dtoOut, data, item => (original = item))
       }),
       () => {
-        updateJoke(data.id, { data, type: "updateWholeJoke" })
-        .then(dtoOut => this._handleUpdateDone(dtoOut, original))
-        .catch(response => this._handleUpdateFail(response, original));
+        updateJoke(data.id, { data, type: Config.CALLS.UPDATE_JOKE })
+          .then(dtoOut => this._handleUpdateDone(dtoOut, original))
+          .catch(response => this._handleUpdateFail(response, original));
       }
     );
   },
@@ -130,9 +122,9 @@ export const Jokes = createReactClass({
         dtoOut: ArrayUtils.updateItemProgress(prevState.dtoOut, data, item => (original = item))
       }),
       () => {
-        updateRating(data.id, { data: { id: data.id, rating: newRate }, type: "updateJokeRating" })
-        .then(dtoOut => this._handleRateDone(dtoOut, original))
-        .catch(response => this._handleRateFail(response, original));
+        updateRating(data.id, { data: { id: data.id, rating: newRate }, type: Config.CALLS.UPDATE_JOKE_RATING })
+          .then(dtoOut => this._handleRateDone(dtoOut, original))
+          .catch(response => this._handleRateFail(response, original));
       }
     );
   },
@@ -162,9 +154,9 @@ export const Jokes = createReactClass({
         dtoOut: ArrayUtils.updateItemProgress(prevState.dtoOut, data, item => (original = item))
       }),
       () => {
-        updateVisibility(data.id, { data, type: "updateVisibility" })
-        .then(dtoOut => this._handleUpdateVisibilityDone(dtoOut, original))
-        .catch(response => this._handleUpdateVisibilityFail(response, original));
+        updateVisibility(data.id, { data, type: Config.CALLS.UPDATE_JOKE_VISIBILITY })
+          .then(dtoOut => this._handleUpdateVisibilityDone(dtoOut, original))
+          .catch(response => this._handleUpdateVisibilityFail(response, original));
       }
     );
   },
@@ -197,8 +189,8 @@ export const Jokes = createReactClass({
       }),
       () => {
         createJoke(data)
-        .then(dtoOut => this._handleCreateDone(dtoOut, original))
-        .catch(response => this._handleCreateFail(response, original));
+          .then(dtoOut => this._handleCreateDone(dtoOut, original))
+          .catch(response => this._handleCreateFail(response, original));
       }
     );
   },
@@ -229,8 +221,8 @@ export const Jokes = createReactClass({
       }),
       () => {
         deleteJoke(data.id)
-        .then(dtoOut => this._handleDeleteDone(dtoOut, original))
-        .catch(response => this._handleDeleteFail(response, original));
+          .then(dtoOut => this._handleDeleteDone(dtoOut, original))
+          .catch(response => this._handleDeleteFail(response, original));
       }
     );
   },
@@ -291,6 +283,10 @@ export const Jokes = createReactClass({
   _onLoad(data) {
     return Calls.jokeList(data).then(data => this.onLoadSuccess_(data));
   },
+
+  _onUpdate(id, { data, type }) {
+    return Calls[type](id, data);
+  },
   //@@viewOff:private
 
   //@@viewOn:render
@@ -301,13 +297,10 @@ export const Jokes = createReactClass({
           onLoad={this._onLoad}
           onCreate={Calls.jokeCreate}
           onDelete={Calls.jokeDelete}
-          onUpdate={Calls.jokeUpdate}
+          onUpdate={this._onUpdate}
         >
-          {({ errorState, data, handleCreate, handleUpdate, handleDelete }) => {
-            if (errorState) {
-              // error
-            } else if (data) {
-              // ready
+          {({ data, handleCreate, handleUpdate, handleDelete }) => {
+            if (data) {
               return (
                 <JokesReady
                   data={this._filterOutVisibility(data)}
@@ -331,7 +324,6 @@ export const Jokes = createReactClass({
                 />
               );
             } else {
-              // loading
               return <UU5.Bricks.Loading />;
             }
           }}
@@ -343,4 +335,3 @@ export const Jokes = createReactClass({
 });
 
 export default Jokes;
-

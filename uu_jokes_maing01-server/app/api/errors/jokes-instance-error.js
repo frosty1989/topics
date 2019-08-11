@@ -147,7 +147,7 @@ const GetIndex = {
   UnableToReadHtmlFile: class extends UuJokesError {
     constructor() {
       super(...arguments);
-      this.code = `${GetIndex.UC_CODE}nnableToReadHtmlFile`;
+      this.code = `${GetIndex.UC_CODE}unableToReadHtmlFile`;
       this.message = "Unable to read html file.";
     }
   }

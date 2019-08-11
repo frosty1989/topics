@@ -28,12 +28,6 @@ export const CategoryManagement = createReactClass({
     classNames: {
       main: Config.CSS + "categorymanagement"
     },
-    calls: {
-      onLoad: "categoryList",
-      create: "categoryCreate",
-      update: "categoryUpdate",
-      delete: "categoryDelete"
-    },
     lsi: LSI
   },
   //@@viewOff:statics
@@ -93,8 +87,8 @@ export const CategoryManagement = createReactClass({
       }),
       () => {
         updateCategory(data.id, data)
-        .then(dtoOut => this._handleUpdateDone(dtoOut, original))
-        .catch(response => this._handleUpdateFail(response, original));
+          .then(dtoOut => this._handleUpdateDone(dtoOut, original))
+          .catch(response => this._handleUpdateFail(response, original));
       }
     );
   },
@@ -131,8 +125,8 @@ export const CategoryManagement = createReactClass({
       }),
       () => {
         createCategory(data)
-        .then(dtoOut => this._handleCreateDone(dtoOut, original))
-        .catch(response => this._handleCreateFail(response, original));
+          .then(dtoOut => this._handleCreateDone(dtoOut, original))
+          .catch(response => this._handleCreateFail(response, original));
       }
     );
   },
@@ -168,8 +162,8 @@ export const CategoryManagement = createReactClass({
       }),
       () => {
         deleteCategory(data.id, forceDelete)
-        .then(dtoOut => this._handleDeleteDone(dtoOut, original))
-        .catch(response => this._handleDeleteFail(response, original));
+          .then(dtoOut => this._handleDeleteDone(dtoOut, original))
+          .catch(response => this._handleDeleteFail(response, original));
       }
     );
   },
@@ -201,6 +195,8 @@ export const CategoryManagement = createReactClass({
         switch (response.code) {
           case Config.ERROR_CODES.CATEGORY_CONTAIN_JOKES:
             return this.getLsiComponent("categoryInUseError");
+          case Config.ERROR_CODES.CATEGORY_NAME_NOT_UNIQUE:
+            return this.getLsiComponent("categoryNameNotUnique");
         }
         break;
       case 403:
@@ -227,14 +223,9 @@ export const CategoryManagement = createReactClass({
           onCreate={Calls.categoryCreate}
           onDelete={Calls.categoryDelete}
           onUpdate={Calls.categoryUpdate}
-          pessimistic={this.state.pessimistic}
         >
-          {({ errorState, data, handleCreate, handleDelete, handleUpdate }) => {
-            if (errorState) {
-              // error
-              return "Error";
-            } else if (data) {
-              // ready
+          {({ data, handleCreate, handleDelete, handleUpdate }) => {
+            if (data) {
               return (
                 <CategoryReady
                   {...this.getMainPropsToPass()}
@@ -252,7 +243,6 @@ export const CategoryManagement = createReactClass({
                 />
               );
             } else {
-              // loading
               return <UU5.Bricks.Loading />;
             }
           }}
@@ -264,4 +254,3 @@ export const CategoryManagement = createReactClass({
 });
 
 export default CategoryManagement;
-

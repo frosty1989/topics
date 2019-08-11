@@ -96,18 +96,7 @@ let Calls = {
     });
   },
 
-  jokeUpdate(id, { data, type }) {
-    switch (type) {
-      case "updateWholeJoke":
-        return Calls._updateWholeJoke(data);
-      case "updateVisibility":
-        return Calls._updateJokeVisibility(data);
-      case "updateJokeRating":
-        return Calls._updateJokeRating(data);
-    }
-  },
-
-  _updateWholeJoke(dtoInData) {
+  updateJoke(id, dtoInData) {
     return new Promise((resolve, reject) => {
       let commandUri = Calls.getCommandUri("joke/update");
       Calls.call("post", commandUri, {
@@ -118,7 +107,7 @@ let Calls = {
     });
   },
 
-  _updateJokeRating(dtoInData) {
+  updateJokeRating(id, dtoInData) {
     return new Promise((resolve, reject) => {
       let commandUri = Calls.getCommandUri("joke/addRating");
       Calls.call("post", commandUri, {
@@ -129,7 +118,7 @@ let Calls = {
     });
   },
 
-  _updateJokeVisibility(dtoInData) {
+  updateJokeVisibility(id, dtoInData) {
     return new Promise((resolve, reject) => {
       let commandUri = Calls.getCommandUri("joke/updateVisibility");
       Calls.call("post", commandUri, {
@@ -197,4 +186,3 @@ function isIE() {
 }
 
 export default Calls;
-
