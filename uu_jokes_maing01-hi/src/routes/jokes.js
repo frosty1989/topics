@@ -48,30 +48,6 @@ export const Jokes = createReactClass({
   //@@viewOff:interface
 
   //@@viewOn:overriding
-  onLoadSuccess_(dtoOut, setStateCallback) {
-    // cast itemList directly into dtoOut
-    // it is easier to work with array structure instead of object wrapper
-    // in many cases this step is not needed
-    this.setAsyncState(
-      {
-        loadFeedback: Config.FEEDBACK.READY,
-        dtoOut: dtoOut.itemList,
-        errorDtoOut: null
-      },
-      setStateCallback
-    );
-
-    return dtoOut;
-  },
-
-  getOnLoadData_(props) {
-    // load 1000 items by default
-    return {
-      pageInfo: {
-        pageSize: 1000
-      }
-    };
-  },
 
   onRouteChanged_() {
     let menu = this.getCcrComponentByKey(Config.LEFT_MENU_CCR_KEY);
@@ -280,8 +256,15 @@ export const Jokes = createReactClass({
     });
   },
 
-  _onLoad(data) {
-    return Calls.jokeList(data).then(data => this.onLoadSuccess_(data));
+  _handleLoad(data) {
+    return Calls.jokeList(data).then(data => {
+      this.setAsyncState({
+        loadFeedback: Config.FEEDBACK.READY,
+        dtoOut: data.itemList,
+        errorDtoOut: null
+      });
+      return data;
+    });
   },
 
   _onUpdate(id, { data, type }) {
@@ -294,7 +277,7 @@ export const Jokes = createReactClass({
     return (
       <UU5.Bricks.Div {...this.getMainPropsToPass()}>
         <UU5.Common.ListDataManager
-          onLoad={this._onLoad}
+          onLoad={this._handleLoad}
           onCreate={Calls.jokeCreate}
           onDelete={Calls.jokeDelete}
           onUpdate={this._onUpdate}

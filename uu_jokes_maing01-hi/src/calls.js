@@ -22,110 +22,70 @@ let Calls = {
   categoryList(dtoInData) {
     return new Promise((resolve, reject) => {
       let commandUri = Calls.getCommandUri("category/list");
-      Calls.call("get", commandUri, {
-        data: dtoInData,
-        done: resolve,
-        fail: reject
-      });
+      Calls.call("get", commandUri, { data: dtoInData, done: resolve, fail: reject });
     });
   },
 
   categoryCreate(dtoInData) {
     return new Promise((resolve, reject) => {
       let commandUri = Calls.getCommandUri("category/create");
-      Calls.call("post", commandUri, {
-        data: dtoInData,
-        done: resolve,
-        fail: reject
-      });
+      Calls.call("post", commandUri, { data: dtoInData, done: resolve, fail: reject });
     });
   },
 
   categoryUpdate(id, dtoInData) {
     return new Promise((resolve, reject) => {
       let commandUri = Calls.getCommandUri("category/update");
-      Calls.call("post", commandUri, {
-        data: dtoInData,
-        done: resolve,
-        fail: reject
-      });
+      Calls.call("post", commandUri, { data: dtoInData, done: resolve, fail: reject });
     });
   },
 
   categoryDelete(id, forceDelete) {
     return new Promise((resolve, reject) => {
       let commandUri = Calls.getCommandUri("category/delete");
-      Calls.call("post", commandUri, {
-        data: { id, forceDelete },
-        done: resolve,
-        fail: reject
-      });
+      Calls.call("post", commandUri, { data: { id, forceDelete }, done: resolve, fail: reject });
     });
   },
 
   jokeList(dtoInData) {
     return new Promise((resolve, reject) => {
       let commandUri = Calls.getCommandUri("joke/list");
-      Calls.call("get", commandUri, {
-        data: dtoInData,
-        done: resolve,
-        fail: reject
-      });
+      Calls.call("get", commandUri, { data: dtoInData, done: resolve, fail: reject });
     });
   },
 
   jokeCreate(dtoInData) {
     return new Promise((resolve, reject) => {
       let commandUri = Calls.getCommandUri("joke/create");
-      Calls.call("post", commandUri, {
-        data: dtoInData,
-        done: resolve,
-        fail: reject
-      });
+      Calls.call("post", commandUri, { data: dtoInData, done: resolve, fail: reject });
     });
   },
 
   jokeDelete(id) {
     return new Promise((resolve, reject) => {
       let commandUri = Calls.getCommandUri("joke/delete");
-      Calls.call("post", commandUri, {
-        data: { id },
-        done: resolve,
-        fail: reject
-      });
+      Calls.call("post", commandUri, { data: { id }, done: resolve, fail: reject });
     });
   },
 
   updateJoke(id, dtoInData) {
     return new Promise((resolve, reject) => {
       let commandUri = Calls.getCommandUri("joke/update");
-      Calls.call("post", commandUri, {
-        data: dtoInData,
-        done: resolve,
-        fail: reject
-      });
+      Calls.call("post", commandUri, { data: dtoInData, done: resolve, fail: reject });
     });
   },
 
   updateJokeRating(id, dtoInData) {
     return new Promise((resolve, reject) => {
       let commandUri = Calls.getCommandUri("joke/addRating");
-      Calls.call("post", commandUri, {
-        data: dtoInData,
-        done: resolve,
-        fail: reject
-      });
+      Calls.call("post", commandUri, { data: dtoInData, done: resolve, fail: reject });
     });
   },
 
   updateJokeVisibility(id, dtoInData) {
     return new Promise((resolve, reject) => {
       let commandUri = Calls.getCommandUri("joke/updateVisibility");
-      Calls.call("post", commandUri, {
-        data: dtoInData,
-        done: resolve,
-        fail: reject
-      });
+      Calls.call("post", commandUri, { data: dtoInData, done: resolve, fail: reject });
     });
   },
 

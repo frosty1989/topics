@@ -48,28 +48,6 @@ export const CategoryManagement = createReactClass({
   //@@viewOff:interface
 
   //@@viewOn:overriding
-  onLoadSuccess_(dtoOut, setStateCallback) {
-    // cast itemList directly into dtoOut
-    this.setState(
-      {
-        loadFeedback: Config.FEEDBACK.READY,
-        dtoOut: dtoOut.itemList,
-        errorDtoOut: null
-      },
-      setStateCallback
-    );
-
-    return dtoOut;
-  },
-
-  getOnLoadData_(props) {
-    // load 1000 items by default
-    return {
-      pageInfo: {
-        pageSize: 1000
-      }
-    };
-  },
 
   onRouteChanged_() {
     let menu = this.getCcrComponentByKey(Config.LEFT_MENU_CCR_KEY);
@@ -209,8 +187,15 @@ export const CategoryManagement = createReactClass({
     this.props.appData.setAppData({ categories: this.state.dtoOut }, callBack);
   },
 
-  _onLoad(data) {
-    return Calls.categoryList(data).then(data => this.onLoadSuccess_(data));
+  _handleLoad(data) {
+    return Calls.categoryList(data).then(data => {
+      this.setState({
+        loadFeedback: Config.FEEDBACK.READY,
+        dtoOut: data.itemList,
+        errorDtoOut: null
+      });
+      return data;
+    });
   },
   //@@viewOff:private
 
@@ -219,7 +204,7 @@ export const CategoryManagement = createReactClass({
     return (
       <UU5.Bricks.Div {...this.getMainPropsToPass()}>
         <UU5.Common.ListDataManager
-          onLoad={this._onLoad}
+          onLoad={this._handleLoad}
           onCreate={Calls.categoryCreate}
           onDelete={Calls.categoryDelete}
           onUpdate={Calls.categoryUpdate}
