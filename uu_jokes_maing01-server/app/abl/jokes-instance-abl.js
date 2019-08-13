@@ -10,7 +10,9 @@ const { BinaryStoreCmdError, UuBinaryErrors, UuBinaryModel: UuBinaryAbl } = requ
 const Path = require("path");
 const fs = require("fs");
 const Lru = require("lru-cache");
+const Xml2js = require("xml2js");
 const UnzipHelper = require("../helpers/unzip-helper");
+const StreamHelper = require("../helpers/stream-helper");
 const Errors = require("../api/errors/jokes-instance-error");
 
 const WARNINGS = {
@@ -49,19 +51,19 @@ const DEFAULTS = {
       type: "image/x-icon",
       file: "../../public/assets/meta/favicon.ico"
     },
-    "favicon-16": {
+    "favicon-16x16": {
       type: "image/png",
       file: "../../public/assets/meta/favicon-16x16.png"
     },
-    "favicon-32": {
+    "favicon-32x32": {
       type: "image/png",
       file: "../../public/assets/meta/favicon-32x32.png"
     },
-    "favicon-96": {
+    "favicon-96x96": {
       type: "image/png",
       file: "../../public/assets/meta/favicon-96x96.png"
     },
-    "favicon-194": {
+    "favicon-194x194": {
       type: "image/png",
       file: "../../public/assets/meta/favicon-194x194.png"
     },
@@ -70,43 +72,43 @@ const DEFAULTS = {
       type: "application/json",
       file: "../../public/assets/meta/manifest.json"
     },
-    "touchicon-57": {
+    "apple-touch-icon-57x57": {
       type: "image/png",
       file: "../../public/assets/meta/apple-touch-icon-57x57.png"
     },
-    "touchicon-60": {
+    "apple-touch-icon-60x60": {
       type: "image/png",
       file: "../../public/assets/meta/apple-touch-icon-60x60.png"
     },
-    "touchicon-72": {
+    "apple-touch-icon-72x72": {
       type: "image/png",
       file: "../../public/assets/meta/apple-touch-icon-72x72.png"
     },
-    "touchicon-76": {
+    "apple-touch-icon-76x76": {
       type: "image/png",
       file: "../../public/assets/meta/apple-touch-icon-76x76.png"
     },
-    "touchicon-114": {
+    "apple-touch-icon-114x114": {
       type: "image/png",
       file: "../../public/assets/meta/apple-touch-icon-114x114.png"
     },
-    "touchicon-120": {
+    "apple-touch-icon-120x120": {
       type: "image/png",
       file: "../../public/assets/meta/apple-touch-icon-120x120.png"
     },
-    "touchicon-144": {
+    "apple-touch-icon-144x144": {
       type: "image/png",
       file: "../../public/assets/meta/apple-touch-icon-144x144.png"
     },
-    "touchicon-152": {
+    "apple-touch-icon-152x152": {
       type: "image/png",
       file: "../../public/assets/meta/apple-touch-icon-152x152.png"
     },
-    "touchicon-180": {
+    "apple-touch-icon-180x180": {
       type: "image/png",
       file: "../../public/assets/meta/apple-touch-icon-180x180.png"
     },
-    "touchicon-512": {
+    "apple-touch-icon-512x512": {
       type: "image/png",
       file: "../../public/assets/meta/apple-touch-icon-512x512.png"
     },
@@ -116,19 +118,19 @@ const DEFAULTS = {
       type: "text/xml",
       file: "../../public/assets/meta/browserconfig.xml"
     },
-    "tile-144": {
+    "mstile-144x144": {
       type: "image/png",
       file: "../../public/assets/meta/mstile-144x144.png"
     },
-    "tile-150": {
+    "mstile-150x150": {
       type: "image/png",
       file: "../../public/assets/meta/mstile-150x150.png"
     },
-    "tile-310-150": {
+    "mstile-310x150": {
       type: "image/png",
       file: "../../public/assets/meta/mstile-310x150.png"
     },
-    "tile-310": {
+    "mstile-310x310": {
       type: "image/png",
       file: "../../public/assets/meta/mstile-310x310.png"
     },
@@ -348,7 +350,7 @@ class JokesInstanceAbl {
     return jokesInstance;
   }
 
-  async setIcons(awid, dtoIn) {
+  async setIcons(awid, dtoIn, uri) {
     //HDS 1
     let validationResult = this.validator.validate("jokeInstaceSetIconsDtoInType", dtoIn);
     // A1, A2
@@ -367,11 +369,12 @@ class JokesInstanceAbl {
     );
 
     let uveMetaData = jokesInstance.uveMetaData || {};
+    let name = jokesInstance.name || DEFAULT_NAME;
 
     //HDS 3
     await UnzipHelper.unzip(
       dtoIn.data,
-      async data => (uveMetaData = await this._store(data, uveMetaData, awid, uuAppErrorMap))
+      async data => (uveMetaData = await this._store(data, uveMetaData, uri, name, awid, uuAppErrorMap))
     );
 
     jokesInstance.uveMetaData = uveMetaData;
@@ -391,13 +394,16 @@ class JokesInstanceAbl {
     return jokesInstance;
   }
 
-  async _store(data, uveMetaData, awid, uuAppErrorMap) {
+  async _store(data, uveMetaData, uri, name, awid, uuAppErrorMap) {
     if (data.type === "File") {
-      let fileName = data.path;
-      let end = fileName.lastIndexOf(".") === -1 ? fileName.length : fileName.lastIndexOf(".");
-      let start = fileName.lastIndexOf("/") === -1 ? 0 : fileName.lastIndexOf("/") + 1;
-      let code = fileName.substring(start, end);
+      let code = this._codeFromFileName(data.path);
       let underscoredCode = code.replace(/-/g, "_");
+
+      if (code === "manifest") {
+        data = await this._fillManifest(data, uri, name);
+      } else if (code === "browserconfig") {
+        data = await this._fillBrowserConfig(data, uri);
+      }
 
       //HDS 3.1 A5
       const codeReq = /^[0-9a-zA-Z-]{3,64}$/;
@@ -441,6 +447,53 @@ class JokesInstanceAbl {
     }
 
     return uveMetaData;
+  }
+
+  _codeFromFileName(fileName) {
+    let end = fileName.lastIndexOf(".") === -1 ? fileName.length : fileName.lastIndexOf(".");
+    let start = fileName.lastIndexOf("/") === -1 ? 0 : fileName.lastIndexOf("/") + 1;
+    return fileName.substring(start, end);
+  }
+
+  async _fillManifest(stream, uri, name) {
+    let manifest = await StreamHelper.readableStreamToString(stream);
+    manifest = JSON.parse(manifest);
+
+    manifest.name = name;
+    manifest.short_name = name;
+    let icons = manifest.icons;
+    icons.forEach(icon => {
+      let iconCode = this._codeFromFileName(icon.src);
+      icon.src = `${uri.getBaseUri()}/jokesInstance/getUveMetaData?type=${iconCode}`;
+    });
+
+    let stringifiedStream = JSON.stringify(manifest);
+    return StreamHelper.stringToReadableStream(stringifiedStream);
+  }
+
+  async _fillBrowserConfig(stream, uri) {
+    let xmlFromString = await StreamHelper.readableStreamToString(stream);
+    let filledBrowserConfig = new Promise((resolve, reject) => {
+      Xml2js.parseString(xmlFromString, (err, data) => {
+        if (err) {
+          reject(err);
+        }
+        let keys = Object.keys(data.browserconfig.msapplication[0].tile[0]);
+        keys.forEach(key => {
+          let tile = data.browserconfig.msapplication[0].tile[0][key][0]["$"];
+          if (tile) {
+            let iconCode = this._codeFromFileName(tile.src);
+            tile.src = `${uri.getBaseUri()}/jokesInstance/getUveMetaData?type=${iconCode}`;
+          }
+        });
+        let builder = new Xml2js.Builder();
+        let xmlData = builder.buildObject(data);
+        resolve(xmlData);
+      });
+    });
+
+    filledBrowserConfig = await filledBrowserConfig;
+    return StreamHelper.stringToReadableStream(filledBrowserConfig);
   }
 
   async getProductInfo(awid) {

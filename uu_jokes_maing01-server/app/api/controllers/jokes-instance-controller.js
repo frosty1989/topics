@@ -22,7 +22,7 @@ class JokesInstanceController {
   }
 
   static setIcons(ucEnv) {
-    return JokesInstanceAbl.setIcons(ucEnv.uri.getAwid(), ucEnv.parameters);
+    return JokesInstanceAbl.setIcons(ucEnv.uri.getAwid(), ucEnv.parameters, ucEnv.getUri());
   }
 
   static getProductInfo(ucEnv) {
