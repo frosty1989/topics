@@ -6,6 +6,7 @@ import * as UU5 from "uu5g04";
 import "uu5g04-bricks";
 import Config from "./config/config.js";
 
+import SpaContext from "../../core/spa-context.js";
 import "./category.less";
 import LSI from "./category-lsi.js";
 //@@viewOff:imports
@@ -27,7 +28,6 @@ export const Category = createReactClass({
 
   //@@viewOn:propTypes
   propTypes: {
-    appData: PropTypes.object,
     addFilter: PropTypes.func.isRequired,
     getValues: PropTypes.func.isRequired,
     filters: PropTypes.array.isRequired,
@@ -48,23 +48,19 @@ export const Category = createReactClass({
   //@@viewOff:overriding
 
   //@@viewOn:private
-  _handleSubmit() {
+  _handleSubmit(categories) {
     let values = this.props.getValues();
     let usedFilter = this.props.filters.find(filter => filter.key === values.type);
     this.props.addFilter(
       values.type,
-      this.getLsiComponent(
-        "category",
-        null,
-        this.props.appData.categories.find(category => category.id === values[values.type]).name
-      ),
+      this.getLsiComponent("category", null, categories.find(category => category.id === values[values.type]).name),
       values[values.type],
       usedFilter.filterFn
     );
   },
 
-  _getOptions() {
-    return this.props.appData.categories.map(category => (
+  _getOptions(categories) {
+    return categories.map(category => (
       <UU5.Forms.Select.Option value={category.id} key={category.id} style="whiteSpace: nowrap">
         {category.name}
       </UU5.Forms.Select.Option>
@@ -75,12 +71,20 @@ export const Category = createReactClass({
   //@@viewOn:render
   render() {
     return (
-      <UU5.Bricks.Div {...this.getMainPropsToPass()}>
-        <UU5.Forms.Select value={this.props.values} name="category" inputWidth="auto" controlled={false}>
-          {this._getOptions()}
-        </UU5.Forms.Select>
-        <UU5.Bricks.Button onClick={this._handleSubmit} colorSchema="primary" content={this.getLsiValue("apply")} />
-      </UU5.Bricks.Div>
+      <SpaContext.Consumer>
+        {({ categories }) => (
+          <UU5.Bricks.Div {...this.getMainPropsToPass()}>
+            <UU5.Forms.Select value={this.props.values} name="category" inputWidth="auto" controlled={false}>
+              {this._getOptions(categories)}
+            </UU5.Forms.Select>
+            <UU5.Bricks.Button
+              onClick={() => this._handleSubmit(categories)}
+              colorSchema="primary"
+              content={this.getLsiValue("apply")}
+            />
+          </UU5.Bricks.Div>
+        )}
+      </SpaContext.Consumer>
     );
   }
   //@@viewOff:render

@@ -9,7 +9,7 @@ import { ensureFunction } from "./functions-helper.js";
  */
 function setInProgress(item) {
   // generate tempId
-  //item._inProgress = UU5.Common.Tools.generateUUID(); //FIXME
+  item._inProgress = UU5.Common.Tools.generateUUID();
   return item;
 }
 

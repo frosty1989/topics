@@ -34,7 +34,6 @@ export const Ready = createReactClass({
 
   //@@viewOn:propTypes
   propTypes: {
-    appData: PropTypes.object,
     onCreate: PropTypes.func.isRequired,
     onUpdate: PropTypes.func.isRequired,
     onDelete: PropTypes.func.isRequired
@@ -57,17 +56,9 @@ export const Ready = createReactClass({
   _tileRenderer(tileProps) {
     const { data, ...props } = tileProps;
     if (data._inProgress) {
-      props.disabled = true;
+      //props.disabled = true;
     }
-    return (
-      <Tile
-        {...props}
-        data={tileProps.data}
-        onDelete={this._handleDelete}
-        onUpdate={this._handleUpdate}
-        appData={this.props.appData}
-      />
-    );
+    return <Tile {...props} data={tileProps.data} onDelete={this._handleDelete} onUpdate={this._handleUpdate} />;
   },
 
   _registerModal(cmp) {

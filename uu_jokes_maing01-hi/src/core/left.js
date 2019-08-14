@@ -1,4 +1,5 @@
 //@viewOn:imports
+//@@viewOn:imports
 import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
@@ -12,6 +13,8 @@ import { ensureClosedMenu } from "../helpers/menu-helper";
 
 import "./left.less";
 import LSI from "./left-lsi.js";
+import SpaContext from "./spa-context.js";
+//@@viewOff:imports
 //@viewOff:imports
 
 export const Left = createReactClass({
@@ -37,7 +40,6 @@ export const Left = createReactClass({
 
   //@@viewOn:propTypes
   propTypes: {
-    appData: PropTypes.object,
     authenticated: PropTypes.bool
   },
   //@@viewOff:propTypes
@@ -45,7 +47,6 @@ export const Left = createReactClass({
   //@@viewOn:getDefaultProps
   getDefaultProps() {
     return {
-      appData: {},
       authenticated: false
     };
   },
@@ -114,18 +115,22 @@ export const Left = createReactClass({
     return (
       <UU5.Bricks.Div {...this.getMainPropsToPass()}>
         <UU5.Bricks.Div className={this.getClassName("logo")}>
-          <UU5.Bricks.Link
-            onClick={this._handleGoHome}
-            onWheelClick={this._handleTabHome}
-            onCtrlClick={this._handleTabHome}
-          >
-            {/* // Logo */}
-            {this.props.appData.logos && this.props.appData.logos.includes("16x9") ? (
-              this._getImage()
-            ) : (
-              <UU5.Bricks.Image name="Logo" responsive src="assets/logos/16x9.png" />
+          <SpaContext.Consumer>
+            {({ logos }) => (
+              <UU5.Bricks.Link
+                onClick={this._handleGoHome}
+                onWheelClick={this._handleTabHome}
+                onCtrlClick={this._handleTabHome}
+              >
+                {/* // Logo */}
+                {logos && logos.includes("16x9") ? (
+                  this._getImage()
+                ) : (
+                  <UU5.Bricks.Image name="Logo" responsive src="assets/logos/16x9.png" />
+                )}
+              </UU5.Bricks.Link>
             )}
-          </UU5.Bricks.Link>
+          </SpaContext.Consumer>
         </UU5.Bricks.Div>
         {this.props.authenticated ? this._getAuthenticatedMenu() : this._getNonAuthenticatedMenu()}
         <LeftLink route="about" size="xl" active={this.state.activeRoute === "about"}>

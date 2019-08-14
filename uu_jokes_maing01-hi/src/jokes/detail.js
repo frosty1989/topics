@@ -9,6 +9,7 @@ import Config from "./config/config.js";
 import Uri from "../helpers/uri-helpers.js";
 import { nl2br } from "../helpers/string-helper";
 
+import SpaContext from "../core/spa-context.js";
 import "./detail.less";
 import LSI from "./detail-lsi.js";
 //@@viewOff:imports
@@ -32,7 +33,6 @@ export const Detail = createReactClass({
 
   //@@viewOn:propTypes
   propTypes: {
-    appData: PropTypes.object,
     data: PropTypes.shape({
       id: PropTypes.string,
       name: PropTypes.string,
@@ -69,10 +69,10 @@ export const Detail = createReactClass({
     );
   },
 
-  _buildCategoryNames() {
+  _buildCategoryNames(categories) {
     // for faster lookup
     let categoryIds = new Set(this.props.data.categoryList);
-    return this.props.appData.categories
+    return categories
       .reduce((acc, category) => {
         if (categoryIds.has(category.id)) {
           acc.push(category.name);
@@ -105,7 +105,9 @@ export const Detail = createReactClass({
           {this.getLsiComponent("votes", null, this.props.data.ratingCount.toString())}
         </UU5.Bricks.Div>
         {/* // Categories */}
-        {this._getLine("mdi-tag-multiple", this._buildCategoryNames())}
+        <SpaContext.Consumer>
+          {({ categories }) => this._getLine("mdi-tag-multiple", this._buildCategoryNames(categories))}
+        </SpaContext.Consumer>
         {/* // Author */}
         {this._getLine("mdi-account", this.props.data.uuIdentityName)}
         {/* // Creation Date */}

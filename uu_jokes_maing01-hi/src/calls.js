@@ -14,9 +14,11 @@ let Calls = {
     return Plus4U5.Common.Calls.call(method, url, dtoIn, clientOptions);
   },
 
-  loadApp(dtoIn) {
-    let commandUri = Calls.getCommandUri("jokesInstance/load");
-    return Calls.call("get", commandUri, dtoIn);
+  loadApp(dtoInData) {
+    return new Promise((resolve, reject) => {
+      let commandUri = Calls.getCommandUri("jokesInstance/load");
+      Calls.call("get", commandUri, { data: dtoInData, done: resolve, fail: reject });
+    });
   },
 
   categoryList(dtoInData) {

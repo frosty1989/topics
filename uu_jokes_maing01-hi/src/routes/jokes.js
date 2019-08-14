@@ -33,9 +33,6 @@ export const Jokes = createReactClass({
   //@@viewOff:statics
 
   //@@viewOn:propTypes
-  propTypes: {
-    appData: PropTypes.object.isRequired
-  },
   //@@viewOff:propTypes
 
   //@@viewOn:getDefaultProps
@@ -64,7 +61,7 @@ export const Jokes = createReactClass({
         dtoOut: ArrayUtils.updateItemProgress(prevState.dtoOut, data, item => (original = item))
       }),
       () => {
-        updateJoke(data.id, { data, type: Config.CALLS.UPDATE_JOKE })
+        updateJoke(data.id, data, undefined, null, "updateJoke")
           .then(dtoOut => this._handleUpdateDone(dtoOut, original))
           .catch(response => this._handleUpdateFail(response, original));
       }
@@ -98,7 +95,7 @@ export const Jokes = createReactClass({
         dtoOut: ArrayUtils.updateItemProgress(prevState.dtoOut, data, item => (original = item))
       }),
       () => {
-        updateRating(data.id, { data: { id: data.id, rating: newRate }, type: Config.CALLS.UPDATE_JOKE_RATING })
+        updateRating(data.id, { id: data.id, rating: newRate }, undefined, null, "updateJokeRating")
           .then(dtoOut => this._handleRateDone(dtoOut, original))
           .catch(response => this._handleRateFail(response, original));
       }
@@ -130,7 +127,7 @@ export const Jokes = createReactClass({
         dtoOut: ArrayUtils.updateItemProgress(prevState.dtoOut, data, item => (original = item))
       }),
       () => {
-        updateVisibility(data.id, { data, type: Config.CALLS.UPDATE_JOKE_VISIBILITY })
+        updateVisibility(data.id, data, undefined, null, "updateJokeVisibility")
           .then(dtoOut => this._handleUpdateVisibilityDone(dtoOut, original))
           .catch(response => this._handleUpdateVisibilityFail(response, original));
       }
@@ -138,7 +135,7 @@ export const Jokes = createReactClass({
   },
 
   _handleUpdateVisibilityDone(dtoOut, original) {
-    this.setAsyncState(prevState => ({
+    this.setState(prevState => ({
       dtoOut: ArrayUtils.updateItemFinal(prevState.dtoOut, { ...original, ...dtoOut })
     }));
     // display alert
@@ -266,10 +263,6 @@ export const Jokes = createReactClass({
       return data;
     });
   },
-
-  _onUpdate(id, { data, type }) {
-    return Calls[type](id, data);
-  },
   //@@viewOff:private
 
   //@@viewOn:render
@@ -280,7 +273,11 @@ export const Jokes = createReactClass({
           onLoad={this._handleLoad}
           onCreate={Calls.jokeCreate}
           onDelete={Calls.jokeDelete}
-          onUpdate={this._onUpdate}
+          onUpdate={{
+            updateJokeRating: Calls.updateJokeRating,
+            updateJokeVisibility: Calls.updateJokeVisibility,
+            updateJoke: Calls.updateJoke
+          }}
         >
           {({ data, handleCreate, handleUpdate, handleDelete }) => {
             if (data) {
@@ -288,7 +285,6 @@ export const Jokes = createReactClass({
                 <JokesReady
                   data={this._filterOutVisibility(data)}
                   detailId={dig(this.props, "params", "id")}
-                  appData={this.props.appData}
                   onCreate={data => {
                     return this._handleCreate(data, handleCreate);
                   }}

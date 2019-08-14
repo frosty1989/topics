@@ -16,6 +16,7 @@ import UpdateForm from "./update-form.js";
 import Detail from "./detail.js";
 import { removeRouteParameters, setRouteParameters } from "../helpers/history-helper.js";
 
+import SpaContext from "../core/spa-context.js";
 import "./ready.less";
 import LSI from "./ready-lsi.js";
 //@@viewOff:imports
@@ -38,7 +39,6 @@ export const Jokes = createReactClass({
 
   //@@viewOn:propTypes
   propTypes: {
-    appData: PropTypes.object,
     detailId: PropTypes.string,
     onCreate: PropTypes.func.isRequired,
     onUpdate: PropTypes.func.isRequired,
@@ -70,12 +70,11 @@ export const Jokes = createReactClass({
   _tileRenderer(tileProps) {
     const { data, ...props } = tileProps;
     if (data._inProgress) {
-      props.disabled = true;
+      //props.disabled = true; //FIXME
     }
     return (
       <Tile
         {...props}
-        appData={this.props.appData}
         data={tileProps.data}
         onDelete={this._handleDelete}
         onUpdate={this._handleUpdate}
@@ -90,7 +89,7 @@ export const Jokes = createReactClass({
     this._modal.open(
       {
         header: <span>{record.name}</span>,
-        content: <Detail data={record} appData={this.props.appData} />,
+        content: <Detail data={record} />,
         className: this.getClassName("detail"),
         onClose: this._handleDetailClose
       },
@@ -124,7 +123,7 @@ export const Jokes = createReactClass({
         onClick: () => {
           this._formModal.open({
             header: this.getLsiComponent("createHeader"),
-            content: <CreateForm appData={this.props.appData} />,
+            content: <CreateForm />,
             onSave: this.props.onCreate,
             controls: {
               buttonSubmitProps: {
@@ -149,7 +148,7 @@ export const Jokes = createReactClass({
     ];
   },
 
-  _getFilters() {
+  _getFilters(uuIdentity) {
     let filters = [
       {
         key: "category",
@@ -187,7 +186,7 @@ export const Jokes = createReactClass({
         key: "uuIdentity",
         label: this.getLsi("filterByUser"),
         filterFn: (item, filterValue) => {
-          return (this.props.appData.uuIdentity === item.uuIdentity) === filterValue;
+          return (uuIdentity === item.uuIdentity) === filterValue;
         }
       });
     }
@@ -205,7 +204,7 @@ export const Jokes = createReactClass({
   _handleUpdate(record) {
     this._formModal.open({
       header: this.getLsiComponent("updateHeader"),
-      content: <UpdateForm appData={this.props.appData} />,
+      content: <UpdateForm />,
       onSave: data => {
         if (typeof data.image === "string") {
           delete data.image; // image code, not a binary
@@ -239,22 +238,26 @@ export const Jokes = createReactClass({
   //@@viewOn:render
   render() {
     return (
-      <UU5.Bricks.Div {...this.getMainPropsToPass()}>
-        <TileList
-          tileRenderer={this._tileRenderer}
-          data={this.props.data}
-          actions={this._getActions}
-          sortItems={this._getSortItems}
-          tileHeight={196}
-          title={this.getLsi("list")}
-        >
-          <UU5.Tiles.FilterBar filters={this._getFilters()}>
-            <Filter appData={this.props.appData} />
-          </UU5.Tiles.FilterBar>
-        </TileList>
-        <FormModal ref_={this._registerFormModal} />
-        <UU5.Bricks.Modal ref_={this._registerModal} />
-      </UU5.Bricks.Div>
+      <SpaContext.Consumer>
+        {({ uuIdentity }) => (
+          <UU5.Bricks.Div {...this.getMainPropsToPass()}>
+            <TileList
+              tileRenderer={this._tileRenderer}
+              data={this.props.data}
+              actions={this._getActions}
+              sortItems={this._getSortItems}
+              tileHeight={196}
+              title={this.getLsi("list")}
+            >
+              <UU5.Tiles.FilterBar filters={this._getFilters(uuIdentity)}>
+                <Filter />
+              </UU5.Tiles.FilterBar>
+            </TileList>
+            <FormModal ref_={this._registerFormModal} />
+            <UU5.Bricks.Modal ref_={this._registerModal} />
+          </UU5.Bricks.Div>
+        )}
+      </SpaContext.Consumer>
     );
   }
   //@@viewOff:render

@@ -31,7 +31,6 @@ const LeftLink = createReactClass({
 
   //@@viewOn:propTypes
   propTypes: {
-    appData: PropTypes.object,
     route: PropTypes.string,
     active: PropTypes.bool,
     size: PropTypes.oneOf(["l", "xl"])
@@ -54,6 +53,7 @@ const LeftLink = createReactClass({
   //@@viewOff:interface
 
   //@@viewOn:overriding
+  //@@viewOn:private
   _goRoute() {
     // change route and ensure the menu gets closed when applicable
     UU5.Environment.setRoute(this.props.route, ensureClosedMenu);

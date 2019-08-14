@@ -28,9 +28,6 @@ export const Form = createReactClass({
   //@@viewOff:statics
 
   //@@viewOn:propTypes
-  propTypes: {
-    appData: PropTypes.object
-  },
   //@@viewOff:propTypes
 
   //@@viewOn:getDefaultProps

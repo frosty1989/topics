@@ -37,7 +37,6 @@ export const Filter = createReactClass({
 
   //@@viewOn:propTypes
   propTypes: {
-    appData: PropTypes.object,
     appliedFilters: PropTypes.object,
     filters: PropTypes.arrayOf(
       PropTypes.shape({
@@ -111,7 +110,6 @@ export const Filter = createReactClass({
             addFilter={this.props.addFilter}
             getValues={this._getFormValues}
             filters={this.props.filters}
-            appData={this.props.appData}
             values={filter}
           />
         );
