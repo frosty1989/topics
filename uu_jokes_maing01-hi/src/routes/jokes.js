@@ -55,165 +55,90 @@ export const Jokes = createReactClass({
   //@@viewOn:private
   _handleUpdate(data, updateJoke) {
     // set new data (temporally)
-    let original;
-    this.setState(
-      prevState => ({
-        dtoOut: ArrayUtils.updateItemProgress(prevState.dtoOut, data, item => (original = item))
-      }),
-      () => {
-        updateJoke(data.id, data, undefined, null, "updateJoke")
-          .then(dtoOut => this._handleUpdateDone(dtoOut, original))
-          .catch(response => this._handleUpdateFail(response, original));
-      }
-    );
+    updateJoke(data.id, { ...data, inProgress: true }, undefined, null, "updateJoke")
+      .then(() => this._handleUpdateDone())
+      .catch(response => this._handleUpdateFail(response));
   },
 
-  _handleUpdateDone(dtoOut, original) {
-    this.setAsyncState(prevState => ({
-      dtoOut: ArrayUtils.updateItemFinal(prevState.dtoOut, { ...original, ...dtoOut })
-    }));
+  _handleUpdateDone() {
     // display alert
     reportSuccess(this.getLsiComponent("updateSuccessHeader"));
   },
 
-  _handleUpdateFail(response, original) {
-    // set original value
-    this.setAsyncState(prevState => ({
-      dtoOut: ArrayUtils.updateItemFinal(prevState.dtoOut, original)
-    }));
+  _handleUpdateFail(response) {
     // display alert
     reportError(this.getLsiComponent("updateFailHeader"), this._decideErrorDescription(response));
   },
 
   _handleRate(data, updateRating) {
     // set new data (temporally)
-    let original;
     let { newRate } = data;
     delete data.newRate;
-    this.setState(
-      prevState => ({
-        dtoOut: ArrayUtils.updateItemProgress(prevState.dtoOut, data, item => (original = item))
-      }),
-      () => {
-        updateRating(data.id, { id: data.id, rating: newRate }, undefined, null, "updateJokeRating")
-          .then(dtoOut => this._handleRateDone(dtoOut, original))
-          .catch(response => this._handleRateFail(response, original));
-      }
-    );
+
+    updateRating(data.id, { id: data.id, rating: newRate, inProgress: true }, undefined, null, "updateJokeRating")
+      .then(() => this._handleRateDone())
+      .catch(response => this._handleRateFail(response));
   },
 
-  _handleRateDone(dtoOut, original) {
-    this.setAsyncState(prevState => ({
-      dtoOut: ArrayUtils.updateItemFinal(prevState.dtoOut, { ...original, ...dtoOut })
-    }));
+  _handleRateDone() {
     // display alert
     reportSuccess(this.getLsiComponent("rateSuccessHeader"));
   },
 
-  _handleRateFail(response, original) {
-    // set original value
-    this.setAsyncState(prevState => ({
-      dtoOut: ArrayUtils.updateItemFinal(prevState.dtoOut, original)
-    }));
+  _handleRateFail(response) {
     // display alert
     reportError(this.getLsiComponent("rateFailHeader"), this._decideErrorDescription(response));
   },
 
   _handleUpdateVisibility(data, updateVisibility) {
+    let original = data.visibility;
     // set new data (temporally)
-    let original;
-    this.setState(
-      prevState => ({
-        dtoOut: ArrayUtils.updateItemProgress(prevState.dtoOut, data, item => (original = item))
-      }),
-      () => {
-        updateVisibility(data.id, data, undefined, null, "updateJokeVisibility")
-          .then(dtoOut => this._handleUpdateVisibilityDone(dtoOut, original))
-          .catch(response => this._handleUpdateVisibilityFail(response, original));
-      }
-    );
+    updateVisibility(data.id, { ...data, inProgress: true }, undefined, null, "updateJokeVisibility")
+      .then(dtoOut => this._handleUpdateVisibilityDone(dtoOut))
+      .catch(response => this._handleUpdateVisibilityFail(response, original));
   },
 
-  _handleUpdateVisibilityDone(dtoOut, original) {
-    this.setState(prevState => ({
-      dtoOut: ArrayUtils.updateItemFinal(prevState.dtoOut, { ...original, ...dtoOut })
-    }));
+  _handleUpdateVisibilityDone(dtoOut) {
     // display alert
-    let lsiKey = original.visibility ? "unpublish" : "publish";
+    let lsiKey = dtoOut.visibility ? "publish" : "unpublish";
     reportSuccess(this.getLsiComponent(`${lsiKey}SuccessHeader`));
   },
 
   _handleUpdateVisibilityFail(response, original) {
-    // set original value
-    this.setAsyncState(prevState => ({
-      dtoOut: ArrayUtils.updateItemFinal(prevState.dtoOut, original)
-    }));
     // display alert
-    let lsiKey = original.visibility ? "unpublish" : "publish";
+    let lsiKey = original ? "unpublish" : "publish";
     reportError(this.getLsiComponent(`${lsiKey}FailHeader`), this._decideErrorDescription(response));
   },
 
   _handleCreate(data, createJoke) {
-    let original;
     // add new one
-    this.setState(
-      prevState => ({
-        dtoOut: ArrayUtils.addItem(prevState.dtoOut, data, item => (original = item))
-      }),
-      () => {
-        createJoke(data)
-          .then(dtoOut => this._handleCreateDone(dtoOut, original))
-          .catch(response => this._handleCreateFail(response, original));
-      }
-    );
+    createJoke({ ...data, inProgress: true })
+      .then(() => this._handleCreateDone())
+      .catch(response => this._handleCreateFail(response));
   },
 
-  _handleCreateDone(dtoOut, original) {
-    // set id in dtoOut
-    this.setAsyncState(prevState => ({
-      dtoOut: ArrayUtils.updateItemFinal(prevState.dtoOut, { ...original, ...dtoOut })
-    }));
+  _handleCreateDone() {
     // display alert
     reportSuccess(this.getLsiComponent("createSuccessHeader"));
   },
 
-  _handleCreateFail(response, original) {
-    // remove from dtoOut
-    this.setAsyncState(prevState => ({
-      dtoOut: ArrayUtils.removeItem(prevState.dtoOut, original)
-    }));
+  _handleCreateFail(response) {
     // display alert
     reportError(this.getLsiComponent("createFailHeader"), this._decideErrorDescription(response));
   },
 
   _handleDelete(data, deleteJoke) {
-    let original;
-    this.setState(
-      prevState => ({
-        dtoOut: ArrayUtils.updateItemProgress(prevState.dtoOut, data, item => (original = item))
-      }),
-      () => {
-        deleteJoke(data.id)
-          .then(dtoOut => this._handleDeleteDone(dtoOut, original))
-          .catch(response => this._handleDeleteFail(response, original));
-      }
-    );
+    deleteJoke(data.id)
+      .then(() => this._handleDeleteDone())
+      .catch(response => this._handleDeleteFail(response));
   },
 
-  _handleDeleteDone(dtoOut, original) {
-    // remove from dataset
-    this.setAsyncState(prevState => ({
-      dtoOut: ArrayUtils.removeItem(prevState.dtoOut, original)
-    }));
+  _handleDeleteDone() {
     // display alert
     reportSuccess(this.getLsiComponent("deleteSuccessHeader"));
   },
 
-  _handleDeleteFail(response, original) {
-    // set original value
-    this.setAsyncState(prevState => ({
-      dtoOut: ArrayUtils.updateItemFinal(prevState.dtoOut, original)
-    }));
+  _handleDeleteFail(response) {
     // display alert
     reportError(this.getLsiComponent("deleteFailHeader"), this._decideErrorDescription(response));
   },
@@ -252,17 +177,6 @@ export const Jokes = createReactClass({
       return result;
     });
   },
-
-  _handleLoad(data) {
-    return Calls.jokeList(data).then(data => {
-      this.setAsyncState({
-        loadFeedback: Config.FEEDBACK.READY,
-        dtoOut: data.itemList,
-        errorDtoOut: null
-      });
-      return data;
-    });
-  },
   //@@viewOff:private
 
   //@@viewOn:render
@@ -270,7 +184,7 @@ export const Jokes = createReactClass({
     return (
       <UU5.Bricks.Div {...this.getMainPropsToPass()}>
         <UU5.Common.ListDataManager
-          onLoad={this._handleLoad}
+          onLoad={Calls.jokeList}
           onCreate={Calls.jokeCreate}
           onDelete={Calls.jokeDelete}
           onUpdate={{

@@ -54,113 +54,56 @@ export const CategoryManagement = createReactClass({
   //@@viewOff:overriding
 
   //@@viewOn:private
-  _handleUpdate(data, updateCategory, setAppData) {
+  _handleUpdate(data, updateCategory, setAppData, categories) {
     // set new data (temporally)
-    let original;
-    this.setState(
-      prevState => ({
-        dtoOut: ArrayUtils.updateItemProgress(prevState.dtoOut, data, item => (original = item))
-      }),
-      () => {
-        updateCategory(data.id, data)
-          .then(dtoOut => this._handleUpdateDone(dtoOut, original, setAppData))
-          .catch(response => this._handleUpdateFail(response, original, setAppData));
-      }
-    );
+    updateCategory(data.id, { ...data, inProgress: true })
+      .then(dtoOut => this._handleUpdateDone(dtoOut, setAppData, categories))
+      .catch(response => this._handleUpdateFail(response));
   },
 
-  _handleUpdateDone(dtoOut, original, setAppData) {
-    this.setAsyncState(
-      prevState => ({
-        dtoOut: ArrayUtils.updateItemFinal(prevState.dtoOut, { ...original, ...dtoOut })
-      }),
-      () => this._setAppData(setAppData)
-    );
+  _handleUpdateDone(dtoOut, setAppData, categories) {
+    setAppData({ categories: ArrayUtils.updateItem(categories, dtoOut) });
     // display alert
     reportSuccess(this.getLsiComponent("updateSuccessHeader"));
   },
 
-  _handleUpdateFail(response, original, setAppData) {
-    // set original value
-    this.setAsyncState(
-      prevState => ({
-        dtoOut: ArrayUtils.updateItemFinal(prevState.dtoOut, original)
-      }),
-      () => this._setAppData(setAppData)
-    );
+  _handleUpdateFail(response) {
     // display alert
     reportError(this.getLsiComponent("updateFailHeader"), this._decideErrorDescription(response));
   },
 
-  _handleCreate(data, createCategory, setAppData) {
-    let original;
-    // add new one
-    this.setState(
-      prevState => ({
-        dtoOut: ArrayUtils.addItem(prevState.dtoOut, data, item => (original = item))
-      }),
-      () => {
-        createCategory(data)
-          .then(dtoOut => this._handleCreateDone(dtoOut, original, setAppData))
-          .catch(response => this._handleCreateFail(response, original));
-      }
-    );
+  _handleCreate(data, createCategory, setAppData, categories) {
+    createCategory({ ...data, inProgress: true })
+      .then(dtoOut => this._handleCreateDone(dtoOut, setAppData, categories))
+      .catch(response => this._handleCreateFail(response));
   },
 
-  _handleCreateDone(dtoOut, original, setAppData) {
-    // set id in dtoOut
-    this.setAsyncState(
-      prevState => ({
-        dtoOut: ArrayUtils.updateItemFinal(prevState.dtoOut, { ...original, ...dtoOut })
-      }),
-      () => this._setAppData(setAppData)
-    );
+  _handleCreateDone(dtoOut, setAppData, categories) {
+    setAppData({ categories: ArrayUtils.addItem(categories, dtoOut) });
     // display alert
     reportSuccess(this.getLsiComponent("createSuccessHeader"));
   },
 
-  _handleCreateFail(response, original) {
-    // remove from dtoOut
-    this.setAsyncState(prevState => ({
-      dtoOut: ArrayUtils.removeItem(prevState.dtoOut, original)
-    }));
+  _handleCreateFail(response) {
     // display alert
     reportError(this.getLsiComponent("createFailHeader"), this._decideErrorDescription(response));
   },
 
-  _handleDelete(data, deleteCategory, setAppData) {
-    let original;
+  _handleDelete(data, deleteCategory, setAppData, categories) {
+    let original = data;
     let { forceDelete } = data;
-    delete data.forceDelete; // remove extra key
-    this.setState(
-      prevState => ({
-        dtoOut: ArrayUtils.updateItemProgress(prevState.dtoOut, data, item => (original = item))
-      }),
-      () => {
-        deleteCategory(data.id, forceDelete)
-          .then(dtoOut => this._handleDeleteDone(dtoOut, original))
-          .catch(response => this._handleDeleteFail(response, original, setAppData));
-      }
-    );
+    deleteCategory(data.id, undefined, { forceDelete })
+      .then(dtoOut => this._handleDeleteDone(original, setAppData, categories))
+      .catch(response => this._handleDeleteFail(response));
   },
 
-  _handleDeleteDone(dtoOut, original) {
-    // remove from dataset
-    this.setAsyncState(prevState => ({
-      dtoOut: ArrayUtils.removeItem(prevState.dtoOut, original)
-    }));
+  _handleDeleteDone(original, setAppData, categories) {
+    setAppData({ categories: ArrayUtils.removeItem(categories, original) });
     // display alert
     reportSuccess(this.getLsiComponent("deleteSuccessHeader"));
   },
 
-  _handleDeleteFail(response, original, setAppData) {
-    // set original value
-    this.setAsyncState(
-      prevState => ({
-        dtoOut: ArrayUtils.updateItemFinal(prevState.dtoOut, original)
-      }),
-      () => this._setAppData(setAppData)
-    );
+  _handleDeleteFail(response) {
     // display alert
     reportError(this.getLsiComponent("deleteFailHeader"), this._decideErrorDescription(response));
   },
@@ -180,21 +123,6 @@ export const CategoryManagement = createReactClass({
     }
     return this.getLsiComponent("unexpectedServerError");
   },
-
-  _setAppData(setAppData, callBack) {
-    setAppData({ categories: this.state.dtoOut }, callBack);
-  },
-
-  _handleLoad(data) {
-    return Calls.categoryList(data).then(data => {
-      this.setState({
-        loadFeedback: Config.FEEDBACK.READY,
-        dtoOut: data.itemList,
-        errorDtoOut: null
-      });
-      return data;
-    });
-  },
   //@@viewOff:private
 
   //@@viewOn:render
@@ -202,27 +130,27 @@ export const CategoryManagement = createReactClass({
     return (
       <UU5.Bricks.Div {...this.getMainPropsToPass()}>
         <UU5.Common.ListDataManager
-          onLoad={this._handleLoad}
+          onLoad={Calls.categoryList}
           onCreate={Calls.categoryCreate}
           onDelete={Calls.categoryDelete}
           onUpdate={Calls.categoryUpdate}
         >
-          {({ data, handleCreate, handleDelete, handleUpdate }) => {
-            if (data) {
+          {({ data: listData, handleCreate, handleDelete, handleUpdate }) => {
+            if (listData) {
               return (
                 <SpaContext.Consumer>
-                  {({ setAppData }) => (
+                  {({ setAppData, categories }) => (
                     <CategoryReady
                       {...this.getMainPropsToPass()}
-                      data={data}
+                      data={listData}
                       onCreate={data => {
-                        return this._handleCreate(data, handleCreate, setAppData);
+                        this._handleCreate(data, handleCreate, setAppData, categories);
                       }}
                       onUpdate={data => {
-                        return this._handleUpdate(data, handleUpdate, setAppData);
+                        this._handleUpdate(data, handleUpdate, setAppData, categories);
                       }}
                       onDelete={data => {
-                        return this._handleDelete(data, handleDelete, setAppData);
+                        this._handleDelete(data, handleDelete, setAppData, categories);
                       }}
                     />
                   )}

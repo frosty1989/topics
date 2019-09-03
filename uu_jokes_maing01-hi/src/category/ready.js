@@ -55,8 +55,8 @@ export const Ready = createReactClass({
   //@@viewOn:private
   _tileRenderer(tileProps) {
     const { data, ...props } = tileProps;
-    if (data._inProgress) {
-      //props.disabled = true;
+    if (data.inProgress) {
+      props.disabled = true;
     }
     return <Tile {...props} data={tileProps.data} onDelete={this._handleDelete} onUpdate={this._handleUpdate} />;
   },

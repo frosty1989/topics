@@ -69,8 +69,8 @@ export const Jokes = createReactClass({
   //@@viewOn:private
   _tileRenderer(tileProps) {
     const { data, ...props } = tileProps;
-    if (data._inProgress) {
-      //props.disabled = true; //FIXME
+    if (data.inProgress) {
+      props.disabled = true;
     }
     return (
       <Tile
