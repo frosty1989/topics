@@ -2,7 +2,7 @@
 
 const fs = require("fs");
 const path = require("path");
-const { TestHelper } = require("uu_appg01_workspace-test");
+const { TestHelper } = require("uu_appg01_server-test");
 const { ObjectStoreError } = require("uu_appg01_server").ObjectStore;
 const {
   JOKES_INSTANCE_INIT,
