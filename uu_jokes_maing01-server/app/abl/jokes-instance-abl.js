@@ -1,5 +1,6 @@
 "use strict";
 
+const { LruCache } = require("uu_appg01_server").Utils;
 const { Validator } = require("uu_appg01_server").Validation;
 const { DaoFactory, ObjectStoreError } = require("uu_appg01_server").ObjectStore;
 const { ValidationHelper } = require("uu_appg01_server").AppServer;
@@ -9,7 +10,6 @@ const { BinaryStoreCmdError, UuBinaryErrors, UuBinaryModel: UuBinaryAbl } = requ
 
 const Path = require("path");
 const fs = require("fs");
-const Lru = require("lru-cache");
 const Xml2js = require("xml2js");
 const UnzipHelper = require("../helpers/unzip-helper");
 const StreamHelper = require("../helpers/stream-helper");
@@ -165,7 +165,7 @@ class JokesInstanceAbl {
     this.STATE_UNDER_CONSTRUCTION = STATE_UNDER_CONSTRUCTION;
     this.AUTHORITIES = AUTHORITIES;
     this.EXECUTIVES = EXECUTIVES;
-    this.metaDataCache = new Lru({ maxAge: 60 * 60 * 1000 });
+    this.metaDataCache = new LruCache({ maxAge: 60 * 60 * 1000 });
   }
 
   async init(awid, dtoIn) {
