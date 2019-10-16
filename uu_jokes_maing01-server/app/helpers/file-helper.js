@@ -1,13 +1,9 @@
 "use strict";
-const base64url = require("base64url");
 const fileType = require("file-type");
 
 const IMAGE_MIME_TYPE_PREFIX = "image/";
 
 class FileHelper {
-  getBufferFromBase64UrlImage(imageBase64Url) {
-    return base64url.toBuffer(imageBase64Url);
-  }
 
   validateImageBuffer(buffer) {
     let result = fileType(buffer);

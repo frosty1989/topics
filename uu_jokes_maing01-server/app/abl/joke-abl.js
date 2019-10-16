@@ -1,6 +1,7 @@
 /*eslint-disable no-constant-condition*/
 
 "use strict";
+const { Base64 } = require("uu_appg01_server").Utils;
 const { Validator } = require("uu_appg01_server").Validation;
 const { DaoFactory, ObjectStoreError } = require("uu_appg01_server").ObjectStore;
 const { ValidationHelper } = require("uu_appg01_server").AppServer;
@@ -93,7 +94,7 @@ class JokeAbl {
         dtoIn.image = stream;
       } else {
         //check if the base64 is valid
-        let binaryBuffer = FileHelper.getBufferFromBase64UrlImage(dtoIn.image);
+        let binaryBuffer = Base64.urlSafeDecode(dtoIn.image, "binary");
         if (!FileHelper.validateImageBuffer(binaryBuffer).valid) {
           throw new Errors.Create.InvalidPhotoContentType({ uuAppErrorMap });
         }
