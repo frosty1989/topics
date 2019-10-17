@@ -4,9 +4,9 @@ const { LruCache } = require("uu_appg01_server").Utils;
 const { Validator } = require("uu_appg01_server").Validation;
 const { DaoFactory, ObjectStoreError } = require("uu_appg01_server").ObjectStore;
 const { ValidationHelper } = require("uu_appg01_server").AppServer;
-const SysProfileAbl = require("uu_appg01_server").Workspace.SysProfileModel;
+const { SysProfileAbl } = require("uu_appg01_server").Workspace;
 const { LoggerFactory } = require("uu_appg01_server").Logging;
-const { BinaryStoreCmdError, UuBinaryErrors, UuBinaryModel: UuBinaryAbl } = require("uu_appg01_binarystore-cmd");
+const { BinaryStoreCmdError, UuBinaryErrors, UuBinaryAbl } = require("uu_appg01_binarystore-cmd");
 
 const Path = require("path");
 const fs = require("fs");
@@ -146,7 +146,7 @@ const DEFAULTS = {
   ttl: 3600 * 1000
 };
 
-const logger = LoggerFactory.get("UuJokes.Models.JokesInstanceModel");
+const logger = LoggerFactory.get("UuJokes.abl.JokesInstanceAbl");
 
 const DEFAULT_NAME = "uuJokes";
 const AUTHORITIES = "Authorities";
