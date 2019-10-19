@@ -15,6 +15,7 @@ import CategoryManagement from "../routes/category-management";
 import About from "../routes/about";
 
 import "./spa-ready.less";
+import SpaContext from "./spa-context.js";
 //@@viewOff:imports
 
 export const SpaReady = createReactClass({
@@ -36,22 +37,7 @@ export const SpaReady = createReactClass({
 
   //@@viewOn:propTypes
   propTypes: {
-    calls: PropTypes.object.isRequired,
-    appData: PropTypes.shape({
-      awid: PropTypes.string,
-      state: PropTypes.string,
-      name: PropTypes.string,
-      logos: PropTypes.array,
-      uuIdentity: PropTypes.string,
-      categories: PropTypes.arrayOf(
-        PropTypes.shape({
-          id: PropTypes.string,
-          name: PropTypes.string
-        })
-      ),
-      userProfiles: PropTypes.arrayOf(PropTypes.string),
-      setAppData: PropTypes.func
-    }).isRequired
+    calls: PropTypes.object.isRequired
   },
   //@@viewOff:propTypes
 
@@ -73,29 +59,32 @@ export const SpaReady = createReactClass({
   //@@viewOn:render
   render() {
     return (
-      <Plus4U5.App.Page
-        {...this.getMainPropsToPass()}
-        top={<Plus4U5.App.Top content={this.props.appData.name} />} // TopTitle
-        bottom={<Bottom />}
-        type={1}
-        displayedLanguages={["cs", "en"]}
-        left={<Left appData={this.props.appData} authenticated={true} />}
-        leftWidth="!xs-320px !s-320px !m-256px l-256px xl-256px"
-      >
-        <UU5.Common.Router
-          route=""
-          notFoundRoute="jokes"
-          routes={{
-            jokes: { component: <Jokes calls={this.props.calls} appData={this.props.appData} /> },
-            "": "jokes",
-            categoryManagement: {
-              component: <CategoryManagement calls={this.props.calls} appData={this.props.appData} />
-            },
-            about: { component: <About /> }
-          }}
-          controlled={false}
-        />
-      </Plus4U5.App.Page>
+      <SpaContext.Consumer {...this.getMainPropsToPass()}>
+        {({ name }) => (
+          <Plus4U5.App.Page
+            top={<Plus4U5.App.Top content={name} />} // TopTitle
+            bottom={<Bottom />}
+            type={1}
+            displayedLanguages={["cs", "en"]}
+            left={<Left authenticated={true} />}
+            leftWidth="!xs-320px !s-320px !m-256px l-256px xl-256px"
+          >
+            <UU5.Common.Router
+              route=""
+              notFoundRoute="jokes"
+              routes={{
+                jokes: { component: <Jokes calls={this.props.calls} /> },
+                "": "jokes",
+                categoryManagement: {
+                  component: <CategoryManagement calls={this.props.calls} />
+                },
+                about: { component: <About /> }
+              }}
+              controlled={false}
+            />
+          </Plus4U5.App.Page>
+        )}
+      </SpaContext.Consumer>
     );
   }
   //@@viewOff:render

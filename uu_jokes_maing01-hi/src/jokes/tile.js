@@ -33,7 +33,6 @@ export const Tile = createReactClass({
 
   //@@viewOn:propTypes
   propTypes: {
-    appData: PropTypes.object,
     onDetail: PropTypes.func.isRequired,
     onUpdate: PropTypes.func.isRequired,
     onDelete: PropTypes.func.isRequired,

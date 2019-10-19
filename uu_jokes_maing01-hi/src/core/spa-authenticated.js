@@ -16,11 +16,12 @@ import Authorization from "../helpers/authorization.js";
 
 import "./spa-authenticated.less";
 import LSI from "./spa-authenticated-lsi.js";
+import SpaContext from "./spa-context.js";
 //@@viewOff:imports
 
 const SpaAuthenticated = createReactClass({
   //@@viewOn:mixins
-  mixins: [UU5.Common.BaseMixin, UU5.Common.LoadMixin],
+  mixins: [UU5.Common.BaseMixin],
   //@@viewOff:mixins
 
   //@@viewOn:statics
@@ -44,11 +45,7 @@ const SpaAuthenticated = createReactClass({
 
   //@@viewOn:getDefaultProps
   //@@viewOff:getDefaultProps
-
   //@@viewOn:reactLifeCycle
-  componentWillMount() {
-    this.setCalls(Calls);
-  },
   //@@viewOff:reactLifeCycle
 
   //@@viewOn:interface
@@ -61,27 +58,6 @@ const SpaAuthenticated = createReactClass({
   //@@viewOff:interface
 
   //@@viewOn:overriding
-  onLoadSuccess_(dtoOut, setStateCallback) {
-    // setup authorization service in Environment to access it across the application
-    UU5.Environment.App.authorization = new Authorization(dtoOut.authorizedProfileList, this.props.identity.uuIdentity);
-
-    // transform keys for easier access
-    this.setAsyncState(
-      {
-        loadFeedback: Config.FEEDBACK.READY,
-        awid: dtoOut.awid,
-        state: dtoOut.state,
-        name: dtoOut.name,
-        logos: dtoOut.logos,
-        categories: dtoOut.categoryList,
-        userProfiles: dtoOut.authorizedProfileList,
-        errorDtoOut: null
-      },
-      setStateCallback
-    );
-
-    return this;
-  },
   //@@viewOff:overriding
 
   //@@viewOn:private
@@ -122,31 +98,61 @@ const SpaAuthenticated = createReactClass({
 
     return content;
   },
+
+  _handleLoad(data) {
+    return Calls.loadApp(data).then(data => {
+      // setup authorization service in Environment to access it across the application
+      UU5.Environment.App.authorization = new Authorization(data.authorizedProfileList, this.props.identity.uuIdentity);
+
+      // transform keys for easier access
+      this.setAsyncState({
+        loadFeedback: Config.FEEDBACK.READY,
+        awid: data.awid,
+        state: data.state,
+        name: data.name,
+        logos: data.logos,
+        categories: data.categoryList,
+        userProfiles: data.authorizedProfileList,
+        errorDtoOut: null
+      });
+
+      return data;
+    });
+  },
+
+  _getChild(data) {
+    return (
+      <SpaContext.Provider value={this._buildAppDataContext(data)}>
+        <SpaReady {...this.getMainPropsToPass()} calls={Calls} />;
+      </SpaContext.Provider>
+    );
+  },
   //@@viewOff:private
 
   //@@viewOn:render
   render() {
     let child;
-    switch (this.getLoadFeedback()) {
-      case "ready":
-        child = <SpaReady {...this.getMainPropsToPass()} appData={this._buildAppDataContext()} />;
-        break;
-      case "error":
-        // error
-        child = (
-          <Plus4U5.App.SpaError
-            {...this.getMainPropsToPass()}
-            error={this.state.errorDtoOut}
-            errorData={dig(this.state, "errorDtoOut", "dtoOut", "uuAppErrorMap")}
-            content={this._handleErrorMessage()}
-          />
-        );
-        break;
-      default:
-        // pending
-        child = <Plus4U5.App.SpaLoading {...this.getMainPropsToPass()}>uuJokes</Plus4U5.App.SpaLoading>;
-    }
-    return child;
+    return (
+      <UU5.Common.Loader onLoad={this._handleLoad}>
+        {({ isLoading, isError, data }) => {
+          if (isError) {
+            child = (
+              <Plus4U5.App.SpaError
+                {...this.getMainPropsToPass()}
+                error={this.state.errorDtoOut}
+                errorData={dig(this.state, "errorDtoOut", "dtoOut", "uuAppErrorMap")}
+                content={this._handleErrorMessage()}
+              />
+            );
+          } else if (isLoading) {
+            child = <Plus4U5.App.SpaLoading {...this.getMainPropsToPass()}>uuJokes</Plus4U5.App.SpaLoading>;
+          } else {
+            child = this._getChild(data);
+          }
+          return child;
+        }}
+      </UU5.Common.Loader>
+    );
   }
   //@@viewOff:render
 });

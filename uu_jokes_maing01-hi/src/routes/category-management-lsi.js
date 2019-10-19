@@ -40,6 +40,10 @@ export default {
     en:
       'Category contains jokes. To delete this category you have to check "Delete category assigned to jokes" in the confirm dialog.'
   },
+  categoryNameNotUnique: {
+    cs: "Název kategorie musí být unikátní.",
+    en: "Category name must be unique."
+  },
 
   unexpectedServerError: {
     cs: "Na serveru došlo k neočekávané chybě.",

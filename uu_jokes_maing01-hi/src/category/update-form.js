@@ -8,8 +8,8 @@ import "uu5g04-forms";
 
 import Config from "./config/config.js";
 
-import "./form.less";
-import LSI from "./form-lsi.js";
+import "./update-form.less";
+import LSI from "./update-form-lsi.js";
 //@@viewOff:imports
 
 export const Form = createReactClass({
@@ -19,18 +19,15 @@ export const Form = createReactClass({
 
   //@@viewOn:statics
   statics: {
-    tagName: Config.TAG + "Form",
+    tagName: Config.TAG + "UpdateForm",
     classNames: {
-      main: Config.CSS + "form"
+      main: Config.CSS + "UpdateForm"
     },
     lsi: LSI
   },
   //@@viewOff:statics
 
   //@@viewOn:propTypes
-  propTypes: {
-    appData: PropTypes.object
-  },
   //@@viewOff:propTypes
 
   //@@viewOn:getDefaultProps
