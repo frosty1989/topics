@@ -30,9 +30,6 @@ const SpaAuthenticated = createReactClass({
     classNames: {
       main: Config.CSS + "spaauthenticated"
     },
-    calls: {
-      onLoad: "loadApp"
-    },
     lsi: LSI
   },
   //@@viewOff:statics
@@ -123,7 +120,7 @@ const SpaAuthenticated = createReactClass({
   _getChild(data) {
     return (
       <SpaContext.Provider value={this._buildAppDataContext(data)}>
-        <SpaReady {...this.getMainPropsToPass()} calls={Calls} />;
+        <SpaReady {...this.getMainPropsToPass()} />;
       </SpaContext.Provider>
     );
   },
