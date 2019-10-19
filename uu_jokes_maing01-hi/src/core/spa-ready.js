@@ -14,7 +14,7 @@ import CategoryManagement from "../routes/category-management";
 import About from "../routes/about";
 
 import "./spa-ready.less";
-import SpaContext from "./spa-context.js";
+import JokesContext from "./jokes-context.js";
 //@@viewOff:imports
 
 export const SpaReady = createReactClass({
@@ -55,7 +55,7 @@ export const SpaReady = createReactClass({
   //@@viewOn:render
   render() {
     return (
-      <SpaContext.Consumer {...this.getMainPropsToPass()}>
+      <JokesContext.Consumer {...this.getMainPropsToPass()}>
         {({ name }) => (
           <Plus4U5.App.Page
             top={<Plus4U5.App.Top content={name} />} // TopTitle
@@ -80,7 +80,7 @@ export const SpaReady = createReactClass({
             />
           </Plus4U5.App.Page>
         )}
-      </SpaContext.Consumer>
+      </JokesContext.Consumer>
     );
   }
   //@@viewOff:render

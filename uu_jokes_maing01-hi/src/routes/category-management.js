@@ -1,7 +1,6 @@
 //@@viewOn:imports
 import React from "react";
 import createReactClass from "create-react-class";
-import PropTypes from "prop-types";
 import * as UU5 from "uu5g04";
 import "uu5g04-bricks";
 
@@ -13,9 +12,7 @@ import { reportError, reportSuccess } from "../helpers/alert-helper";
 
 import "./category-management.less";
 import LSI from "./category-management-lsi.js";
-import JokesReady from "../jokes/ready";
-import { dig } from "../helpers/object-utils";
-import SpaContext from "../core/spa-context.js";
+import JokesContext from "../core/jokes-context.js";
 //@@viewOff:imports
 
 export const CategoryManagement = createReactClass({
@@ -93,7 +90,7 @@ export const CategoryManagement = createReactClass({
     let original = data;
     let { forceDelete } = data;
     deleteCategory(data.id, undefined, { forceDelete })
-      .then(dtoOut => this._handleDeleteDone(original, setAppData, categories))
+      .then(() => this._handleDeleteDone(original, setAppData, categories))
       .catch(response => this._handleDeleteFail(response));
   },
 
@@ -138,7 +135,7 @@ export const CategoryManagement = createReactClass({
           {({ data: listData, handleCreate, handleDelete, handleUpdate }) => {
             if (listData) {
               return (
-                <SpaContext.Consumer>
+                <JokesContext.Consumer>
                   {({ setAppData, categories }) => (
                     <CategoryReady
                       {...this.getMainPropsToPass()}
@@ -154,7 +151,7 @@ export const CategoryManagement = createReactClass({
                       }}
                     />
                   )}
-                </SpaContext.Consumer>
+                </JokesContext.Consumer>
               );
             } else {
               return <UU5.Bricks.Loading />;

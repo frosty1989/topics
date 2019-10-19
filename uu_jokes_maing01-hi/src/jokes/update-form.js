@@ -8,7 +8,7 @@ import "uu5g04-forms";
 
 import Config from "./config/config.js";
 
-import SpaContext from "../core/spa-context.js";
+import JokesContext from "../core/jokes-context.js";
 import "./update-form.less";
 import LSI from "./update-form-lsi.js";
 //@@viewOff:imports
@@ -80,7 +80,7 @@ export const Form = createReactClass({
   //@@viewOn:render
   render() {
     return (
-      <SpaContext.Consumer>
+      <JokesContext.Consumer>
         {({ categories }) => (
           <UU5.Bricks.Div {...this.getMainPropsToPass()}>
             {/* // Name */}
@@ -106,7 +106,7 @@ export const Form = createReactClass({
             </UU5.Forms.Select>
           </UU5.Bricks.Div>
         )}
-      </SpaContext.Consumer>
+      </JokesContext.Consumer>
     );
   }
   //@@viewOff:render

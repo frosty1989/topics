@@ -16,7 +16,7 @@ import UpdateForm from "./update-form.js";
 import Detail from "./detail.js";
 import { removeRouteParameters, setRouteParameters } from "../helpers/history-helper.js";
 
-import SpaContext from "../core/spa-context.js";
+import JokesContext from "../core/jokes-context.js";
 import "./ready.less";
 import LSI from "./ready-lsi.js";
 //@@viewOff:imports
@@ -238,7 +238,7 @@ export const Jokes = createReactClass({
   //@@viewOn:render
   render() {
     return (
-      <SpaContext.Consumer>
+      <JokesContext.Consumer>
         {({ uuIdentity }) => (
           <UU5.Bricks.Div {...this.getMainPropsToPass()}>
             <TileList
@@ -257,7 +257,7 @@ export const Jokes = createReactClass({
             <UU5.Bricks.Modal ref_={this._registerModal} />
           </UU5.Bricks.Div>
         )}
-      </SpaContext.Consumer>
+      </JokesContext.Consumer>
     );
   }
   //@@viewOff:render

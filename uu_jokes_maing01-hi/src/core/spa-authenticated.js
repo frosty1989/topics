@@ -16,7 +16,7 @@ import Authorization from "../helpers/authorization.js";
 
 import "./spa-authenticated.less";
 import LSI from "./spa-authenticated-lsi.js";
-import SpaContext from "./spa-context.js";
+import JokesContext from "./jokes-context.js";
 //@@viewOff:imports
 
 const SpaAuthenticated = createReactClass({
@@ -119,9 +119,9 @@ const SpaAuthenticated = createReactClass({
 
   _getChild(data) {
     return (
-      <SpaContext.Provider value={this._buildAppDataContext(data)}>
+      <JokesContext.Provider value={this._buildAppDataContext(data)}>
         <SpaReady {...this.getMainPropsToPass()} />;
-      </SpaContext.Provider>
+      </JokesContext.Provider>
     );
   },
   //@@viewOff:private
