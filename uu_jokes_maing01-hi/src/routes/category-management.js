@@ -135,18 +135,18 @@ export const CategoryManagement = UU5.Common.VisualComponent.create({
             if (listData) {
               return (
                 <JokesConsumer>
-                  {({ setAppData, categoryList }) => (
+                  {({ setData, categoryList }) => (
                     <CategoryReady
                       {...this.getMainPropsToPass()}
                       data={listData}
                       onCreate={data => {
-                        this._handleCreate(data, handleCreate, setAppData, categoryList);
+                        this._handleCreate(data, handleCreate, setData, categoryList);
                       }}
                       onUpdate={data => {
-                        this._handleUpdate(data, handleUpdate, setAppData, categoryList);
+                        this._handleUpdate(data, handleUpdate, setData, categoryList);
                       }}
                       onDelete={data => {
-                        this._handleDelete(data, handleDelete, setAppData, categoryList);
+                        this._handleDelete(data, handleDelete, setData, categoryList);
                       }}
                     />
                   )}

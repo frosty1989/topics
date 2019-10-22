@@ -5,7 +5,6 @@ import Plus4U5 from "uu_plus4u5g01";
 import "uu_plus4u5g01-app";
 
 import Config from "./config/config.js";
-import { whitelistedKeys } from "../helpers/object-utils.js";
 import SpaReady from "./spa-ready.js";
 import Calls from "calls";
 import { dig } from "../helpers/object-utils";
@@ -40,12 +39,6 @@ const SpaAuthenticated = UU5.Common.VisualComponent.create({
   //@@viewOff:reactLifeCycle
 
   //@@viewOn:interface
-  setAppData(appData, setStateCallback) {
-    // filter out keys, no possibility to set awid or userProfiles
-    let newData = whitelistedKeys(appData, "state", "name", "categoryList", "logos");
-    this._provider.setData(newData, setStateCallback);
-    return this;
-  },
   //@@viewOff:interface
 
   //@@viewOn:overriding
@@ -59,8 +52,7 @@ const SpaAuthenticated = UU5.Common.VisualComponent.create({
       name: data.name,
       logos: data.logos,
       categoryList: data.categoryList,
-      userProfiles: data.userProfiles,
-      setAppData: this.setAppData
+      userProfiles: data.userProfiles
     };
   },
 
