@@ -55,7 +55,7 @@ const Spa = createReactClass({
           {({ identity }) => {
             let child;
             if (identity) {
-              child = <SpaAuthenticated {...this.getMainPropsToPass()} identity={identity} />;
+              child = <SpaAuthenticated {...this.getMainPropsToPass()} />;
             } else if (identity === null) {
               child = <SpaNotAuthenticated {...this.getMainPropsToPass()} />;
             } else {

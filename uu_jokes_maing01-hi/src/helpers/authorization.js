@@ -3,9 +3,8 @@ import Config from "../config/config.js";
 
 // helper class to handle basic authorization with cached values
 export default class {
-  constructor(userProfiles, uuIdentity) {
+  constructor(userProfiles) {
     this.userProfiles = userProfiles;
-    this.uuIdentity = uuIdentity;
     // precalculate rights ... once
     this._isInAuthoritiesProfile = UU5.Common.Tools.hasProfile(this.userProfiles, Config.PROFILES.AUTHORITIES);
     this._isInExecutivesProfile = UU5.Common.Tools.hasProfile(this.userProfiles, Config.PROFILES.EXECUTIVES);
@@ -43,7 +42,4 @@ export default class {
     return this._isInExecutivesProfile;
   }
 
-  isOwner(record) {
-    return this.uuIdentity === record.uuIdentity;
-  }
 }

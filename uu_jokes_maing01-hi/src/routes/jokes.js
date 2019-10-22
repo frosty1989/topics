@@ -1,7 +1,6 @@
 //@@viewOn:imports
 import React from "react";
 import createReactClass from "create-react-class";
-import PropTypes from "prop-types";
 import * as UU5 from "uu5g04";
 import "uu5g04-bricks";
 import "uu5tilesg01";
@@ -9,9 +8,8 @@ import Calls from "calls";
 
 import Config from "./config/config.js";
 import JokesReady from "../jokes/ready.js";
-import ArrayUtils from "../helpers/array-utils";
-import { dig } from "../helpers/object-utils.js";
-import { reportSuccess, reportError } from "../helpers/alert-helper";
+import {dig} from "../helpers/object-utils.js";
+import {reportSuccess, reportError} from "../helpers/alert-helper";
 
 import "./jokes.less";
 import LSI from "./jokes-lsi.js";
@@ -55,7 +53,7 @@ export const Jokes = createReactClass({
   //@@viewOn:private
   _handleUpdate(data, updateJoke) {
     // set new data (temporally)
-    updateJoke(data.id, { ...data, inProgress: true }, undefined, null, "updateJoke")
+    updateJoke(data.id, {...data, inProgress: true}, undefined, null, "updateJoke")
       .then(() => this._handleUpdateDone())
       .catch(response => this._handleUpdateFail(response));
   },
@@ -72,10 +70,10 @@ export const Jokes = createReactClass({
 
   _handleRate(data, updateRating) {
     // set new data (temporally)
-    let { newRate } = data;
+    let {newRate} = data;
     delete data.newRate;
 
-    updateRating(data.id, { id: data.id, rating: newRate, inProgress: true }, undefined, null, "updateJokeRating")
+    updateRating(data.id, {id: data.id, rating: newRate, inProgress: true}, undefined, null, "updateJokeRating")
       .then(() => this._handleRateDone())
       .catch(response => this._handleRateFail(response));
   },
@@ -93,7 +91,7 @@ export const Jokes = createReactClass({
   _handleUpdateVisibility(data, updateVisibility) {
     let original = data.visibility;
     // set new data (temporally)
-    updateVisibility(data.id, { ...data, inProgress: true }, undefined, null, "updateJokeVisibility")
+    updateVisibility(data.id, {...data, inProgress: true}, undefined, null, "updateJokeVisibility")
       .then(dtoOut => this._handleUpdateVisibilityDone(dtoOut))
       .catch(response => this._handleUpdateVisibilityFail(response, original));
   },
@@ -112,7 +110,7 @@ export const Jokes = createReactClass({
 
   _handleCreate(data, createJoke) {
     // add new one
-    createJoke({ ...data, inProgress: true })
+    createJoke({...data, inProgress: true})
       .then(() => this._handleCreateDone())
       .catch(response => this._handleCreateFail(response));
   },
@@ -160,7 +158,7 @@ export const Jokes = createReactClass({
     return this.getLsiComponent("unexpectedServerError");
   },
 
-  _filterOutVisibility(jokes) {
+  _filterOutVisibility(jokes, identity) {
     let canSeeAllUnpublished = UU5.Environment.App.authorization.canSeeAllUnpublished();
     let canSeeUnpublished = UU5.Environment.App.authorization.canSeeUnpublished();
 
@@ -169,7 +167,7 @@ export const Jokes = createReactClass({
 
       if (canSeeAllUnpublished) {
         result = true;
-      } else if (canSeeUnpublished && UU5.Environment.App.authorization.isOwner(joke)) {
+      } else if (canSeeUnpublished && joke.uuIdentity === identity) {
         result = true;
       } else {
         result = joke.visibility;
@@ -193,31 +191,35 @@ export const Jokes = createReactClass({
             updateJoke: Calls.updateJoke
           }}
         >
-          {({ data, handleCreate, handleUpdate, handleDelete }) => {
+          {({data, handleCreate, handleUpdate, handleDelete}) => {
             if (data) {
               return (
-                <JokesReady
-                  data={this._filterOutVisibility(data)}
-                  detailId={dig(this.props, "params", "id")}
-                  onCreate={data => {
-                    return this._handleCreate(data, handleCreate);
-                  }}
-                  onUpdate={data => {
-                    return this._handleUpdate(data, handleUpdate);
-                  }}
-                  onRate={data => {
-                    return this._handleRate(data, handleUpdate);
-                  }}
-                  onDelete={data => {
-                    return this._handleDelete(data, handleDelete);
-                  }}
-                  onUpdateVisibility={data => {
-                    return this._handleUpdateVisibility(data, handleUpdate);
-                  }}
-                />
+                <UU5.Common.Identity>
+                  {({identity}) =>
+                    <JokesReady
+                      data={this._filterOutVisibility(data, identity)}
+                      detailId={dig(this.props, "params", "id")}
+                      onCreate={data => {
+                        return this._handleCreate(data, handleCreate);
+                      }}
+                      onUpdate={data => {
+                        return this._handleUpdate(data, handleUpdate);
+                      }}
+                      onRate={data => {
+                        return this._handleRate(data, handleUpdate);
+                      }}
+                      onDelete={data => {
+                        return this._handleDelete(data, handleDelete);
+                      }}
+                      onUpdateVisibility={data => {
+                        return this._handleUpdateVisibility(data, handleUpdate);
+                      }}
+                    />
+                  }
+                </UU5.Common.Identity>
               );
             } else {
-              return <UU5.Bricks.Loading />;
+              return <UU5.Bricks.Loading/>;
             }
           }}
         </UU5.Common.ListDataManager>

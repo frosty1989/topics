@@ -46,7 +46,7 @@ const JokesProvider = createReactClass({
 
   //@@viewOn:interface
   setData(data, setStateCallback){
-    let newData = UU5.Common.Tools.mergeDeep({}, this.state.data, data);
+    let newData = UU5.Common.Tools.merge(this.state.data, data);
     this.setState({data: newData}, setStateCallback);
   },
   //@@viewOff:interface

@@ -1,7 +1,6 @@
 //@@viewOn:imports
 import React from "react";
 import createReactClass from "create-react-class";
-import PropTypes from "prop-types";
 import * as UU5 from "uu5g04";
 import "uu5g04-bricks";
 import * as Plus4U5 from "uu_plus4u5g01";
@@ -35,9 +34,6 @@ const SpaAuthenticated = createReactClass({
   //@@viewOff:statics
 
   //@@viewOn:propTypes
-  propTypes: {
-    identity: PropTypes.object
-  },
   //@@viewOff:propTypes
 
   //@@viewOn:getDefaultProps
@@ -98,7 +94,7 @@ const SpaAuthenticated = createReactClass({
   _handleLoad(data) {
     return Calls.loadApp(data).then(data => {
       // setup authorization service in Environment to access it across the application
-      UU5.Environment.App.authorization = new Authorization(data.authorizedProfileList, this.props.identity.uuIdentity);
+      UU5.Environment.App.authorization = new Authorization(data.authorizedProfileList);
       return data;
     });
   },
