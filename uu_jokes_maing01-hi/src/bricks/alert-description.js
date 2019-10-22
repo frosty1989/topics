@@ -1,7 +1,6 @@
 //@@viewOn:imports
 import React from "react";
-import createReactClass from "create-react-class";
-import * as UU5 from "uu5g04";
+import UU5 from "uu5g04";
 import "uu5g04-bricks";
 
 import Config from "./config/config.js";
@@ -9,7 +8,7 @@ import Config from "./config/config.js";
 import "./alert-description.less";
 //@@viewOff:imports
 
-export const AlertDescription = createReactClass({
+export const AlertDescription = UU5.Common.VisualComponent.create({
   //@@viewOn:mixins
   mixins: [UU5.Common.BaseMixin, UU5.Common.SectionMixin],
   //@@viewOff:mixins

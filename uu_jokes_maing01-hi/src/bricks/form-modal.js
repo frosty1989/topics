@@ -1,8 +1,6 @@
 //@@viewOn:imports
 import React from "react";
-import createReactClass from "create-react-class";
-import PropTypes from "prop-types";
-import * as UU5 from "uu5g04";
+import UU5 from "uu5g04";
 import "uu5g04-bricks";
 import "uu5g04-forms";
 
@@ -11,7 +9,7 @@ import Config from "./config/config.js";
 import "./form-modal.less";
 //@@viewOff:imports
 
-export const FormModal = createReactClass({
+export const FormModal = UU5.Common.VisualComponent.create({
   //@@viewOn:mixins
   mixins: [UU5.Common.BaseMixin],
   //@@viewOff:mixins

@@ -1,9 +1,7 @@
 //@@viewOn:imports
 import React from "react";
-import createReactClass from "create-react-class";
-import * as UU5 from "uu5g04";
-import "uu5g04-bricks";
-import * as Plus4U5 from "uu_plus4u5g01";
+import UU5 from "uu5g04";
+import Plus4U5 from "uu_plus4u5g01";
 import "uu_plus4u5g01-app";
 
 import Config from "./config/config.js";
@@ -17,7 +15,7 @@ import "./spa-ready.less";
 import {JokesConsumer} from "./jokes-provider.js";
 //@@viewOff:imports
 
-export const SpaReady = createReactClass({
+export const SpaReady = UU5.Common.VisualComponent.create({
   //@@viewOn:mixins
   mixins: [UU5.Common.BaseMixin, UU5.Common.PureRenderMixin],
   //@@viewOff:mixins

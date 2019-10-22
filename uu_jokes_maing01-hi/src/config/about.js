@@ -1,5 +1,4 @@
-import React from "react";
-import * as UU5 from "uu5g04";
+import UU5 from "uu5g04";
 
 export const About = {
   licence: {

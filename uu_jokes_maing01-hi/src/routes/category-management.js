@@ -1,7 +1,6 @@
 //@@viewOn:imports
 import React from "react";
-import createReactClass from "create-react-class";
-import * as UU5 from "uu5g04";
+import UU5 from "uu5g04";
 import "uu5g04-bricks";
 
 import Calls from "calls";
@@ -16,7 +15,7 @@ import LSI from "./category-management-lsi.js";
 
 //@@viewOff:imports
 
-export const CategoryManagement = createReactClass({
+export const CategoryManagement = UU5.Common.VisualComponent.create({
   //@@viewOn:mixins
   mixins: [UU5.Common.BaseMixin, UU5.Common.RouteMixin, UU5.Common.CcrReaderMixin],
   //@@viewOff:mixins

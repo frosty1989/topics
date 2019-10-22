@@ -1,8 +1,7 @@
 //@@viewOn:imports
 import React from "react";
 import PropTypes from "prop-types";
-import createReactClass from "create-react-class";
-import * as UU5 from "uu5g04";
+import UU5 from "uu5g04";
 import "uu5g04-bricks";
 
 import Config from "./config/config.js";
@@ -12,7 +11,7 @@ import { ensureClosedMenu } from "../helpers/menu-helper";
 import "./left-link.less";
 //@@viewOff:imports
 
-const LeftLink = createReactClass({
+const LeftLink = UU5.Common.VisualComponent.create({
   //@@viewOn:mixins
   mixins: [UU5.Common.BaseMixin, UU5.Common.ElementaryMixin],
   //@@viewOff:mixins

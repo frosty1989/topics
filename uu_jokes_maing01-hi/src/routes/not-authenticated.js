@@ -1,7 +1,6 @@
 //@@viewOn:imports
 import React from "react";
-import createReactClass from "create-react-class";
-import * as UU5 from "uu5g04";
+import UU5 from "uu5g04";
 import "uu5g04-bricks";
 import Plus4U5 from "uu_plus4u5g01";
 
@@ -11,7 +10,7 @@ import "./not-authenticated.less";
 import LSI from "./not-authenticated-lsi.js";
 //@@viewOff:imports
 
-const NotAuthenticated = createReactClass({
+const NotAuthenticated = UU5.Common.VisualComponent.create({
   //@@viewOn:mixins
   mixins: [UU5.Common.BaseMixin, UU5.Common.RouteMixin, UU5.Common.CcrReaderMixin],
   //@@viewOff:mixins

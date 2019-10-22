@@ -1,7 +1,6 @@
 //@@viewOn:imports
 import React from "react";
-import createReactClass from "create-react-class";
-import * as UU5 from "uu5g04";
+import UU5 from "uu5g04";
 import "uu5g04-bricks";
 import Plus4U5 from "uu_plus4u5g01";
 import "uu_plus4u5g01-bricks";
@@ -15,7 +14,7 @@ import SpaNotAuthenticated from "./spa-not-authenticated.js";
 import "./spa.less";
 //@@viewOff:imports
 
-const Spa = createReactClass({
+const Spa = UU5.Common.VisualComponent.create({
   //@@viewOn:mixins
   mixins: [UU5.Common.BaseMixin],
   //@@viewOff:mixins

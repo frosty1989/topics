@@ -1,8 +1,7 @@
 //@@viewOn:imports
 import React from "react";
-import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
-import * as UU5 from "uu5g04";
+import UU5 from "uu5g04";
 import "uu5g04-bricks";
 
 import Config from "./config/config.js";
@@ -10,7 +9,7 @@ import Config from "./config/config.js";
 import "./tile.less";
 //@@viewOff:imports
 
-export const Tile = createReactClass({
+export const Tile = UU5.Common.VisualComponent.create({
   //@@viewOn:mixins
   mixins: [UU5.Common.BaseMixin, UU5.Common.ElementaryMixin, UU5.Common.PureRenderMixin],
   //@@viewOff:mixins

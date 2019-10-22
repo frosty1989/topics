@@ -1,5 +1,4 @@
 import React from "react";
-import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 import UU5 from "uu5g04";
 
@@ -9,8 +8,7 @@ const JokesContext = UU5.Common.Context.create();
 const JokesConsumer = JokesContext.Consumer;
 
 
-const JokesProvider = createReactClass({
-
+const JokesProvider = UU5.Common.Component.create({
 
   //@@viewOn:statics
   statics: {

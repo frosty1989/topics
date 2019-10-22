@@ -1,8 +1,7 @@
 //@@viewOn:imports
 import React from "react";
-import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
-import * as UU5 from "uu5g04";
+import UU5 from "uu5g04";
 import "uu5g04-bricks";
 
 import Config from "./config/config.js";
@@ -14,7 +13,7 @@ import "./detail.less";
 import LSI from "./detail-lsi.js";
 //@@viewOff:imports
 
-export const Detail = createReactClass({
+export const Detail = UU5.Common.VisualComponent.create({
   //@@viewOn:mixins
   mixins: [UU5.Common.BaseMixin],
   //@@viewOff:mixins

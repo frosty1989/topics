@@ -1,8 +1,7 @@
 //@@viewOn:imports
 import React from "react";
-import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
-import * as UU5 from "uu5g04";
+import UU5 from "uu5g04";
 import "uu5g04-bricks";
 import "uu5tilesg01";
 
@@ -20,7 +19,7 @@ import "./ready.less";
 import LSI from "./ready-lsi.js";
 //@@viewOff:imports
 
-export const Jokes = createReactClass({
+export const Jokes = UU5.Common.VisualComponent.create({
   //@@viewOn:mixins
   mixins: [UU5.Common.BaseMixin],
   //@@viewOff:mixins
