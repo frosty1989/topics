@@ -1,5 +1,3 @@
-import React from "react";
-import ReactDOM from "react-dom";
 import { AppContainer } from "react-hot-loader";
 import * as UU5 from "uu5g04";
 
@@ -24,7 +22,7 @@ let _targetElementId;
 export function render(targetElementId) {
   _targetElementId = targetElementId;
 
-  ReactDOM.render(
+  UU5.Common.DOM.render(
     <AppContainer>
       <Spa />
     </AppContainer>,

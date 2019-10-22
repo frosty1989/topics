@@ -1,6 +1,4 @@
 //@@viewOn:imports
-import React from "react";
-import PropTypes from "prop-types";
 import UU5 from "uu5g04";
 import "uu5g04-bricks";
 import Config from "./config/config.js";
@@ -32,11 +30,11 @@ export const Checkbox = UU5.Common.VisualComponent.create({
 
   //@@viewOn:propTypes
   propTypes: {
-    addFilter: PropTypes.func.isRequired,
-    getValues: PropTypes.func.isRequired,
-    type: PropTypes.string.isRequired,
-    filters: PropTypes.array.isRequired,
-    values: PropTypes.any
+    addFilter: UU5.PropTypes.func.isRequired,
+    getValues: UU5.PropTypes.func.isRequired,
+    type: UU5.PropTypes.string.isRequired,
+    filters: UU5.PropTypes.array.isRequired,
+    values: UU5.PropTypes.any
   },
   //@@viewOff:propTypes
 

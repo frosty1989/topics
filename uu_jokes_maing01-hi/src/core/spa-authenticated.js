@@ -1,5 +1,4 @@
 //@@viewOn:imports
-import React from "react";
 import UU5 from "uu5g04";
 import "uu5g04-bricks";
 import Plus4U5 from "uu_plus4u5g01";
@@ -65,14 +64,14 @@ const SpaAuthenticated = UU5.Common.VisualComponent.create({
     };
   },
 
-  _handleErrorMessage() {
+  _handleErrorMessage(data) {
     let content; // default message
-    let errorCode = dig(this.state, "errorDtoOut", "code");
+    let errorCode = data.code;
 
     switch (errorCode) {
       case Config.ERROR_CODES.LOAD_INSTANCE_CLOSED:
       case Config.ERROR_CODES.LOAD_INSTANCE_UNDER_CONSTRUCTION:
-        let appState = dig(this.state, "errorDtoOut", "paramMap", "state");
+        let appState = dig(data, "paramMap", "state");
         switch (appState) {
           case Config.STATES.CLOSED:
             content = this.getLsiComponent("closed");
@@ -87,6 +86,7 @@ const SpaAuthenticated = UU5.Common.VisualComponent.create({
         break;
     }
 
+    console.log(content);
     return content;
   },
 
@@ -117,9 +117,9 @@ const SpaAuthenticated = UU5.Common.VisualComponent.create({
             child = (
               <Plus4U5.App.SpaError
                 {...this.getMainPropsToPass()}
-                error={this.state.errorDtoOut}
-                errorData={dig(this.state, "errorDtoOut", "dtoOut", "uuAppErrorMap")}
-                content={this._handleErrorMessage()}
+                error={data.dtoOut}
+                errorData={dig(data, "dtoOut", "uuAppErrorMap")}
+                content={this._handleErrorMessage(data)}
               />
             );
           } else if (isLoading) {

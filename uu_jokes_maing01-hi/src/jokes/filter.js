@@ -1,6 +1,4 @@
 //@@viewOn:imports
-import React from "react";
-import PropTypes from "prop-types";
 import UU5 from "uu5g04";
 import "uu5g04-bricks";
 import "uu5g04-forms";
@@ -36,17 +34,17 @@ export const Filter = UU5.Common.VisualComponent.create({
 
   //@@viewOn:propTypes
   propTypes: {
-    appliedFilters: PropTypes.object,
-    filters: PropTypes.arrayOf(
-      PropTypes.shape({
-        key: PropTypes.string,
-        label: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
-        filterFn: PropTypes.func
+    appliedFilters: UU5.PropTypes.object,
+    filters: UU5.PropTypes.arrayOf(
+      UU5.PropTypes.shape({
+        key: UU5.PropTypes.string,
+        label: UU5.PropTypes.oneOfType([UU5.PropTypes.string, UU5.PropTypes.object]),
+        filterFn: UU5.PropTypes.func
       })
     ),
-    addFilter: PropTypes.func,
-    removeFilter: PropTypes.func,
-    filterBar: PropTypes.object
+    addFilter: UU5.PropTypes.func,
+    removeFilter: UU5.PropTypes.func,
+    filterBar: UU5.PropTypes.object
   },
   //@@viewOff:propTypes
 

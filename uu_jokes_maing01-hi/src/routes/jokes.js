@@ -1,5 +1,4 @@
 //@@viewOn:imports
-import React from "react";
 import UU5 from "uu5g04";
 import "uu5g04-bricks";
 import "uu5tilesg01";

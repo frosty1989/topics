@@ -1,5 +1,3 @@
-import React from "react";
-import PropTypes from "prop-types";
 import UU5 from "uu5g04";
 
 import Config from "./config/config.js";
@@ -18,7 +16,7 @@ const JokesProvider = UU5.Common.Component.create({
 
   //@@viewOn:propTypes
   propTypes: {
-    data: PropTypes.object
+    data: UU5.PropTypes.object
   },
   //@@viewOff:propTypes
 

@@ -1,4 +1,3 @@
-import * as UU5 from "uu5g04";
 import { ensureFunction } from "./functions-helper.js";
 
 function isSameItem(itemA, itemB) {

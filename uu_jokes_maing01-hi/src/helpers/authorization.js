@@ -1,4 +1,4 @@
-import * as UU5 from "uu5g04";
+import UU5 from "uu5g04";
 import Config from "../config/config.js";
 
 // helper class to handle basic authorization with cached values

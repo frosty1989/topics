@@ -1,5 +1,4 @@
 //@viewOn:imports
-import React from "react";
 import UU5 from "uu5g04";
 
 import Config from "./config/config.js";

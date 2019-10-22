@@ -1,6 +1,4 @@
 //@@viewOn:imports
-import React from "react";
-import PropTypes from "prop-types";
 import UU5 from "uu5g04";
 import "uu5g04-bricks";
 
@@ -32,9 +30,9 @@ export const Tile = UU5.Common.VisualComponent.create({
 
   //@@viewOn:propTypes
   propTypes: {
-    onUpdate: PropTypes.func.isRequired,
-    onDelete: PropTypes.func.isRequired,
-    data: PropTypes.object.isRequired
+    onUpdate: UU5.PropTypes.func.isRequired,
+    onDelete: UU5.PropTypes.func.isRequired,
+    data: UU5.PropTypes.object.isRequired
   },
   //@@viewOff:propTypes
 

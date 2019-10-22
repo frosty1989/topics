@@ -1,6 +1,4 @@
 //@@viewOn:imports
-import React from "react";
-import PropTypes from "prop-types";
 import UU5 from "uu5g04";
 import "uu5g04-bricks";
 import Config from "./config/config.js";
@@ -36,10 +34,10 @@ export const Rating = UU5.Common.VisualComponent.create({
 
   //@@viewOn:propTypes
   propTypes: {
-    addFilter: PropTypes.func.isRequired,
-    getValues: PropTypes.func.isRequired,
-    filters: PropTypes.array.isRequired,
-    values: PropTypes.object
+    addFilter: UU5.PropTypes.func.isRequired,
+    getValues: UU5.PropTypes.func.isRequired,
+    filters: UU5.PropTypes.array.isRequired,
+    values: UU5.PropTypes.object
   },
   //@@viewOff:propTypes
 

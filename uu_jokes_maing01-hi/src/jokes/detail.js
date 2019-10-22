@@ -1,12 +1,10 @@
 //@@viewOn:imports
-import React from "react";
-import PropTypes from "prop-types";
 import UU5 from "uu5g04";
 import "uu5g04-bricks";
 
 import Config from "./config/config.js";
 import Uri from "../helpers/uri-helpers.js";
-import { nl2br } from "../helpers/string-helper";
+import {nl2br} from "../helpers/string-helper";
 
 import {JokesConsumer} from "../core/jokes-provider.js";
 import "./detail.less";
@@ -32,16 +30,16 @@ export const Detail = UU5.Common.VisualComponent.create({
 
   //@@viewOn:propTypes
   propTypes: {
-    data: PropTypes.shape({
-      id: PropTypes.string,
-      name: PropTypes.string,
-      text: PropTypes.string,
-      averageRating: PropTypes.any,
-      ratingCount: PropTypes.any,
-      visibility: PropTypes.boolean,
-      uuIdentityName: PropTypes.string,
-      categoryList: PropTypes.array,
-      image: PropTypes.string
+    data: UU5.PropTypes.shape({
+      id: UU5.PropTypes.string,
+      name: UU5.PropTypes.string,
+      text: UU5.PropTypes.string,
+      averageRating: UU5.PropTypes.any,
+      ratingCount: UU5.PropTypes.any,
+      visibility: UU5.PropTypes.boolean,
+      uuIdentityName: UU5.PropTypes.string,
+      categoryList: UU5.PropTypes.array,
+      image: UU5.PropTypes.string
     })
   },
   //@@viewOff:propTypes

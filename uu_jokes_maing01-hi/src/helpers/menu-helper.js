@@ -1,4 +1,4 @@
-import * as UU5 from "uu5g04";
+import UU5 from "uu5g04";
 
 // affected screens are based on UU5.Bricks.Page leftWidth property
 // all screens widths starting with ! for closed menu

@@ -1,6 +1,4 @@
 //@@viewOn:imports
-import React from "react";
-import PropTypes from "prop-types";
 import UU5 from "uu5g04";
 import "uu5g04-bricks";
 
@@ -33,9 +31,9 @@ export const Ready = UU5.Common.VisualComponent.create({
 
   //@@viewOn:propTypes
   propTypes: {
-    onCreate: PropTypes.func.isRequired,
-    onUpdate: PropTypes.func.isRequired,
-    onDelete: PropTypes.func.isRequired
+    onCreate: UU5.PropTypes.func.isRequired,
+    onUpdate: UU5.PropTypes.func.isRequired,
+    onDelete: UU5.PropTypes.func.isRequired
   },
   //@@viewOff:propTypes
 

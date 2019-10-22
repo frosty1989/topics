@@ -65,7 +65,7 @@ const LeftLink = UU5.Common.VisualComponent.create({
 
   //@@viewOn:private
   _getChildren() {
-    let children = React.Children.toArray(this.props.children);
+    let children = UU5.Common.Children.toArray(this.props.children);
 
     if (typeof this.props.route === "string") {
       children = (

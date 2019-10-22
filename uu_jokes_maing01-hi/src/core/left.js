@@ -1,6 +1,4 @@
 //@@viewOn:imports
-import React from "react";
-import PropTypes from "prop-types";
 import UU5 from "uu5g04";
 import "uu5g04-bricks";
 
@@ -37,7 +35,7 @@ export const Left = UU5.Common.VisualComponent.create({
 
   //@@viewOn:propTypes
   propTypes: {
-    authenticated: PropTypes.bool
+    authenticated: UU5.PropTypes.bool
   },
   //@@viewOff:propTypes
 
@@ -80,7 +78,7 @@ export const Left = UU5.Common.VisualComponent.create({
 
   _getAuthenticatedMenu() {
     return (
-      <React.Fragment>
+      <UU5.Common.Fragment>
         <LeftLink route="jokes" active={this.state.activeRoute === "jokes"}>
           {this.getLsiComponent("jokes")}
         </LeftLink>
@@ -89,7 +87,7 @@ export const Left = UU5.Common.VisualComponent.create({
             {this.getLsiComponent("categories")}
           </LeftLink>
         )}
-      </React.Fragment>
+      </UU5.Common.Fragment>
     );
   },
 

@@ -1,6 +1,4 @@
 //@@viewOn:imports
-import React from "react";
-import PropTypes from "prop-types";
 import UU5 from "uu5g04";
 import "uu5g04-bricks";
 import "uu5g04-forms";
@@ -33,7 +31,7 @@ export const Form = UU5.Common.VisualComponent.create({
 
   //@@viewOn:propTypes
   propTypes: {
-    showPublished: PropTypes.bool
+    showPublished: UU5.PropTypes.bool
   },
   //@@viewOff:propTypes
 

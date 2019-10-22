@@ -1,6 +1,4 @@
 //@@viewOn:imports
-import React from "react";
-import PropTypes from "prop-types";
 import UU5 from "uu5g04";
 import "uu5g04-bricks";
 import "uu5g04-forms";
@@ -28,7 +26,7 @@ export const Delete = UU5.Common.VisualComponent.create({
 
   //@@viewOn:propTypes
   propTypes: {
-    data: PropTypes.object
+    data: UU5.PropTypes.object
   },
   //@@viewOff:propTypes
 
