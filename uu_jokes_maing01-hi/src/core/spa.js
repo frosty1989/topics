@@ -52,11 +52,11 @@ const Spa = createReactClass({
     return (
       <UU5.Common.Session session={Session.currentSession}>
         <UU5.Common.Identity>
-          {({ identity, session }) => {
+          {({ identity }) => {
             let child;
-            if (session.isAuthenticated()) {
+            if (identity) {
               child = <SpaAuthenticated {...this.getMainPropsToPass()} identity={identity} />;
-            } else if (session.isAuthenticated() === false) {
+            } else if (identity === null) {
               child = <SpaNotAuthenticated {...this.getMainPropsToPass()} />;
             } else {
               child = <Plus4U5.App.SpaLoading {...this.getMainPropsToPass()}>uuJokes</Plus4U5.App.SpaLoading>;

@@ -64,7 +64,6 @@ const SpaAuthenticated = createReactClass({
       state: data.state,
       name: data.name,
       logos: data.logos,
-      uuIdentity: this.props.identity.uuIdentity,
       categoryList: data.categoryList,
       userProfiles: data.userProfiles,
       setAppData: this.setAppData

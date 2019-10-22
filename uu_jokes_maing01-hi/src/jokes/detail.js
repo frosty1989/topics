@@ -69,10 +69,10 @@ export const Detail = createReactClass({
     );
   },
 
-  _buildCategoryNames(categories) {
+  _buildCategoryNames(categoryList) {
     // for faster lookup
     let categoryIds = new Set(this.props.data.categoryList);
-    return categories
+    return categoryList
       .reduce((acc, category) => {
         if (categoryIds.has(category.id)) {
           acc.push(category.name);
@@ -106,7 +106,7 @@ export const Detail = createReactClass({
         </UU5.Bricks.Div>
         {/* // Categories */}
         <JokesConsumer>
-          {({ categories }) => this._getLine("mdi-tag-multiple", this._buildCategoryNames(categories))}
+          {({ categoryList }) => this._getLine("mdi-tag-multiple", this._buildCategoryNames(categoryList))}
         </JokesConsumer>
         {/* // Author */}
         {this._getLine("mdi-account", this.props.data.uuIdentityName)}
