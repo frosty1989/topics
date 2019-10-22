@@ -6,10 +6,6 @@
   "namespace": "UuJokes",
   "spec": "uu5-app; uu_appg01@1.0.0",
   "dependencies": {
-    "create-react-class": "15.6.3",
-    "prop-types": "15.7.2",
-    "react": "16.8.6",
-    "react-dom": "16.8.6",
     "systemjs": "0.19.47",
     "uu5g04": "^1.0.0",
     "uu_appg01": "^5.0.0",
@@ -26,22 +22,6 @@
         "localBaseUri": "node_modules/systemjs/dist/",
         "main": "system.src.js",
         "mainMinified": "system.js"
-      },
-      "react": {
-        "cdnBaseUri": "https://cdn.plus4u.net/libs/react/${dependencies['react'].version}/",
-        "localBaseUri": "node_modules/react/umd/"
-      },
-      "react-dom": {
-        "cdnBaseUri": "https://cdn.plus4u.net/libs/react-dom/${dependencies['react-dom'].version}/",
-        "localBaseUri": "node_modules/react-dom/umd/"
-      },
-      "create-react-class": {
-        "cdnBaseUri": "https://cdn.plus4u.net/libs/create-react-class/${dependencies['create-react-class'].version}/",
-        "localBaseUri": "node_modules/create-react-class/"
-      },
-      "prop-types": {
-        "cdnBaseUri": "https://cdn.plus4u.net/libs/prop-types/${dependencies['prop-types'].version}/",
-        "localBaseUri": "node_modules/prop-types/"
       },
       "uu5g04": {
         "cdnBaseUri": "https://cdn.plus4u.net/uu-uu5g04/${dependencies['uu5g04'].version}/",
@@ -109,7 +89,7 @@
     }
   },
   "devDependencies": {
-    "uu_appg01_devkit": "^1.3.0"
+    "uu_appg01_devkit": "^1.5.0"
   },
   "engines": {
     "node": ">=8.9.0"
