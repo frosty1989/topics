@@ -16,7 +16,7 @@ import Authorization from "../helpers/authorization.js";
 
 import "./spa-authenticated.less";
 import LSI from "./spa-authenticated-lsi.js";
-import JokesContext from "./jokes-context.js";
+import JokesProvider from "./jokes-provider.js";
 //@@viewOff:imports
 
 const SpaAuthenticated = createReactClass({
@@ -48,8 +48,8 @@ const SpaAuthenticated = createReactClass({
   //@@viewOn:interface
   setAppData(appData, setStateCallback) {
     // filter out keys, no possibility to set awid or userProfiles
-    let newData = whitelistedKeys(appData, "state", "name", "categories", "logos");
-    this.setState(newData, setStateCallback);
+    let newData = whitelistedKeys(appData, "state", "name", "categoryList", "logos");
+    this._provider.setData(newData, setStateCallback);
     return this;
   },
   //@@viewOff:interface
@@ -58,15 +58,15 @@ const SpaAuthenticated = createReactClass({
   //@@viewOff:overriding
 
   //@@viewOn:private
-  _buildAppDataContext() {
+  _buildAppDataContext(data) {
     return {
-      awid: this.state.awid,
-      state: this.state.state,
-      name: this.state.name,
-      logos: this.state.logos,
+      awid: data.awid,
+      state: data.state,
+      name: data.name,
+      logos: data.logos,
       uuIdentity: this.props.identity.uuIdentity,
-      categories: this.state.categories,
-      userProfiles: this.state.userProfiles,
+      categoryList: data.categoryList,
+      userProfiles: data.userProfiles,
       setAppData: this.setAppData
     };
   },
@@ -100,28 +100,15 @@ const SpaAuthenticated = createReactClass({
     return Calls.loadApp(data).then(data => {
       // setup authorization service in Environment to access it across the application
       UU5.Environment.App.authorization = new Authorization(data.authorizedProfileList, this.props.identity.uuIdentity);
-
-      // transform keys for easier access
-      this.setAsyncState({
-        loadFeedback: Config.FEEDBACK.READY,
-        awid: data.awid,
-        state: data.state,
-        name: data.name,
-        logos: data.logos,
-        categories: data.categoryList,
-        userProfiles: data.authorizedProfileList,
-        errorDtoOut: null
-      });
-
       return data;
     });
   },
 
   _getChild(data) {
     return (
-      <JokesContext.Provider value={this._buildAppDataContext(data)}>
+      <JokesProvider ref={comp => {this._provider = comp}} data={this._buildAppDataContext(data)}>
         <SpaReady {...this.getMainPropsToPass()} />;
-      </JokesContext.Provider>
+      </JokesProvider>
     );
   },
   //@@viewOff:private

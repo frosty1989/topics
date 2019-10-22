@@ -9,7 +9,7 @@ import Config from "./config/config.js";
 import Uri from "../helpers/uri-helpers.js";
 import { nl2br } from "../helpers/string-helper";
 
-import JokesContext from "../core/jokes-context.js";
+import {JokesConsumer} from "../core/jokes-provider.js";
 import "./detail.less";
 import LSI from "./detail-lsi.js";
 //@@viewOff:imports
@@ -105,9 +105,9 @@ export const Detail = createReactClass({
           {this.getLsiComponent("votes", null, this.props.data.ratingCount.toString())}
         </UU5.Bricks.Div>
         {/* // Categories */}
-        <JokesContext.Consumer>
+        <JokesConsumer>
           {({ categories }) => this._getLine("mdi-tag-multiple", this._buildCategoryNames(categories))}
-        </JokesContext.Consumer>
+        </JokesConsumer>
         {/* // Author */}
         {this._getLine("mdi-account", this.props.data.uuIdentityName)}
         {/* // Creation Date */}

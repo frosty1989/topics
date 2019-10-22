@@ -6,7 +6,7 @@ import * as UU5 from "uu5g04";
 import "uu5g04-bricks";
 import Config from "./config/config.js";
 
-import JokesContext from "../../core/jokes-context.js";
+import {JokesConsumer} from "../../core/jokes-provider.js";
 import "./category.less";
 import LSI from "./category-lsi.js";
 //@@viewOff:imports
@@ -71,7 +71,7 @@ export const Category = createReactClass({
   //@@viewOn:render
   render() {
     return (
-      <JokesContext.Consumer>
+      <JokesConsumer>
         {({ categories }) => (
           <UU5.Bricks.Div {...this.getMainPropsToPass()}>
             <UU5.Forms.Select value={this.props.values} name="category" inputWidth="auto" controlled={false}>
@@ -84,7 +84,7 @@ export const Category = createReactClass({
             />
           </UU5.Bricks.Div>
         )}
-      </JokesContext.Consumer>
+      </JokesConsumer>
     );
   }
   //@@viewOff:render

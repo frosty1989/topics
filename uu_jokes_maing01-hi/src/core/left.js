@@ -13,7 +13,7 @@ import { ensureClosedMenu } from "../helpers/menu-helper";
 
 import "./left.less";
 import LSI from "./left-lsi.js";
-import JokesContext from "./jokes-context.js";
+import {JokesConsumer} from "./jokes-provider.js";
 //@@viewOff:imports
 //@viewOff:imports
 
@@ -115,7 +115,7 @@ export const Left = createReactClass({
     return (
       <UU5.Bricks.Div {...this.getMainPropsToPass()}>
         <UU5.Bricks.Div className={this.getClassName("logo")}>
-          <JokesContext.Consumer>
+          <JokesConsumer>
             {({ logos }) => (
               <UU5.Bricks.Link
                 onClick={this._handleGoHome}
@@ -130,7 +130,7 @@ export const Left = createReactClass({
                 )}
               </UU5.Bricks.Link>
             )}
-          </JokesContext.Consumer>
+          </JokesConsumer>
         </UU5.Bricks.Div>
         {this.props.authenticated ? this._getAuthenticatedMenu() : this._getNonAuthenticatedMenu()}
         <LeftLink route="about" size="xl" active={this.state.activeRoute === "about"}>

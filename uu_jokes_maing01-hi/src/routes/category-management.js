@@ -10,9 +10,10 @@ import ArrayUtils from "../helpers/array-utils.js";
 import CategoryReady from "../category/ready.js";
 import { reportError, reportSuccess } from "../helpers/alert-helper";
 
+import {JokesConsumer} from "../core/jokes-provider.js";
 import "./category-management.less";
 import LSI from "./category-management-lsi.js";
-import JokesContext from "../core/jokes-context.js";
+
 //@@viewOff:imports
 
 export const CategoryManagement = createReactClass({
@@ -51,15 +52,15 @@ export const CategoryManagement = createReactClass({
   //@@viewOff:overriding
 
   //@@viewOn:private
-  _handleUpdate(data, updateCategory, setAppData, categories) {
+  _handleUpdate(data, updateCategory, setAppData, categoryList) {
     // set new data (temporally)
     updateCategory(data.id, { ...data, inProgress: true })
-      .then(dtoOut => this._handleUpdateDone(dtoOut, setAppData, categories))
+      .then(dtoOut => this._handleUpdateDone(dtoOut, setAppData, categoryList))
       .catch(response => this._handleUpdateFail(response));
   },
 
-  _handleUpdateDone(dtoOut, setAppData, categories) {
-    setAppData({ categories: ArrayUtils.updateItem(categories, dtoOut) });
+  _handleUpdateDone(dtoOut, setAppData, categoryList) {
+    setAppData({ categoryList: ArrayUtils.updateItem(categoryList, dtoOut) });
     // display alert
     reportSuccess(this.getLsiComponent("updateSuccessHeader"));
   },
@@ -69,14 +70,14 @@ export const CategoryManagement = createReactClass({
     reportError(this.getLsiComponent("updateFailHeader"), this._decideErrorDescription(response));
   },
 
-  _handleCreate(data, createCategory, setAppData, categories) {
+  _handleCreate(data, createCategory, setAppData, categoryList) {
     createCategory({ ...data, inProgress: true })
-      .then(dtoOut => this._handleCreateDone(dtoOut, setAppData, categories))
+      .then(dtoOut => this._handleCreateDone(dtoOut, setAppData, categoryList))
       .catch(response => this._handleCreateFail(response));
   },
 
-  _handleCreateDone(dtoOut, setAppData, categories) {
-    setAppData({ categories: ArrayUtils.addItem(categories, dtoOut) });
+  _handleCreateDone(dtoOut, setAppData, categoryList) {
+    setAppData({ categoryList: ArrayUtils.addItem(categoryList, dtoOut) });
     // display alert
     reportSuccess(this.getLsiComponent("createSuccessHeader"));
   },
@@ -86,16 +87,16 @@ export const CategoryManagement = createReactClass({
     reportError(this.getLsiComponent("createFailHeader"), this._decideErrorDescription(response));
   },
 
-  _handleDelete(data, deleteCategory, setAppData, categories) {
+  _handleDelete(data, deleteCategory, setAppData, categoryList) {
     let original = data;
     let { forceDelete } = data;
     deleteCategory(data.id, undefined, { forceDelete })
-      .then(() => this._handleDeleteDone(original, setAppData, categories))
+      .then(() => this._handleDeleteDone(original, setAppData, categoryList))
       .catch(response => this._handleDeleteFail(response));
   },
 
-  _handleDeleteDone(original, setAppData, categories) {
-    setAppData({ categories: ArrayUtils.removeItem(categories, original) });
+  _handleDeleteDone(original, setAppData, categoryList) {
+    setAppData({ categoryList: ArrayUtils.removeItem(categoryList, original) });
     // display alert
     reportSuccess(this.getLsiComponent("deleteSuccessHeader"));
   },
@@ -135,23 +136,23 @@ export const CategoryManagement = createReactClass({
           {({ data: listData, handleCreate, handleDelete, handleUpdate }) => {
             if (listData) {
               return (
-                <JokesContext.Consumer>
-                  {({ setAppData, categories }) => (
+                <JokesConsumer>
+                  {({ setAppData, categoryList }) => (
                     <CategoryReady
                       {...this.getMainPropsToPass()}
                       data={listData}
                       onCreate={data => {
-                        this._handleCreate(data, handleCreate, setAppData, categories);
+                        this._handleCreate(data, handleCreate, setAppData, categoryList);
                       }}
                       onUpdate={data => {
-                        this._handleUpdate(data, handleUpdate, setAppData, categories);
+                        this._handleUpdate(data, handleUpdate, setAppData, categoryList);
                       }}
                       onDelete={data => {
-                        this._handleDelete(data, handleDelete, setAppData, categories);
+                        this._handleDelete(data, handleDelete, setAppData, categoryList);
                       }}
                     />
                   )}
-                </JokesContext.Consumer>
+                </JokesConsumer>
               );
             } else {
               return <UU5.Bricks.Loading />;

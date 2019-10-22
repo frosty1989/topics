@@ -8,7 +8,8 @@ import "uu5g04-forms";
 
 import Config from "./config/config.js";
 
-import JokesContext from "../core/jokes-context.js";
+import {JokesConsumer} from "../core/jokes-provider.js";
+
 import "./create-form.less";
 import LSI from "./create-form-lsi.js";
 //@@viewOff:imports
@@ -80,8 +81,8 @@ export const Form = createReactClass({
   //@@viewOn:render
   render() {
     return (
-      <JokesContext.Consumer>
-        {({ categories }) => (
+      <JokesConsumer>
+        {({ categoryList }) => (
           <UU5.Bricks.Div {...this.getMainPropsToPass()}>
             {/* // Name */}
             <UU5.Forms.Text inputAttrs={{ maxLength: 255 }} label={this.getLsiComponent("name")} name="name" required />
@@ -102,11 +103,11 @@ export const Form = createReactClass({
               multiple
               openToContent={true}
             >
-              {this._getCategoriesOptions(categories)}
+              {this._getCategoriesOptions(categoryList)}
             </UU5.Forms.Select>
           </UU5.Bricks.Div>
         )}
-      </JokesContext.Consumer>
+      </JokesConsumer>
     );
   }
   //@@viewOff:render
