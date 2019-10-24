@@ -42,10 +42,11 @@ const JokesProvider = UU5.Common.Component.create({
   //@@viewOff:standardComponentLifeCycle
 
   //@@viewOn:interface
-  setData(data, setStateCallback){
+  setData(data, setStateCallback) {
     // filter out keys, no possibility to set awid or userProfiles
     let newData = UU5.Common.Tools.merge(this.state.data, whitelistedKeys(data, "state", "name", "categoryList", "logos"));
     this.setState({data: newData}, setStateCallback);
+    return this;
   },
   //@@viewOff:interface
 
