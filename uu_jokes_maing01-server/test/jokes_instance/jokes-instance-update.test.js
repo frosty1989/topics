@@ -133,6 +133,6 @@ test("A6 - updating joke instance fails", async () => {
 function mockAbl() {
   mockDaoFactory();
   const JokesInstanceAbl = require("../../app/abl/jokes-instance-abl");
-  const { UuBinaryAbl } = require("uu_appg01_binarystore-cmd");
+  const UuBinaryAbl = require("uu_appg01_binarystore-cmd").UuBinaryModel;
   return { JokesInstanceAbl, UuBinaryAbl };
 }
