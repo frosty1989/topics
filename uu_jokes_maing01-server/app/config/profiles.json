@@ -44,7 +44,7 @@
       },
       "jokesInstance/load": {
         "awidRuntimeModeList": ["standard"],
-        "profileList": ["Authorities", "Executives", "Readers"]
+        "profileList": ["Authorities", "Executives", "Readers", "AwidOwner"]
       },
       "jokesInstance/update": {
         "awidRuntimeModeList": ["standard"],

@@ -4,9 +4,12 @@ const { LruCache } = require("uu_appg01_server").Utils;
 const { Validator } = require("uu_appg01_server").Validation;
 const { DaoFactory, ObjectStoreError } = require("uu_appg01_server").ObjectStore;
 const { ValidationHelper } = require("uu_appg01_server").AppServer;
-const { SysProfileAbl } = require("uu_appg01_server").Workspace;
 const { LoggerFactory } = require("uu_appg01_server").Logging;
-const { BinaryStoreCmdError, UuBinaryErrors, UuBinaryAbl } = require("uu_appg01_binarystore-cmd");
+const { UuBinaryErrors, UuBinaryAbl } = require("uu_appg01_binarystore-cmd");
+const { SysProfileAbl, SysAppWorkspaceAbl, AppClientTokenService, SysAppClientTokenAbl } = require("uu_appg01_server").Workspace;
+
+const { UriBuilder } = require("uu_appg01_server").Uri;
+const { AppClient } = require("uu_appg01_server");
 
 const Path = require("path");
 const fs = require("fs");
@@ -168,7 +171,8 @@ class JokesInstanceAbl {
     this.metaDataCache = new LruCache({ maxAge: 60 * 60 * 1000 });
   }
 
-  async init(awid, dtoIn) {
+  async init(uri, dtoIn, session) {
+    const awid = uri.getAwid();
     // hds 1
     let jokeInstance = await this.dao.getByAwid(awid);
     // A1
@@ -197,12 +201,15 @@ class JokesInstanceAbl {
       DaoFactory.getDao("category").createSchema()
     ]);
 
+    // hds 4
     try {
-      // hds 4
-      await SysProfileAbl.setProfile(awid, { code: AUTHORITIES, roleUri: dtoIn.uuAppProfileAuthorities });
+      jokeInstance = await this.dao.create(dtoIn);
     } catch (e) {
       // A4
-      throw new Errors.Init.SysSetProfileFailed({ uuAppErrorMap }, { role: dtoIn.uuAppProfileAuthorities }, e);
+      if (e instanceof ObjectStoreError) {
+        throw new Errors.Init.JokesInstanceDaoCreateFailed({ uuAppErrorMap }, e);
+      }
+      throw e;
     }
 
     // hds 5
@@ -214,20 +221,56 @@ class JokesInstanceAbl {
         // A5
         throw new Errors.Init.UuBinaryCreateFailed({ uuAppErrorMap }, e);
       }
-      // hds 6
       dtoIn.logos = [DEFAULTS.logoType];
       delete dtoIn.logo;
     }
 
-    // hds 7
-    try {
-      jokeInstance = await this.dao.create(dtoIn);
-    } catch (e) {
-      // A6
-      if (e instanceof ObjectStoreError) {
-        throw new Errors.Init.JokesInstanceDaoCreateFailed({ uuAppErrorMap }, e);
+    // hds 6
+    if (dtoIn.uuBtLocationUri) {
+      const baseUri = uri.getBaseUri();
+      const uuBtUriBuilder = UriBuilder.parse(dtoIn.uuBtLocationUri);
+      const location = uuBtUriBuilder.getParameters().id;
+      const uuBtBaseUri = uuBtUriBuilder.toUri().getBaseUri();
+
+      SysAppClientTokenAbl.initKeys(uri.getAwid());
+
+      const createAwscDtoIn = {
+        name: dtoIn.name,
+        typeCode: "uu-jokes-maing01",
+        location: location,
+        uuAppWorkspaceUri: baseUri
+      };
+
+      const awscCreateUri = uuBtUriBuilder.setUseCase("uuAwsc/create").toUri();
+      const appClientToken = await AppClientTokenService.createToken(uri, uuBtBaseUri);
+      const callOpts = AppClientTokenService.setToken({ session }, appClientToken);
+
+      try {
+        const awscDtoOut = await AppClient.post(awscCreateUri, createAwscDtoIn, callOpts);
+      } catch (e) {
+        // A6
+        throw new Errors.Init.CreateAwscFailed({ uuAppErrorMap }, { location: dtoIn.uuBtLocationUri }, e);
       }
-      throw e;
+
+      const artifactUri = uuBtUriBuilder.setUseCase(null).clearParameters().setParameter("id", awscDtoOut.id).toUri();
+
+      await SysAppWorkspaceAbl.connectArtifact(
+        baseUri,
+        {
+          artifactUri: artifactUri.toString()
+        },
+        session
+      );
+    }
+
+    // hds 7
+    if (dtoIn.uuAppProfileAuthorities) {
+      try {
+        await SysProfileAbl.setProfile(awid, { code: AUTHORITIES, roleUri: dtoIn.uuAppProfileAuthorities });
+      } catch (e) {
+        // A7
+        throw new Errors.Init.SysSetProfileFailed({ uuAppErrorMap }, { role: dtoIn.uuAppProfileAuthorities }, e);
+      }
     }
 
     // hds 8
@@ -649,7 +692,7 @@ class JokesInstanceAbl {
     <meta name="application-name" content="${uveMetaData.name}">
     <meta name="msapplication-TileColor" content="${
       uveMetaData["tilecolor"] ? uveMetaData["tilecolor"] : DEFAULTS.metaData["tilecolor"]
-    }"/>
+      }"/>
     <meta name="msapplication-config" content="${uri.getBaseUri()}/jokesInstance/getUveMetaData?type=browserconfig"/>
     
     <link rel="mask-icon" href="${uri.getBaseUri()}/jokesInstance/getUveMetaData?type=safari-pinned-tab" color="#d81e05"/>
