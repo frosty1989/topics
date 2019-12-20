@@ -146,7 +146,7 @@ const DEFAULTS = {
   description:
     "Database of jokes in which users can create and update jokes, manage them, rate them and sort them into categories.",
   logoType: "16x9",
-  ttl: 3600 * 1000
+  ttl: 60 * 60 * 1000
 };
 
 const logger = LoggerFactory.get("UuJokes.abl.JokesInstanceAbl");
@@ -168,7 +168,7 @@ class JokesInstanceAbl {
     this.STATE_UNDER_CONSTRUCTION = STATE_UNDER_CONSTRUCTION;
     this.AUTHORITIES = AUTHORITIES;
     this.EXECUTIVES = EXECUTIVES;
-    this.metaDataCache = new LruCache({ maxAge: 60 * 60 * 1000 });
+    this.metaDataCache = new LruCache({ maxAge: DEFAULTS.ttl });
   }
 
   async init(uri, dtoIn, session) {
