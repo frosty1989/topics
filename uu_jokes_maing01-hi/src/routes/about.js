@@ -10,6 +10,18 @@ import "./about.less";
 import LSI from "./about-lsi.js";
 //@@viewOff:imports
 
+const FLS_TEXT_STYLE = UU5.Common.Css.css` {
+    text-align: center;
+    font-size: 14px;
+    color: #393939;
+    margin: 40px 0 24px 0;
+  }`;
+
+const FLS_STYLE = UU5.Common.Css.css` {
+    text-align: center;
+    margin-top: 24px;
+  }`;
+
 export const About = UU5.Common.VisualComponent.create({
   //@@viewOn:mixins
   mixins: [UU5.Common.BaseMixin, UU5.Common.LsiMixin, UU5.Common.RouteMixin, UU5.Common.CcrReaderMixin],
@@ -21,7 +33,9 @@ export const About = UU5.Common.VisualComponent.create({
     classNames: {
       main: Config.CSS + "about",
       logos: Config.CSS + "about-logos",
-      termsOfUse: Config.CSS + "about-terms"
+      termsOfUse: Config.CSS + "about-terms",
+      fls: FLS_STYLE,
+      flsText: FLS_TEXT_STYLE,
     },
     lsi: LSI
   },
@@ -67,9 +81,55 @@ export const About = UU5.Common.VisualComponent.create({
     const otherAuthors = this._getAuthors(AboutCfg.otherAuthors);
     const usedTechnologies = AboutCfg.usedTechnologies || {};
 
+    // FIXME temporary added fls
+    const fls = `
+      <uu5string/>
+      <UU5.Bricks.Lsi>
+        <UU5.Bricks.Lsi.Item language="en">
+          <UU5.Bricks.Authenticated authenticated>
+          <br/>
+            Did you find a problem or do you have an idea that could improve the application? Contact us:
+          <br/><br/>
+          <UuFls.Bricks.CreateIssueButton flsBaseUri="https://uuappg01-eu-w-1.plus4u.net/uu-flsg01-main/8014eb79e8184ebb8942d96ce37b61b4/" borderRadius="2px" productCode="support/uuJokes"  colorSchema="blue-rich" size="m" content="Send feedback"/>
+          <br/>
+         </UU5.Bricks.Authenticated>      
+        </UU5.Bricks.Lsi.Item>
+        <UU5.Bricks.Lsi.Item language="cs">
+          <UU5.Bricks.Authenticated authenticated>
+          <br/>
+            Našli jste nějaký problém nebo máte nápad, jak aplikaci vylepšit? Ozvěte se nám:
+          <br/><br/>
+          <UuFls.Bricks.CreateIssueButton flsBaseUri="https://uuappg01-eu-w-1.plus4u.net/uu-flsg01-main/8014eb79e8184ebb8942d96ce37b61b4/" borderRadius="2px" productCode="support/uuJokes"  colorSchema="blue-rich" size="m" content="Poslat zpětnou vazbu"/>
+          <br/>
+         </UU5.Bricks.Authenticated>      
+        </UU5.Bricks.Lsi.Item>
+      </UU5.Bricks.Lsi>
+      
+    `;
+
     return (
       <UU5.Bricks.Section {...this.getMainPropsToPass()}>
         <Plus4U5.App.About header={this.getLsiValue("header")} />
+
+          <UU5.Common.Identity>
+            {({ identity  }) => {
+              let children;
+
+              if (identity === undefined) {
+                children = <UU5.Bricks.Loading inline />;
+              } else if (identity) {
+                children = (
+                  <UU5.Bricks.Div className={this.getClassName('fls')}>
+                    <UU5.Bricks.Div content={fls} className={this.getClassName('flsText')}/>
+                  </UU5.Bricks.Div>
+                );
+              } else {
+                children = null;
+              }
+              return children;
+            }}
+          </UU5.Common.Identity>
+
         <Plus4U5.App.Licence
           organisation={this.getLsiItem(licence.organisation)}
           authorities={this.getLsiItem(licence.authorities)}
