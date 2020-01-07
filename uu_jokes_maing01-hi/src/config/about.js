@@ -56,7 +56,7 @@ export const About = {
       role: {
         en: "Developer"
       }
-    },
+    }
   ],
   otherAuthors: [
     {
@@ -140,7 +140,13 @@ export const About = {
         Technical documentation can be found in <UU5.Bricks.Link href="https://uuos9.plus4u.net/uu-bookkitg01-main/78462435-71f8d7b5cfdc4336b0abfe47b3cb237b/book" target="_blank" content='uuJokesg01' />.`
       ]
     }
-  }
+  },
+  authorities: [
+    {
+      uuId: "4-1",
+      name: "Radek Dolejš"
+    }
+  ]
 };
 
 export default About;
