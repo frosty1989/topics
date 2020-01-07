@@ -232,7 +232,7 @@ class JokesInstanceAbl {
       const location = uuBtUriBuilder.getParameters().id;
       const uuBtBaseUri = uuBtUriBuilder.toUri().getBaseUri();
 
-      SysAppClientTokenAbl.initKeys(uri.getAwid());
+      await SysAppClientTokenAbl.initKeys(uri.getAwid());
 
       const createAwscDtoIn = {
         name: dtoIn.name,
@@ -245,8 +245,9 @@ class JokesInstanceAbl {
       const appClientToken = await AppClientTokenService.createToken(uri, uuBtBaseUri);
       const callOpts = AppClientTokenService.setToken({ session }, appClientToken);
 
+      let awscDtoOut;
       try {
-        const awscDtoOut = await AppClient.post(awscCreateUri, createAwscDtoIn, callOpts);
+        awscDtoOut = await AppClient.post(awscCreateUri, createAwscDtoIn, callOpts);
       } catch (e) {
         // A6
         throw new Errors.Init.CreateAwscFailed({ uuAppErrorMap }, { location: dtoIn.uuBtLocationUri }, e);
