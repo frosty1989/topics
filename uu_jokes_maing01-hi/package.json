@@ -1,18 +1,20 @@
 {
   "name": "uu_jokes_maing01-hi",
-  "version": "2.1.0-DEV",
+  "version": "2.2.0-DEV",
   "description": "Server project example for developing UAF application in Node.js",
   "license": "License Commercial",
   "namespace": "UuJokes",
   "spec": "uu5-app; uu_appg01@1.0.0",
   "dependencies": {
+    "immutable": "^3.8.2",
     "systemjs": "0.19.47",
     "uu5g04": "^1.0.0",
+    "uu5tilesg01": "^3.0.0",
     "uu_appg01": "^4.4.0",
     "uu_appg01_core": "^4.4.0",
     "uu_appg01_oidc": "^2.0.0",
-    "uu_plus4u5g01": "^3.0.0",
-    "uu5tilesg01": "^3.0.0"
+    "uu_flsg01": "^0.6.1",
+    "uu_plus4u5g01": "^3.0.0"
   },
   "uuBuildSettings": {
     "useCdn": false,
@@ -85,6 +87,10 @@
         "main": "ReactDnDHTML5Backend.js",
         "mainMinified": "ReactDnDHTML5Backend.min.js",
         "localBaseUri": "node_modules/react-dnd-html5-backend/dist/"
+      },
+      "immutable": {
+        "cdnBaseUri": "https://cdn.plus4u.net/libs/immutable/3.8.2/",
+        "localBaseUri": "node_modules/immutable/dist/"
       }
     }
   },

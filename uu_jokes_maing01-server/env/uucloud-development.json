@@ -1,10 +1,10 @@
-{ 
+{
   "schemaVersion": "1.0.0",
   "schemaSpecificationUri": "https://uuos9.plus4u.net/uu-bookkitg01-main/78462435-289fcd2e11d34f3e9b2184bedb236ded/book/page?code=uuSubAppInstanceDescriptor",
   "uuSubApp": {
     "code": "UU.JOKES.MAING01",
     "name": "uuJokes",
-    "version": "2.1.0-DEV",
+    "version": "2.2.0-DEV",
     "description": "Server project example for developing UAF application in Node.js",
     "license": "License Commercial",
     "asidRequired": true,
@@ -46,10 +46,12 @@
   "uuSubAppInstance": {
     "asid": "b39ee01ca39744dbbf0280f1f087c449",
     "asidOwner": "24-5659-1",
-    "awidList": [{
-      "awid": "00c97dde5a404db099b31a7764355fec",
-      "awidOwner": "24-5660-1"
-    }],
+    "awidList": [
+      {
+        "awid": "00c97dde5a404db099b31a7764355fec",
+        "awidOwner": "24-5660-1"
+      }
+    ],
     "uuAppObjectStoreMap": {
       "OSID_1": {
         "osid": "d19a1c24e9a944dfaf392cce16d51118"

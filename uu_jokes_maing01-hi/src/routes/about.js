@@ -1,6 +1,7 @@
 //@@viewOn:imports
 import UU5 from "uu5g04";
 import "uu5g04-bricks";
+import "uu_flsg01";
 import Plus4U5 from "uu_plus4u5g01";
 import { Uri } from "uu_appg01_core";
 
@@ -29,7 +30,9 @@ export const About = UU5.Common.VisualComponent.create({
       links: Config.CSS + "about-links",
       license: Config.CSS + "about-license",
       licenseText: Config.CSS + "about-license-text",
-      authors: Config.CSS + "about-authors"
+      authors: Config.CSS + "about-authors",
+      fls: Config.CSS + "fls",
+      flsText: Config.CSS + "fls-text"
     },
     lsi: LSI
   },
@@ -87,6 +90,33 @@ export const About = UU5.Common.VisualComponent.create({
           termsOfUse="https://uuos9.plus4u.net/uu-bookkitg01-main/78462435-96f8595b119144fb8a9ffbc087ea7e26/book"
           technicalDocumentation="https://uuos9.plus4u.net/uu-bookkitg01-main/78462435-71f8d7b5cfdc4336b0abfe47b3cb237b/book"
         />
+
+        <UU5.Common.Identity>
+          {({ identity }) => {
+            let children;
+            if (identity === undefined) {
+              children = <UU5.Bricks.Loading inline />;
+            } else if (identity) {
+              children = (
+                <UU5.Bricks.Div className={this.getClassName("fls")}>
+                  <UU5.Bricks.Div content={this.getLsiComponent("fslText")} className={this.getClassName("flsText")} />
+
+                  <UuFls.Bricks.CreateIssueButton
+                    flsBaseUri="https://uuappg01-eu-w-1.plus4u.net/uu-flsg01-main/8014eb79e8184ebb8942d96ce37b61b4/"
+                    borderRadius="2px"
+                    productCode="support/uuJokes"
+                    colorSchema="blue-rich"
+                    size="m"
+                    content={this.getLsiComponent("flsButton")}
+                  />
+                </UU5.Bricks.Div>
+              );
+            } else {
+              children = null;
+            }
+            return children;
+          }}
+        </UU5.Common.Identity>
 
         <Plus4U5.App.Authors
           className={this.getClassName("authors")}

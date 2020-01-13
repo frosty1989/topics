@@ -30,5 +30,13 @@ export default {
   authorities: {
     cs: "Kompetentní osoby",
     en: "Authorities"
+  },
+  fslText: {
+    cs: "Našli jste nějaký problém nebo máte nápad, jak aplikaci vylepšit? Ozvěte se nám:",
+    en: "Did you find a problem or do you have an idea that could improve the application? Contact us:"
+  },
+  flsButton: {
+    cs: "Poslat zpětnou vazbu",
+    en: "Send feedback"
   }
 };
