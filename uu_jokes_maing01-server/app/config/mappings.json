@@ -5,7 +5,7 @@
       "defaultUve": {
         "realization": "api/controllers/JokesInstanceController.getIndex",
         "httpMethod": "GET",
-        "type": "CMD"
+        "type": "UVE"
       },
       "workaround": {
         "realization": "index.html",
