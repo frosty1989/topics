@@ -9,6 +9,9 @@ class JokesInstanceController {
     return JokesInstanceAbl.init(ucEnv.getUri(), ucEnv.getDtoIn(), ucEnv.getSession());
   }
 
+  static plugInBt(ucEnv) {
+    return JokesInstanceAbl.plugInBt(ucEnv.getUri(), ucEnv.getDtoIn(), ucEnv.getSession());
+  }
   static load(ucEnv) {
     return JokesInstanceAbl.load(ucEnv.uri.getAwid(), ucEnv.getAuthorizationResult());
   }

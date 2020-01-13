@@ -7,6 +7,10 @@ const jokesInstanceInitDtoInType = shape({
   logo: binary()
 });
 
+const jokesInstancePlugInBtDtoInType = shape({
+  uuBtLocationUri: uri().isRequired(),
+});
+
 const jokesInstanceSetLogoDtoInType = shape({
   type: oneOf("16x9","3x2","4x3","2x3"),
   logo: binary().isRequired()

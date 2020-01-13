@@ -279,6 +279,66 @@ class JokesInstanceAbl {
     return jokeInstance;
   }
 
+
+  async plugInBt(uri, dtoIn, session) {
+    const awid = uri.getAwid();
+    // hds 1
+    let jokeInstance = await this.dao.getByAwid(awid);
+    // A1
+    if (!jokeInstance) {
+      throw new Errors.Load.JokesInstanceDoesNotExist();
+    }
+
+    // hds 2
+    let validationResult = this.validator.validate("jokesInstancePlugInBtDtoInType", dtoIn);
+    // A2, A3
+    let uuAppErrorMap = ValidationHelper.processValidationResult(
+      dtoIn,
+      validationResult,
+      WARNINGS.initUnsupportedKeys.code,
+      Errors.Init.InvalidDtoIn
+    );
+
+    // hds 3
+    const baseUri = uri.getBaseUri();
+    const uuBtUriBuilder = UriBuilder.parse(dtoIn.uuBtLocationUri);
+    const location = uuBtUriBuilder.getParameters().id;
+    const uuBtBaseUri = uuBtUriBuilder.toUri().getBaseUri();
+
+    const createAwscDtoIn = {
+      name: jokeInstance.name,
+      typeCode: "uu-jokes-maing01",
+      location: location,
+      uuAppWorkspaceUri: baseUri
+    };
+
+    const awscCreateUri = uuBtUriBuilder.setUseCase("uuAwsc/create").toUri();
+    const appClientToken = await AppClientTokenService.createToken(uri, uuBtBaseUri);
+    const callOpts = AppClientTokenService.setToken({ session }, appClientToken);
+
+    let awscDtoOut;
+    try {
+      awscDtoOut = await AppClient.post(awscCreateUri, createAwscDtoIn, callOpts);
+    } catch (e) {
+      // A6
+      throw new Errors.Init.CreateAwscFailed({ uuAppErrorMap }, { location: dtoIn.uuBtLocationUri }, e);
+    }
+
+    const artifactUri = uuBtUriBuilder.setUseCase(null).clearParameters().setParameter("id", awscDtoOut.id).toUri();
+
+    await SysAppWorkspaceAbl.connectArtifact(
+      baseUri,
+      {
+        artifactUri: artifactUri.toString()
+      },
+      session
+    );
+
+    // hds 4
+    jokeInstance.uuAppErrorMap = uuAppErrorMap;
+    return jokeInstance;
+  }
+
   async load(awid, authorizationResult) {
     // hds 1, A1, hds 1.1, A2
     let jokesInstance = await this.checkInstance(
