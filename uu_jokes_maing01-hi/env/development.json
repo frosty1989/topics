@@ -4,9 +4,9 @@
   "basePath": "/uu-jokes-main/0-0/",
   "useMockData": false,
   "uu5Environment": {
-    "fls_base_uri": "https://uuappg01-eu-w-1.plus4u.net/uu-flsg01-main/8014eb79e8184ebb8942d96ce37b61b4/",
-    "term_of_use_uri": "https://uuos9.plus4u.net/uu-bookkitg01-main/78462435-96f8595b119144fb8a9ffbc087ea7e26/book",
-    "technical_documentation_uri": "https://uuos9.plus4u.net/uu-bookkitg01-main/78462435-71f8d7b5cfdc4336b0abfe47b3cb237b/book",
-    "product_code": "support/uuJokes"
+    "fls_base_uri": "",
+    "term_of_use_uri": "",
+    "technical_documentation_uri": "",
+    "product_code": ""
   }
 }
