@@ -7,9 +7,6 @@ import { Uri } from "uu_appg01_core";
 import Config from "./config/config.js";
 import AboutCfg from "../config/about.js";
 
-import AppInfo from "../about/app-info.js";
-import LicenseOwner from "../about/license-owner.js";
-
 import "./about.less";
 import LSI from "./about-lsi.js";
 //@@viewOff:imports
@@ -25,13 +22,7 @@ export const About = UU5.Common.VisualComponent.create({
     classNames: {
       main: Config.CSS + "about",
       logos: Config.CSS + "about-logos",
-      termsOfUse: Config.CSS + "about-terms",
-      links: Config.CSS + "about-links",
-      license: Config.CSS + "about-license",
-      licenseText: Config.CSS + "about-license-text",
-      authors: Config.CSS + "about-authors",
-      fls: Config.CSS + "fls",
-      flsText: Config.CSS + "fls-text"
+      authors: Config.CSS + "about-authors"
     },
     lsi: LSI
   },
@@ -98,7 +89,6 @@ export const About = UU5.Common.VisualComponent.create({
     return (
       <UU5.Bricks.Section {...this.getMainPropsToPass()}>
         <Plus4U5.App.About header={this.getLsiValue("header")} />
-        <AppInfo termsOfUse={termOfUseUri} technicalDocumentation={technicalDocumentationUri} />
 
         <UU5.Common.Identity>
           {({ identity }) => {
@@ -107,9 +97,11 @@ export const About = UU5.Common.VisualComponent.create({
               children = <UU5.Bricks.Loading inline />;
             } else if (identity) {
               children = (
-                <UU5.Bricks.Div className={this.getClassName("fls")}>
-                  <UU5.Bricks.Div content={this.getLsiComponent("fslText")} className={this.getClassName("flsText")} />
-                  {flsButton}
+                <UU5.Bricks.Div>
+                  <UU5.Bricks.Div className="center">
+                    <UU5.Bricks.P className="center font-size-s">{this.getLsiComponent("flsText")}</UU5.Bricks.P>
+                    {flsButton}
+                  </UU5.Bricks.Div>
                 </UU5.Bricks.Div>
               );
             } else {
@@ -119,9 +111,27 @@ export const About = UU5.Common.VisualComponent.create({
           }}
         </UU5.Common.Identity>
 
+        <Plus4U5.App.Resources
+          header=""
+          resources={[
+            this.getLsiComponent("appNameWithVersion"),
+            <UU5.Bricks.Link
+              href={termOfUseUri}
+              key="termOfUse"
+              target="_blank"
+              content={this.getLsiValue("termsOfUse")}
+            />,
+            <UU5.Bricks.Link
+              href={technicalDocumentationUri}
+              key="technicalDocumentation"
+              target="_blank"
+              content={this.getLsiValue("technicalDocumentation")}
+            />
+          ]}
+        />
+
         <Plus4U5.App.Authors
           className={this.getClassName("authors")}
-          level="3"
           header={this.getLsiValue("creatorsHeader")}
           leadingAuthors={leadingAuthors}
           otherAuthors={otherAuthors}
@@ -129,29 +139,57 @@ export const About = UU5.Common.VisualComponent.create({
 
         <UU5.Bricks.Line size="s" />
 
-        <UU5.Bricks.Section {...this.getMainPropsToPass()}>
-          <UU5.Bricks.Row display="flex">
-            <UU5.Bricks.Column colWidth="xl-6 l-6 md-6 s-12">
-              <Plus4U5.App.Technologies
-                textAlign="left"
-                technologyType="application"
-                technologies={this.getLsiItem(usedTechnologies.technologies)}
-                content={this.getLsiItem(usedTechnologies.content)}
-              />
-            </UU5.Bricks.Column>
-            <UU5.Bricks.Column className={this.getClassName("license")} colWidth="xl-6 l-6 md-6 s-12">
-              <LicenseOwner
-                organization={{ name: "Plus4U", link: "https://www.plus4u.net/" }}
-                authorities={AboutCfg.authorities}
-                awid={awid}
-              />
-            </UU5.Bricks.Column>
-          </UU5.Bricks.Row>
-        </UU5.Bricks.Section>
+        <UU5.Bricks.Row>
+          <UU5.Bricks.Column colWidth="xs-12 s-12 m-6 l-6 xl-6">
+            <Plus4U5.App.Technologies
+              textAlign="left"
+              technologyType="application"
+              technologies={this.getLsiItem(usedTechnologies.technologies)}
+              content={this.getLsiItem(usedTechnologies.content)}
+            />
+          </UU5.Bricks.Column>
+          <UU5.Bricks.Column colWidth="xs-12 s-12 m-6 l-6 xl-6">
+            <Plus4U5.App.Licence
+              textAlign="left"
+              organisation={{
+                name: "Plus4U",
+                uri: "https://www.plus4u.net/"
+              }}
+              authorities={[
+                {
+                  name: "Radek Dolejš",
+                  uri: "https://plus4u.net/ues/sesm?SessFree=ues%3AVPH-BT%3A4-1"
+                }
+              ]}
+              awid={
+                <UU5.Bricks.Link
+                  content={awid}
+                  href="https://uuos9.plus4u.net/uu-bookkitg01-main/78462435-0238a88bac124b3ca828835b57144ffa/book/page?code=64bcc363"
+                />
+              }
+            />
+          </UU5.Bricks.Column>
+        </UU5.Bricks.Row>
 
-        <UU5.Bricks.Div className={this.getClassName("logos")}>
-          <UU5.Bricks.Image responsive={false} src="assets/unicorn.svg" />
-          <UU5.Bricks.Image responsive={false} src="assets/plus4u.svg" />
+        <UU5.Bricks.Div className="center">
+          <UU5.Bricks.Link href="https://unicorn.com">
+            <UU5.Bricks.Image
+              mainAttrs={{ height: 80 }}
+              responsive={false}
+              src="https://docs.plus4u.net/public/assets/unicorn.svg"
+              className={this.getClassName("logos")}
+              target="_blank"
+            />
+          </UU5.Bricks.Link>
+          <UU5.Bricks.Link href="https://www.plus4u.net">
+            <UU5.Bricks.Image
+              mainAttrs={{ height: 80 }}
+              responsive={false}
+              src="https://docs.plus4u.net/public/assets/plus4u.svg"
+              className={this.getClassName("logos")}
+              target="_blank"
+            />
+          </UU5.Bricks.Link>
         </UU5.Bricks.Div>
       </UU5.Bricks.Section>
     );
