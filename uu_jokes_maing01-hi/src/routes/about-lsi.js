@@ -3,6 +3,12 @@ export default {
     cs: "O aplikaci uuJokes",
     en: "About application uuJokes"
   },
+  about: {
+    en:
+      "uuJokes is a reference uuApp in uuApp Framework architecture. It is technology demo and simple example how application can be developed in uuApp framework. It is showing most important principles and patterns in uuApps. It helps with education of design and development in uuApp framework.",
+    cs:
+      "uuJokes je referenční uuApp v uuApp Framework architektuře. Jedná se o technologické demo a ukázku, jak aplikace mohou být vyvíjeny v uuApp frameworku. Ukazuje nejdůležitější principy a patterny v uuApps. Pomáhá s výukou designu a vývoje v uuApp frameworku."
+  },
   creatorsHeader: {
     cs: "Tvůrci aplikace",
     en: "Application creators"
