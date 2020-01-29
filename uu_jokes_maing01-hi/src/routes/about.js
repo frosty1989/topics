@@ -1,6 +1,7 @@
 //@@viewOn:imports
 import UU5 from "uu5g04";
 import "uu5g04-bricks";
+import Calls from "calls";
 import Plus4U5 from "uu_plus4u5g01";
 import { Uri } from "uu_appg01_core";
 
@@ -48,6 +49,17 @@ export const About = UU5.Common.VisualComponent.create({
   //@@viewOff:overriding
 
   //@@viewOn:private
+  _getAuthorities(userList) {
+    let authorities = [];
+    userList.forEach(user =>
+      authorities.push({
+        name: user.name,
+        uri: "https://plus4u.net/ues/sesm?SessFree=ues:VPH-BT:" + encodeURIComponent(user.uuIdentity)
+      })
+    );
+
+    return authorities;
+  },
   _getAuthors(authors) {
     return (
       authors &&
@@ -88,7 +100,7 @@ export const About = UU5.Common.VisualComponent.create({
 
     return (
       <UU5.Bricks.Section {...this.getMainPropsToPass()}>
-        <Plus4U5.App.About header={this.getLsiValue("header")} />
+        <Plus4U5.App.About header={this.getLsiValue("header")} content={this.getLsiValue("about")} />
 
         <UU5.Common.Identity>
           {({ identity }) => {
@@ -149,25 +161,21 @@ export const About = UU5.Common.VisualComponent.create({
             />
           </UU5.Bricks.Column>
           <UU5.Bricks.Column colWidth="xs-12 s-12 m-6 l-6 xl-6">
-            <Plus4U5.App.Licence
-              textAlign="left"
-              organisation={{
-                name: "Plus4U",
-                uri: "https://www.plus4u.net/"
+            <UU5.Common.Loader onLoad={Calls.loadLicenseOwner}>
+              {({ data }) => {
+                return data ? (
+                  <Plus4U5.App.Licence
+                    textAlign="left"
+                    organisation={{
+                      name: data.organization.name,
+                      uri: data.organization.web
+                    }}
+                    authorities={this._getAuthorities(data.userList)}
+                    awid={<UU5.Bricks.Link content={awid} />}
+                  />
+                ) : null;
               }}
-              authorities={[
-                {
-                  name: "Radek Dolejš",
-                  uri: "https://plus4u.net/ues/sesm?SessFree=ues%3AVPH-BT%3A4-1"
-                }
-              ]}
-              awid={
-                <UU5.Bricks.Link
-                  content={awid}
-                  href="https://uuos9.plus4u.net/uu-bookkitg01-main/78462435-0238a88bac124b3ca828835b57144ffa/book/page?code=64bcc363"
-                />
-              }
-            />
+            </UU5.Common.Loader>
           </UU5.Bricks.Column>
         </UU5.Bricks.Row>
 
@@ -176,7 +184,7 @@ export const About = UU5.Common.VisualComponent.create({
             <UU5.Bricks.Image
               mainAttrs={{ height: 80 }}
               responsive={false}
-              src="https://docs.plus4u.net/public/assets/unicorn.svg"
+              src="assets/unicorn.svg"
               className={this.getClassName("logos")}
               target="_blank"
             />
@@ -185,7 +193,7 @@ export const About = UU5.Common.VisualComponent.create({
             <UU5.Bricks.Image
               mainAttrs={{ height: 80 }}
               responsive={false}
-              src="https://docs.plus4u.net/public/assets/plus4u.svg"
+              src="assets/plus4u.svg"
               className={this.getClassName("logos")}
               target="_blank"
             />
