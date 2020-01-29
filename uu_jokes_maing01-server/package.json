@@ -10,13 +10,13 @@
     "pump": "^3.0.0",
     "unzip-stream": "^0.3.0",
     "xml2js": "^0.4.19",
-    "uu_appg01_binarystore-cmd": "^2.1.0",
-    "uu_appg01_datastore": "^2.1.0",
-    "uu_appg01_server": "^4.4.0"
+    "uu_appg01_binarystore-cmd": "^2.2.0",
+    "uu_appg01_datastore": "^2.2.0",
+    "uu_appg01_server": "^4.6.2"
   },
   "devDependencies": {
-    "uu_appg01_devkit": "^1.3.0",
-    "uu_appg01_workspace-test": "^2.7.0"
+    "uu_appg01_devkit": "^1.5.0",
+    "uu_appg01_workspace-test": "^2.8.0"
   },
   "engines": {
     "node": ">=8.9.0"
