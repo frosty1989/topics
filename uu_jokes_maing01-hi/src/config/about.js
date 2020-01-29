@@ -56,7 +56,7 @@ export const About = {
       role: {
         en: "Developer"
       }
-    },
+    }
   ],
   otherAuthors: [
     {
