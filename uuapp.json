@@ -13,7 +13,7 @@
     "devkit": {
       "development": {
         "appBoxLocationUri": "ues:UU-BT:PRD.UU-JOKESG01-NODEJS/APPBOX",
-        "appDeploymentUri": "ues:UU-BT[78462435]:AWE_EGL[5c94fba94f1d8af4f88df7be]:UU.JOKES.MAING01[5d19cc6a0e2aca73efbbb3dd]"
+        "appDeploymentUri": ""
       },
       "demo": {
         "appBoxLocationUri": "ues:UU-BT:PRD.UU-JOKESG01-NODEJS/APPBOX",
