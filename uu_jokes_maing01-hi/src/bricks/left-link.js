@@ -1,8 +1,7 @@
 //@@viewOn:imports
 import React from "react";
 import PropTypes from "prop-types";
-import createReactClass from "create-react-class";
-import * as UU5 from "uu5g04";
+import UU5 from "uu5g04";
 import "uu5g04-bricks";
 
 import Config from "./config/config.js";
@@ -12,7 +11,7 @@ import { ensureClosedMenu } from "../helpers/menu-helper";
 import "./left-link.less";
 //@@viewOff:imports
 
-const LeftLink = createReactClass({
+const LeftLink = UU5.Common.VisualComponent.create({
   //@@viewOn:mixins
   mixins: [UU5.Common.BaseMixin, UU5.Common.ElementaryMixin],
   //@@viewOff:mixins
@@ -31,7 +30,6 @@ const LeftLink = createReactClass({
 
   //@@viewOn:propTypes
   propTypes: {
-    appData: PropTypes.object,
     route: PropTypes.string,
     active: PropTypes.bool,
     size: PropTypes.oneOf(["l", "xl"])
@@ -54,6 +52,7 @@ const LeftLink = createReactClass({
   //@@viewOff:interface
 
   //@@viewOn:overriding
+  //@@viewOn:private
   _goRoute() {
     // change route and ensure the menu gets closed when applicable
     UU5.Environment.setRoute(this.props.route, ensureClosedMenu);
@@ -66,7 +65,7 @@ const LeftLink = createReactClass({
 
   //@@viewOn:private
   _getChildren() {
-    let children = React.Children.toArray(this.props.children);
+    let children = UU5.Common.Children.toArray(this.props.children);
 
     if (typeof this.props.route === "string") {
       children = (

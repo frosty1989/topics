@@ -1,23 +1,22 @@
 {
   "name": "uu_jokes_maing01-server",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "Server project example for developing UAF application in Node.js",
   "license": "License Commercial",
   "spec": "nodejs-app; uu_appg01@1.0.0",
   "dependencies": {
-    "base64url": "^3.0.1",
     "bson": "1.1.0",
     "file-type": "^12.0.1",
-    "lru-cache": "^5.1.1",
     "pump": "^3.0.0",
     "unzip-stream": "^0.3.0",
-    "uu_appg01_binarystore-cmd": "^2.1.0",
-    "uu_appg01_datastore": "^2.1.0",
-    "uu_appg01_server": "^4.4.0"
+    "xml2js": "^0.4.19",
+    "uu_appg01_binarystore-cmd": "^2.2.0",
+    "uu_appg01_datastore": "^2.2.0",
+    "uu_appg01_server": "^4.6.2"
   },
   "devDependencies": {
-    "uu_appg01_devkit": "^1.3.0",
-    "uu_appg01_workspace-test": "^2.7.0"
+    "uu_appg01_devkit": "^1.5.0",
+    "uu_appg01_workspace-test": "^2.8.0"
   },
   "engines": {
     "node": ">=8.9.0"
@@ -31,6 +30,7 @@
     "deploy": "uu_appg01_devkit deploy",
     "start": "uu_appg01_devkit start",
     "prettify": "uu_appg01_devkit prettify",
+    "vulnerabilityScan": "uu_appg01_devkit vulnerabilityScan",
     "uuAppBox": "uu_appg01_devkit uuAppBox",
     "uuCloudDeploy": "uu_appg01_devkit uuCloudDeploy",
     "uuCloudUndeploy": "uu_appg01_devkit uuCloudUndeploy",

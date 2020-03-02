@@ -1,8 +1,5 @@
-//@viewOn:imports
-import React from "react";
-import createReactClass from "create-react-class";
-import PropTypes from "prop-types";
-import * as UU5 from "uu5g04";
+//@@viewOn:imports
+import UU5 from "uu5g04";
 import "uu5g04-bricks";
 
 import Config from "./config/config.js";
@@ -12,9 +9,10 @@ import { ensureClosedMenu } from "../helpers/menu-helper";
 
 import "./left.less";
 import LSI from "./left-lsi.js";
-//@viewOff:imports
+import {JokesConsumer} from "./jokes-provider.js";
+//@@viewOff:imports
 
-export const Left = createReactClass({
+export const Left = UU5.Common.VisualComponent.create({
   //@@viewOn:mixins
   mixins: [UU5.Common.BaseMixin, UU5.Common.CcrWriterMixin, UU5.Common.PureRenderMixin],
   //@@viewOff:mixins
@@ -37,15 +35,13 @@ export const Left = createReactClass({
 
   //@@viewOn:propTypes
   propTypes: {
-    appData: PropTypes.object,
-    authenticated: PropTypes.bool
+    authenticated: UU5.PropTypes.bool
   },
   //@@viewOff:propTypes
 
   //@@viewOn:getDefaultProps
   getDefaultProps() {
     return {
-      appData: {},
       authenticated: false
     };
   },
@@ -82,7 +78,7 @@ export const Left = createReactClass({
 
   _getAuthenticatedMenu() {
     return (
-      <React.Fragment>
+      <UU5.Common.Fragment>
         <LeftLink route="jokes" active={this.state.activeRoute === "jokes"}>
           {this.getLsiComponent("jokes")}
         </LeftLink>
@@ -91,7 +87,7 @@ export const Left = createReactClass({
             {this.getLsiComponent("categories")}
           </LeftLink>
         )}
-      </React.Fragment>
+      </UU5.Common.Fragment>
     );
   },
 
@@ -114,18 +110,22 @@ export const Left = createReactClass({
     return (
       <UU5.Bricks.Div {...this.getMainPropsToPass()}>
         <UU5.Bricks.Div className={this.getClassName("logo")}>
-          <UU5.Bricks.Link
-            onClick={this._handleGoHome}
-            onWheelClick={this._handleTabHome}
-            onCtrlClick={this._handleTabHome}
-          >
-            {/* // Logo */}
-            {this.props.appData.logos && this.props.appData.logos.includes("16x9") ? (
-              this._getImage()
-            ) : (
-              <UU5.Bricks.Image name="Logo" responsive src="assets/logos/16x9.png" />
+          <JokesConsumer>
+            {({ logos }) => (
+              <UU5.Bricks.Link
+                onClick={this._handleGoHome}
+                onWheelClick={this._handleTabHome}
+                onCtrlClick={this._handleTabHome}
+              >
+                {/* // Logo */}
+                {logos && logos.includes("16x9") ? (
+                  this._getImage()
+                ) : (
+                  <UU5.Bricks.Image name="Logo" responsive src="assets/logos/16x9.jpeg" />
+                )}
+              </UU5.Bricks.Link>
             )}
-          </UU5.Bricks.Link>
+          </JokesConsumer>
         </UU5.Bricks.Div>
         {this.props.authenticated ? this._getAuthenticatedMenu() : this._getNonAuthenticatedMenu()}
         <LeftLink route="about" size="xl" active={this.state.activeRoute === "about"}>

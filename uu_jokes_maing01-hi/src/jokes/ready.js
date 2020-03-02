@@ -1,8 +1,5 @@
 //@@viewOn:imports
-import React from "react";
-import createReactClass from "create-react-class";
-import PropTypes from "prop-types";
-import * as UU5 from "uu5g04";
+import UU5 from "uu5g04";
 import "uu5g04-bricks";
 import "uu5tilesg01";
 
@@ -11,7 +8,8 @@ import FormModal from "../bricks/form-modal";
 import TileList from "../bricks/tile-list.js";
 import Filter from "./filter.js";
 import Tile from "./tile.js";
-import Form from "./form";
+import CreateForm from "./create-form.js";
+import UpdateForm from "./update-form.js";
 import Detail from "./detail.js";
 import { removeRouteParameters, setRouteParameters } from "../helpers/history-helper.js";
 
@@ -19,7 +17,7 @@ import "./ready.less";
 import LSI from "./ready-lsi.js";
 //@@viewOff:imports
 
-export const Jokes = createReactClass({
+export const Jokes = UU5.Common.VisualComponent.create({
   //@@viewOn:mixins
   mixins: [UU5.Common.BaseMixin],
   //@@viewOff:mixins
@@ -37,13 +35,12 @@ export const Jokes = createReactClass({
 
   //@@viewOn:propTypes
   propTypes: {
-    appData: PropTypes.object,
-    detailId: PropTypes.string,
-    onCreate: PropTypes.func.isRequired,
-    onUpdate: PropTypes.func.isRequired,
-    onDelete: PropTypes.func.isRequired,
-    onRate: PropTypes.func.isRequired,
-    onUpdateVisibility: PropTypes.func.isRequired
+    detailId: UU5.PropTypes.string,
+    onCreate: UU5.PropTypes.func.isRequired,
+    onUpdate: UU5.PropTypes.func.isRequired,
+    onDelete: UU5.PropTypes.func.isRequired,
+    onRate: UU5.PropTypes.func.isRequired,
+    onUpdateVisibility: UU5.PropTypes.func.isRequired
   },
   //@@viewOff:propTypes
 
@@ -68,13 +65,12 @@ export const Jokes = createReactClass({
   //@@viewOn:private
   _tileRenderer(tileProps) {
     const { data, ...props } = tileProps;
-    if (data._inProgress) {
+    if (data.inProgress) {
       props.disabled = true;
     }
     return (
       <Tile
         {...props}
-        appData={this.props.appData}
         data={tileProps.data}
         onDelete={this._handleDelete}
         onUpdate={this._handleUpdate}
@@ -89,7 +85,7 @@ export const Jokes = createReactClass({
     this._modal.open(
       {
         header: <span>{record.name}</span>,
-        content: <Detail data={record} appData={this.props.appData} />,
+        content: <Detail data={record} />,
         className: this.getClassName("detail"),
         onClose: this._handleDetailClose
       },
@@ -123,7 +119,7 @@ export const Jokes = createReactClass({
         onClick: () => {
           this._formModal.open({
             header: this.getLsiComponent("createHeader"),
-            content: <Form appData={this.props.appData} />,
+            content: <CreateForm />,
             onSave: this.props.onCreate,
             controls: {
               buttonSubmitProps: {
@@ -148,7 +144,7 @@ export const Jokes = createReactClass({
     ];
   },
 
-  _getFilters() {
+  _getFilters(uuIdentity) {
     let filters = [
       {
         key: "category",
@@ -186,7 +182,7 @@ export const Jokes = createReactClass({
         key: "uuIdentity",
         label: this.getLsi("filterByUser"),
         filterFn: (item, filterValue) => {
-          return (this.props.appData.uuIdentity === item.uuIdentity) === filterValue;
+          return (uuIdentity === item.uuIdentity) === filterValue;
         }
       });
     }
@@ -204,7 +200,7 @@ export const Jokes = createReactClass({
   _handleUpdate(record) {
     this._formModal.open({
       header: this.getLsiComponent("updateHeader"),
-      content: <Form appData={this.props.appData} />,
+      content: <UpdateForm />,
       onSave: data => {
         if (typeof data.image === "string") {
           delete data.image; // image code, not a binary
@@ -238,22 +234,26 @@ export const Jokes = createReactClass({
   //@@viewOn:render
   render() {
     return (
-      <UU5.Bricks.Div {...this.getMainPropsToPass()}>
-        <TileList
-          tileRenderer={this._tileRenderer}
-          data={this.props.data}
-          actions={this._getActions}
-          sortItems={this._getSortItems}
-          tileHeight={196}
-          title={this.getLsi("list")}
-        >
-          <UU5.Tiles.FilterBar filters={this._getFilters()}>
-            <Filter appData={this.props.appData} />
-          </UU5.Tiles.FilterBar>
-        </TileList>
-        <FormModal ref_={this._registerFormModal} />
-        <UU5.Bricks.Modal ref_={this._registerModal} />
-      </UU5.Bricks.Div>
+      <UU5.Common.Identity>
+        {({ uuIdentity }) => (
+          <UU5.Bricks.Div {...this.getMainPropsToPass()}>
+            <TileList
+              tileRenderer={this._tileRenderer}
+              data={this.props.data}
+              actions={this._getActions}
+              sortItems={this._getSortItems}
+              tileHeight={196}
+              title={this.getLsi("list")}
+            >
+              <UU5.Tiles.FilterBar filters={this._getFilters(uuIdentity)}>
+                <Filter />
+              </UU5.Tiles.FilterBar>
+            </TileList>
+            <FormModal ref_={this._registerFormModal} />
+            <UU5.Bricks.Modal ref_={this._registerModal} />
+          </UU5.Bricks.Div>
+        )}
+      </UU5.Common.Identity>
     );
   }
   //@@viewOff:render

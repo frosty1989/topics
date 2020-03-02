@@ -1,19 +1,17 @@
 //@@viewOn:imports
-import React from "react";
-import createReactClass from "create-react-class";
-import PropTypes from "prop-types";
-import * as UU5 from "uu5g04";
+import UU5 from "uu5g04";
 import "uu5g04-bricks";
 
 import Config from "./config/config.js";
 import Uri from "../helpers/uri-helpers.js";
-import { nl2br } from "../helpers/string-helper";
+import {nl2br} from "../helpers/string-helper";
 
+import {JokesConsumer} from "../core/jokes-provider.js";
 import "./detail.less";
 import LSI from "./detail-lsi.js";
 //@@viewOff:imports
 
-export const Detail = createReactClass({
+export const Detail = UU5.Common.VisualComponent.create({
   //@@viewOn:mixins
   mixins: [UU5.Common.BaseMixin],
   //@@viewOff:mixins
@@ -32,17 +30,16 @@ export const Detail = createReactClass({
 
   //@@viewOn:propTypes
   propTypes: {
-    appData: PropTypes.object,
-    data: PropTypes.shape({
-      id: PropTypes.string,
-      name: PropTypes.string,
-      text: PropTypes.string,
-      averageRating: PropTypes.any,
-      ratingCount: PropTypes.any,
-      visibility: PropTypes.boolean,
-      uuIdentityName: PropTypes.string,
-      categoryList: PropTypes.array,
-      image: PropTypes.string
+    data: UU5.PropTypes.shape({
+      id: UU5.PropTypes.string,
+      name: UU5.PropTypes.string,
+      text: UU5.PropTypes.string,
+      averageRating: UU5.PropTypes.any,
+      ratingCount: UU5.PropTypes.any,
+      visibility: UU5.PropTypes.boolean,
+      uuIdentityName: UU5.PropTypes.string,
+      categoryList: UU5.PropTypes.array,
+      image: UU5.PropTypes.string
     })
   },
   //@@viewOff:propTypes
@@ -69,10 +66,10 @@ export const Detail = createReactClass({
     );
   },
 
-  _buildCategoryNames() {
+  _buildCategoryNames(categoryList) {
     // for faster lookup
     let categoryIds = new Set(this.props.data.categoryList);
-    return this.props.appData.categories
+    return categoryList
       .reduce((acc, category) => {
         if (categoryIds.has(category.id)) {
           acc.push(category.name);
@@ -105,7 +102,9 @@ export const Detail = createReactClass({
           {this.getLsiComponent("votes", null, this.props.data.ratingCount.toString())}
         </UU5.Bricks.Div>
         {/* // Categories */}
-        {this._getLine("mdi-tag-multiple", this._buildCategoryNames())}
+        <JokesConsumer>
+          {({ categoryList }) => this._getLine("mdi-tag-multiple", this._buildCategoryNames(categoryList))}
+        </JokesConsumer>
         {/* // Author */}
         {this._getLine("mdi-account", this.props.data.uuIdentityName)}
         {/* // Creation Date */}

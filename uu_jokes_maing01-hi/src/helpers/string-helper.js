@@ -1,4 +1,3 @@
-import React from "react";
 
 // turn new lines \n into HTML/React new lines <br/>
 function nl2br(text) {

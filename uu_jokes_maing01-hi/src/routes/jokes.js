@@ -1,24 +1,21 @@
 //@@viewOn:imports
-import React from "react";
-import createReactClass from "create-react-class";
-import PropTypes from "prop-types";
-import * as UU5 from "uu5g04";
+import UU5 from "uu5g04";
 import "uu5g04-bricks";
 import "uu5tilesg01";
+import Calls from "calls";
 
 import Config from "./config/config.js";
 import JokesReady from "../jokes/ready.js";
-import ArrayUtils from "../helpers/array-utils";
-import { dig } from "../helpers/object-utils.js";
-import { reportSuccess, reportError } from "../helpers/alert-helper";
+import {dig} from "../helpers/object-utils.js";
+import {reportSuccess, reportError} from "../helpers/alert-helper";
 
 import "./jokes.less";
 import LSI from "./jokes-lsi.js";
 //@@viewOff:imports
 
-export const Jokes = createReactClass({
+export const Jokes = UU5.Common.VisualComponent.create({
   //@@viewOn:mixins
-  mixins: [UU5.Common.BaseMixin, UU5.Common.RouteMixin, UU5.Common.LoadMixin, UU5.Common.CcrReaderMixin],
+  mixins: [UU5.Common.BaseMixin, UU5.Common.RouteMixin, UU5.Common.CcrReaderMixin],
   //@@viewOff:mixins
 
   //@@viewOn:statics
@@ -27,22 +24,11 @@ export const Jokes = createReactClass({
     classNames: {
       main: Config.CSS + "jokes"
     },
-    calls: {
-      onLoad: "jokeList",
-      create: "jokeCreate",
-      update: "jokeUpdate",
-      delete: "jokeDelete",
-      rate: "jokeRate",
-      updateVisibility: "jokeUpdateVisibility"
-    },
     lsi: LSI
   },
   //@@viewOff:statics
 
   //@@viewOn:propTypes
-  propTypes: {
-    appData: PropTypes.object.isRequired
-  },
   //@@viewOff:propTypes
 
   //@@viewOn:getDefaultProps
@@ -55,29 +41,6 @@ export const Jokes = createReactClass({
   //@@viewOff:interface
 
   //@@viewOn:overriding
-  onLoadSuccess_(dtoOut, setStateCallback) {
-    // cast itemList directly into dtoOut
-    // it is easier to work with array structure instead of object wrapper
-    // in many cases this step is not needed
-    this.setAsyncState(
-      {
-        loadFeedback: Config.FEEDBACK.READY,
-        dtoOut: dtoOut.itemList,
-        errorDtoOut: null
-      },
-      setStateCallback
-    );
-    return this;
-  },
-
-  getOnLoadData_(props) {
-    // load 1000 items by default
-    return {
-      pageInfo: {
-        pageSize: 1000
-      }
-    };
-  },
 
   onRouteChanged_() {
     let menu = this.getCcrComponentByKey(Config.LEFT_MENU_CCR_KEY);
@@ -86,177 +49,92 @@ export const Jokes = createReactClass({
   //@@viewOff:overriding
 
   //@@viewOn:private
-  _handleUpdate(data) {
+  _handleUpdate(data, updateJoke) {
     // set new data (temporally)
-    let original;
-    this.setState(
-      prevState => ({
-        dtoOut: ArrayUtils.updateItemProgress(prevState.dtoOut, data, item => (original = item))
-      }),
-      () => {
-        this.getCall("update")({
-          data: data,
-          done: dtoOut => this._handleUpdateDone(dtoOut, original),
-          fail: response => this._handleUpdateFail(response, original)
-        });
-      }
-    );
+    updateJoke(data.id, {...data, inProgress: true}, undefined, null, "updateJoke")
+      .then(() => this._handleUpdateDone())
+      .catch(response => this._handleUpdateFail(response));
   },
 
-  _handleUpdateDone(dtoOut, original) {
-    this.setAsyncState(prevState => ({
-      dtoOut: ArrayUtils.updateItemFinal(prevState.dtoOut, { ...original, ...dtoOut })
-    }));
+  _handleUpdateDone() {
     // display alert
     reportSuccess(this.getLsiComponent("updateSuccessHeader"));
   },
 
-  _handleUpdateFail(response, original) {
-    // set original value
-    this.setAsyncState(prevState => ({
-      dtoOut: ArrayUtils.updateItemFinal(prevState.dtoOut, original)
-    }));
+  _handleUpdateFail(response) {
     // display alert
     reportError(this.getLsiComponent("updateFailHeader"), this._decideErrorDescription(response));
   },
 
-  _handleRate(data) {
+  _handleRate(data, updateRating) {
     // set new data (temporally)
-    let original;
-    let { newRate } = data;
+    let {newRate} = data;
     delete data.newRate;
-    this.setState(
-      prevState => ({
-        dtoOut: ArrayUtils.updateItemProgress(prevState.dtoOut, data, item => (original = item))
-      }),
-      () => {
-        this.getCall("rate")({
-          data: { id: data.id, rating: newRate },
-          done: dtoOut => this._handleRateDone(dtoOut, original),
-          fail: response => this._handleRateFail(response, original)
-        });
-      }
-    );
+
+    updateRating(data.id, {id: data.id, rating: newRate, inProgress: true}, undefined, null, "updateJokeRating")
+      .then(() => this._handleRateDone())
+      .catch(response => this._handleRateFail(response));
   },
 
-  _handleRateDone(dtoOut, original) {
-    this.setAsyncState(prevState => ({
-      dtoOut: ArrayUtils.updateItemFinal(prevState.dtoOut, { ...original, ...dtoOut })
-    }));
+  _handleRateDone() {
     // display alert
     reportSuccess(this.getLsiComponent("rateSuccessHeader"));
   },
 
-  _handleRateFail(response, original) {
-    // set original value
-    this.setAsyncState(prevState => ({
-      dtoOut: ArrayUtils.updateItemFinal(prevState.dtoOut, original)
-    }));
+  _handleRateFail(response) {
     // display alert
     reportError(this.getLsiComponent("rateFailHeader"), this._decideErrorDescription(response));
   },
 
-  _handleUpdateVisibility(data) {
+  _handleUpdateVisibility(data, updateVisibility) {
+    let original = data.visibility;
     // set new data (temporally)
-    let original;
-    this.setState(
-      prevState => ({
-        dtoOut: ArrayUtils.updateItemProgress(prevState.dtoOut, data, item => (original = item))
-      }),
-      () => {
-        this.getCall("updateVisibility")({
-          data: data,
-          done: dtoOut => this._handleUpdateVisibilityDone(dtoOut, original),
-          fail: response => this._handleUpdateVisibilityFail(response, original)
-        });
-      }
-    );
+    updateVisibility(data.id, {...data, inProgress: true}, undefined, null, "updateJokeVisibility")
+      .then(dtoOut => this._handleUpdateVisibilityDone(dtoOut))
+      .catch(response => this._handleUpdateVisibilityFail(response, original));
   },
 
-  _handleUpdateVisibilityDone(dtoOut, original) {
-    this.setAsyncState(prevState => ({
-      dtoOut: ArrayUtils.updateItemFinal(prevState.dtoOut, { ...original, ...dtoOut })
-    }));
+  _handleUpdateVisibilityDone(dtoOut) {
     // display alert
-    let lsiKey = original.visibility ? "unpublish" : "publish";
+    let lsiKey = dtoOut.visibility ? "publish" : "unpublish";
     reportSuccess(this.getLsiComponent(`${lsiKey}SuccessHeader`));
   },
 
   _handleUpdateVisibilityFail(response, original) {
-    // set original value
-    this.setAsyncState(prevState => ({
-      dtoOut: ArrayUtils.updateItemFinal(prevState.dtoOut, original)
-    }));
     // display alert
-    let lsiKey = original.visibility ? "unpublish" : "publish";
+    let lsiKey = original ? "unpublish" : "publish";
     reportError(this.getLsiComponent(`${lsiKey}FailHeader`), this._decideErrorDescription(response));
   },
 
-  _handleCreate(data) {
-    let original;
+  _handleCreate(data, createJoke) {
     // add new one
-    this.setState(
-      prevState => ({
-        dtoOut: ArrayUtils.addItem(prevState.dtoOut, data, item => (original = item))
-      }),
-      () => {
-        this.getCall("create")({
-          data: data,
-          done: dtoOut => this._handleCreateDone(dtoOut, original),
-          fail: response => this._handleCreateFail(response, original)
-        });
-      }
-    );
+    createJoke({...data, inProgress: true})
+      .then(() => this._handleCreateDone())
+      .catch(response => this._handleCreateFail(response));
   },
 
-  _handleCreateDone(dtoOut, original) {
-    // set id in dtoOut
-    this.setAsyncState(prevState => ({
-      dtoOut: ArrayUtils.updateItemFinal(prevState.dtoOut, { ...original, ...dtoOut })
-    }));
+  _handleCreateDone() {
     // display alert
     reportSuccess(this.getLsiComponent("createSuccessHeader"));
   },
 
-  _handleCreateFail(response, original) {
-    // remove from dtoOut
-    this.setAsyncState(prevState => ({
-      dtoOut: ArrayUtils.removeItem(prevState.dtoOut, original)
-    }));
+  _handleCreateFail(response) {
     // display alert
     reportError(this.getLsiComponent("createFailHeader"), this._decideErrorDescription(response));
   },
 
-  _handleDelete(data) {
-    let original;
-    this.setState(
-      prevState => ({
-        dtoOut: ArrayUtils.updateItemProgress(prevState.dtoOut, data, item => (original = item))
-      }),
-      () => {
-        this.getCall("delete")({
-          data: { id: data.id },
-          done: dtoOut => this._handleDeleteDone(dtoOut, original),
-          fail: response => this._handleDeleteFail(response, original)
-        });
-      }
-    );
+  _handleDelete(data, deleteJoke) {
+    deleteJoke(data.id)
+      .then(() => this._handleDeleteDone())
+      .catch(response => this._handleDeleteFail(response));
   },
 
-  _handleDeleteDone(dtoOut, original) {
-    // remove from dataset
-    this.setAsyncState(prevState => ({
-      dtoOut: ArrayUtils.removeItem(prevState.dtoOut, original)
-    }));
+  _handleDeleteDone() {
     // display alert
     reportSuccess(this.getLsiComponent("deleteSuccessHeader"));
   },
 
-  _handleDeleteFail(response, original) {
-    // set original value
-    this.setAsyncState(prevState => ({
-      dtoOut: ArrayUtils.updateItemFinal(prevState.dtoOut, original)
-    }));
+  _handleDeleteFail(response) {
     // display alert
     reportError(this.getLsiComponent("deleteFailHeader"), this._decideErrorDescription(response));
   },
@@ -278,7 +156,7 @@ export const Jokes = createReactClass({
     return this.getLsiComponent("unexpectedServerError");
   },
 
-  _filterOutVisibility(jokes) {
+  _filterOutVisibility(jokes, identity) {
     let canSeeAllUnpublished = UU5.Environment.App.authorization.canSeeAllUnpublished();
     let canSeeUnpublished = UU5.Environment.App.authorization.canSeeUnpublished();
 
@@ -287,7 +165,7 @@ export const Jokes = createReactClass({
 
       if (canSeeAllUnpublished) {
         result = true;
-      } else if (canSeeUnpublished && UU5.Environment.App.authorization.isOwner(joke)) {
+      } else if (canSeeUnpublished && joke.uuIdentity === identity) {
         result = true;
       } else {
         result = joke.visibility;
@@ -295,27 +173,55 @@ export const Jokes = createReactClass({
       return result;
     });
   },
-
-  _getChild() {
-    return (
-      <JokesReady
-        data={this._filterOutVisibility(this.getDtoOut())}
-        detailId={dig(this.props, "params", "id")}
-        appData={this.props.appData}
-        onCreate={this._handleCreate}
-        onUpdate={this._handleUpdate}
-        onRate={this._handleRate}
-        onDelete={this._handleDelete}
-        onUpdateVisibility={this._handleUpdateVisibility}
-      />
-    );
-  },
   //@@viewOff:private
 
   //@@viewOn:render
   render() {
     return (
-      <UU5.Bricks.Div {...this.getMainPropsToPass()}>{this.getLoadFeedbackChildren(this._getChild)}</UU5.Bricks.Div>
+      <UU5.Bricks.Div {...this.getMainPropsToPass()}>
+        <UU5.Common.ListDataManager
+          onLoad={Calls.jokeList}
+          onCreate={Calls.jokeCreate}
+          onDelete={Calls.jokeDelete}
+          onUpdate={{
+            updateJokeRating: Calls.updateJokeRating,
+            updateJokeVisibility: Calls.updateJokeVisibility,
+            updateJoke: Calls.updateJoke
+          }}
+        >
+          {({data, handleCreate, handleUpdate, handleDelete}) => {
+            if (data) {
+              return (
+                <UU5.Common.Identity>
+                  {({identity}) =>
+                    <JokesReady
+                      data={this._filterOutVisibility(data, identity)}
+                      detailId={dig(this.props, "params", "id")}
+                      onCreate={data => {
+                        return this._handleCreate(data, handleCreate);
+                      }}
+                      onUpdate={data => {
+                        return this._handleUpdate(data, handleUpdate);
+                      }}
+                      onRate={data => {
+                        return this._handleRate(data, handleUpdate);
+                      }}
+                      onDelete={data => {
+                        return this._handleDelete(data, handleDelete);
+                      }}
+                      onUpdateVisibility={data => {
+                        return this._handleUpdateVisibility(data, handleUpdate);
+                      }}
+                    />
+                  }
+                </UU5.Common.Identity>
+              );
+            } else {
+              return <UU5.Bricks.Loading/>;
+            }
+          }}
+        </UU5.Common.ListDataManager>
+      </UU5.Bricks.Div>
     );
   }
   //@@viewOff:render

@@ -1,4 +1,4 @@
-import * as UU5 from "uu5g04";
+import UU5 from "uu5g04";
 
 const UriHelpers = {
   openNewTab(component) {

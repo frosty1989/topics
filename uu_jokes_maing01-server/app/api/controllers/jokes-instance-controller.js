@@ -6,9 +6,12 @@ const CACHE_VALUE = "public, max-age=86400, s-maxage=86400";
 
 class JokesInstanceController {
   static init(ucEnv) {
-    return JokesInstanceAbl.init(ucEnv.uri.getAwid(), ucEnv.parameters);
+    return JokesInstanceAbl.init(ucEnv.getUri(), ucEnv.getDtoIn(), ucEnv.getSession());
   }
 
+  static plugInBt(ucEnv) {
+    return JokesInstanceAbl.plugInBt(ucEnv.getUri(), ucEnv.getDtoIn(), ucEnv.getSession());
+  }
   static load(ucEnv) {
     return JokesInstanceAbl.load(ucEnv.uri.getAwid(), ucEnv.getAuthorizationResult());
   }
@@ -22,7 +25,7 @@ class JokesInstanceController {
   }
 
   static setIcons(ucEnv) {
-    return JokesInstanceAbl.setIcons(ucEnv.uri.getAwid(), ucEnv.parameters);
+    return JokesInstanceAbl.setIcons(ucEnv.uri.getAwid(), ucEnv.parameters, ucEnv.getUri());
   }
 
   static getProductInfo(ucEnv) {

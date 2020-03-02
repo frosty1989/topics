@@ -1,14 +1,12 @@
 //@viewOn:imports
-import React from "react";
-import createReactClass from "create-react-class";
-import * as UU5 from "uu5g04";
+import UU5 from "uu5g04";
 
 import Config from "./config/config.js";
 
 import "./bottom.less";
 //@viewOff:imports
 
-export const Bottom = createReactClass({
+export const Bottom = UU5.Common.VisualComponent.create({
   //@@viewOn:mixins
   mixins: [UU5.Common.BaseMixin],
   //@@viewOff:mixins

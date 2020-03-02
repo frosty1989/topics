@@ -1,8 +1,5 @@
 //@@viewOn:imports
-import React from "react";
-import createReactClass from "create-react-class";
-import PropTypes from "prop-types";
-import * as UU5 from "uu5g04";
+import UU5 from "uu5g04";
 import "uu5g04-bricks";
 import "uu5g04-forms";
 
@@ -12,7 +9,7 @@ import "./delete.less";
 import LSI from "./delete-lsi.js";
 //@@viewOff:imports
 
-export const Delete = createReactClass({
+export const Delete = UU5.Common.VisualComponent.create({
   //@@viewOn:mixins
   mixins: [UU5.Common.BaseMixin],
   //@@viewOff:mixins
@@ -29,7 +26,7 @@ export const Delete = createReactClass({
 
   //@@viewOn:propTypes
   propTypes: {
-    data: PropTypes.object
+    data: UU5.PropTypes.object
   },
   //@@viewOff:propTypes
 

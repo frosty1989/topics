@@ -3,77 +3,126 @@
  */
 import { Uri } from "uu_appg01_core";
 import { Client } from "uu_appg01";
+import Plus4U5 from "uu_plus4u5g01";
 import * as UU5 from "uu5g04";
 
 let Calls = {
   /** URL containing app base, e.g. "https://uuos9.plus4u.net/vnd-app/tid-awid/". */
   APP_BASE_URI: location.protocol + "//" + location.host + UU5.Environment.getAppBasePath(),
 
-  call(method, url, dtoIn, headers) {
-    if(method === "get" && isIE()){
-      // prevent proactive caching of get requests in IE by adding current timestamp to the request data
-      dtoIn.data = dtoIn.data || {};
-      dtoIn.data = {ieTmpStmp: Date.now(), ...dtoIn.data};
-    }
-    Client[method](url, dtoIn.data || null, headers).then(
-      response => dtoIn.done(response.data),
-      response => dtoIn.fail(response)
-    );
+  call(method, url, dtoIn, clientOptions) {
+    return Plus4U5.Common.Calls.call(method, url, dtoIn, clientOptions);
   },
 
-  loadApp(dtoIn) {
-    let commandUri = Calls.getCommandUri("jokesInstance/load");
-    Calls.call("get", commandUri, dtoIn);
+  loadApp(dtoInData) {
+    return new Promise((resolve, reject) => {
+      let commandUri = Calls.getCommandUri("jokesInstance/load");
+      Calls.call("get", commandUri, { data: dtoInData, done: resolve, fail: reject });
+    });
+  },
+  loadLicenseOwner() {
+    return new Promise((resolve, reject) => {
+      let commandUri = Calls.getCommandUri("sys/getLicenseOwner");
+      Calls.call("get", commandUri, { data: {}, done: resolve, fail: reject });
+    });
   },
 
-  categoryList(dtoIn) {
-    let commandUri = Calls.getCommandUri("category/list");
-    Calls.call("get", commandUri, dtoIn);
+  categoryList(dtoInData) {
+    return new Promise((resolve, reject) => {
+      let commandUri = Calls.getCommandUri("category/list");
+      Calls.call("get", commandUri, { data: dtoInData, done: resolve, fail: reject });
+    });
   },
 
-  categoryCreate(dtoIn) {
-    let commandUri = Calls.getCommandUri("category/create");
-    Calls.call("post", commandUri, dtoIn);
+  categoryCreate(dtoInData) {
+    return new Promise((resolve, reject) => {
+      let commandUri = Calls.getCommandUri("category/create");
+      Calls.call("post", commandUri, {
+        data: dtoInData,
+        done: data => resolve({ ...data, inProgress: false }),
+        fail: reject
+      });
+    });
   },
 
-  categoryUpdate(dtoIn) {
-    let commandUri = Calls.getCommandUri("category/update");
-    Calls.call("post", commandUri, dtoIn);
+  categoryUpdate(id, dtoInData) {
+    return new Promise((resolve, reject) => {
+      let commandUri = Calls.getCommandUri("category/update");
+      Calls.call("post", commandUri, {
+        data: dtoInData,
+        done: data => resolve({ ...data, inProgress: false }),
+        fail: reject
+      });
+    });
   },
 
-  categoryDelete(dtoIn) {
-    let commandUri = Calls.getCommandUri("category/delete");
-    Calls.call("post", commandUri, dtoIn);
+  categoryDelete(id, { forceDelete }) {
+    return new Promise((resolve, reject) => {
+      let commandUri = Calls.getCommandUri("category/delete");
+      Calls.call("post", commandUri, {
+        data: { id, forceDelete },
+        done: data => resolve({ ...data, inProgress: false }),
+        fail: reject
+      });
+    });
   },
 
-  jokeList(dtoIn) {
-    let commandUri = Calls.getCommandUri("joke/list");
-    Calls.call("get", commandUri, dtoIn);
+  jokeList(dtoInData) {
+    return new Promise((resolve, reject) => {
+      let commandUri = Calls.getCommandUri("joke/list");
+      Calls.call("get", commandUri, { data: dtoInData, done: resolve, fail: reject });
+    });
   },
 
-  jokeCreate(dtoIn) {
-    let commandUri = Calls.getCommandUri("joke/create");
-    Calls.call("post", commandUri, dtoIn);
+  jokeCreate(dtoInData) {
+    return new Promise((resolve, reject) => {
+      let commandUri = Calls.getCommandUri("joke/create");
+      Calls.call("post", commandUri, {
+        data: dtoInData,
+        done: data => resolve({ ...data, inProgress: false }),
+        fail: reject
+      });
+    });
   },
 
-  jokeUpdate(dtoIn) {
-    let commandUri = Calls.getCommandUri("joke/update");
-    Calls.call("post", commandUri, dtoIn);
+  jokeDelete(id) {
+    return new Promise((resolve, reject) => {
+      let commandUri = Calls.getCommandUri("joke/delete");
+      Calls.call("post", commandUri, { data: { id }, done: resolve, fail: reject });
+    });
   },
 
-  jokeDelete(dtoIn) {
-    let commandUri = Calls.getCommandUri("joke/delete");
-    Calls.call("post", commandUri, dtoIn);
+  updateJoke(id, dtoInData) {
+    return new Promise((resolve, reject) => {
+      let commandUri = Calls.getCommandUri("joke/update");
+      Calls.call("post", commandUri, {
+        data: dtoInData,
+        done: data => resolve({ ...data, inProgress: false }),
+        fail: reject
+      });
+    });
   },
 
-  jokeRate(dtoIn) {
-    let commandUri = Calls.getCommandUri("joke/addRating");
-    Calls.call("post", commandUri, dtoIn);
+  updateJokeRating(id, dtoInData) {
+    return new Promise((resolve, reject) => {
+      let commandUri = Calls.getCommandUri("joke/addRating");
+      Calls.call("post", commandUri, {
+        data: dtoInData,
+        done: data => resolve({ ...data, inProgress: false }),
+        fail: reject
+      });
+    });
   },
 
-  jokeUpdateVisibility(dtoIn) {
-    let commandUri = Calls.getCommandUri("joke/updateVisibility");
-    Calls.call("post", commandUri, dtoIn);
+  updateJokeVisibility(id, dtoInData) {
+    return new Promise((resolve, reject) => {
+      let commandUri = Calls.getCommandUri("joke/updateVisibility");
+      Calls.call("post", commandUri, {
+        data: dtoInData,
+        done: data => resolve({ ...data, inProgress: false }),
+        fail: reject
+      });
+    });
   },
 
   uploadFile(dtoIn) {
@@ -128,7 +177,7 @@ let Calls = {
   }
 };
 
-function isIE(){
+function isIE() {
   return !!window.MSInputMethodContext && !!document.documentMode;
 }
 

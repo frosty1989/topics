@@ -1,8 +1,5 @@
 //@@viewOn:imports
-import React from "react";
-import createReactClass from "create-react-class";
-import PropTypes from "prop-types";
-import * as UU5 from "uu5g04";
+import UU5 from "uu5g04";
 import "uu5g04-bricks";
 import Config from "./config/config.js";
 
@@ -20,7 +17,7 @@ const COMPARATOR_MAP = {
 };
 //@@viewOff:statics
 
-export const Rating = createReactClass({
+export const Rating = UU5.Common.VisualComponent.create({
   //@@viewOn:mixins
   mixins: [UU5.Common.BaseMixin, UU5.Common.PureRenderMixin],
   //@@viewOff:mixins
@@ -37,10 +34,10 @@ export const Rating = createReactClass({
 
   //@@viewOn:propTypes
   propTypes: {
-    addFilter: PropTypes.func.isRequired,
-    getValues: PropTypes.func.isRequired,
-    filters: PropTypes.array.isRequired,
-    values: PropTypes.object
+    addFilter: UU5.PropTypes.func.isRequired,
+    getValues: UU5.PropTypes.func.isRequired,
+    filters: UU5.PropTypes.array.isRequired,
+    values: UU5.PropTypes.object
   },
   //@@viewOff:propTypes
 

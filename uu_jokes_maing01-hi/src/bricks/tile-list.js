@@ -1,8 +1,5 @@
 //@@viewOn:imports
-import React from "react";
-import createReactClass from "create-react-class";
-import PropTypes from "prop-types";
-import * as UU5 from "uu5g04";
+import UU5 from "uu5g04";
 import "uu5g04-bricks";
 import "uu5tilesg01";
 
@@ -11,7 +8,7 @@ import Config from "./config/config.js";
 import "./tile-list.less";
 //@@viewOff:imports
 
-export const TileList = createReactClass({
+export const TileList = UU5.Common.VisualComponent.create({
   //@@viewOn:mixins
   mixins: [UU5.Common.BaseMixin, UU5.Common.PureRenderMixin, UU5.Common.ScreenSizeMixin],
   //@@viewOff:mixins
@@ -30,12 +27,12 @@ export const TileList = createReactClass({
 
   //@@viewOn:propTypes
   propTypes: {
-    tileRenderer: PropTypes.func.isRequired,
-    data: PropTypes.array.isRequired,
-    actions: PropTypes.func.isRequired,
-    sortItems: PropTypes.func.isRequired,
-    title: PropTypes.object,
-    tileHeight: PropTypes.number.isRequired
+    tileRenderer: UU5.PropTypes.func.isRequired,
+    data: UU5.PropTypes.array.isRequired,
+    actions: UU5.PropTypes.func.isRequired,
+    sortItems: UU5.PropTypes.func.isRequired,
+    title: UU5.PropTypes.object,
+    tileHeight: UU5.PropTypes.number.isRequired
   },
   //@@viewOff:propTypes
 

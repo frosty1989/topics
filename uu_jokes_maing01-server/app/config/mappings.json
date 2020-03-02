@@ -5,7 +5,7 @@
       "defaultUve": {
         "realization": "api/controllers/JokesInstanceController.getIndex",
         "httpMethod": "GET",
-        "type": "CMD"
+        "type": "UVE"
       },
       "workaround": {
         "realization": "index.html",
@@ -14,6 +14,11 @@
       },
       "jokesInstance/init": {
         "realization": "api/controllers/JokesInstanceController.init",
+        "httpMethod": "POST",
+        "type": "CMD"
+      },
+      "jokesInstance/plugInBt": {
+        "realization": "api/controllers/JokesInstanceController.plugInBt",
         "httpMethod": "POST",
         "type": "CMD"
       },

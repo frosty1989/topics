@@ -1,6 +1,7 @@
 /*eslint-disable no-constant-condition*/
 
 "use strict";
+const { Base64 } = require("uu_appg01_server").Utils;
 const { Validator } = require("uu_appg01_server").Validation;
 const { DaoFactory, ObjectStoreError } = require("uu_appg01_server").ObjectStore;
 const { ValidationHelper } = require("uu_appg01_server").AppServer;
@@ -8,6 +9,7 @@ const UuBinaryAbl = require("uu_appg01_binarystore-cmd").UuBinaryModel;
 const JokesInstanceAbl = require("./jokes-instance-abl");
 const Errors = require("../api/errors/joke-error");
 const Path = require("path");
+const FileHelper = require("../helpers/file-helper");
 
 const WARNINGS = {
   createUnsupportedKeys: {
@@ -80,13 +82,32 @@ class JokeAbl {
     dtoIn.uuIdentityName = session.getIdentity().getName();
     dtoIn.awid = awid;
 
-    // hds 3
+    // hds 3.1, A5
     if (dtoIn.image) {
+      //check if stream or base64
+      if (dtoIn.image.readable) {
+        //check if the stream is valid
+        let { valid: isValidStream, stream } = await FileHelper.validateImageStream(dtoIn.image);
+        if (!isValidStream) {
+          throw new Errors.Create.InvalidPhotoContentType({ uuAppErrorMap });
+        }
+        dtoIn.image = stream;
+      } else {
+        //check if the base64 is valid
+        let binaryBuffer = Base64.urlSafeDecode(dtoIn.image, "binary");
+        if (!FileHelper.validateImageBuffer(binaryBuffer).valid) {
+          throw new Errors.Create.InvalidPhotoContentType({ uuAppErrorMap });
+        }
+
+        dtoIn.image = FileHelper.toStream(binaryBuffer);
+      }
+
+      //Hhds 3.2
       try {
         let binary = await UuBinaryAbl.createBinary(awid, { data: dtoIn.image });
         dtoIn.image = binary.code;
       } catch (e) {
-        // A5
+        // A6
         throw new Errors.Create.UuBinaryCreateFailed({ uuAppErrorMap }, e);
       }
     }
@@ -94,7 +115,7 @@ class JokeAbl {
     // hds 4
     if (dtoIn.categoryList) {
       let presentCategories = await this._checkCategoriesExistence(awid, dtoIn.categoryList);
-      // A6
+      // A7
       if (dtoIn.categoryList.length > 0) {
         ValidationHelper.addWarning(
           uuAppErrorMap,
@@ -113,7 +134,7 @@ class JokeAbl {
     try {
       joke = await this.dao.create(dtoIn);
     } catch (e) {
-      // A7
+      // A8
       if (e instanceof ObjectStoreError) {
         throw new Errors.Create.JokeDaoCreateFailed({ uuAppErrorMap }, e);
       }

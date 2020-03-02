@@ -19,6 +19,13 @@ const Init = {
       this.message = "DtoIn is not valid.";
     }
   },
+  CreateAwscFailed: class extends UuJokesError {
+    constructor() {
+      super(...arguments);
+      this.code = `${Init.UC_CODE}createAwscFailed`;
+      this.message = "Create uuAwsc failed.";
+    }
+  },
   SysSetProfileFailed: class extends UuJokesError {
     constructor() {
       super(...arguments);
@@ -128,13 +135,6 @@ const SetLogo = {
       this.code = `${SetLogo.UC_CODE}jokesInstanceDaoUpdateByAwidFailed`;
       this.message = "Update jokesInstance by jokesInstance Dao updateByAwid failed.";
     }
-  },
-  InvalidPhotoContentType: class extends UuJokesError {
-    constructor() {
-      super(...arguments);
-      this.code = `${SetLogo.UC_CODE}invalidPhotoContentType`;
-      this.message = "ContentType of new photo is invalid.";
-    }
   }
 };
 
@@ -154,7 +154,7 @@ const GetIndex = {
   UnableToReadHtmlFile: class extends UuJokesError {
     constructor() {
       super(...arguments);
-      this.code = `${GetIndex.UC_CODE}nnableToReadHtmlFile`;
+      this.code = `${GetIndex.UC_CODE}unableToReadHtmlFile`;
       this.message = "Unable to read html file.";
     }
   }
