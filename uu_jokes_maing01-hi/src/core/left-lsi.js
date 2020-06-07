@@ -3,9 +3,9 @@ export default {
     cs: "Vtipy",
     en: "Jokes"
   },
-  categories: {
-    cs: "Kategorie",
-    en: "Categories"
+  newspapers: {
+    cs: "Noviny",
+    en: "Newspapers"
   },
   about: {
     cs: "O aplikaci",

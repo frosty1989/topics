@@ -15,9 +15,9 @@ const WARNINGS = {
   createUnsupportedKeys: {
     code: `${Errors.Create.UC_CODE}unsupportedKeys`
   },
-  createCategoryDoesNotExist: {
-    code: `${Errors.Create.UC_CODE}categoryDoesNotExist`,
-    message: "One or more categories with given categoryId do not exist."
+  createNewspaperDoesNotExist: {
+    code: `${Errors.Create.UC_CODE}newspaperDoesNotExist`,
+    message: "One or more newspapers with given newspaperId do not exist."
   },
   getUnsupportedKeys: {
     code: `${Errors.Get.UC_CODE}unsupportedKeys`
@@ -25,9 +25,9 @@ const WARNINGS = {
   updateUnsupportedKeys: {
     code: `${Errors.Update.UC_CODE}unsupportedKeys`
   },
-  updateCategoryDoesNotExist: {
-    code: `${Errors.Update.UC_CODE}categoryDoesNotExist`,
-    message: "One or more categories with given categoryId do not exist."
+  updateNewspaperDoesNotExist: {
+    code: `${Errors.Update.UC_CODE}newspaperDoesNotExist`,
+    message: "One or more newspapers with given newspaperId do not exist."
   },
   updateVisibilityUnsupportedKeys: {
     code: `${Errors.UpdateVisibility.UC_CODE}unsupportedKeys`
@@ -53,7 +53,7 @@ class JokeAbl {
   constructor() {
     this.validator = new Validator(Path.join(__dirname, "..", "api", "validation_types", "joke-types.js"));
     this.dao = DaoFactory.getDao("joke");
-    this.categoryDao = DaoFactory.getDao("category");
+    this.newspaperDao = DaoFactory.getDao("newspaper");
     this.jokeRatingDao = DaoFactory.getDao("jokeRating");
   }
 
@@ -113,20 +113,20 @@ class JokeAbl {
     }
 
     // hds 4
-    if (dtoIn.categoryList) {
-      let presentCategories = await this._checkCategoriesExistence(awid, dtoIn.categoryList);
+    if (dtoIn.newspaperList) {
+      let presentNewspapers = await this._checkNewspapersExistence(awid, dtoIn.newspaperList);
       // A7
-      if (dtoIn.categoryList.length > 0) {
+      if (dtoIn.newspaperList.length > 0) {
         ValidationHelper.addWarning(
           uuAppErrorMap,
-          WARNINGS.createCategoryDoesNotExist.code,
-          WARNINGS.createCategoryDoesNotExist.message,
-          { categoryList: [...new Set(dtoIn.categoryList)] }
+          WARNINGS.createNewspaperDoesNotExist.code,
+          WARNINGS.createNewspaperDoesNotExist.message,
+          { newspaperList: [...new Set(dtoIn.newspaperList)] }
         );
       }
-      dtoIn.categoryList = [...new Set(presentCategories)];
+      dtoIn.newspaperList = [...new Set(presentNewspapers)];
     } else {
-      dtoIn.categoryList = [];
+      dtoIn.newspaperList = [];
     }
 
     // hds 5
@@ -221,18 +221,18 @@ class JokeAbl {
     }
 
     // hds 5
-    if (dtoIn.categoryList) {
-      let presentCategories = await this._checkCategoriesExistence(awid, dtoIn.categoryList);
+    if (dtoIn.newspaperList) {
+      let presentNewspapers = await this._checkNewspapersExistence(awid, dtoIn.newspaperList);
       // A7
-      if (dtoIn.categoryList.length > 0) {
+      if (dtoIn.newspaperList.length > 0) {
         ValidationHelper.addWarning(
           uuAppErrorMap,
-          WARNINGS.updateCategoryDoesNotExist.code,
-          WARNINGS.updateCategoryDoesNotExist.message,
-          { categoryList: [...new Set(dtoIn.categoryList)] }
+          WARNINGS.updateNewspaperDoesNotExist.code,
+          WARNINGS.updateNewspaperDoesNotExist.message,
+          { newspaperList: [...new Set(dtoIn.newspaperList)] }
         );
       }
-      dtoIn.categoryList = [...new Set(presentCategories)];
+      dtoIn.newspaperList = [...new Set(presentNewspapers)];
     }
 
     // hds 6
@@ -402,8 +402,8 @@ class JokeAbl {
 
     // hds 3
     let list;
-    if (dtoIn.categoryList) {
-      list = await this.dao.listByCategoryIdList(awid, dtoIn.categoryList, dtoIn.sortBy, dtoIn.order, dtoIn.pageInfo);
+    if (dtoIn.newspaperList) {
+      list = await this.dao.listByNewspaperIdList(awid, dtoIn.newspaperList, dtoIn.sortBy, dtoIn.order, dtoIn.pageInfo);
     } else {
       list = await this.dao.list(awid, dtoIn.sortBy, dtoIn.order, dtoIn.pageInfo);
     }
@@ -502,32 +502,32 @@ class JokeAbl {
   }
 
   /**
-   * Checks whether categories exist for specified awid and removes them from categoryList (so it, in the end, contains
-   * only ids of categories, that do not exist).
+   * Checks whether newspapers exist for specified awid and removes them from newspaperList (so it, in the end, contains
+   * only ids of newspapers, that do not exist).
    * @param {String} awid Used awid
-   * @param {Array} categoryList An array with ids of categories
-   * @returns {Promise<[]>} Ids of existing categories
+   * @param {Array} newspaperList An array with ids of newspapers
+   * @returns {Promise<[]>} Ids of existing newspapers
    */
-  async _checkCategoriesExistence(awid, categoryList) {
-    let categories;
+  async _checkNewspapersExistence(awid, newspaperList) {
+    let newspapers;
     let pageInfo = { pageIndex: 0 };
-    let presentCategories = [];
-    let categoryIndex;
+    let presentNewspapers = [];
+    let newspaperIndex;
     while (true) {
-      categories = await this.categoryDao.listByCategoryIdList(awid, categoryList, pageInfo);
-      categories.itemList.forEach(category => {
-        categoryIndex = categoryList.indexOf(category.id.toString());
-        if (categoryIndex !== -1) {
-          presentCategories.push(category.id.toString());
-          categoryList.splice(categoryIndex, 1);
+      newspapers = await this.newspaperDao.listByNewspaperIdList(awid, newspaperList, pageInfo);
+      newspapers.itemList.forEach(newspaper => {
+        newspaperIndex = newspaperList.indexOf(newspaper.id.toString());
+        if (newspaperIndex !== -1) {
+          presentNewspapers.push(newspaper.id.toString());
+          newspaperList.splice(newspaperIndex, 1);
         }
       });
-      if (categories.itemList < categories.pageInfo.pageSize || categoryList.length === 0) {
+      if (newspapers.itemList < newspapers.pageInfo.pageSize || newspaperList.length === 0) {
         break;
       }
       pageInfo.pageIndex += 1;
     }
-    return presentCategories;
+    return presentNewspapers;
   }
 }
 

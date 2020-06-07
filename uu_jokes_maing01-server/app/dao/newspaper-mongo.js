@@ -3,7 +3,7 @@
 const { UuObjectDao } = require("uu_appg01_server").ObjectStore;
 const { ObjectId } = require("bson");
 
-class CategoryMongo extends UuObjectDao {
+class NewspaperMongo extends UuObjectDao {
   async createSchema() {
     await super.createIndex({ awid: 1, _id: 1 }, { unique: true });
     await super.createIndex({ awid: 1, name: 1 }, { unique: true });
@@ -35,11 +35,11 @@ class CategoryMongo extends UuObjectDao {
     return await super.find({ awid }, pageInfo, sort);
   }
 
-  async listByCategoryIdList(awid, categoryIdList, pageInfo) {
+  async listByNewspaperIdList(awid, newspaperIdList, pageInfo) {
     let query = {
       awid,
       _id: {
-        $in: categoryIdList.map(id => {
+        $in: newspaperIdList.map(id => {
           if (!ObjectId.isValid(id)) return id;
           return new ObjectId(id);
         })
@@ -49,4 +49,4 @@ class CategoryMongo extends UuObjectDao {
   }
 }
 
-module.exports = CategoryMongo;
+module.exports = NewspaperMongo;

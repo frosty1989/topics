@@ -83,8 +83,8 @@ export const Left = UU5.Common.VisualComponent.create({
           {this.getLsiComponent("jokes")}
         </LeftLink>
         {UU5.Environment.App.authorization.canManage() && (
-          <LeftLink route="categoryManagement" active={this.state.activeRoute === "categoryManagement"}>
-            {this.getLsiComponent("categories")}
+          <LeftLink route="newspaperManagement" active={this.state.activeRoute === "newspaperManagement"}>
+            {this.getLsiComponent("newspapers")}
           </LeftLink>
         )}
       </UU5.Common.Fragment>

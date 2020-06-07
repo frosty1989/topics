@@ -144,7 +144,7 @@ const DEFAULTS = {
   },
   name: "uuJokes",
   description:
-    "Database of jokes in which users can create and update jokes, manage them, rate them and sort them into categories.",
+    "Database of jokes in which users can create and update jokes, manage them, rate them and sort them into newspapers.",
   logoType: "16x9",
   ttl: 60 * 60 * 1000
 };
@@ -162,7 +162,7 @@ class JokesInstanceAbl {
   constructor() {
     this.validator = new Validator(Path.join(__dirname, "..", "api", "validation_types", "jokes-instance-types.js"));
     this.dao = DaoFactory.getDao("jokesInstance");
-    this.categoryDao = DaoFactory.getDao("category");
+    this.newspaperDao = DaoFactory.getDao("newspaper");
     // redeclare some constants, so they can be used from other abls
     this.STATE_ACTIVE = STATE_ACTIVE;
     this.STATE_UNDER_CONSTRUCTION = STATE_UNDER_CONSTRUCTION;
@@ -198,7 +198,7 @@ class JokesInstanceAbl {
       this.dao.createSchema(),
       DaoFactory.getDao("joke").createSchema(),
       DaoFactory.getDao("jokeRating").createSchema(),
-      DaoFactory.getDao("category").createSchema()
+      DaoFactory.getDao("newspaper").createSchema()
     ]);
 
     // hds 4
@@ -357,7 +357,7 @@ class JokesInstanceAbl {
     }
 
     // hds 2
-    jokesInstance.categoryList = (await this.categoryDao.list(awid)).itemList;
+    jokesInstance.newspaperList = (await this.newspaperDao.list(awid)).itemList;
 
     // hds 3
     jokesInstance.authorizedProfileList = authorizedProfiles;

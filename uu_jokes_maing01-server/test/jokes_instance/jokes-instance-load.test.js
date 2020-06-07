@@ -25,7 +25,7 @@ test("HDS", async () => {
   expect(dtoOut.state).toEqual("underConstruction");
   expect(dtoOut.name).toEqual("uuJokes");
   expect(dtoOut.logo).toBeUndefined();
-  expect(dtoOut.categoryList).toEqual([]);
+  expect(dtoOut.newspaperList).toEqual([]);
   expect(dtoOut.authorizedProfileList).toEqual(["Authorities"]);
 });
 

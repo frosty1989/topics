@@ -27,16 +27,16 @@ let Calls = {
     });
   },
 
-  categoryList(dtoInData) {
+  newspaperList(dtoInData) {
     return new Promise((resolve, reject) => {
-      let commandUri = Calls.getCommandUri("category/list");
+      let commandUri = Calls.getCommandUri("newspaper/list");
       Calls.call("get", commandUri, { data: dtoInData, done: resolve, fail: reject });
     });
   },
 
-  categoryCreate(dtoInData) {
+  newspaperCreate(dtoInData) {
     return new Promise((resolve, reject) => {
-      let commandUri = Calls.getCommandUri("category/create");
+      let commandUri = Calls.getCommandUri("newspaper/create");
       Calls.call("post", commandUri, {
         data: dtoInData,
         done: data => resolve({ ...data, inProgress: false }),
@@ -45,9 +45,9 @@ let Calls = {
     });
   },
 
-  categoryUpdate(id, dtoInData) {
+  newspaperUpdate(id, dtoInData) {
     return new Promise((resolve, reject) => {
-      let commandUri = Calls.getCommandUri("category/update");
+      let commandUri = Calls.getCommandUri("newspaper/update");
       Calls.call("post", commandUri, {
         data: dtoInData,
         done: data => resolve({ ...data, inProgress: false }),
@@ -56,9 +56,9 @@ let Calls = {
     });
   },
 
-  categoryDelete(id, { forceDelete }) {
+  newspaperDelete(id, { forceDelete }) {
     return new Promise((resolve, reject) => {
-      let commandUri = Calls.getCommandUri("category/delete");
+      let commandUri = Calls.getCommandUri("newspaper/delete");
       Calls.call("post", commandUri, {
         data: { id, forceDelete },
         done: data => resolve({ ...data, inProgress: false }),

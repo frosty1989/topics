@@ -65,7 +65,7 @@ export const Ready = UU5.Common.VisualComponent.create({
   _getActions() {
     return [
       {
-        content: this.getLsi("create"), // CreateCategory Button
+        content: this.getLsi("create"), // CreateNewspaper Button
         onClick: () => {
           this._modal.open({
             header: this.getLsiComponent("createHeader"),

@@ -38,7 +38,7 @@ export const Detail = UU5.Common.VisualComponent.create({
       ratingCount: UU5.PropTypes.any,
       visibility: UU5.PropTypes.boolean,
       uuIdentityName: UU5.PropTypes.string,
-      categoryList: UU5.PropTypes.array,
+      newspaperList: UU5.PropTypes.array,
       image: UU5.PropTypes.string
     })
   },
@@ -66,13 +66,13 @@ export const Detail = UU5.Common.VisualComponent.create({
     );
   },
 
-  _buildCategoryNames(categoryList) {
+  _buildNewspaperNames(newspaperList) {
     // for faster lookup
-    let categoryIds = new Set(this.props.data.categoryList);
-    return categoryList
-      .reduce((acc, category) => {
-        if (categoryIds.has(category.id)) {
-          acc.push(category.name);
+    let newspaperIds = new Set(this.props.data.newspaperList);
+    return newspaperList
+      .reduce((acc, newspaper) => {
+        if (newspaperIds.has(newspaper.id)) {
+          acc.push(newspaper.name);
         }
         return acc;
       }, [])
@@ -101,9 +101,9 @@ export const Detail = UU5.Common.VisualComponent.create({
           {/* // Rating Count */}
           {this.getLsiComponent("votes", null, this.props.data.ratingCount.toString())}
         </UU5.Bricks.Div>
-        {/* // Categories */}
+        {/* // Newspapers */}
         <JokesConsumer>
-          {({ categoryList }) => this._getLine("mdi-tag-multiple", this._buildCategoryNames(categoryList))}
+          {({ newspaperList }) => this._getLine("mdi-tag-multiple", this._buildNewspaperNames(newspaperList))}
         </JokesConsumer>
         {/* // Author */}
         {this._getLine("mdi-account", this.props.data.uuIdentityName)}

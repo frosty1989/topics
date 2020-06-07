@@ -47,10 +47,10 @@ export const Form = UU5.Common.VisualComponent.create({
   //@@viewOff:overriding
 
   //@@viewOn:private
-  _getCategoriesOptions(categories) {
-    return categories.map(category => (
-      <UU5.Forms.Select.Option value={category.id} key={category.id}>
-        {category.name}
+  _getNewspapersOptions(newspapers) {
+    return newspapers.map(newspaper => (
+      <UU5.Forms.Select.Option value={newspaper.id} key={newspaper.id}>
+        {newspaper.name}
       </UU5.Forms.Select.Option>
     ));
   },
@@ -78,7 +78,7 @@ export const Form = UU5.Common.VisualComponent.create({
   render() {
     return (
       <JokesConsumer>
-        {({ categoryList }) => (
+        {({ newspaperList }) => (
           <UU5.Bricks.Div {...this.getMainPropsToPass()}>
             {/* // Name */}
             <UU5.Forms.Text inputAttrs={{ maxLength: 255 }} label={this.getLsiComponent("name")} name="name" required />
@@ -92,14 +92,14 @@ export const Form = UU5.Common.VisualComponent.create({
             />
             {/* // Image */}
             <UU5.Forms.File label={this.getLsiComponent("image")} name="image" ref_={this._registerFile} />
-            {/* // Categories */}
+            {/* // Newspapers */}
             <UU5.Forms.Select
-              label={this.getLsiComponent("category")}
-              name="categoryList"
+              label={this.getLsiComponent("newspaper")}
+              name="newspaperList"
               multiple
               openToContent={true}
             >
-              {this._getCategoriesOptions(categoryList)}
+              {this._getNewspapersOptions(newspaperList)}
             </UU5.Forms.Select>
           </UU5.Bricks.Div>
         )}

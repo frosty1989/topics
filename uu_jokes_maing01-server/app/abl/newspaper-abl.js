@@ -4,7 +4,7 @@ const { Validator } = require("uu_appg01_server").Validation;
 const { DaoFactory, ObjectStoreError, DuplicateKey } = require("uu_appg01_server").ObjectStore;
 const { ValidationHelper } = require("uu_appg01_server").AppServer;
 const JokesInstanceAbl = require("./jokes-instance-abl");
-const Errors = require("../api/errors/category-error");
+const Errors = require("../api/errors/newspaper-error");
 const Path = require("path");
 
 const WARNINGS = {
@@ -31,10 +31,10 @@ const DEFAULTS = {
   pageSize: 100
 };
 
-class CategoryAbl {
+class NewspaperAbl {
   constructor() {
-    this.validator = new Validator(Path.join(__dirname, "..", "api", "validation_types", "category-types.js"));
-    this.dao = DaoFactory.getDao("category");
+    this.validator = new Validator(Path.join(__dirname, "..", "api", "validation_types", "newspaper-types.js"));
+    this.dao = DaoFactory.getDao("newspaper");
     this.jokeDao = DaoFactory.getDao("joke");
   }
 
@@ -47,7 +47,7 @@ class CategoryAbl {
     );
 
     // hds 2, 2.1
-    let validationResult = this.validator.validate("categoryCreateDtoInType", dtoIn);
+    let validationResult = this.validator.validate("newspaperCreateDtoInType", dtoIn);
     // hds 2.2, 2.3, A3, A4
     let uuAppErrorMap = ValidationHelper.processValidationResult(
       dtoIn,
@@ -60,24 +60,24 @@ class CategoryAbl {
     dtoIn.awid = awid;
 
     // hds 3
-    let category;
+    let newspaper;
     try {
-      category = await this.dao.create(dtoIn);
+      newspaper = await this.dao.create(dtoIn);
     } catch (e) {
       if (e instanceof DuplicateKey) {
         // A5
-        throw new Errors.Create.CategoryNameNotUnique({ uuAppErrorMap }, { categoryName: dtoIn.name });
+        throw new Errors.Create.NewspaperNameNotUnique({ uuAppErrorMap }, { newspaperName: dtoIn.name });
       }
       if (e instanceof ObjectStoreError) {
         // A6
-        throw new Errors.Create.CategoryDaoCreateFailed({ uuAppErrorMap }, e);
+        throw new Errors.Create.NewspaperDaoCreateFailed({ uuAppErrorMap }, e);
       }
       throw e;
     }
 
     // hds 4
-    category.uuAppErrorMap = uuAppErrorMap;
-    return category;
+    newspaper.uuAppErrorMap = uuAppErrorMap;
+    return newspaper;
   }
 
   async get(awid, dtoIn, authorizationResult) {
@@ -98,7 +98,7 @@ class CategoryAbl {
     }
 
     // hds 2, 2.1
-    let validationResult = this.validator.validate("categoryGetDtoInType", dtoIn);
+    let validationResult = this.validator.validate("newspaperGetDtoInType", dtoIn);
     // hds 2.2, 2.3, A4, A5
     let uuAppErrorMap = ValidationHelper.processValidationResult(
       dtoIn,
@@ -108,23 +108,23 @@ class CategoryAbl {
     );
 
     // hds 3
-    let category;
+    let newspaper;
     if (dtoIn.id) {
-      category = await this.dao.get(awid, dtoIn.id);
+      newspaper = await this.dao.get(awid, dtoIn.id);
     } else {
-      category = await this.dao.getByName(awid, dtoIn.name);
+      newspaper = await this.dao.getByName(awid, dtoIn.name);
     }
     // A6
-    if (!category) {
+    if (!newspaper) {
       let paramMap = {};
-      if (dtoIn.id) paramMap.categoryId = dtoIn.id;
-      if (dtoIn.name) paramMap.categoryName = dtoIn.name;
-      throw new Errors.Get.CategoryDoesNotExist({ uuAppErrorMap }, paramMap);
+      if (dtoIn.id) paramMap.newspaperId = dtoIn.id;
+      if (dtoIn.name) paramMap.newspaperName = dtoIn.name;
+      throw new Errors.Get.NewspaperDoesNotExist({ uuAppErrorMap }, paramMap);
     }
 
     // hds 4
-    category.uuAppErrorMap = uuAppErrorMap;
-    return category;
+    newspaper.uuAppErrorMap = uuAppErrorMap;
+    return newspaper;
   }
 
   async update(awid, dtoIn) {
@@ -136,7 +136,7 @@ class CategoryAbl {
     );
 
     // hds 2, 2.1
-    let validationResult = this.validator.validate("categoryUpdateDtoInType", dtoIn);
+    let validationResult = this.validator.validate("newspaperUpdateDtoInType", dtoIn);
     // hds 2.2, 2.3, A3, A4
     let uuAppErrorMap = ValidationHelper.processValidationResult(
       dtoIn,
@@ -146,25 +146,25 @@ class CategoryAbl {
     );
 
     // hds 3
-    let category;
+    let newspaper;
     dtoIn.awid = awid;
     try {
-      category = await this.dao.update(dtoIn);
+      newspaper = await this.dao.update(dtoIn);
     } catch (e) {
       if (e instanceof DuplicateKey) {
         // A5
-        throw new Errors.Update.CategoryNameNotUnique({ uuAppErrorMap }, { categoryName: dtoIn.name });
+        throw new Errors.Update.NewspaperNameNotUnique({ uuAppErrorMap }, { newspaperName: dtoIn.name });
       }
       if (e instanceof ObjectStoreError) {
         // A6
-        throw new Errors.Update.CategoryDaoUpdateFailed({ uuAppErrorMap }, e);
+        throw new Errors.Update.NewspaperDaoUpdateFailed({ uuAppErrorMap }, e);
       }
       throw e;
     }
 
     // hds 4
-    category.uuAppErrorMap = uuAppErrorMap;
-    return category;
+    newspaper.uuAppErrorMap = uuAppErrorMap;
+    return newspaper;
   }
 
   async delete(awid, dtoIn) {
@@ -176,7 +176,7 @@ class CategoryAbl {
     );
 
     // hds 2, 2.1
-    let validationResult = this.validator.validate("categoryDeleteDtoInType", dtoIn);
+    let validationResult = this.validator.validate("newspaperDeleteDtoInType", dtoIn);
     // hds 2.2, 2.3, A3, A4
     let uuAppErrorMap = ValidationHelper.processValidationResult(
       dtoIn,
@@ -190,11 +190,11 @@ class CategoryAbl {
       // hds 3.1
       let count;
       try {
-        count = await this.jokeDao.getCountByCategoryId(awid, dtoIn.id);
+        count = await this.jokeDao.getCountByNewspaperId(awid, dtoIn.id);
       } catch (e) {
         //  A5
         if (e instanceof ObjectStoreError) {
-          throw new Errors.Delete.JokeDaoGetCountByCategoryFailed({ uuAppErrorMap }, e);
+          throw new Errors.Delete.JokeDaoGetCountByNewspaperFailed({ uuAppErrorMap }, e);
         }
         throw e;
       }
@@ -205,11 +205,11 @@ class CategoryAbl {
     } else {
       // hds 3.2
       try {
-        await this.jokeDao.removeCategory(awid, dtoIn.id);
+        await this.jokeDao.removeNewspaper(awid, dtoIn.id);
       } catch (e) {
         if (e instanceof ObjectStoreError) {
           // A7
-          throw new Errors.Delete.JokeDaoRemoveCategoryFailed({ uuAppErrorMap }, e);
+          throw new Errors.Delete.JokeDaoRemoveNewspaperFailed({ uuAppErrorMap }, e);
         }
         throw e;
       }
@@ -240,7 +240,7 @@ class CategoryAbl {
     }
 
     // hds 2, 2.1
-    let validationResult = this.validator.validate("categoryListDtoInType", dtoIn);
+    let validationResult = this.validator.validate("newspaperListDtoInType", dtoIn);
     // hds 2.2, 2.3, A4, A5
     let uuAppErrorMap = ValidationHelper.processValidationResult(
       dtoIn,
@@ -263,4 +263,4 @@ class CategoryAbl {
   }
 }
 
-module.exports = new CategoryAbl();
+module.exports = new NewspaperAbl();

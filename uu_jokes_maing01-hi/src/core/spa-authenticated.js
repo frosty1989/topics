@@ -51,7 +51,7 @@ const SpaAuthenticated = UU5.Common.VisualComponent.create({
       state: data.state,
       name: data.name,
       logos: data.logos,
-      categoryList: data.categoryList,
+      newspaperList: data.newspaperList,
       userProfiles: data.userProfiles
     };
   },

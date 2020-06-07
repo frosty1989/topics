@@ -7,7 +7,7 @@ import Config from "./config/config.js";
 import Bottom from "./bottom";
 import Left from "./left";
 import Jokes from "../routes/jokes";
-import CategoryManagement from "../routes/category-management";
+import NewspaperManagement from "../routes/newspaper-management";
 import About from "../routes/about";
 
 import "./spa-ready.less";
@@ -68,8 +68,8 @@ export const SpaReady = UU5.Common.VisualComponent.create({
               routes={{
                 jokes: { component: <Jokes /> },
                 "": "jokes",
-                categoryManagement: {
-                  component: <CategoryManagement />
+                newspaperManagement: {
+                  component: <NewspaperManagement />
                 },
                 about: { component: <About /> }
               }}

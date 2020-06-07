@@ -82,28 +82,28 @@
         "httpMethod": "POST",
         "type": "CMD"
       },
-      "category/create": {
-        "realization": "api/controllers/CategoryController.create",
+      "newspaper/create": {
+        "realization": "api/controllers/NewspaperController.create",
         "httpMethod": "POST",
         "type": "CMD"
       },
-      "category/get": {
-        "realization": "api/controllers/CategoryController.get",
+      "newspaper/get": {
+        "realization": "api/controllers/NewspaperController.get",
         "httpMethod": "GET",
         "type": "CMD"
       },
-      "category/update": {
-        "realization": "api/controllers/CategoryController.update",
+      "newspaper/update": {
+        "realization": "api/controllers/NewspaperController.update",
         "httpMethod": "POST",
         "type": "CMD"
       },
-      "category/delete": {
-        "realization": "api/controllers/CategoryController.delete",
+      "newspaper/delete": {
+        "realization": "api/controllers/NewspaperController.delete",
         "httpMethod": "POST",
         "type": "CMD"
       },
-      "category/list": {
-        "realization": "api/controllers/CategoryController.list",
+      "newspaper/list": {
+        "realization": "api/controllers/NewspaperController.list",
         "httpMethod": "GET",
         "type": "CMD"
       },

@@ -1,26 +1,26 @@
 /* eslint-disable */
-const categoryCreateDtoInType = shape({
+const newspaperCreateDtoInType = shape({
   name: uu5String(255).isRequired(),
   icon: string(40)
 });
 
-const categoryGetDtoInType = shape({
+const newspaperGetDtoInType = shape({
   id: id().isRequired("name"),
   name: uu5String(255).isRequired("id")
 });
 
-const categoryUpdateDtoInType = shape({
+const newspaperUpdateDtoInType = shape({
   id: id().isRequired(),
   name: uu5String(255),
   icon: string(40)
 });
 
-const categoryDeleteDtoInType = shape({
+const newspaperDeleteDtoInType = shape({
   id: id().isRequired(),
   forceDelete: boolean()
 });
 
-const categoryListDtoInType = shape({
+const newspaperListDtoInType = shape({
   order: oneOf(["asc", "desc"]),
   pageInfo: shape({
     pageIndex: integer(),

@@ -64,7 +64,7 @@ test("A1 - jokes instance does not exist", async () => {
   try {
     await TestHelper.executeGetCommand(CATEGORY_LIST);
   } catch (e) {
-    expect(e.code).toEqual("uu-jokes-main/category/list/jokesInstanceDoesNotExist");
+    expect(e.code).toEqual("uu-jokes-main/newspaper/list/jokesInstanceDoesNotExist");
     expect(e.message).toEqual("JokesInstance does not exist.");
   }
 });
@@ -79,7 +79,7 @@ test("A2 - jokes instance is closed", async () => {
   try {
     await TestHelper.executeGetCommand(CATEGORY_LIST);
   } catch (e) {
-    expect(e.code).toEqual("uu-jokes-main/category/list/jokesInstanceNotInProperState");
+    expect(e.code).toEqual("uu-jokes-main/newspaper/list/jokesInstanceNotInProperState");
     expect(e.message).toEqual("JokesInstance is not in proper state [active|underConstruction].");
     expect(e.paramMap.state).toEqual("closed");
     expect(e.paramMap.expectedStateList).toEqual(["active", "underConstruction"]);
@@ -96,7 +96,7 @@ test("A3 - jokes instance is under construction", async () => {
   try {
     await TestHelper.executeGetCommand(CATEGORY_LIST);
   } catch (e) {
-    expect(e.code).toEqual("uu-jokes-main/category/list/jokesInstanceIsUnderConstruction");
+    expect(e.code).toEqual("uu-jokes-main/newspaper/list/jokesInstanceIsUnderConstruction");
     expect(e.message).toEqual("JokesInstance is in state underConstruction.");
     expect(e.paramMap.state).toEqual("underConstruction");
   }
@@ -107,7 +107,7 @@ test("A4 - unsupported keys in dtoIn", async () => {
   await TestHelper.login("Authority");
   let response = await TestHelper.executeGetCommand(CATEGORY_LIST, { brambor: true });
   expect(response.status).toEqual(200);
-  let warning = response.uuAppErrorMap["uu-jokes-main/category/list/unsupportedKeys"];
+  let warning = response.uuAppErrorMap["uu-jokes-main/newspaper/list/unsupportedKeys"];
   expect(warning).toBeTruthy();
   expect(warning.type).toEqual("warning");
   expect(warning.message).toEqual("DtoIn contains unsupported keys.");
@@ -121,7 +121,7 @@ test("A5 - invalid dtoIn", async () => {
   try {
     await TestHelper.executeGetCommand(CATEGORY_LIST, { pageInfo: false });
   } catch (e) {
-    expect(e.code).toEqual("uu-jokes-main/category/list/invalidDtoIn");
+    expect(e.code).toEqual("uu-jokes-main/newspaper/list/invalidDtoIn");
     expect(e.message).toEqual("DtoIn is not valid.");
   }
 });

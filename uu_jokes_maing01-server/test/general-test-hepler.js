@@ -15,11 +15,11 @@ const JOKE_UPDATE_VISIBILITY = "joke/updateVisibility";
 const JOKE_DELETE = "joke/delete";
 const JOKE_LIST = "joke/list";
 const JOKE_ADD_RATING = "joke/addRating";
-const CATEGORY_CREATE = "category/create";
-const CATEGORY_GET = "category/get";
-const CATEGORY_UPDATE = "category/update";
-const CATEGORY_DELETE = "category/delete";
-const CATEGORY_LIST = "category/list";
+const CATEGORY_CREATE = "newspaper/create";
+const CATEGORY_GET = "newspaper/get";
+const CATEGORY_UPDATE = "newspaper/update";
+const CATEGORY_DELETE = "newspaper/delete";
+const CATEGORY_LIST = "newspaper/list";
 const MONGO_ID = "012345678910111213141516";
 
 const getImageStream = () => {
