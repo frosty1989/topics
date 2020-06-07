@@ -27,16 +27,16 @@ let Calls = {
     });
   },
 
-  categoryList(dtoInData) {
+  topicList(dtoInData) {
     return new Promise((resolve, reject) => {
-      let commandUri = Calls.getCommandUri("category/list");
+      let commandUri = Calls.getCommandUri("topic/list");
       Calls.call("get", commandUri, { data: dtoInData, done: resolve, fail: reject });
     });
   },
 
-  categoryCreate(dtoInData) {
+  topicCreate(dtoInData) {
     return new Promise((resolve, reject) => {
-      let commandUri = Calls.getCommandUri("category/create");
+      let commandUri = Calls.getCommandUri("topic/create");
       Calls.call("post", commandUri, {
         data: dtoInData,
         done: data => resolve({ ...data, inProgress: false }),
@@ -45,9 +45,9 @@ let Calls = {
     });
   },
 
-  categoryUpdate(id, dtoInData) {
+  topicUpdate(id, dtoInData) {
     return new Promise((resolve, reject) => {
-      let commandUri = Calls.getCommandUri("category/update");
+      let commandUri = Calls.getCommandUri("topic/update");
       Calls.call("post", commandUri, {
         data: dtoInData,
         done: data => resolve({ ...data, inProgress: false }),
@@ -56,9 +56,9 @@ let Calls = {
     });
   },
 
-  categoryDelete(id, { forceDelete }) {
+  topicDelete(id, { forceDelete }) {
     return new Promise((resolve, reject) => {
-      let commandUri = Calls.getCommandUri("category/delete");
+      let commandUri = Calls.getCommandUri("topic/delete");
       Calls.call("post", commandUri, {
         data: { id, forceDelete },
         done: data => resolve({ ...data, inProgress: false }),

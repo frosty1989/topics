@@ -166,10 +166,10 @@ test("A7 - categories don't exist", async () => {
   await TestHelper.executePostCommand(JOKES_INSTANCE_INIT, { uuAppProfileAuthorities: "theWholesomeMurder" });
   await TestHelper.login("Authority");
 
-  let existingCategoryId = "012345678910111213141516";
-  let nonExistentCategoryId = "171819202122232425262728";
+  let existingTopicId = "012345678910111213141516";
+  let nonExistentTopicId = "171819202122232425262728";
   await TestHelper.executeDbScript(
-    `db.getCollection('category').insert({_id:ObjectId("${existingCategoryId}"),awid:"${TestHelper.getAwid()}"})`
+    `db.getCollection('topic').insert({_id:ObjectId("${existingTopicId}"),awid:"${TestHelper.getAwid()}"})`
   );
 
   let joke = await TestHelper.executePostCommand(JOKE_CREATE, {
@@ -178,16 +178,16 @@ test("A7 - categories don't exist", async () => {
 
   joke = await TestHelper.executePostCommand(JOKE_UPDATE, {
     id: joke.id,
-    categoryList: [existingCategoryId, nonExistentCategoryId]
+    topicList: [existingTopicId, nonExistentTopicId]
   });
 
   expect(joke.status).toEqual(200);
-  expect(joke.categoryList).toEqual([existingCategoryId]);
-  let warning = joke.uuAppErrorMap["uu-jokes-main/joke/update/categoryDoesNotExist"];
+  expect(joke.topicList).toEqual([existingTopicId]);
+  let warning = joke.uuAppErrorMap["uu-jokes-main/joke/update/topicDoesNotExist"];
   expect(warning).toBeTruthy();
   expect(warning.type).toEqual("warning");
-  expect(warning.message).toEqual("One or more categories with given categoryId do not exist.");
-  expect(warning.paramMap.categoryList).toEqual([nonExistentCategoryId]);
+  expect(warning.message).toEqual("One or more categories with given topicId do not exist.");
+  expect(warning.paramMap.topicList).toEqual([nonExistentTopicId]);
 });
 
 test("A8 - creating binary fails", async () => {

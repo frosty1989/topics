@@ -17,8 +17,8 @@
           "realization": "dao/JokeRatingMongo",
           "maxNoi": 10000
         },
-        "category": {
-          "realization": "dao/CategoryMongo",
+        "topic": {
+          "realization": "dao/TopicMongo",
           "maxNoi": 128
         }
       }

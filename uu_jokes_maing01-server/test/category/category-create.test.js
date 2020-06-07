@@ -24,11 +24,11 @@ afterEach(() => {
 test("HDS", async () => {
   await TestHelper.executePostCommand(JOKES_INSTANCE_INIT, { uuAppProfileAuthorities: ".", state: "active" });
   await TestHelper.login("Authority");
-  let categoryName = "(Mg,Fe2+)2(Mg,Fe2+)5Si8O2(OH)2";
-  let response = await TestHelper.executePostCommand(CATEGORY_CREATE, { name: categoryName });
+  let topicName = "(Mg,Fe2+)2(Mg,Fe2+)5Si8O2(OH)2";
+  let response = await TestHelper.executePostCommand(CATEGORY_CREATE, { name: topicName });
   expect(response.status).toEqual(200);
   let dtoOut = response;
-  expect(dtoOut.name).toEqual(categoryName);
+  expect(dtoOut.name).toEqual(topicName);
   expect(dtoOut.icon).toEqual("mdi-label");
   expect(dtoOut.awid).toEqual(TestHelper.getAwid());
   expect(dtoOut.uuAppErrorMap).toEqual({});
@@ -40,7 +40,7 @@ test("A1 - jokesInstance does nto exist", async () => {
   try {
     await TestHelper.executePostCommand(CATEGORY_CREATE, { name: "He sings lovesongs on a Casio." });
   } catch (e) {
-    expect(e.code).toEqual("uu-jokes-main/category/create/jokesInstanceDoesNotExist");
+    expect(e.code).toEqual("uu-jokes-main/topic/create/jokesInstanceDoesNotExist");
     expect(e.message).toEqual("JokesInstance does not exist.");
   }
 });
@@ -52,7 +52,7 @@ test("A2 - jokes instance is closed", async () => {
   try {
     await TestHelper.executePostCommand(CATEGORY_CREATE, { name: "I don't know anymore.." });
   } catch (e) {
-    expect(e.code).toEqual("uu-jokes-main/category/create/jokesInstanceNotInProperState");
+    expect(e.code).toEqual("uu-jokes-main/topic/create/jokesInstanceNotInProperState");
     expect(e.message).toEqual("JokesInstance is not in proper state [active|underConstruction].");
     expect(e.paramMap.state).toEqual("closed");
     expect(e.paramMap.expectedStateList).toEqual(["active", "underConstruction"]);
@@ -67,7 +67,7 @@ test("A3 - unsupported keys in dtoIn", async () => {
     pche: "brm brm"
   });
   expect(response.status).toEqual(200);
-  let warning = response.uuAppErrorMap["uu-jokes-main/category/create/unsupportedKeys"];
+  let warning = response.uuAppErrorMap["uu-jokes-main/topic/create/unsupportedKeys"];
   expect(warning).toBeTruthy();
   expect(warning.type).toEqual("warning");
   expect(warning.message).toEqual("DtoIn contains unsupported keys.");
@@ -81,12 +81,12 @@ test("A4 - dtoIn is not valid", async () => {
   try {
     await TestHelper.executePostCommand(CATEGORY_CREATE, {});
   } catch (e) {
-    expect(e.code).toEqual("uu-jokes-main/category/create/invalidDtoIn");
+    expect(e.code).toEqual("uu-jokes-main/topic/create/invalidDtoIn");
     expect(e.message).toEqual("DtoIn is not valid.");
   }
 });
 
-test("A5 - category with such name already exists", async () => {
+test("A5 - topic with such name already exists", async () => {
   expect.assertions(3);
   await TestHelper.executePostCommand(JOKES_INSTANCE_INIT, { uuAppProfileAuthorities: ".", state: "active" });
   await TestHelper.login("Authority");
@@ -95,25 +95,25 @@ test("A5 - category with such name already exists", async () => {
   try {
     await TestHelper.executePostCommand(CATEGORY_CREATE, { name: name });
   } catch (e) {
-    expect(e.code).toEqual("uu-jokes-main/category/create/categoryNameNotUnique");
-    expect(e.message).toEqual("Category name is not unique in awid.");
-    expect(e.paramMap.categoryName).toEqual(name);
+    expect(e.code).toEqual("uu-jokes-main/topic/create/topicNameNotUnique");
+    expect(e.message).toEqual("Topic name is not unique in awid.");
+    expect(e.paramMap.topicName).toEqual(name);
   }
 });
 
-test("A6 - creating category fails", async () => {
+test("A6 - creating topic fails", async () => {
   mockDaoFactory();
-  const CategoryAbl = require("../../app/abl/category-abl");
+  const TopicAbl = require("../../app/abl/topic-abl");
   const JokesInstanceAbl = require("../../app/abl/jokes-instance-abl");
   JokesInstanceAbl.checkInstance = () => null;
-  CategoryAbl.dao.create = () => {
+  TopicAbl.dao.create = () => {
     throw new ObjectStoreError("it fails.");
   };
 
   try {
-    await CategoryAbl.create("awid", { name: "..." });
+    await TopicAbl.create("awid", { name: "..." });
   } catch (e) {
-    expect(e.code).toEqual("uu-jokes-main/category/create/categoryDaoCreateFailed");
-    expect(e.message).toEqual("Create category by category DAO create failed.");
+    expect(e.code).toEqual("uu-jokes-main/topic/create/topicDaoCreateFailed");
+    expect(e.message).toEqual("Create topic by topic DAO create failed.");
   }
 });

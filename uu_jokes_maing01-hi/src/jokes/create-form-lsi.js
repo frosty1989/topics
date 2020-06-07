@@ -11,9 +11,9 @@ export default {
     cs: "Obrázek",
     en: "Image"
   },
-  category: {
-    cs: "Kategorie",
-    en: "Category"
+  topic: {
+    cs: "Téma",
+    en: "Topic"
   },
   published: {
     cs: "Publikován",

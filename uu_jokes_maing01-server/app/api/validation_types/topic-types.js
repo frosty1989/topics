@@ -1,26 +1,26 @@
 /* eslint-disable */
-const categoryCreateDtoInType = shape({
+const topicCreateDtoInType = shape({
   name: uu5String(255).isRequired(),
   icon: string(40)
 });
 
-const categoryGetDtoInType = shape({
+const topicGetDtoInType = shape({
   id: id().isRequired("name"),
   name: uu5String(255).isRequired("id")
 });
 
-const categoryUpdateDtoInType = shape({
+const topicUpdateDtoInType = shape({
   id: id().isRequired(),
   name: uu5String(255),
   icon: string(40)
 });
 
-const categoryDeleteDtoInType = shape({
+const topicDeleteDtoInType = shape({
   id: id().isRequired(),
   forceDelete: boolean()
 });
 
-const categoryListDtoInType = shape({
+const topicListDtoInType = shape({
   order: oneOf(["asc", "desc"]),
   pageInfo: shape({
     pageIndex: integer(),

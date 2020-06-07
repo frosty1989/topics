@@ -153,23 +153,23 @@ test("HDS - only pageIndex in pageInfo", async () => {
   expect(dtoOut.itemList).toEqual([]);
 });
 
-test("HDS - filter by category", async () => {
+test("HDS - filter by topic", async () => {
   await TestHelper.executePostCommand(JOKES_INSTANCE_INIT, { uuAppProfileAuthorities: ".", state: "active" });
   await TestHelper.login("Authority");
 
-  // category management commands are not yet implemented => creating something straight in the database
+  // topic management commands are not yet implemented => creating something straight in the database
   await TestHelper.executeDbScript(
     `db.getCollection('joke').insertMany([
-      {awid: "${TestHelper.getAwid()}", name:"A", categoryList:[ObjectId("${MONGO_ID}"), 14]},
-      {awid: "${TestHelper.getAwid()}", name:"B", categoryList:[true]},
-      {awid: "${TestHelper.getAwid()}", name:"C", categoryList:[ObjectId("${MONGO_ID}")]},
+      {awid: "${TestHelper.getAwid()}", name:"A", topicList:[ObjectId("${MONGO_ID}"), 14]},
+      {awid: "${TestHelper.getAwid()}", name:"B", topicList:[true]},
+      {awid: "${TestHelper.getAwid()}", name:"C", topicList:[ObjectId("${MONGO_ID}")]},
     ])`
   );
 
-  // The second categoryId is a valid id - it will pass through the validation - but there is no category
+  // The second topicId is a valid id - it will pass through the validation - but there is no topic
   // (obviously) with such id, so it won't influence the result. It will check the correct conversion
   // from string to mongodb's objectID in some dao.
-  let response = await TestHelper.executeGetCommand(JOKE_LIST, { categoryList: [MONGO_ID, `${MONGO_ID}12345678`] });
+  let response = await TestHelper.executeGetCommand(JOKE_LIST, { topicList: [MONGO_ID, `${MONGO_ID}12345678`] });
   expect(response.status).toEqual(200);
   let dtoOut = response;
   expect(dtoOut.pageInfo.total).toEqual(2);

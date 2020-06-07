@@ -4,8 +4,8 @@ export default {
     en: "Jokes"
   },
   categories: {
-    cs: "Kategorie",
-    en: "Categories"
+    cs: "Témata",
+    en: "Topics"
   },
   about: {
     cs: "O aplikaci",

@@ -147,9 +147,9 @@ export const Jokes = UU5.Common.VisualComponent.create({
   _getFilters(uuIdentity) {
     let filters = [
       {
-        key: "category",
-        label: this.getLsi("filterByCategory"),
-        filterFn: (item, filterValue) => item.categoryList && item.categoryList.includes(filterValue)
+        key: "topic",
+        label: this.getLsi("filterByTopic"),
+        filterFn: (item, filterValue) => item.topicList && item.topicList.includes(filterValue)
       },
       {
         key: "image",

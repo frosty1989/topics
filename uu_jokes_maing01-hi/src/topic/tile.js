@@ -63,7 +63,7 @@ export const Tile = UU5.Common.VisualComponent.create({
     return (
       <UU5.Bricks.Div {...this.getMainPropsToPass()}>
         <UU5.Bricks.Icon icon={this.props.data.icon || this.getDefault().icon} />
-        {/* // CategoryName */}
+        {/* // TopicName */}
         <span className={this.getClassName("text")}>{this.props.data.name}</span>
         {/* // EditButton */}
         <UU5.Bricks.Link onClick={this._handleUpdate}>

@@ -6,7 +6,7 @@ import "uu5g04-forms";
 import Config from "./config/config.js";
 import { dig } from "../helpers/object-utils.js";
 import Rating from "./filter/rating.js";
-import Category from "./filter/category.js";
+import Topic from "./filter/topic.js";
 import Checkbox from "./filter/checkbox.js";
 
 import "./filter.less";
@@ -100,9 +100,9 @@ export const Filter = UU5.Common.VisualComponent.create({
     let child;
     let filter = dig(this.props.appliedFilters, this.state.selectedType, "value");
     switch (this.state.selectedType) {
-      case "category":
+      case "topic":
         child = (
-          <Category
+          <Topic
             className={this.getClassName("valueColumn")}
             addFilter={this.props.addFilter}
             getValues={this._getFormValues}

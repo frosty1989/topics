@@ -82,28 +82,28 @@
         "httpMethod": "POST",
         "type": "CMD"
       },
-      "category/create": {
-        "realization": "api/controllers/CategoryController.create",
+      "topic/create": {
+        "realization": "api/controllers/TopicController.create",
         "httpMethod": "POST",
         "type": "CMD"
       },
-      "category/get": {
-        "realization": "api/controllers/CategoryController.get",
+      "topic/get": {
+        "realization": "api/controllers/TopicController.get",
         "httpMethod": "GET",
         "type": "CMD"
       },
-      "category/update": {
-        "realization": "api/controllers/CategoryController.update",
+      "topic/update": {
+        "realization": "api/controllers/TopicController.update",
         "httpMethod": "POST",
         "type": "CMD"
       },
-      "category/delete": {
-        "realization": "api/controllers/CategoryController.delete",
+      "topic/delete": {
+        "realization": "api/controllers/TopicController.delete",
         "httpMethod": "POST",
         "type": "CMD"
       },
-      "category/list": {
-        "realization": "api/controllers/CategoryController.list",
+      "topic/list": {
+        "realization": "api/controllers/TopicController.list",
         "httpMethod": "GET",
         "type": "CMD"
       },

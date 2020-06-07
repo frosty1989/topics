@@ -5,25 +5,25 @@ import "uu5g04-bricks";
 import Calls from "calls";
 import Config from "./config/config.js";
 import ArrayUtils from "../helpers/array-utils.js";
-import CategoryReady from "../category/ready.js";
+import TopicReady from "../topic/ready.js";
 import { reportError, reportSuccess } from "../helpers/alert-helper";
 
 import {JokesConsumer} from "../core/jokes-provider.js";
-import "./category-management.less";
-import LSI from "./category-management-lsi.js";
+import "./topic-management.less";
+import LSI from "./topic-management-lsi.js";
 
 //@@viewOff:imports
 
-export const CategoryManagement = UU5.Common.VisualComponent.create({
+export const TopicManagement = UU5.Common.VisualComponent.create({
   //@@viewOn:mixins
   mixins: [UU5.Common.BaseMixin, UU5.Common.RouteMixin, UU5.Common.CcrReaderMixin],
   //@@viewOff:mixins
 
   //@@viewOn:statics
   statics: {
-    tagName: Config.TAG + "CategoryManagement",
+    tagName: Config.TAG + "TopicManagement",
     classNames: {
-      main: Config.CSS + "categorymanagement"
+      main: Config.CSS + "topicmanagement"
     },
     lsi: LSI
   },
@@ -45,20 +45,20 @@ export const CategoryManagement = UU5.Common.VisualComponent.create({
 
   onRouteChanged_() {
     let menu = this.getCcrComponentByKey(Config.LEFT_MENU_CCR_KEY);
-    menu && menu.setActiveRoute("categoryManagement");
+    menu && menu.setActiveRoute("topicManagement");
   },
   //@@viewOff:overriding
 
   //@@viewOn:private
-  _handleUpdate(data, updateCategory, setAppData, categoryList) {
+  _handleUpdate(data, updateTopic, setAppData, topicList) {
     // set new data (temporally)
-    updateCategory(data.id, { ...data, inProgress: true })
-      .then(dtoOut => this._handleUpdateDone(dtoOut, setAppData, categoryList))
+    updateTopic(data.id, { ...data, inProgress: true })
+      .then(dtoOut => this._handleUpdateDone(dtoOut, setAppData, topicList))
       .catch(response => this._handleUpdateFail(response));
   },
 
-  _handleUpdateDone(dtoOut, setAppData, categoryList) {
-    setAppData({ categoryList: ArrayUtils.updateItem(categoryList, dtoOut) });
+  _handleUpdateDone(dtoOut, setAppData, topicList) {
+    setAppData({ topicList: ArrayUtils.updateItem(topicList, dtoOut) });
     // display alert
     reportSuccess(this.getLsiComponent("updateSuccessHeader"));
   },
@@ -68,14 +68,14 @@ export const CategoryManagement = UU5.Common.VisualComponent.create({
     reportError(this.getLsiComponent("updateFailHeader"), this._decideErrorDescription(response));
   },
 
-  _handleCreate(data, createCategory, setAppData, categoryList) {
-    createCategory({ ...data, inProgress: true })
-      .then(dtoOut => this._handleCreateDone(dtoOut, setAppData, categoryList))
+  _handleCreate(data, createTopic, setAppData, topicList) {
+    createTopic({ ...data, inProgress: true })
+      .then(dtoOut => this._handleCreateDone(dtoOut, setAppData, topicList))
       .catch(response => this._handleCreateFail(response));
   },
 
-  _handleCreateDone(dtoOut, setAppData, categoryList) {
-    setAppData({ categoryList: ArrayUtils.addItem(categoryList, dtoOut) });
+  _handleCreateDone(dtoOut, setAppData, topicList) {
+    setAppData({ topicList: ArrayUtils.addItem(topicList, dtoOut) });
     // display alert
     reportSuccess(this.getLsiComponent("createSuccessHeader"));
   },
@@ -85,16 +85,16 @@ export const CategoryManagement = UU5.Common.VisualComponent.create({
     reportError(this.getLsiComponent("createFailHeader"), this._decideErrorDescription(response));
   },
 
-  _handleDelete(data, deleteCategory, setAppData, categoryList) {
+  _handleDelete(data, deleteTopic, setAppData, topicList) {
     let original = data;
     let { forceDelete } = data;
-    deleteCategory(data.id, undefined, { forceDelete })
-      .then(() => this._handleDeleteDone(original, setAppData, categoryList))
+    deleteTopic(data.id, undefined, { forceDelete })
+      .then(() => this._handleDeleteDone(original, setAppData, topicList))
       .catch(response => this._handleDeleteFail(response));
   },
 
-  _handleDeleteDone(original, setAppData, categoryList) {
-    setAppData({ categoryList: ArrayUtils.removeItem(categoryList, original) });
+  _handleDeleteDone(original, setAppData, topicList) {
+    setAppData({ topicList: ArrayUtils.removeItem(topicList, original) });
     // display alert
     reportSuccess(this.getLsiComponent("deleteSuccessHeader"));
   },
@@ -109,9 +109,9 @@ export const CategoryManagement = UU5.Common.VisualComponent.create({
       case 400: // app error
         switch (response.code) {
           case Config.ERROR_CODES.CATEGORY_CONTAIN_JOKES:
-            return this.getLsiComponent("categoryInUseError");
+            return this.getLsiComponent("topicInUseError");
           case Config.ERROR_CODES.CATEGORY_NAME_NOT_UNIQUE:
-            return this.getLsiComponent("categoryNameNotUnique");
+            return this.getLsiComponent("topicNameNotUnique");
         }
         break;
       case 403:
@@ -126,27 +126,27 @@ export const CategoryManagement = UU5.Common.VisualComponent.create({
     return (
       <UU5.Bricks.Div {...this.getMainPropsToPass()}>
         <UU5.Common.ListDataManager
-          onLoad={Calls.categoryList}
-          onCreate={Calls.categoryCreate}
-          onDelete={Calls.categoryDelete}
-          onUpdate={Calls.categoryUpdate}
+          onLoad={Calls.topicList}
+          onCreate={Calls.topicCreate}
+          onDelete={Calls.topicDelete}
+          onUpdate={Calls.topicUpdate}
         >
           {({ data: listData, handleCreate, handleDelete, handleUpdate }) => {
             if (listData) {
               return (
                 <JokesConsumer>
-                  {({ setData, categoryList }) => (
-                    <CategoryReady
+                  {({ setData, topicList }) => (
+                    <TopicReady
                       {...this.getMainPropsToPass()}
                       data={listData}
                       onCreate={data => {
-                        this._handleCreate(data, handleCreate, setData, categoryList);
+                        this._handleCreate(data, handleCreate, setData, topicList);
                       }}
                       onUpdate={data => {
-                        this._handleUpdate(data, handleUpdate, setData, categoryList);
+                        this._handleUpdate(data, handleUpdate, setData, topicList);
                       }}
                       onDelete={data => {
-                        this._handleDelete(data, handleDelete, setData, categoryList);
+                        this._handleDelete(data, handleDelete, setData, topicList);
                       }}
                     />
                   )}
@@ -163,4 +163,4 @@ export const CategoryManagement = UU5.Common.VisualComponent.create({
   //@@viewOff:render
 });
 
-export default CategoryManagement;
+export default TopicManagement;

@@ -1,7 +1,7 @@
 "use strict";
 
 const UuJokesError = require("./uu-jokes-error");
-const CATEGORY_ERROR_PREFIX = `${UuJokesError.ERROR_PREFIX}category/`;
+const CATEGORY_ERROR_PREFIX = `${UuJokesError.ERROR_PREFIX}topic/`;
 
 const Create = {
   UC_CODE: `${CATEGORY_ERROR_PREFIX}create/`,
@@ -26,18 +26,18 @@ const Create = {
       this.message = "DtoIn is not valid.";
     }
   },
-  CategoryNameNotUnique: class extends UuJokesError {
+  TopicNameNotUnique: class extends UuJokesError {
     constructor() {
       super(...arguments);
-      this.code = `${Create.UC_CODE}categoryNameNotUnique`;
-      this.message = "Category name is not unique in awid.";
+      this.code = `${Create.UC_CODE}topicNameNotUnique`;
+      this.message = "Topic name is not unique in awid.";
     }
   },
-  CategoryDaoCreateFailed: class extends UuJokesError {
+  TopicDaoCreateFailed: class extends UuJokesError {
     constructor() {
       super(...arguments);
-      this.code = `${Create.UC_CODE}categoryDaoCreateFailed`;
-      this.message = "Create category by category DAO create failed.";
+      this.code = `${Create.UC_CODE}topicDaoCreateFailed`;
+      this.message = "Create topic by topic DAO create failed.";
     }
   }
 };
@@ -72,11 +72,11 @@ const Get = {
       this.message = "DtoIn is not valid.";
     }
   },
-  CategoryDoesNotExist: class extends UuJokesError {
+  TopicDoesNotExist: class extends UuJokesError {
     constructor() {
       super(...arguments);
-      this.code = `${Get.UC_CODE}categoryDoesNotExist`;
-      this.message = "Category does not exist.";
+      this.code = `${Get.UC_CODE}topicDoesNotExist`;
+      this.message = "Topic does not exist.";
     }
   }
 };
@@ -104,18 +104,18 @@ const Update = {
       this.message = "DtoIn is not valid.";
     }
   },
-  CategoryNameNotUnique: class extends UuJokesError {
+  TopicNameNotUnique: class extends UuJokesError {
     constructor() {
       super(...arguments);
-      this.code = `${Update.UC_CODE}categoryNameNotUnique`;
-      this.message = "Category name is not unique in awid.";
+      this.code = `${Update.UC_CODE}topicNameNotUnique`;
+      this.message = "Topic name is not unique in awid.";
     }
   },
-  CategoryDaoUpdateFailed: class extends UuJokesError {
+  TopicDaoUpdateFailed: class extends UuJokesError {
     constructor() {
       super(...arguments);
-      this.code = `${Update.UC_CODE}categoryDaoUpdateFailed`;
-      this.message = "Update category by category Dao update failed.";
+      this.code = `${Update.UC_CODE}topicDaoUpdateFailed`;
+      this.message = "Update topic by topic Dao update failed.";
     }
   }
 };
@@ -143,25 +143,25 @@ const Delete = {
       this.message = "DtoIn is not valid.";
     }
   },
-  JokeDaoGetCountByCategoryFailed: class extends UuJokesError {
+  JokeDaoGetCountByTopicFailed: class extends UuJokesError {
     constructor() {
       super(...arguments);
-      this.code = `${Delete.UC_CODE}jokeDaoGetCountByCategoryFailed`;
-      this.message = "Get count by joke Dao getCountByCategory failed.";
+      this.code = `${Delete.UC_CODE}jokeDaoGetCountByTopicFailed`;
+      this.message = "Get count by joke Dao getCountByTopic failed.";
     }
   },
   RelatedJokesExist: class extends UuJokesError {
     constructor() {
       super(...arguments);
       this.code = `${Delete.UC_CODE}relatedJokesExist`;
-      this.message = "Category contains jokes.";
+      this.message = "Topic contains jokes.";
     }
   },
-  JokeDaoRemoveCategoryFailed: class extends UuJokesError {
+  JokeDaoRemoveTopicFailed: class extends UuJokesError {
     constructor() {
       super(...arguments);
-      this.code = `${Delete.UC_CODE}jokeDaoRemoveCategoryFailed`;
-      this.message = "Removing category by joke Dao removeCategory failed.";
+      this.code = `${Delete.UC_CODE}jokeDaoRemoveTopicFailed`;
+      this.message = "Removing topic by joke Dao removeTopic failed.";
     }
   }
 };

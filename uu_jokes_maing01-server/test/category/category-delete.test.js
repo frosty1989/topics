@@ -35,39 +35,39 @@ test("HDS - delete succeeds even when there is nothing to delete", async () => {
   expect(response.uuAppErrorMap).toEqual({});
 });
 
-test("HDS - create category then delete it, no jokes involved", async () => {
+test("HDS - create topic then delete it, no jokes involved", async () => {
   expect.assertions(3);
   await TestHelper.executePostCommand(JOKES_INSTANCE_INIT, { uuAppProfileAuthorities: ".", state: "active" });
-  let category = await TestHelper.executePostCommand(CATEGORY_CREATE, { name: ".." });
-  let response = await TestHelper.executePostCommand(CATEGORY_DELETE, { id: category.id });
+  let topic = await TestHelper.executePostCommand(CATEGORY_CREATE, { name: ".." });
+  let response = await TestHelper.executePostCommand(CATEGORY_DELETE, { id: topic.id });
   expect(response.status).toEqual(200);
   expect(response.uuAppErrorMap).toEqual({});
   try {
-    await TestHelper.executeGetCommand(CATEGORY_GET, { id: category.id });
+    await TestHelper.executeGetCommand(CATEGORY_GET, { id: topic.id });
   } catch (e) {
-    expect(e.code).toEqual("uu-jokes-main/category/get/categoryDoesNotExist");
+    expect(e.code).toEqual("uu-jokes-main/topic/get/topicDoesNotExist");
   }
 });
 
-test("HDS - force delete category and checks that its removed from joke", async () => {
+test("HDS - force delete topic and checks that its removed from joke", async () => {
   expect.assertions(3);
   await TestHelper.executePostCommand(JOKES_INSTANCE_INIT, { uuAppProfileAuthorities: ".", state: "active" });
 
   // create two categories
-  let categoryOne = await TestHelper.executePostCommand(CATEGORY_CREATE, { name: ".." });
-  let categoryTwo = await TestHelper.executePostCommand(CATEGORY_CREATE, { name: "..." });
+  let topicOne = await TestHelper.executePostCommand(CATEGORY_CREATE, { name: ".." });
+  let topicTwo = await TestHelper.executePostCommand(CATEGORY_CREATE, { name: "..." });
 
   // create joke belonging to both categories
-  await createCategoriedJokeDb([categoryOne.id, categoryTwo.id]);
+  await createTopicdJokeDb([topicOne.id, topicTwo.id]);
 
-  // force delete one category
-  let response = await TestHelper.executePostCommand(CATEGORY_DELETE, { id: categoryTwo.id, forceDelete: true });
+  // force delete one topic
+  let response = await TestHelper.executePostCommand(CATEGORY_DELETE, { id: topicTwo.id, forceDelete: true });
   expect(response.status).toEqual(200);
   expect(response.uuAppErrorMap).toEqual({});
 
-  // the deleted category is also deleted from joke
+  // the deleted topic is also deleted from joke
   let joke = await TestHelper.executeGetCommand(JOKE_GET, { id: MONGO_ID });
-  expect(joke.categoryList).toEqual([categoryOne.id]);
+  expect(joke.topicList).toEqual([topicOne.id]);
 });
 
 test("A1 - jokesInstance does nto exist", async () => {
@@ -75,7 +75,7 @@ test("A1 - jokesInstance does nto exist", async () => {
   try {
     await TestHelper.executePostCommand(CATEGORY_DELETE);
   } catch (e) {
-    expect(e.code).toEqual("uu-jokes-main/category/delete/jokesInstanceDoesNotExist");
+    expect(e.code).toEqual("uu-jokes-main/topic/delete/jokesInstanceDoesNotExist");
     expect(e.message).toEqual("JokesInstance does not exist.");
   }
 });
@@ -86,7 +86,7 @@ test("A2 - jokes instance is closed", async () => {
   try {
     await TestHelper.executePostCommand(CATEGORY_DELETE, {});
   } catch (e) {
-    expect(e.code).toEqual("uu-jokes-main/category/delete/jokesInstanceNotInProperState");
+    expect(e.code).toEqual("uu-jokes-main/topic/delete/jokesInstanceNotInProperState");
     expect(e.message).toEqual("JokesInstance is not in proper state [active|underConstruction].");
     expect(e.paramMap.state).toEqual("closed");
     expect(e.paramMap.expectedStateList).toEqual(["active", "underConstruction"]);
@@ -97,7 +97,7 @@ test("A3 - unsupported keys in dtoIn", async () => {
   await TestHelper.executePostCommand(JOKES_INSTANCE_INIT, { uuAppProfileAuthorities: "." });
   let response = await TestHelper.executePostCommand(CATEGORY_DELETE, { id: MONGO_ID, vrchr: "japko" });
   expect(response.status).toEqual(200);
-  let warning = response.uuAppErrorMap["uu-jokes-main/category/delete/unsupportedKeys"];
+  let warning = response.uuAppErrorMap["uu-jokes-main/topic/delete/unsupportedKeys"];
   expect(warning).toBeTruthy();
   expect(warning.type).toEqual("warning");
   expect(warning.message).toEqual("DtoIn contains unsupported keys.");
@@ -110,7 +110,7 @@ test("A4 - dtoIn is not valid", async () => {
   try {
     await TestHelper.executePostCommand(CATEGORY_DELETE, {});
   } catch (e) {
-    expect(e.code).toEqual("uu-jokes-main/category/delete/invalidDtoIn");
+    expect(e.code).toEqual("uu-jokes-main/topic/delete/invalidDtoIn");
     expect(e.message).toEqual("DtoIn is not valid.");
   }
 });
@@ -118,67 +118,67 @@ test("A4 - dtoIn is not valid", async () => {
 test("A5 - obtaining count of relevant jokes fails", async () => {
   expect.assertions(2);
 
-  let CategoryAbl = mockAbl();
-  CategoryAbl.jokeDao.getCountByCategoryId = () => {
+  let TopicAbl = mockAbl();
+  TopicAbl.jokeDao.getCountByTopicId = () => {
     throw new ObjectStoreError("it failed.");
   };
 
   try {
-    await CategoryAbl.delete("awid", { id: MONGO_ID });
+    await TopicAbl.delete("awid", { id: MONGO_ID });
   } catch (e) {
-    expect(e.code).toEqual("uu-jokes-main/category/delete/jokeDaoGetCountByCategoryFailed");
-    expect(e.message).toEqual("Get count by joke Dao getCountByCategory failed.");
+    expect(e.code).toEqual("uu-jokes-main/topic/delete/jokeDaoGetCountByTopicFailed");
+    expect(e.message).toEqual("Get count by joke Dao getCountByTopic failed.");
   }
 });
 
-test("A6 - there are jokes with deleted category and the delete is not forced", async () => {
+test("A6 - there are jokes with deleted topic and the delete is not forced", async () => {
   expect.assertions(3);
   await TestHelper.executePostCommand(JOKES_INSTANCE_INIT, { uuAppProfileAuthorities: "." });
-  let category = await TestHelper.executePostCommand(CATEGORY_CREATE, { name: ".." });
-  await createCategoriedJokeDb([category.id]);
+  let topic = await TestHelper.executePostCommand(CATEGORY_CREATE, { name: ".." });
+  await createTopicdJokeDb([topic.id]);
   try {
-    await TestHelper.executePostCommand(CATEGORY_DELETE, { id: category.id });
+    await TestHelper.executePostCommand(CATEGORY_DELETE, { id: topic.id });
   } catch (e) {
-    expect(e.code).toEqual("uu-jokes-main/category/delete/relatedJokesExist");
-    expect(e.message).toEqual("Category contains jokes.");
+    expect(e.code).toEqual("uu-jokes-main/topic/delete/relatedJokesExist");
+    expect(e.message).toEqual("Topic contains jokes.");
     expect(e.paramMap.relatedJokes).toEqual(1);
   }
 });
 
-test("A7 - removing category fails", async () => {
+test("A7 - removing topic fails", async () => {
   expect.assertions(2);
 
-  let CategoryAbl = mockAbl();
-  CategoryAbl.jokeDao.removeCategory = () => {
+  let TopicAbl = mockAbl();
+  TopicAbl.jokeDao.removeTopic = () => {
     throw new ObjectStoreError("it failed.");
   };
 
   try {
-    await CategoryAbl.delete("awid", { id: MONGO_ID, forceDelete: true });
+    await TopicAbl.delete("awid", { id: MONGO_ID, forceDelete: true });
   } catch (e) {
-    expect(e.code).toEqual("uu-jokes-main/category/delete/jokeDaoRemoveCategoryFailed");
-    expect(e.message).toEqual("Removing category by joke Dao removeCategory failed.");
+    expect(e.code).toEqual("uu-jokes-main/topic/delete/jokeDaoRemoveTopicFailed");
+    expect(e.message).toEqual("Removing topic by joke Dao removeTopic failed.");
   }
 });
 
 function mockAbl() {
   mockDaoFactory();
-  const CategoryAbl = require("../../app/abl/category-abl");
+  const TopicAbl = require("../../app/abl/topic-abl");
   const JokesInstanceAbl = require("../../app/abl/jokes-instance-abl");
   JokesInstanceAbl.checkInstance = () => null;
-  return CategoryAbl;
+  return TopicAbl;
 }
 
 // calling joke/create doesn't work with disabled authorization/authentication, this is a shortcut
-async function createCategoriedJokeDb(categoryList) {
-  categoryList = categoryList.map(category => {
-    return `ObjectId("${category}")`;
+async function createTopicdJokeDb(topicList) {
+  topicList = topicList.map(topic => {
+    return `ObjectId("${topic}")`;
   });
   await TestHelper.executeDbScript(
     `db.getCollection('joke').insert({
       _id:ObjectId("${MONGO_ID}"),
       awid:"${TestHelper.getAwid()}",
-      categoryList:[${categoryList}]
+      topicList:[${topicList}]
     })`
   );
 }

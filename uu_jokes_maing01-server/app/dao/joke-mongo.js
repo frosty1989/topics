@@ -7,12 +7,12 @@ const { DbConnection } = require("uu_appg01_datastore");
 class JokeMongo extends UuObjectDao {
   async createSchema() {
     await super.createIndex({ awid: 1, _id: 1 }, { unique: true });
-    await super.createIndex({ awid: 1, categoryList: 1 });
+    await super.createIndex({ awid: 1, topicList: 1 });
   }
 
   async create(uuObject) {
-    if (uuObject.categoryList) {
-      uuObject.categoryList = uuObject.categoryList.map(categoryId => new ObjectId(categoryId));
+    if (uuObject.topicList) {
+      uuObject.topicList = uuObject.topicList.map(topicId => new ObjectId(topicId));
     }
     return await super.insertOne(uuObject);
   }
@@ -21,16 +21,16 @@ class JokeMongo extends UuObjectDao {
     return await super.findOne({ id, awid });
   }
 
-  async getCountByCategoryId(awid, categoryId) {
+  async getCountByTopicId(awid, topicId) {
     return await super.count({
       awid,
-      categoryList: ObjectId.isValid(categoryId) ? new ObjectId(categoryId) : categoryId
+      topicList: ObjectId.isValid(topicId) ? new ObjectId(topicId) : topicId
     });
   }
 
   async update(uuObject) {
-    if (uuObject.categoryList) {
-      uuObject.categoryList = uuObject.categoryList.map(categoryId => new ObjectId(categoryId));
+    if (uuObject.topicList) {
+      uuObject.topicList = uuObject.topicList.map(topicId => new ObjectId(topicId));
     }
     let filter = { id: uuObject.id, awid: uuObject.awid };
     return await super.findOneAndUpdate(filter, uuObject, "NONE");
@@ -40,13 +40,13 @@ class JokeMongo extends UuObjectDao {
     return await this.update({ awid, id, visibility });
   }
 
-  async removeCategory(awid, categoryId) {
+  async removeTopic(awid, topicId) {
     let db = await DbConnection.get(this.customUri);
     await db
       .collection(this.collectionName)
       .updateMany(
         { awid },
-        { $pull: { categoryList: ObjectId.isValid(categoryId) ? new ObjectId(categoryId) : categoryId } }
+        { $pull: { topicList: ObjectId.isValid(topicId) ? new ObjectId(topicId) : topicId } }
       );
   }
 
@@ -61,15 +61,15 @@ class JokeMongo extends UuObjectDao {
     return await super.find({ awid }, pageInfo, sort);
   }
 
-  async listByCategoryIdList(awid, categoryIdList, sortBy, order, pageInfo) {
+  async listByTopicIdList(awid, topicIdList, sortBy, order, pageInfo) {
     let sort = {
       [sortBy]: order === "asc" ? 1 : -1
     };
     return await super.find(
       {
         awid,
-        categoryList: {
-          $in: categoryIdList.map(id => {
+        topicList: {
+          $in: topicIdList.map(id => {
             if (!ObjectId.isValid(id)) return id;
             return new ObjectId(id);
           })

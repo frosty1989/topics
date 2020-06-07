@@ -28,9 +28,9 @@ export default {
   },
   ...Lsi.buttons,
 
-  filterByCategory: {
-    cs: "Kategorie",
-    en: "Category"
+  filterByTopic: {
+    cs: "Téma",
+    en: "Topic"
   },
 
   filterByImage: {

@@ -35,7 +35,7 @@ test("A1 - jokes instance does not exist", async () => {
   try {
     await TestHelper.executePostCommand(CATEGORY_UPDATE, {});
   } catch (e) {
-    expect(e.code).toEqual("uu-jokes-main/category/update/jokesInstanceDoesNotExist");
+    expect(e.code).toEqual("uu-jokes-main/topic/update/jokesInstanceDoesNotExist");
     expect(e.message).toEqual("JokesInstance does not exist.");
   }
 });
@@ -46,7 +46,7 @@ test("A2 - jokes instance is closed", async () => {
   try {
     await TestHelper.executePostCommand(CATEGORY_UPDATE, {});
   } catch (e) {
-    expect(e.code).toEqual("uu-jokes-main/category/update/jokesInstanceNotInProperState");
+    expect(e.code).toEqual("uu-jokes-main/topic/update/jokesInstanceNotInProperState");
     expect(e.message).toEqual("JokesInstance is not in proper state [active|underConstruction].");
     expect(e.paramMap.state).toEqual("closed");
     expect(e.paramMap.expectedStateList).toEqual(["active", "underConstruction"]);
@@ -58,7 +58,7 @@ test("A3 - unsupported keys in dtoIn", async () => {
   let response = await TestHelper.executePostCommand(CATEGORY_CREATE, { name: "Thimphu" });
   response = await TestHelper.executePostCommand(CATEGORY_UPDATE, { id: response.id, city: "Dhaka" });
   expect(response.status).toEqual(200);
-  let warning = response.uuAppErrorMap["uu-jokes-main/category/update/unsupportedKeys"];
+  let warning = response.uuAppErrorMap["uu-jokes-main/topic/update/unsupportedKeys"];
   expect(warning).toBeTruthy();
 });
 
@@ -68,12 +68,12 @@ test("A4 - invalid dtoIn", async () => {
   try {
     await TestHelper.executePostCommand(CATEGORY_UPDATE, {});
   } catch (e) {
-    expect(e.code).toEqual("uu-jokes-main/category/update/invalidDtoIn");
+    expect(e.code).toEqual("uu-jokes-main/topic/update/invalidDtoIn");
     expect(e.message).toEqual("DtoIn is not valid.");
   }
 });
 
-test("A5 - category with such name already exists", async () => {
+test("A5 - topic with such name already exists", async () => {
   expect.assertions(3);
   await TestHelper.executePostCommand(JOKES_INSTANCE_INIT, { uuAppProfileAuthorities: "." });
   let name = "Myanmar";
@@ -82,19 +82,19 @@ test("A5 - category with such name already exists", async () => {
   try {
     await TestHelper.executePostCommand(CATEGORY_UPDATE, { id: response.id, name });
   } catch (e) {
-    expect(e.code).toEqual("uu-jokes-main/category/update/categoryNameNotUnique");
-    expect(e.message).toEqual("Category name is not unique in awid.");
-    expect(e.paramMap.categoryName).toEqual(name);
+    expect(e.code).toEqual("uu-jokes-main/topic/update/topicNameNotUnique");
+    expect(e.message).toEqual("Topic name is not unique in awid.");
+    expect(e.paramMap.topicName).toEqual(name);
   }
 });
 
-test("A6 - category update fails, especially if there is no category", async () => {
+test("A6 - topic update fails, especially if there is no topic", async () => {
   expect.assertions(2);
   await TestHelper.executePostCommand(JOKES_INSTANCE_INIT, { uuAppProfileAuthorities: "." });
   try {
     await TestHelper.executePostCommand(CATEGORY_UPDATE, { id: MONGO_ID });
   } catch (e) {
-    expect(e.code).toEqual("uu-jokes-main/category/update/categoryDaoUpdateFailed");
-    expect(e.message).toEqual("Update category by category Dao update failed.");
+    expect(e.code).toEqual("uu-jokes-main/topic/update/topicDaoUpdateFailed");
+    expect(e.message).toEqual("Update topic by topic Dao update failed.");
   }
 });

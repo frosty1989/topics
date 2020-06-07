@@ -71,7 +71,7 @@ test("HDS - no image, Authorities call", async () => {
   expect(dtoOut.ratingCount).toEqual(0);
   expect(dtoOut.visibility).toEqual(true);
   expect(dtoOut.image).toBeUndefined();
-  expect(dtoOut.categoryList).toEqual([]);
+  expect(dtoOut.topicList).toEqual([]);
   expect(dtoOut.uuAppErrorMap).toEqual({});
   expect(dtoOut.awid).toEqual(TestHelper.getAwid());
 });
@@ -198,27 +198,27 @@ test("A7 - categories don't exist", async () => {
   await TestHelper.executePostCommand(JOKES_INSTANCE_INIT, { uuAppProfileAuthorities: "." });
   await TestHelper.login("Authority");
 
-  let existingCategoryId = "012345678910111213141516";
-  let nonExistentCategoryId = "171819202122232425262728";
+  let existingTopicId = "012345678910111213141516";
+  let nonExistentTopicId = "171819202122232425262728";
   let dtoIn = {
     name: "Uz mi dochazi jmena vtipu",
-    categoryList: [existingCategoryId, nonExistentCategoryId]
+    topicList: [existingTopicId, nonExistentTopicId]
   };
 
   await TestHelper.executeDbScript(
-    `db.getCollection('category').insert({_id:ObjectId("${existingCategoryId}"),awid:"${TestHelper.getAwid()}"})`
+    `db.getCollection('topic').insert({_id:ObjectId("${existingTopicId}"),awid:"${TestHelper.getAwid()}"})`
   );
 
   let result = await TestHelper.executePostCommand(JOKE_CREATE, dtoIn);
   expect(result.status).toBe(200);
   let dtoOut = result;
-  expect(dtoOut.categoryList).toEqual([existingCategoryId]);
+  expect(dtoOut.topicList).toEqual([existingTopicId]);
 
-  let warning = dtoOut.uuAppErrorMap["uu-jokes-main/joke/create/categoryDoesNotExist"];
+  let warning = dtoOut.uuAppErrorMap["uu-jokes-main/joke/create/topicDoesNotExist"];
   expect(warning).toBeTruthy();
   expect(warning.type).toEqual("warning");
-  expect(warning.message).toEqual("One or more categories with given categoryId do not exist.");
-  expect(warning.paramMap.categoryList).toEqual([nonExistentCategoryId]);
+  expect(warning.message).toEqual("One or more categories with given topicId do not exist.");
+  expect(warning.paramMap.topicList).toEqual([nonExistentTopicId]);
 });
 
 test("A8 - storing the joke fails", async () => {

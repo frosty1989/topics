@@ -15,9 +15,9 @@ const WARNINGS = {
   createUnsupportedKeys: {
     code: `${Errors.Create.UC_CODE}unsupportedKeys`
   },
-  createCategoryDoesNotExist: {
-    code: `${Errors.Create.UC_CODE}categoryDoesNotExist`,
-    message: "One or more categories with given categoryId do not exist."
+  createTopicDoesNotExist: {
+    code: `${Errors.Create.UC_CODE}topicDoesNotExist`,
+    message: "One or more categories with given topicId do not exist."
   },
   getUnsupportedKeys: {
     code: `${Errors.Get.UC_CODE}unsupportedKeys`
@@ -25,9 +25,9 @@ const WARNINGS = {
   updateUnsupportedKeys: {
     code: `${Errors.Update.UC_CODE}unsupportedKeys`
   },
-  updateCategoryDoesNotExist: {
-    code: `${Errors.Update.UC_CODE}categoryDoesNotExist`,
-    message: "One or more categories with given categoryId do not exist."
+  updateTopicDoesNotExist: {
+    code: `${Errors.Update.UC_CODE}topicDoesNotExist`,
+    message: "One or more categories with given topicId do not exist."
   },
   updateVisibilityUnsupportedKeys: {
     code: `${Errors.UpdateVisibility.UC_CODE}unsupportedKeys`
@@ -53,7 +53,7 @@ class JokeAbl {
   constructor() {
     this.validator = new Validator(Path.join(__dirname, "..", "api", "validation_types", "joke-types.js"));
     this.dao = DaoFactory.getDao("joke");
-    this.categoryDao = DaoFactory.getDao("category");
+    this.topicDao = DaoFactory.getDao("topic");
     this.jokeRatingDao = DaoFactory.getDao("jokeRating");
   }
 
@@ -113,20 +113,20 @@ class JokeAbl {
     }
 
     // hds 4
-    if (dtoIn.categoryList) {
-      let presentCategories = await this._checkCategoriesExistence(awid, dtoIn.categoryList);
+    if (dtoIn.topicList) {
+      let presentTopics = await this._checkTopicsExistence(awid, dtoIn.topicList);
       // A7
-      if (dtoIn.categoryList.length > 0) {
+      if (dtoIn.topicList.length > 0) {
         ValidationHelper.addWarning(
           uuAppErrorMap,
-          WARNINGS.createCategoryDoesNotExist.code,
-          WARNINGS.createCategoryDoesNotExist.message,
-          { categoryList: [...new Set(dtoIn.categoryList)] }
+          WARNINGS.createTopicDoesNotExist.code,
+          WARNINGS.createTopicDoesNotExist.message,
+          { topicList: [...new Set(dtoIn.topicList)] }
         );
       }
-      dtoIn.categoryList = [...new Set(presentCategories)];
+      dtoIn.topicList = [...new Set(presentTopics)];
     } else {
-      dtoIn.categoryList = [];
+      dtoIn.topicList = [];
     }
 
     // hds 5
@@ -221,18 +221,18 @@ class JokeAbl {
     }
 
     // hds 5
-    if (dtoIn.categoryList) {
-      let presentCategories = await this._checkCategoriesExistence(awid, dtoIn.categoryList);
+    if (dtoIn.topicList) {
+      let presentTopics = await this._checkTopicsExistence(awid, dtoIn.topicList);
       // A7
-      if (dtoIn.categoryList.length > 0) {
+      if (dtoIn.topicList.length > 0) {
         ValidationHelper.addWarning(
           uuAppErrorMap,
-          WARNINGS.updateCategoryDoesNotExist.code,
-          WARNINGS.updateCategoryDoesNotExist.message,
-          { categoryList: [...new Set(dtoIn.categoryList)] }
+          WARNINGS.updateTopicDoesNotExist.code,
+          WARNINGS.updateTopicDoesNotExist.message,
+          { topicList: [...new Set(dtoIn.topicList)] }
         );
       }
-      dtoIn.categoryList = [...new Set(presentCategories)];
+      dtoIn.topicList = [...new Set(presentTopics)];
     }
 
     // hds 6
@@ -402,8 +402,8 @@ class JokeAbl {
 
     // hds 3
     let list;
-    if (dtoIn.categoryList) {
-      list = await this.dao.listByCategoryIdList(awid, dtoIn.categoryList, dtoIn.sortBy, dtoIn.order, dtoIn.pageInfo);
+    if (dtoIn.topicList) {
+      list = await this.dao.listByTopicIdList(awid, dtoIn.topicList, dtoIn.sortBy, dtoIn.order, dtoIn.pageInfo);
     } else {
       list = await this.dao.list(awid, dtoIn.sortBy, dtoIn.order, dtoIn.pageInfo);
     }
@@ -502,32 +502,32 @@ class JokeAbl {
   }
 
   /**
-   * Checks whether categories exist for specified awid and removes them from categoryList (so it, in the end, contains
+   * Checks whether categories exist for specified awid and removes them from topicList (so it, in the end, contains
    * only ids of categories, that do not exist).
    * @param {String} awid Used awid
-   * @param {Array} categoryList An array with ids of categories
+   * @param {Array} topicList An array with ids of categories
    * @returns {Promise<[]>} Ids of existing categories
    */
-  async _checkCategoriesExistence(awid, categoryList) {
+  async _checkTopicsExistence(awid, topicList) {
     let categories;
     let pageInfo = { pageIndex: 0 };
-    let presentCategories = [];
-    let categoryIndex;
+    let presentTopics = [];
+    let topicIndex;
     while (true) {
-      categories = await this.categoryDao.listByCategoryIdList(awid, categoryList, pageInfo);
-      categories.itemList.forEach(category => {
-        categoryIndex = categoryList.indexOf(category.id.toString());
-        if (categoryIndex !== -1) {
-          presentCategories.push(category.id.toString());
-          categoryList.splice(categoryIndex, 1);
+      categories = await this.topicDao.listByTopicIdList(awid, topicList, pageInfo);
+      categories.itemList.forEach(topic => {
+        topicIndex = topicList.indexOf(topic.id.toString());
+        if (topicIndex !== -1) {
+          presentTopics.push(topic.id.toString());
+          topicList.splice(topicIndex, 1);
         }
       });
-      if (categories.itemList < categories.pageInfo.pageSize || categoryList.length === 0) {
+      if (categories.itemList < categories.pageInfo.pageSize || topicList.length === 0) {
         break;
       }
       pageInfo.pageIndex += 1;
     }
-    return presentCategories;
+    return presentTopics;
   }
 }
 
